@@ -1,0 +1,5 @@
+numpy
+scipy
+rawpy
+colour-science
+pillow
