@@ -281,8 +281,9 @@ class Engine:
             sub = chemistry.FilmState(latent=None, halide=flat(st.halide)[sl], silver=flat(st.silver)[sl],
                                       dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet)
             Dn[sl] = sc.normalized_density(self._transmittance(sub))
-        if self.p.timing == "frame":           # 按整张底片的平均密度自动校正
-            sc.balance(Dn.mean(0), self.p.mid_gray)
+        if self.p.timing == "frame":           # 按整张底片的平均密度自动校正 (亮度校正有上限)
+            gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=True)))[0]
+            sc.balance(Dn.mean(0), self.p.mid_gray, nominal=gray)
         return sc.to_rgb(Dn).reshape(shape)
 
     def render_xyz(self, rgb_lin):

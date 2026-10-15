@@ -198,4 +198,4 @@ def test_scan_neutral_with_matching_profile(name):
 def test_scan_without_profile_leaves_bounded_cast():
     """电影负片没有扫描档案, 用通用 Kodak 档案扫描 + 部分自动校正 → 留下有限的偏色。"""
     out = Engine(Params(film="kodak_vision3_250d", grain=0, roll=None)).render(RAMP)[0, 4]
-    assert 2.0 < chroma(out) < 15.0
+    assert 1.0 < chroma(out) < 15.0

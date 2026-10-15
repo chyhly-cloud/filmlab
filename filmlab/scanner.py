@@ -12,9 +12,11 @@
                    这里用该相纸实测特性曲线的影调形状做反转 (负 → 正)。真实相纸的三层染料
                    组合起来是中性的, 所以三个通道共用一条中性曲线 (三层曲线的平均)。
      黑白胶片按冲印店的做法用灰度模式扫描, 档案为该胶片本身。
-  5. 自动校正      按整张底片的平均密度 (同 LATD) 校正亮度和颜色。为了不把日落、夜景这类
-                   主体"校死", 颜色只校正一部分 —— 校正力度因扫描仪设置与操作员而异,
-                   在一个范围内随机 (variation.py)。
+  5. 反转与校正    和真实的底片扫描仪一样, 片基 (未曝光处) 是每个通道的黑点, 中灰的平衡
+                   靠调整各通道的反差 (斜率) 完成 —— 黑点锚定, 黑始终是中性的。
+                   亮度按整张底片的平均密度 (同 LATD) 校正, 但最多 ±1 档 (不把夜景拉成白天);
+                   颜色只校正一部分, 以免把日落、夜景这类主体"校死" —— 力度因扫描仪设置与
+                   操作员而异, 在一个范围内随机 (variation.py)。
 
 ⚠ 光源峰值波长、档案选择、校正力度为估计值 (厂商未公开)。
 """
@@ -95,34 +97,47 @@ class Scanner:
         if profile is None:
             profile = e if self.mono else (e.key if e.key in SCANNER_PROFILES else self.m.default_profile)
         self.profile = profile if isinstance(profile, str) else profile.key
-        self.gain, self.offset = film_profile(profile, scanner)
+        self.gain, _ = film_profile(profile, scanner)
         self.base = measure(engine._transmittance_base(), self.m)
         self.paper = emulsion(self.m.virtual_paper)
         c = self.paper.S_nom.mean(1)
         self.curve = c - c.min()                       # 中性的数字相纸曲线
         self.strength = 0.0 if self.mono else strength
-        self.k = np.zeros(3)
+        self.K, self.s = 0.0, np.ones(3)
 
     def normalized_density(self, T):
-        """去片基 → 档案 γ 归一化 → 灰点对中。"""
-        return (measure(T, self.m) - self.base) * self.gain - self.offset
+        """去片基 (片基 = 0, 即黑点) → 按档案拉齐三通道反差。"""
+        return (measure(T, self.m) - self.base) * self.gain
 
     def to_rgb(self, Dn):
-        """归一化底片密度 → 数字相纸 → 线性 RGB。"""
+        """归一化底片密度 → 数字相纸 → 线性 RGB。片基 (Dn=0) 在三个通道映射到同一点 → 中性的黑。"""
         x = self.paper.log_exposure
-        Dp = np.interp(-Dn + self.k, x, self.curve)
+        Dp = np.interp(self.K - Dn * self.s, x, self.curve)
         out = 10.0 ** -Dp
         if self.mono:
             out = np.repeat(out.mean(-1, keepdims=True), 3, -1)
         return out
 
-    def balance(self, ref_density, mid_gray=0.18):
-        """自动校正: 让参考密度 (灰卡或整张平均) 印成中灰。亮度全校正, 颜色按 strength 部分校正。"""
+    def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.3):
+        """自动校正: 让参考密度 (灰卡或整张平均) 印成中灰。数字相纸曝光 logH = K − s·Dn:
+        K 决定亮度 (以绿通道为准), 各通道斜率 s 决定颜色平衡 (黑点 Dn=0 不受影响)。
+        nominal = None: 按灰卡定光 (亮度全校正, 颜色按 strength 部分校正)。
+        nominal = 标准灰卡的密度: 按整张平均自动校正时, 亮度相对标准只校正 ±density_limit (log10,
+                  0.3 ≈ 1 档); 颜色在标准灰卡的平衡上, 再按 strength 部分跟随整张平均。"""
         x = self.paper.log_exposure
-        need = np.interp(-np.log10(mid_gray), self.curve, x)                     # 数字相纸上中灰需要的曝光
-        k = need + ref_density                                                   # logH = −Dn + k
-        m = k[1]
-        self.k = m + self.strength * (k - m)
+        need = np.interp(-np.log10(mid_gray), self.curve, x)       # 数字相纸上中灰需要的曝光
+
+        def solve(r):
+            r = np.maximum(np.asarray(r, float), 0.05)
+            return need + r[1], r[1] / r                           # 让 r 在三通道都印成中灰
+        if nominal is None:
+            self.K, s_full = solve(ref_density)
+            self.s = 1.0 + self.strength * (s_full - 1.0)
+            return
+        K0, s0 = solve(nominal)
+        Kf, sf = solve(ref_density)
+        self.K = K0 + float(np.clip(Kf - K0, -density_limit, density_limit))
+        self.s = s0 + self.strength * (sf - s0)
 
     def render(self, T):
         """底片光谱透射率 → 线性 sRGB。"""

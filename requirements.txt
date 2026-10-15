@@ -4,3 +4,5 @@ rawpy
 colour-science
 pillow
 exifread
+scikit-image
+PyWavelets
