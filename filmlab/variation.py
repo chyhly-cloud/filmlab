@@ -39,7 +39,7 @@ class Variation:
     back_reflect: float = 1.0              # 由材料决定 (remjet / 防光晕层), 不随机
     # ---- 扫描
     scan_strength: float = 0.75            # 扫描仪自动颜色校正的力度 (设置 / 操作员习惯)
-    scan_stretch: float = 1.25             # 扫描仪自动色阶最多把反差拉伸多少倍 (估计范围)
+    scan_stretch: float = 1.0              # 扫描仪按反差拉伸 (未找到出处, 不使用; 影调范围由逐张黑白点完成)
     levels_strength: float = 0.8           # 扫描仪按每张高光 / 暗部侧设置黑白点的力度 (估计)
     latd_limit: float = 0.30               # 按 LATD 自动校正亮度的最大范围 (底片密度; 估计, 用真实扫描校验)
 
@@ -71,7 +71,7 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
         frame_seed=int(np.random.default_rng([roll_seed, 3, frame]).integers(1 << 31)),
         agitation_density=float(lab.uniform(0.004, 0.012)),
         scan_strength=float(lab.uniform(0.85, 1.0)),
-        scan_stretch=float(lab.uniform(1.0, 1.25)),
-        latd_limit=float(lab.uniform(0.45, 0.6)),
+        scan_stretch=1.0,
+        latd_limit=float(lab.uniform(0.25, 0.35)),
         levels_strength=float(lab.uniform(0.6, 1.0)),
     )

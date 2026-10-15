@@ -47,6 +47,17 @@ def _exif(path):
     return {}
 
 
+def exif_exposure(path):
+    """(曝光时间 s, 光圈 N, ISO); 读不到返回 None。"""
+    try:
+        tags = _exif(path)
+        val = lambda k: float(Fraction(str(tags[k].values[0])))
+        k = "EXIF ISOSpeedRatings" if "EXIF ISOSpeedRatings" in tags else "EXIF PhotographicSensitivity"
+        return val("EXIF ExposureTime"), val("EXIF FNumber"), val(k)
+    except Exception:
+        return None
+
+
 def clip_luminance(path):
     """由 EXIF 曝光参数估计传感器截断点对应的场景亮度 (cd/m²)。
     ISO 12232 饱和感光度: S_sat = 78 / H_sat; 焦平面照度 H = q·L·t / N² (q ≈ 0.65, 镜头透过率等)
@@ -275,6 +286,43 @@ def film_exposure(rgb, path=None, gray=0.184):
     load_raw 输出中 1.0 ≈ 截断, 于是把 0.128 对应到胶片的中灰 0.184。
     (若改用"相同快门和光圈", 高 ISO 夜景换到 EI 800 会欠曝好几档, 不符合胶片摄影师的实际做法。)"""
     return rgb * gray / (10.0 / 78.0)
+
+
+def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=None):
+    """胶片摄影师用胶片相机拍同一场景: 按 EI 测光, 但受相机的物理极限约束。
+
+    rgb     load_raw 的输出 (1.0 = 传感器截断), l_clip: 截断点的场景亮度 (cd/m², EXIF)。
+    测光    中央重点的平均亮度 (线性光平均, 同测光表积分), 不计光源本身 (熟练的摄影师 / 评价测光
+            不会让画面里的灯把整张压暗)。反射式测光方程: N²/t = L·S/K, K = 12.5。
+    极限    手持时镜头最大光圈 N_min 与安全快门 t_max 决定能给的最大曝光; 场景比这更暗就只能欠曝,
+            欠多少由绝对亮度决定 —— 夜景比室内更容易欠曝, 这是真实的物理约束。
+            最小光圈 / 最高快门限制强光 (f/16, 1/1000)。
+            原片用了比手持更长的曝光 (t_original, EXIF) 说明用了三脚架: 胶片摄影师同样可以。
+    随机    每张的镜头与快门在常见范围内取 (rng): N_min ∈ {1.4, 1.8, 2} (夜拍 800T 常用大光圈定焦),
+            手持 t_max ∈ [1/60, 1/15] s。
+    返回    胶片曝光 (中灰 = gray, 即胶片按 EI 正确曝光时中灰卡的位置) 与说明。"""
+    rng = np.random.default_rng(0) if rng is None else rng
+    Y = np.clip(rgb @ LUMA, 0, None)
+    h, w = Y.shape
+    yy, xx = np.mgrid[0:h, 0:w]
+    wgt = np.exp(-0.5 * (((yy - h / 2) / (0.35 * h)) ** 2 + ((xx - w / 2) / (0.35 * w)) ** 2))
+    wgt = wgt * (Y < 0.9)                                   # 不计光源 / 截断的高光
+    y_meter = float((Y * wgt).sum() / max(wgt.sum(), 1e-9))
+    y_meter = max(y_meter, 1e-6)
+    scale, note = gray / y_meter, "测光"
+    if l_clip is not None:
+        L = y_meter * l_clip                                # 测光读数 (cd/m²)
+        need = L * ei / 12.5                                # 需要的 N²/t
+        n_min = float(rng.choice([1.4, 1.8, 2.0]))
+        t_max = float(np.exp(rng.uniform(np.log(1 / 60), np.log(1 / 15))))
+        if t_original is not None and t_original > t_max:     # 三脚架
+            t_max = float(t_original)
+        lo, hi = n_min ** 2 / t_max, 16.0 ** 2 * 1000.0
+        actual = float(np.clip(need, lo, hi))
+        scale *= need / actual
+        note = (f"测光 {L:.2g} cd/m², 需要 N²/t={need:.3g}, 相机 f/{n_min:g} · 1/{1 / t_max:.0f}s"
+                f" → {np.log2(need / actual):+.1f} 档")
+    return rgb * scale, note
 
 
 def auto_expose(rgb, key=0.18):

@@ -55,6 +55,9 @@ def load_stock(key: str) -> Stock:
     logS = np.asarray(D["log_sensitivity"], float)
     logS = np.where(np.isnan(logS), -10.0, logS)  # 测量范围外 = 不感光
     kind = "paper" if info["support"] == "paper" else info["type"]
+    ref = str(info.get("reference_illuminant", "D55"))
+    if ref == "T":
+        logS, ref = _rebalance_tungsten(logS), "BB3200"
     return Stock(
         key=key,
         name=info["name"],
@@ -64,10 +67,26 @@ def load_stock(key: str) -> Stock:
         base_density=_clean(D["base_density"]),
         log_exposure=np.asarray(D["log_exposure"], float),
         density_curves=np.clip(np.nan_to_num(np.asarray(D["density_curves"], float)), 0, None),
-        reference_illuminant=str(info.get("reference_illuminant", "D55")),
+        reference_illuminant=ref,
         target_print=info.get("target_print"),
         antihalation=info.get("antihalation", "strong"),
     )
+
+
+def _rebalance_tungsten(logS):
+    """灯光片的感光度平衡: Kodak 数据手册 (如 5219) 规定灯光片按 3200K 钨丝灯平衡、感光测定也用
+    3200K 曝光。spektrafilm 档案在归一化时用的参考光源 "T" 是 colour 库的 Incandescent 光谱
+    (约 2813K), 按它平衡后胶片在 2813K 下才中性, 在真正的 3200K 下偏冷。
+    这里按 3200K 黑体重新平衡: 中灰在 3200K 下三层曝光之比与原档案在 "T" 下相同。"""
+    import colour
+    from . import spectral
+    S = 10.0 ** logS
+    inc = colour.SDS_LIGHT_SOURCES["Incandescent"].copy().align(colour.SpectralShape(380, 780, 5)).values
+    bb = spectral.illuminant("BB3200")
+    r_t = (inc[:, None] * S).sum(0) / inc.sum()
+    r_b = (bb[:, None] * S).sum(0) / bb.sum()
+    k = (r_t / r_t[1]) / (r_b / r_b[1])            # 让 3200K 下的通道比 = 原来 T 下的通道比
+    return logS + np.log10(k)[None, :]
 
 
 def list_stocks():

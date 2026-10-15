@@ -67,6 +67,30 @@ def measure(T, m: ScannerModel):
 
 
 _PROFILES = {}
+_PRINTING = {}
+
+
+def printing_matrix(scanner: str, profile_key: str, paper_key: str):
+    """窄带扫描密度 → 相纸"看到"的印放密度 (3×3, 在密度域线性)。
+
+    相纸用宽带的感光度透过底片曝光: 每种染料的多余吸收会影响相纸的几层 (串扰), 这让印放的颜色
+    比窄带测量低饱和。Frontier 的目标是复现银盐相纸印放 (Fuji 2001), 所以扫描后要把窄带密度
+    换算成印放密度 (同 Cineon 的 printing density 概念)。换算按扫描仪的通用档案胶片的染料光谱
+    拟合 —— 冲印店只有一套通用的换算, 实际胶片与它不同的部分就是成像的一部分。"""
+    key = (scanner, profile_key, paper_key)
+    if key not in _PRINTING:
+        from . import spectral
+        film, paper = emulsion(profile_key).stock, emulsion(paper_key).stock
+        m = SCANNERS[scanner]
+        rng = np.random.default_rng(0)
+        d = rng.uniform(0, 2.5, (2000, 3))
+        T = 10.0 ** -(d @ film.dye_density.T + film.base_density)
+        T0 = 10.0 ** -film.base_density
+        dn = measure(T, m) - measure(T0[None, :], m)
+        S = spectral.illuminant("TH-KG3")[:, None] * 10.0 ** paper.log_sensitivity
+        dp = -np.log10((T @ S) / (T0 @ S))
+        _PRINTING[key] = np.linalg.lstsq(dn, dp, rcond=None)[0]
+    return _PRINTING[key]
 
 
 def film_profile(profile, scanner: str):
@@ -87,6 +111,8 @@ def _film_profile(profile, scanner: str):
     H = eng._expose_lin(rgb, eng.M_ref, compensation=False)
     st = eng._develop(eng._log_exposure(H))
     D = measure(eng._transmittance(st), m) - measure(10.0 ** -eng.e.stock.base_density, m)
+    D = D @ printing_matrix(scanner, eng.e.key if eng.e.design != "bw" else SCANNERS[scanner].default_profile,
+                            SCANNERS[scanner].virtual_paper)
     slope = np.polyfit(steps, D, 1)[0]                 # 每通道 dD / dlogH
     gain = slope[1] / slope                            # 拉齐到绿通道的反差
     gray = D[len(steps) // 2] * gain                   # 中灰在各通道的位置
@@ -105,6 +131,10 @@ def neutral_paper_curve(paper):
 
 
 COLOR_LIMIT = 0.6    # 自动颜色校正的最大偏移 (底片密度), 估计值
+# 高光侧 (绿通道密度 95–99%) 的目标反射率: 冲印店扫描给高光留有余量。没有公开数据,
+# 由 32 张真实 800T 夜景 / 室内扫描的亮度 95 百分位推得 (中位数 0.58–0.76)。
+HIGHLIGHT_AIM = 0.65
+CONTRAST_RANGE = (0.8, 3.0)   # 逐张反差拟合的上下限, 估计值
 SLOPE_LIMIT = 0.35   # 灰平衡 LUT 对单通道反差的最大改变 (±35%), 估计值
 
 
@@ -117,6 +147,8 @@ class Scanner:
         if profile is None:
             profile = e if self.mono else (e.key if e.key in SCANNER_PROFILES else self.m.default_profile)
         self.profile = profile if isinstance(profile, str) else profile.key
+        prof_key = profile if isinstance(profile, str) else (self.m.default_profile if self.mono else profile.key)
+        self.P = printing_matrix(scanner, prof_key, self.m.virtual_paper)
         self.gain, self.gray0 = film_profile(profile, scanner)   # 档案: 反差拉齐 + 该胶片中灰的通道平衡
         self.base = measure(engine._transmittance_base(), self.m)
         self.paper = emulsion(self.m.virtual_paper)
@@ -128,7 +160,7 @@ class Scanner:
 
     def normalized_density(self, T):
         """去片基 (片基 = 0, 即黑点) → 按档案拉齐三通道反差。"""
-        return (measure(T, self.m) - self.base) * self.gain
+        return ((measure(T, self.m) - self.base) @ self.P) * self.gain
 
     def to_rgb(self, Dn):
         """归一化底片密度 → 数字相纸 → 线性 RGB。片基 (Dn=0) 在三个通道映射到同一点 → 中性的黑。"""
@@ -186,7 +218,8 @@ class Scanner:
             layers[j] = d0
         return Dg, layers, illum, white, wxy
 
-    def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.18, color_limit=COLOR_LIMIT):
+    def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.18, color_limit=COLOR_LIMIT,
+                stretch=None):
         """自动定标。数字相纸曝光 logH_c = K_c − s·Dn_c (Dn: 去片基后、按档案拉齐反差的底片密度)。
 
         和光学印放一样, 校正只有两种: 整体反差 s (三通道相同, 反差由胶片档案决定) 与
@@ -216,7 +249,8 @@ class Scanner:
             r0 = np.asarray(nominal, float)
             g = float(np.clip(ref[1], r0[1] - density_limit, r0[1] + density_limit))
         g = max(g, 0.05)
-        stretch = float(np.clip((x_black - need) / g, 1.0, self.stretch_max))   # 让片基尽量接近纯黑
+        if stretch is None:
+            stretch = float(np.clip((x_black - need) / g, 1.0, self.stretch_max))   # 让片基尽量接近纯黑
         corr = np.clip(self.strength * ((ref - ref[1]) - c0), -color_limit / stretch, color_limit / stretch)
         self.s = np.full(3, stretch)
         self.K = need + stretch * (g + c0 + corr)                   # 绿通道: 灰点精确落在中灰
@@ -251,10 +285,17 @@ class Scanner:
         self.M = (off, r)
         Dm = off + r * Dn[ok]
         latd = -np.log10(np.mean(10.0 ** -Dm, 0))
+        # 反差: 把这张底片暗部侧到高光侧的密度范围放进相纸的再现范围 (Fuji 2001: 反差按相纸狭窄的
+        # 再现范围拟合)。相纸再现范围取曲线 3%–97% 之间的曝光范围; 反差变化有上下限 (估计)。
+        x, cv = self.paper.log_exposure, self.curve
+        x_hl = float(np.interp(-np.log10(HIGHLIGHT_AIM), cv, x))      # 高光侧落在相纸上的位置
+        span_paper = float(x[np.argmax(cv >= 0.97 * cv.max())] - x_hl)
+        span_film = max(float(hl[1] - sh[1]), 0.05)
+        stretch = float(np.clip(span_paper / span_film, CONTRAST_RANGE[0], CONTRAST_RANGE[1]))
         # 亮度与反差只由绿通道决定; 颜色已在 M 中校正, 这里不再做通道偏移
         self.gray0, saved = np.zeros(3), self.gray0
         self.balance(latd - latd_normal, mid_gray, nominal=nominal, density_limit=density_limit,
-                     color_limit=0.0)
+                     color_limit=0.0, stretch=stretch)
         self.gray0 = saved
         self.K = np.full(3, self.K[1])
 

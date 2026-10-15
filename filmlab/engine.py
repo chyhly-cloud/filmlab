@@ -347,7 +347,7 @@ class Engine:
             sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
         out = sc.to_rgb(Dn)
         if self.p.timing == "frame":
-            out = _frame_levels(out, self.v.levels_strength)
+            pass  # 影调范围由 balance_frame 的反差拟合完成 (Fuji 2001); 不再额外做线性黑白点
         return out.reshape(shape)
 
     def render_xyz(self, rgb_lin):
