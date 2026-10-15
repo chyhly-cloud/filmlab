@@ -225,7 +225,9 @@ def develop_image(e: Emulsion, logH, tau, inhib_amount, blur_px, kind="color"):
     return _curves_at(logH - first @ A, x, C)
 
 
-def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0) -> FilmState:
+def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0,
+        tau_factor: float = 1.0) -> FilmState:
+    """tau_factor: 这一次冲洗实际的显影程度偏差 (时间 / 温度 / 药液活性公差, 见 variation.py)。"""
     st = initial_state(e, logH)
     native_dev = DEVELOPERS[NATIVE_IMAGE_DEVELOPER[e.native_process]]
     for step in process.steps:
@@ -241,7 +243,7 @@ def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0) -
                 st.log.append(f"{dev.name}: 显影全部剩余卤化银")
             elif not st.latent_used:
                 tau = (minutes / dev.t_nom) * 2.0 ** ((temp - dev.temp_nom) / dev.temp_doubling) \
-                    * dev.activity / native_dev.activity
+                    * dev.activity / native_dev.activity * tau_factor
                 inhib = e.dir_amount if dev.kind == "color" or e.design != "negative" else 0.3 * e.dir_amount
                 inhib += dev.acutance
                 dS = np.minimum(develop_image(e, logH, tau, inhib, blur_px * (1 + 2 * dev.acutance), dev.kind),

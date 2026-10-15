@@ -7,14 +7,23 @@ XYZ_TO_SRGB = np.array([[3.2404542, -1.5371385, -0.4985314],
                         [0.0556434, -0.2040259, 1.0572252]])
 
 
-def load_raw(path, max_size=2400, white_balance="camera"):
+def load_raw(path, max_size=2400, white_balance="daylight"):
+    """white_balance:
+      daylight  固定日光白平衡 (默认): 保留场景真实的光色, 由胶片自己决定钨丝灯 / 日光下的表现,
+                就像胶片相机没有自动白平衡一样
+      camera    相机记录的白平衡 (场景被"拉正")
+      auto      自动白平衡"""
     with rawpy.imread(str(path)) as raw:
+        kw = dict(use_camera_wb=(white_balance == "camera"), use_auto_wb=(white_balance == "auto"))
+        if white_balance == "daylight":
+            wb = list(raw.daylight_whitebalance)
+            if not np.all(np.isfinite(wb[:3])) or min(wb[:3]) <= 0:   # 部分 DNG 没有日光系数
+                kw["use_camera_wb"] = True
+            else:
+                kw["user_wb"] = wb[:3] + [wb[1] if wb[3] <= 0 else wb[3]]
         xyz = raw.postprocess(
             gamma=(1, 1), no_auto_bright=True, output_bps=16,
-            output_color=rawpy.ColorSpace.XYZ,
-            use_camera_wb=(white_balance == "camera"),
-            use_auto_wb=(white_balance == "auto"),
-            half_size=True, user_flip=None,
+            output_color=rawpy.ColorSpace.XYZ, half_size=True, user_flip=None, **kw,
         ).astype(np.float32) / 65535.0
     step = max(1, int(round(max(xyz.shape[:2]) / max_size)))
     if step > 1:  # 盒式下采样 (线性光下平均, 物理正确)

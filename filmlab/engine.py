@@ -22,6 +22,7 @@ from scipy.optimize import least_squares
 from . import chemistry, film, spectral
 from .chemistry import PROCESSES, Process
 from .materials import Emulsion, emulsion
+from . import variation
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
@@ -34,7 +35,9 @@ class Params:
     paper: str | Emulsion | None = None        # None = 胶片推荐的相纸 / 拷贝片
     # ---- S0/S1 拍摄
     exposure_ev: float = 0.0                   # 相对于按包装感光度测光
-    scene_illuminant: str | None = None        # None = 胶片的平衡光源 (日光 D55 / 灯光 T)
+    # 输入 RGB 的参考光源。默认 D55: RAW 以固定日光白平衡读入, 场景光色已包含在 RGB 里
+    # (钨丝灯场景本身就是橙色的)。若输入已用相机白平衡"拉正", 设为 None = 胶片自己的平衡光源。
+    scene_illuminant: str | None = "D55"
     lens_filter: np.ndarray | None = None      # (81,) 镜头前滤镜光谱透射率
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
@@ -43,13 +46,19 @@ class Params:
     push: float = 0.0                          # 推 (+) / 拉 (−) 档数
     bleach: float | None = None                # 漂白效率, 0 = 漂白旁路
     # ---- S4 印放
-    auto_timing: bool = True                   # 冲印店按灰卡定光号
+    # 冲印店定光: frame = 按整张底片的平均密度 (自动冲印机 LATD 方式, 偏色基本被校正)
+    #            gray  = 按拍摄光下的灰卡
+    #            standard = 按标准光源下的灰卡, 不做逐张校正 (光源偏色会保留)
+    timing: str = "gray"
     printer_points: tuple = (0.0, 0.0, 0.0)    # 在自动光号上手动加减 (R G B, +号 = 该层多曝光)
     print_filter: tuple = (0.0, 0.0, 0.0)      # Durst 分色滤镜 C M Y
     mid_gray: float = 0.18
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
-    seed: int = 0
+    # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
+    roll: int | None = 0
+    lab: int | None = None
+    frame: int = 0
 
 
 def _resolve(x, default=None):
@@ -91,8 +100,11 @@ class Engine:
         self.proc = _process(e, p)
         st = e.stock
         ref = st.reference_illuminant
-        self.M_ref = film.exposure_matrix(st, ref, p.lens_filter)
-        self.M = film.exposure_matrix(st, p.scene_illuminant or ref, p.lens_filter)
+        self.v = variation.sample(p.roll, p.frame, p.lab)
+        self.M_ref = film.exposure_response(st, ref, p.lens_filter)
+        self.M = film.exposure_response(st, p.scene_illuminant or ref, p.lens_filter)
+        self.halo = film.halation_response(st, p.scene_illuminant or ref, p.lens_filter, self.v, e.halation) \
+            if e.halation > 0 and p.exposure_hook is None else None
         g = self._expose_lin(np.full((1, 1, 3), GRAY), self.M_ref, compensation=False)[0, 0]
         self.log_k = _speed_point(e) - np.log10(g[1])        # 测光 (透过滤镜, 含滤镜因数)
         self.layer_cal = np.zeros(3)
@@ -137,7 +149,7 @@ class Engine:
 
     # ---- S2/S3 ----
     def _develop(self, logH, blur_px=0.0):
-        return chemistry.run(self.e, self.proc, logH, blur_px)
+        return chemistry.run(self.e, self.proc, logH, blur_px, tau_factor=self.v.tau_factor)
 
     def _transmittance(self, st):
         e = self.e
@@ -187,22 +199,24 @@ class Engine:
             out[sl] = self._view(sub)
         return out.reshape(shape)
 
-    def _gray_state(self, actual_light=False):
-        """标准灰卡。actual_light=True: 用实际拍摄光源 (冲印店看到的是这张底片的真实样子)。"""
-        H = self._expose_lin(np.full((1, 3), GRAY), self.M if actual_light else self.M_ref)
+    def _gray_state(self, actual_light=False, rgb=None):
+        """灰卡 (或任意 rgb) 的冲洗结果。actual_light=True: 用实际拍摄光源。"""
+        rgb = np.full((1, 3), GRAY) if rgb is None else np.asarray(rgb, float).reshape(1, 3)
+        H = self._expose_lin(rgb, self.M if actual_light else self.M_ref)
         return self._develop(self._log_exposure(H))
 
-    def _timing(self):
-        """冲印店定光号: 调整三层印放曝光, 让中灰印成中性 18% 灰。"""
+    def _timing(self, target_rgb=None):
+        """冲印店定光号: 调整三层印放曝光, 让目标 (灰卡或整张底片的平均) 印成中性 18% 灰。"""
         import colour
-        st = self._gray_state(actual_light=True)
+        if self.p.timing == "standard":
+            st = self._gray_state(actual_light=False)
+        else:
+            st = self._gray_state(actual_light=True, rgb=target_rgb)
         self._view(st)
         pc = self.paper.S_nom
         k0 = np.array([self.paper.log_exposure[np.argmax(pc[:, c] > 0.8)] for c in range(3)])
         k0 -= np.log10(self._last_Hp)
         self.print_k = k0
-        if not self.p.auto_timing:
-            return
 
         def resid(v):
             self.print_k = np.asarray(v)
@@ -217,10 +231,18 @@ class Engine:
         p, e = self.p, self.e
         h, w = rgb_lin.shape[:2]
         self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
+        if self.paper is not None and p.timing == "frame":
+            # 自动冲印机测整张底片的平均密度 (LATD), 以此定光
+            lin = np.clip(rgb_lin.reshape(-1, 3), 1e-4, None)
+            avg = np.exp(np.log(lin).mean(0))
+            avg *= GRAY / (avg @ np.array([0.2126, 0.7152, 0.0722]))
+            self._timing(avg / 2.0 ** p.exposure_ev)
         H = self._expose_lin(rgb_lin, self.M)
         H = film.emulsion_scatter(H, self.px_um)
-        H = film.halation(H, e.halation, self.px_um)
+        if self.halo is not None:
+            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v)
         st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
+        self._agitation(st)
         self._grain(st)
         self.state = st
         return self.view_xyz(st)
@@ -240,7 +262,7 @@ class Engine:
             * (1.4 if e.design == "bw" else 1.0) * st.grain_factor * self.p.grain
         sigma = rms48 * 48.0 / self.px_um
         blur = (1.0 + iso / 100.0) / self.px_um
-        rng = np.random.default_rng(self.p.seed)
+        rng = np.random.default_rng(self.v.frame_seed)
         from scipy.ndimage import gaussian_filter
         tgt = st.dye if e.has_couplers and np.any(st.dye > 0) else st.silver
         for c in range(3):
@@ -252,11 +274,28 @@ class Engine:
             sat = np.clip(1 - d / (e.halide_cap[c] * 1.05), 0.05, 1)
             tgt[..., c] = np.clip(tgt[..., c] + n * sigma * np.sqrt(d * sat), 0, None)
 
+    def _agitation(self, st):
+        """冲洗时搅拌不均: 显影液在片面上的补充不完全均匀 → 低频 (毫米级) 的密度起伏。"""
+        a = self.v.agitation_density
+        if a <= 0 or st.dye.ndim < 3 or min(st.dye.shape[:2]) < 32:
+            return
+        from scipy.ndimage import gaussian_filter
+        rng = np.random.default_rng(self.v.frame_seed + 7)
+        n = gaussian_filter(rng.standard_normal(st.dye.shape[:2]), 4000.0 / self.px_um)
+        n = n / (n.std() + 1e-12) * a
+        tgt = st.dye if np.any(st.dye > 0) else st.silver
+        tgt *= (1.0 + n)[..., None]
+
     def describe(self):
         """把整条物理链条写出来 (含冲洗日志与印放光号)。"""
         st = self._gray_state()
         lines = [f"胶片: {self.e.name}  ({self.e.design}, 原生工艺 {self.e.native_process})",
                  f"冲洗: {self.proc.name}"] + [f"  · {l}" for l in st.log]
+        v = self.v
+        if self.p.roll is not None:
+            lines.append(f"第 {self.p.roll} 卷 / 第 {self.p.frame} 张: 片基 {v.base_um:.0f}µm, "
+                         f"冲洗偏差 τ×{v.tau_factor:.3f} (时间 {v.dev_time_factor:.3f}, 温度 {v.dev_temp_offset:+.2f}°C, "
+                         f"药液 {v.activity_factor:.3f})")
         lines.append(f"成像: {'负像' if self.polarity == 'negative' else '正像'}")
         if self.paper is not None:
             try:
@@ -307,10 +346,11 @@ def _calibrate_reversal(eng):
 def _material_calibration(key: str):
     """反转片材料校准: 标准 E-6、参考光源下, 求三层的曝光偏移让中灰中性 (只做一次)。"""
     eng = Engine.__new__(Engine)
-    eng.p = Params(film=emulsion(key), grain=0)
+    eng.p = Params(film=emulsion(key), grain=0, roll=None)
     eng.e = e = emulsion(key)
     eng.proc = PROCESSES[e.native_process]
-    eng.M_ref = eng.M = film.exposure_matrix(e.stock, e.stock.reference_illuminant)
+    eng.v = variation.NOMINAL
+    eng.M_ref = eng.M = film.exposure_response(e.stock, e.stock.reference_illuminant)
     g = film.expose(np.full((1, 3), GRAY), eng.M_ref)[0]
     eng.log_k = _speed_point(e) - np.log10(g[1])
     eng.paper = None
@@ -322,5 +362,5 @@ def _material_calibration(key: str):
 @lru_cache(maxsize=None)
 def _reference_timing(film_key: str, paper_key: str):
     paper = _bw_paper() if paper_key == "bw_paper" else paper_key
-    eng = Engine(Params(film=film_key, paper=paper, grain=0))
+    eng = Engine(Params(film=film_key, paper=paper, grain=0, roll=None))
     return eng.print_k.copy() if eng.paper is not None else None

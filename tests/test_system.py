@@ -80,7 +80,7 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 
 
 # ------------------------------------------------------------- 系统 --
-@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "tungsten"))])
+@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))])
 def test_mid_gray_neutral(name):
     """负片靠冲印店定光号, 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""
@@ -124,3 +124,62 @@ def test_status_m_sees_unwanted_absorption():
     """密度计读数应高于分析密度 (真实染料的多余吸收)。"""
     _, an, integ, _ = step_wedge(Params(film="kodak_portra_400", grain=0))
     assert np.all(integ[-5:, 1] > an[-5:, 1])
+
+
+def test_tungsten_film_daylight_vs_tungsten_light():
+    """灯光片 (500T): 日光下拍、冲印店不逐张校正 → 偏蓝; 钨丝灯下拍 → 接近中性。
+    输入为日光白平衡的 RGB, 钨丝灯照明的灰卡在其中本身就是橙色的 (2856K 黑体相对 D55)。"""
+    import colour
+    def gray_out(rgb):
+        eng = Engine(Params(film="kodak_vision3_500t", grain=0, timing="standard"))
+        return eng.render(np.asarray(rgb, float).reshape(1, 1, 3))[0, 0]
+    xyz_a = colour.sd_to_XYZ(colour.SDS_ILLUMINANTS["A"]); xyz_d = colour.sd_to_XYZ(colour.SDS_ILLUMINANTS["D55"])
+    M = colour.models.RGB_COLOURSPACE_sRGB.matrix_XYZ_to_RGB
+    tung = (M @ xyz_a) / (M @ xyz_d)
+    tung = 0.184 * tung / (tung @ np.array([0.2126, 0.7152, 0.0722]))
+    day, tun = gray_out([0.184] * 3), gray_out(tung)
+    assert day[2] > day[0] * 1.15          # 日光: 偏蓝
+    assert chroma(tun) < chroma(day)       # 钨丝灯: 更接近中性
+
+
+# ------------------------------------------------------ 光晕 / 随机性 --
+def test_halation_ring_radius_from_base_optics():
+    """光晕核的峰值半径应等于片基全反射的几何位置 2·t·tan(θc)。"""
+    from filmlab.film import halation_kernel
+    px = 10.0
+    for t in (120.0, 140.0):
+        k = halation_kernel(px, base_um=t)
+        n = k.shape[0] // 2
+        r_peak = np.argmax(k[n, n:]) * px
+        expect = 2 * t * np.tan(np.arcsin(1 / 1.5))
+        assert abs(r_peak - expect) < 2.5 * px
+
+
+def test_halation_light_is_red_from_emulsion_stack():
+    """到达片基并返回的光主要被红感层吸收 —— 来自乳剂叠层的光谱计算, 不是设定值。"""
+    from filmlab import film, variation
+    st = emulsion("kodak_vision3_500t").stock
+    f = film.halation_response(st, "D55", None, variation.NOMINAL, 1.0)
+    r, g, b = f(np.array([[1.0, 1.0, 1.0]]))[0]
+    assert r > 3 * g and g > b
+
+
+def test_remjet_blocks_halation():
+    img = np.full((120, 120, 3), 0.01)
+    img[55:65, 55:65] = 200.0
+    a = Engine(Params(film="kodak_vision3_500t", process="ECN-2", grain=0, frame_width_mm=4, timing="standard")).render(img)
+    b = Engine(Params(**{**recipe("cinestill_800t"), "grain": 0, "frame_width_mm": 4, "timing": "standard"})).render(img)
+    ring = (slice(60, 61), slice(68, 72))
+    assert b[ring][..., 0].mean() > 3 * a[ring][..., 0].mean()
+
+
+def test_roll_variation_within_process_tolerance():
+    """不同胶卷 / 冲洗的差异应在冲洗厂控制条的允许范围内 (中灰 ±0.1 档量级), 且可复现。"""
+    from filmlab import variation
+    ys = []
+    for roll in range(8):
+        out = Engine(Params(film="fujifilm_provia_100f", grain=0, roll=roll)).render(np.full((1, 1, 3), 0.184))
+        ys.append(out[0, 0, 1])
+    stops = np.log2(np.array(ys) / np.mean(ys))
+    assert 0.005 < stops.std() < 0.15
+    assert variation.sample(3) == variation.sample(3)

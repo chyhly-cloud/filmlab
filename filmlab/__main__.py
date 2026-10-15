@@ -27,7 +27,9 @@ def main():
     ap.add_argument("--illuminant", help="拍摄现场光源, 例: D55 / D65 / T / BB2800")
     ap.add_argument("--format", type=float, default=36.0, help="底片宽度 mm (35mm=36, 6x7=70)")
     ap.add_argument("--grain", type=float, help="颗粒倍数")
-    ap.add_argument("--wb", default="camera", choices=["camera", "auto", "none"])
+    ap.add_argument("--wb", default="daylight", choices=["daylight", "camera", "auto"],
+                    help="RAW 白平衡: daylight 保留场景光色 (推荐, 像胶片一样); camera 用相机白平衡")
+    ap.add_argument("--timing", choices=["frame", "gray", "standard"], help="冲印店定光方式")
     ap.add_argument("--list", action="store_true")
     a = ap.parse_args()
 
@@ -41,11 +43,13 @@ def main():
     kw = recipe(a.recipe)
     kw["exposure_ev"] = kw.get("exposure_ev", 0.0) + a.ev
     kw.update(printer_points=tuple(a.points), frame_width_mm=a.format)
+    if a.wb != "daylight" and "scene_illuminant" not in kw and a.illuminant is None:
+        kw["scene_illuminant"] = None      # 输入已被白平衡"拉正" → 按胶片自己的平衡光源
     if a.push is not None:
         kw["push"] = a.push
         kw["exposure_ev"] -= a.push
     for k, v in [("paper", a.paper), ("scene_illuminant", a.illuminant), ("process", a.process),
-                 ("bleach", a.bleach), ("grain", a.grain)]:
+                 ("bleach", a.bleach), ("grain", a.grain), ("timing", a.timing)]:
         if v is not None:
             kw[k] = v
 

@@ -58,6 +58,59 @@ def rgb_basis() -> np.ndarray:
     return _sd(colour.recovery.MSDS_BASIS_FUNCTIONS_sRGB_MALLETT2019)
 
 
+# ------------------------------------------------- S0 光谱重建 --
+_SRGB_TO_XYZ = np.array([[0.4124564, 0.3575761, 0.1804375],
+                         [0.2126729, 0.7151522, 0.0721750],
+                         [0.0193339, 0.1191920, 0.9503041]])
+
+
+@lru_cache(maxsize=None)
+def upsampling_table():
+    """Jakob-Hanika 2019 色度 → 光谱表 (tools/build_upsampling.py 生成)。不存在时返回 None。"""
+    path = FILTER_DIR.parent / "upsampling_xy64.npz"
+    if not path.exists():
+        return None
+    d = np.load(path)
+    return d["x"], d["y"], d["spectra"].astype(np.float64)
+
+
+def spectral_response(weights: np.ndarray):
+    """返回函数: 场景线性 RGB → Σ_λ 光谱(λ) · weights(λ, k)。
+
+    weights 已包含光源、滤镜和接收者 (乳剂感光度等)。
+    有重建表时: 由像素色度查出一条物理上可实现的平滑光谱 (色域外的颜色也正确),
+    再按亮度 Y 缩放, 曝光对亮度是线性的;
+    没有时: 退回 Mallett-Yuksel 基光谱 (线性, 只在 sRGB 色域内准确)。"""
+    tab = upsampling_table()
+    if tab is None:
+        M = rgb_basis().T @ weights
+        return lambda rgb: rgb @ M
+    xs, ys, spectra = tab
+    G = spectra @ weights                      # (64, 64, k): 每个色度单位亮度的响应
+    from scipy.ndimage import map_coordinates
+    white = spectral_white_xy()
+
+    def f(rgb):
+        rgb = np.asarray(rgb, float)
+        xyz = rgb @ _SRGB_TO_XYZ.T
+        Y = np.clip(xyz[..., 1], 0, None)
+        ssum = xyz.sum(-1)
+        ok = ssum > 1e-9
+        x = np.where(ok, xyz[..., 0] / np.where(ok, ssum, 1), white[0])
+        y = np.where(ok, xyz[..., 1] / np.where(ok, ssum, 1), white[1])
+        ci = np.clip(x / xs[-1] * (len(xs) - 1), 0, len(xs) - 1)
+        cj = np.clip(y / ys[-1] * (len(ys) - 1), 0, len(ys) - 1)
+        out = np.stack([map_coordinates(G[..., k], [ci.ravel(), cj.ravel()], order=1, mode="nearest")
+                        for k in range(G.shape[-1])], -1).reshape(rgb.shape[:-1] + (G.shape[-1],))
+        return out * Y[..., None]
+    return f
+
+
+def spectral_white_xy():
+    w = _SRGB_TO_XYZ.sum(1)
+    return w[0] / w.sum(), w[1] / w.sum()
+
+
 @lru_cache(maxsize=None)
 def dichroic_filters() -> np.ndarray:
     """放大机分色滤镜 (Durst) 的透射率, (81, 3) 列为 C M Y。"""
