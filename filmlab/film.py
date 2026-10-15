@@ -115,15 +115,36 @@ def halation_response(stock: Stock, scene_illuminant: str, scene_filter, v, back
     return spectral.spectral_response(w)
 
 
-def halation(H, halo_source, px_um, v):
-    """把每层的光晕源按片基光学核在空间上铺开, 加到曝光量上。"""
+def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4):
+    """多次反射: 光回到乳剂后, 在乳剂正面 (乳剂/空气, 同样 >42° 全反射) 再被反射回片基,
+    每多一次往返横向再偏移 2·t·tanθ, 形成 2 倍、3 倍半径的外环。
+    rho = 每多一次往返保留的比例 ≈ (该波段穿透整个乳剂的透射率)², 所以外环越来越红。"""
+    k1 = halation_kernel(px_um, base_um=base_um, forward=forward,
+                         r_max_um=1500.0 * bounces)
+    total = k1.copy()
+    for n in range(2, bounces + 1):
+        kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces)
+        total += rho ** (n - 1) * kn
+    return total
+
+
+def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0)):
+    """把每层的光晕源按片基光学核 (含多次反射) 在空间上铺开, 加到曝光量上。"""
     from scipy.signal import fftconvolve
-    k = halation_kernel(px_um, base_um=v.base_um, forward=v.forward)
     out = H.copy()
     for c in range(3):
         if halo_source[..., c].max() > 0:
+            k = multi_bounce_kernel(px_um, v.base_um, v.forward, rho[c]) if rho[c] > 0.01 \
+                else halation_kernel(px_um, base_um=v.base_um, forward=v.forward)
             out[..., c] += fftconvolve(halo_source[..., c], k, mode="same")
     return out
+
+
+def bounce_retention(stock: Stock, v):
+    """每层波段内, 光再往返一次穿透整个乳剂后保留的比例 (多次反射用)。"""
+    T_down, _, _ = emulsion_stack(stock, v.layer_absorbance, v.yellow_filter)
+    S = 10.0 ** stock.log_sensitivity
+    return tuple(float((T_down ** 2 * S[:, c]).sum() / S[:, c].sum()) for c in range(3))
 
 
 def emulsion_scatter(H, px_um, sigma_um=4.0):

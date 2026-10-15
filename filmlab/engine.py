@@ -222,7 +222,15 @@ class Engine:
         """灰卡 (或任意 rgb) 的冲洗结果。actual_light=True: 用实际拍摄光源。"""
         rgb = np.full((1, 3), GRAY) if rgb is None else np.asarray(rgb, float).reshape(1, 3)
         H = self._expose_lin(rgb, self.M if actual_light else self.M_ref)
+        if getattr(self, "halo", None) is not None:
+            # 大面积均匀区域也会接收到自身的光晕 (整个光环的能量), 冲印店看到的底片包含这部分
+            H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
         return self._develop(self._log_exposure(H))
+
+    def _halo_total(self):
+        if not hasattr(self, "_halo_total_cache"):
+            self._halo_total_cache = film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward).sum()
+        return self._halo_total_cache
 
     def _timing(self, target_rgb=None):
         """冲印店定光号: 调整三层印放曝光, 让目标 (灰卡或整张底片的平均) 印成中性 18% 灰。"""
@@ -254,7 +262,8 @@ class Engine:
         H = self._expose_lin(rgb_lin, self.M)
         H = film.emulsion_scatter(H, self.px_um)
         if self.halo is not None:
-            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v)
+            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v,
+                              film.bounce_retention(e.stock, self.v))
         st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
         self._agitation(st)
         self._grain(st)

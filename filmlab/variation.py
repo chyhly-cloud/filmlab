@@ -23,7 +23,7 @@ import numpy as np
 class Variation:
     # ---- 胶卷 (制造)
     base_um: float = 130.0                 # 片基厚度 (µm), 决定光晕环的半径
-    layer_absorbance: tuple = (0.55, 0.55, 0.55)   # R G B 感光层对其敏感光的吸收密度
+    layer_absorbance: tuple = (0.15, 0.15, 0.15)   # R G B 感光层对其敏感光的吸收密度 (单层只吸收约 20–40%)
     yellow_filter: float = 1.5             # 黄滤光层在蓝光波段的密度
     diffuse_fraction: float = 0.6          # 穿过乳剂后被散射为漫射光的比例
     forward: float = 1.5                   # 漫射光的前向程度 (cos^m)
@@ -54,7 +54,7 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
     lab = np.random.default_rng([roll_seed if lab_seed is None else lab_seed, 2])
     return Variation(
         base_um=float(r.normal(130.0, 4.0)),
-        layer_absorbance=tuple(float(v) for v in r.uniform(0.4, 0.75, 3)),
+        layer_absorbance=tuple(float(v) for v in r.uniform(0.08, 0.25, 3)),
         yellow_filter=float(r.uniform(1.1, 1.9)),
         diffuse_fraction=float(r.uniform(0.45, 0.75)),
         forward=float(r.uniform(1.0, 2.5)),
