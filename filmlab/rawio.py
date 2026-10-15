@@ -76,26 +76,34 @@ def clip_luminance(path):
 
 
 # ------------------------------------------------------------ 降噪 --
-def estimate_noise(img, block=8):
+def estimate_noise(img, bins=16):
     """估计数码传感器噪声模型 方差 = a·信号 + b (a: 光子散粒噪声, b: 读出噪声), 每通道。
-    在平坦小块里统计均值与方差, 取每个亮度区间方差的低分位数 (平坦区域) 做线性拟合。"""
-    h, w = (img.shape[0] // block) * block, (img.shape[1] // block) * block
-    blocks = img[:h, :w].reshape(h // block, block, w // block, block, -1)
-    m = blocks.mean((1, 3)).reshape(-1, img.shape[-1])
-    v = blocks.var((1, 3), ddof=1).reshape(-1, img.shape[-1])
+    用最细尺度的对角 Haar 小波系数 HH = (x00 − x01 − x10 + x11)/2 —— 独立噪声下 var(HH) = var(x),
+    而边缘、纹理几乎不产生对角高频, 所以不会被当成噪声 (Donoho: σ = median|HH| / 0.6745)。
+    按 2×2 块的平均亮度分组, 每组用稳健的 MAD 估计方差, 再做非负线性拟合。"""
+    h, w = (img.shape[0] // 2) * 2, (img.shape[1] // 2) * 2
+    x = img[:h, :w]
+    x00, x01, x10, x11 = x[0::2, 0::2], x[0::2, 1::2], x[1::2, 0::2], x[1::2, 1::2]
+    hh = (x00 - x01 - x10 + x11) / 2.0
+    m = (x00 + x01 + x10 + x11) / 4.0
     params = []
     for c in range(img.shape[-1]):
-        mc, vc = m[:, c], v[:, c]
+        mc, hc = m[..., c].ravel(), hh[..., c].ravel()
         ok = (mc > 0) & (mc < np.percentile(mc, 99))
-        edges = np.quantile(mc[ok], np.linspace(0, 1, 21))
+        edges = np.quantile(mc[ok], np.linspace(0, 1, bins + 1))
         xs, ys = [], []
         for lo, hi in zip(edges[:-1], edges[1:]):
             sel = ok & (mc >= lo) & (mc < hi)
-            if sel.sum() > 20:
+            if sel.sum() > 200:
                 xs.append(mc[sel].mean())
-                ys.append(np.percentile(vc[sel], 10))
-        a, b = np.polyfit(xs, ys, 1) if len(xs) >= 3 else (0.0, np.percentile(vc, 10))
-        params.append((max(a, 1e-9), max(b, 1e-12)))
+                ys.append((np.median(np.abs(hc[sel])) / 0.6745) ** 2)
+        if len(xs) >= 3:
+            from scipy.optimize import nnls
+            A = np.column_stack([xs, np.ones(len(xs))])
+            a_, b_ = nnls(A / np.array(ys)[:, None] ** 0.5, np.array(ys) ** 0.5)[0]   # 相对误差加权
+        else:
+            a_, b_ = 0.0, float(np.median(ys)) if ys else 1e-8
+        params.append((max(a_, 1e-9), max(b_, 1e-12)))
     return np.array(params)
 
 
