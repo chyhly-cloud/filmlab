@@ -40,6 +40,8 @@ class Variation:
     # ---- 扫描
     scan_strength: float = 0.75            # 扫描仪自动颜色校正的力度 (设置 / 操作员习惯)
     scan_stretch: float = 1.25             # 扫描仪自动色阶最多把反差拉伸多少倍 (估计范围)
+    levels_strength: float = 0.8           # 扫描仪按每张高光 / 暗部侧设置黑白点的力度 (估计)
+    latd_limit: float = 0.30               # 按 LATD 自动校正亮度的最大范围 (底片密度; 估计, 用真实扫描校验)
 
     @property
     def tau_factor(self):
@@ -68,6 +70,8 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
         activity_factor=float(lab.normal(1.0, 0.025)),       # 补充液状态
         frame_seed=int(np.random.default_rng([roll_seed, 3, frame]).integers(1 << 31)),
         agitation_density=float(lab.uniform(0.004, 0.012)),
-        scan_strength=float(lab.uniform(0.6, 0.9)),
-        scan_stretch=float(lab.uniform(1.1, 1.4)),
+        scan_strength=float(lab.uniform(0.85, 1.0)),
+        scan_stretch=float(lab.uniform(1.0, 1.25)),
+        latd_limit=float(lab.uniform(0.45, 0.6)),
+        levels_strength=float(lab.uniform(0.6, 1.0)),
     )

@@ -27,6 +27,8 @@ from . import variation
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
+# 正常曝光的日光场景, LATD 比灰卡密度低多少 (Portra 400, 10 张正常曝光 RAW 的中位数, 范围 0.06–0.21)
+LATD_NORMAL = -0.127
 
 
 @dataclass
@@ -335,12 +337,18 @@ class Engine:
                                       dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet,
                                       dye_agent=st.dye_agent)
             Dn[sl] = sc.normalized_density(self._transmittance(sub))
-        if self.p.timing == "frame":           # 按整张底片的平均密度自动校正 (亮度校正有上限)
+        if self.p.timing == "frame":           # 按整张底片的 LATD 自动校正 (亮度校正有上限)
             # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。
             # 冲印店不知道场景用的什么光; RAW 的日光白平衡与此无关。
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
-            sc.balance(np.nanmean(Dn, 0), self.p.mid_gray, nominal=gray)
-        return sc.to_rgb(Dn).reshape(shape)
+            # LATD (大面积透射密度): 整张底片平均透射光的密度 —— 印放机 / 扫描仪测的是透过来的光,
+            # 薄 (暗部) 的区域透光多, 权重大。夜景底片大部分接近片基, LATD 很低 → 冲印店大幅提亮。
+            # 印放机按"正常场景的 LATD 印成正常"标定, 正常场景的 LATD 比灰卡低 LATD_NORMAL。
+            sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
+        out = sc.to_rgb(Dn)
+        if self.p.timing == "frame":
+            out = _frame_levels(out, self.v.levels_strength)
+        return out.reshape(shape)
 
     def render_xyz(self, rgb_lin):
         p, e = self.p, self.e
@@ -476,6 +484,25 @@ def _material_calibration(key: str):
     eng.view_illum = spectral.illuminant("D50")
     eng.white_xy = spectral.white_xy(eng.view_illum)
     return _solve_neutral(eng)
+
+
+def _frame_levels(rgb, strength, black_pct=0.5, white_pct=99.5, white_min=0.6,
+                  black_out=0.003, white_out=0.92):
+    """扫描仪的自动设置把每张的暗部侧与高光侧放进输出范围 (Fuji: 高光与暗部的灰阶做非线性处理,
+    把整张的影调范围放进相纸的再现范围)。在线性光里做黑点 / 白点 (同色阶), 三通道相同:
+    加深黑、提亮偏暗的高光, 而不像提高反差那样同时放大饱和度与噪声。
+    暗部侧 (最暗 black_pct%) → black_out; 高光侧 (white_pct%, 不低于 white_min, 免得把很暗的
+    底片拉成白天) → white_out。冲印店扫描的黑不是 0、高光侧也留有余量不截断 (真实 800T 扫描:
+    最暗 1% 的 8 位码值中位数约 10, 很少有大面积截断的白)。力度 strength 在范围内随机。"""
+    Y = rgb @ np.array([0.2126, 0.7152, 0.0722])
+    ok = np.isfinite(Y)
+    b, w = np.percentile(Y[ok], [black_pct, white_pct])
+    w = min(max(w, white_min), 1.0)
+    b0 = (1 - strength) * black_out + strength * max(b, 0.0)    # 输入中被映射到 black_out 的亮度
+    lo = b0 + (black_out - b0)                                   # = black_out (仅为可读)
+    hi = (1 - strength) * white_out + strength * white_out      # 高光侧的目标
+    w0 = (1 - strength) * hi + strength * w                      # 输入中被映射到 hi 的亮度
+    return lo + (rgb - b0) * (hi - lo) / max(w0 - b0, 1e-3)
 
 
 @lru_cache(maxsize=None)

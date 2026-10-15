@@ -104,7 +104,8 @@ def neutral_paper_curve(paper):
     return c - c.min()
 
 
-COLOR_LIMIT = 0.45   # 自动颜色校正的最大偏移 (logH, ≈18 个印放光号), 估计值
+COLOR_LIMIT = 0.6    # 自动颜色校正的最大偏移 (底片密度), 估计值
+SLOPE_LIMIT = 0.35   # 灰平衡 LUT 对单通道反差的最大改变 (±35%), 估计值
 
 
 class Scanner:
@@ -120,9 +121,10 @@ class Scanner:
         self.base = measure(engine._transmittance_base(), self.m)
         self.paper = emulsion(self.m.virtual_paper)
         self.curve = neutral_paper_curve(self.paper)   # 中性的数字相纸曲线
+        self._print_lut = None
         self.strength = 0.0 if self.mono else strength
         self.stretch_max = stretch_max
-        self.K, self.s = np.zeros(3), np.ones(3)
+        self.K, self.s, self.M = np.zeros(3), np.ones(3), None
 
     def normalized_density(self, T):
         """去片基 (片基 = 0, 即黑点) → 按档案拉齐三通道反差。"""
@@ -131,15 +133,58 @@ class Scanner:
     def to_rgb(self, Dn):
         """归一化底片密度 → 数字相纸 → 线性 RGB。片基 (Dn=0) 在三个通道映射到同一点 → 中性的黑。"""
         x = self.paper.log_exposure
+        if self.M is not None:              # 逐张的两点灰平衡 (每通道线性映射)
+            Dn = self.M[0] + self.M[1] * Dn
         Dp = np.interp(self.K - Dn * self.s, x, self.curve)
-        # 输出的是数字文件, 不是放在房间里看的相纸: 相纸的最大密度 (表面反射限制的黑) 写成文件的黑,
-        # 白写成白 (相对介质的渲染 + 黑点补偿, 与冲印店扫描仪输出一致)。片基没有拉伸到相纸最大
-        # 密度时 (薄底片、拉伸受限), 黑仍然发灰 —— 那是底片本身的信息。
         k = 10.0 ** -self.curve.max()
-        out = (10.0 ** -Dp - k) / (1.0 - k)
         if self.mono:
-            out = np.repeat(out.mean(-1, keepdims=True), 3, -1)
-        return out
+            out = (10.0 ** -Dp - k) / (1.0 - k)
+            return np.repeat(out.mean(-1, keepdims=True), 3, -1)
+        return self._reference_print(Dp, k)
+
+    def _reference_print(self, Dp, k, chunk=1 << 16):
+        """数字相纸的颜色: 按真实相纸染料光谱计算的参考印放 (Fuji: Frontier 的目标是复现银盐相纸印放)。
+        相纸的三种染料都不纯 (青染料也吸收一些绿光, 品红吸收一些蓝光 …), 这种串扰让印放的颜色
+        比"三通道各自独立"低饱和 —— 不能把三个通道直接当作 RGB 输出。
+        每个通道驱动相纸的一层: 先求出中性灰阶上各层的染料量 (扫描仪的中性标定), 通道密度 Dp_c
+        按这一关系换算为第 c 层的染料量, 再由染料光谱、D50 观看光源算出颜色。
+        输出是数字文件: 相纸白 = 白, 相纸最大密度 (k) = 黑 (相对介质渲染 + 黑点补偿)。"""
+        from . import spectral
+        if self._print_lut is None:
+            self._print_lut = self._neutral_layers()
+        Dg, layers, illum, white, wxy = self._print_lut
+        shape = Dp.shape
+        flat = Dp.reshape(-1, 3)
+        out = np.empty_like(flat)
+        ps = self.paper.stock
+        for i in range(0, flat.shape[0], chunk):
+            d = np.stack([np.interp(flat[i:i + chunk, c], Dg, layers[:, c]) for c in range(3)], -1)
+            R = 10.0 ** -(d @ ps.dye_density.T + ps.base_density)
+            xyz = spectral.spectrum_to_xyz(R, illum) / white[1]
+            xyz = (xyz - k * white / white[1]) / (1.0 - k)
+            out[i:i + chunk] = spectral.xyz_to_srgb(xyz, wxy)
+        return out.reshape(shape)
+
+    def _neutral_layers(self):
+        """中性灰阶: 对每个视觉密度 D, 求相纸三层的染料量, 使反射光在 D50 下呈中性、亮度 = 10^-D (相对纸白)。"""
+        from scipy.optimize import least_squares
+        from . import spectral
+        ps = self.paper.stock
+        illum = spectral.illuminant("D50")
+        white = spectral.spectrum_to_xyz(10.0 ** -ps.base_density, illum)
+        wxy = spectral.white_xy(illum)
+        wn = white / white[1]
+        Dg = np.linspace(0.0, float(self.curve.max()) + 0.05, 64)
+        layers = np.zeros((len(Dg), 3))
+        d0 = np.zeros(3)
+        for j, D in enumerate(Dg):
+            def resid(d):
+                R = 10.0 ** -(d @ ps.dye_density.T + ps.base_density)
+                xyz = spectral.spectrum_to_xyz(R, illum) / white[1]
+                return np.log10(np.clip(xyz, 1e-9, None)) - np.log10(wn * 10.0 ** -D)
+            d0 = least_squares(resid, d0, bounds=(0, 6)).x
+            layers[j] = d0
+        return Dg, layers, illum, white, wxy
 
     def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.18, color_limit=COLOR_LIMIT):
         """自动定标。数字相纸曝光 logH_c = K_c − s·Dn_c (Dn: 去片基后、按档案拉齐反差的底片密度)。
@@ -175,6 +220,43 @@ class Scanner:
         corr = np.clip(self.strength * ((ref - ref[1]) - c0), -color_limit / stretch, color_limit / stretch)
         self.s = np.full(3, stretch)
         self.K = need + stretch * (g + c0 + corr)                   # 绿通道: 灰点精确落在中灰
+
+    def balance_frame(self, Dn, nominal, mid_gray=0.18, density_limit=0.3, latd_normal=0.0,
+                      slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT):
+        """按整张底片自动定标 (Frontier 型; Fuji 专利 US6668096B1: 由每张的密度直方图求平均密度 /
+        LATD、高光侧与暗部侧, 再建立各通道的灰平衡 LUT)。
+
+        亮度  LATD (整张平均透射光的密度) 相对"正常场景"的偏离, 校正不超过 ±density_limit。
+        颜色  两点灰平衡: 暗部侧 (绿通道密度最低的 1–5% 像素) 与高光侧 (95–99%, 避开光源本身)
+              两个区域在每个通道上都映射到中性 (以档案的中灰平衡为中性)。每通道是一个线性映射
+              (偏移 + 斜率) —— 斜率能补偿胶片在非设计光源下各层落在曲线不同位置造成的反差差异
+              (日光下的灯光片)。力度 strength 部分校正, 斜率变化不超过 ±slope_limit, 偏移不超过
+              color_limit —— 防止把钠灯等近单色场景的弱通道拉成极端反差。"""
+        Dn = np.asarray(Dn, float)
+        ok = np.all(np.isfinite(Dn), -1)
+        g = Dn[ok, 1]
+        lo, hi = np.percentile(g, [1, 5, 95, 99]).reshape(2, 2)
+        sh = Dn[ok][(g >= lo[0]) & (g <= lo[1])].mean(0)
+        hl = Dn[ok][(g >= hi[0]) & (g <= hi[1])].mean(0)
+        c0 = 0.0 if self.mono else self.gray0
+        span = hl - sh
+        full = np.where(np.abs(span) > 0.02, (span[1]) / np.where(np.abs(span) > 0.02, span, 1.0), 1.0)
+        r = np.clip(1.0 + self.strength * (full - 1.0), 1.0 - slope_limit, 1.0 + slope_limit)
+        # 不校正: 只按档案的中灰平衡 (Dn_c − c0_c); 完全校正: 暗部侧映射到绿通道的暗部侧。
+        # 部分校正: 暗部侧的目标在两者之间按 strength 插值, 偏离"不校正"不超过 color_limit
+        none_sh = sh - c0
+        target = none_sh + np.clip(self.strength * (sh[1] - none_sh), -color_limit, color_limit)
+        off = target - r * sh
+        r[1], off[1] = 1.0, 0.0
+        self.M = (off, r)
+        Dm = off + r * Dn[ok]
+        latd = -np.log10(np.mean(10.0 ** -Dm, 0))
+        # 亮度与反差只由绿通道决定; 颜色已在 M 中校正, 这里不再做通道偏移
+        self.gray0, saved = np.zeros(3), self.gray0
+        self.balance(latd - latd_normal, mid_gray, nominal=nominal, density_limit=density_limit,
+                     color_limit=0.0)
+        self.gray0 = saved
+        self.K = np.full(3, self.K[1])
 
     def render(self, T):
         """底片光谱透射率 → 线性 sRGB。"""
