@@ -66,29 +66,30 @@ _SRGB_TO_XYZ = np.array([[0.4124564, 0.3575761, 0.1804375],
 
 @lru_cache(maxsize=None)
 def upsampling_table():
-    """Jakob-Hanika 2019 色度 → 光谱表 (tools/build_upsampling.py 生成)。不存在时返回 None。"""
-    path = FILTER_DIR.parent / "upsampling_xy64.npz"
+    """Jakob-Hanika 2019 (x, y, 亮度) → 光谱表 (tools/build_upsampling.py 生成)。不存在时返回 None。"""
+    path = FILTER_DIR.parent / "upsampling_xyY.npz"
     if not path.exists():
         return None
     d = np.load(path)
-    return d["x"], d["y"], d["spectra"].astype(np.float64)
+    return d["x"], d["y"], d["lum"], d["spectra"].astype(np.float64)
 
 
 def spectral_response(weights: np.ndarray):
     """返回函数: 场景线性 RGB → Σ_λ 光谱(λ) · weights(λ, k)。
 
     weights 已包含光源、滤镜和接收者 (乳剂感光度等)。
-    有重建表时: 由像素色度查出一条物理上可实现的平滑光谱 (色域外的颜色也正确),
-    再按亮度 Y 缩放, 曝光对亮度是线性的;
-    没有时: 退回 Mallett-Yuksel 基光谱 (线性, 只在 sRGB 色域内准确)。"""
+    有重建表时: 由像素的色度与亮度 (按反射率理解, 中灰 0.18) 查出一条物理上可实现的平滑光谱,
+    色域外的颜色也正确; 超出反射物体颜色极限的高光取该色度下最亮的可实现光谱。
+    没有表时: 退回 Mallett-Yuksel 基光谱 (线性, 只在 sRGB 色域内准确)。"""
     tab = upsampling_table()
     if tab is None:
         M = rgb_basis().T @ weights
         return lambda rgb: rgb @ M
-    xs, ys, spectra = tab
-    G = spectra @ weights                      # (64, 64, k): 每个色度单位亮度的响应
+    xs, ys, lums, spectra = tab
+    G = spectra @ weights                      # (nx, ny, nY, k): 单位亮度的响应
     from scipy.ndimage import map_coordinates
     white = spectral_white_xy()
+    loglum = np.log(lums)
 
     def f(rgb):
         rgb = np.asarray(rgb, float)
@@ -100,7 +101,9 @@ def spectral_response(weights: np.ndarray):
         y = np.where(ok, xyz[..., 1] / np.where(ok, ssum, 1), white[1])
         ci = np.clip(x / xs[-1] * (len(xs) - 1), 0, len(xs) - 1)
         cj = np.clip(y / ys[-1] * (len(ys) - 1), 0, len(ys) - 1)
-        out = np.stack([map_coordinates(G[..., k], [ci.ravel(), cj.ravel()], order=1, mode="nearest")
+        ck = np.interp(np.log(np.maximum(Y, 1e-6)), loglum, np.arange(len(lums)))
+        coords = [ci.ravel(), cj.ravel(), ck.ravel()]
+        out = np.stack([map_coordinates(G[..., k], coords, order=1, mode="nearest")
                         for k in range(G.shape[-1])], -1).reshape(rgb.shape[:-1] + (G.shape[-1],))
         return out * Y[..., None]
     return f

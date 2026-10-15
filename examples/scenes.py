@@ -1,4 +1,5 @@
-"""同一配方在多种场景下的表现: 数码直出 / 冲印店自动校色 / 不逐张校正。
+"""同一配方在多种场景下的表现: 数码直出 / 第 1 卷 / 第 2 卷 (不同胶卷与冲洗, 物理随机范围内的差异)。
+负片按冲印店扫描输出, 扫描仪按整张底片自动校正。
 用法: python examples/scenes.py cinestill_800t out/cinestill  场景RAW... [--ev 场景:EV ...]"""
 import sys
 import time
@@ -34,10 +35,10 @@ def main():
         c = np.clip(cam, 0, None)
         tiles.append(save_srgb(c / (1 + c / 4), outdir / f"{stem}_digital.jpg"))
         labels.append(f"{stem} 数码直出")
-        for timing, lab in [("frame", "冲印店自动校色"), ("standard", "不逐张校正")]:
-            eng = Engine(Params(**{**recipe(name), "timing": timing}))
-            tiles.append(save_srgb(eng.render(day), outdir / f"{stem}_{timing}.jpg"))
-            labels.append(f"{name} {lab}")
+        for roll in (1, 2):
+            eng = Engine(Params(**{**recipe(name), "timing": "frame", "roll": roll, "frame": len(tiles)}))
+            tiles.append(save_srgb(eng.render(day), outdir / f"{stem}_roll{roll}.jpg"))
+            labels.append(f"{name} 第{roll}卷")
         print(f"{stem}: {time.time() - t:.1f}s", flush=True)
     for i in range(0, len(tiles), 12):
         contact_sheet(tiles[i:i + 12], labels[i:i + 12], outdir / f"sheet_{i // 12 + 1}.jpg", cols=3, width=520)
