@@ -324,7 +324,9 @@ class Engine:
                                       dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet)
             Dn[sl] = sc.normalized_density(self._transmittance(sub))
         if self.p.timing == "frame":           # 按整张底片的平均密度自动校正 (亮度校正有上限)
-            gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=True)))[0]
+            # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。
+            # 冲印店不知道场景用的什么光; RAW 的日光白平衡与此无关。
+            gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
             sc.balance(np.nanmean(Dn, 0), self.p.mid_gray, nominal=gray)
         return sc.to_rgb(Dn).reshape(shape)
 
@@ -376,10 +378,12 @@ class Engine:
             return
         from scipy.ndimage import gaussian_filter
         rng = np.random.default_rng(self.v.frame_seed + 7)
-        n = gaussian_filter(rng.standard_normal(st.dye.shape[:2]), 4000.0 / self.px_um)
-        n = n / (n.std() + 1e-12) * a
+        s = 4000.0 / self.px_um
+        # 按滤波后白噪声的理论标准差 1/(2√π·σ) 归一 (不用样本标准差: 画面小于起伏尺度时
+        # 样本几乎是常数, 除以它会把均值放大成巨大的偏移)
+        n = gaussian_filter(rng.standard_normal(st.dye.shape[:2]), s, mode="wrap") * (2.0 * np.sqrt(np.pi) * s) * a
         tgt = st.dye if np.any(st.dye > 0) else st.silver
-        tgt *= (1.0 + n)[..., None]
+        tgt *= np.clip(1.0 + n, 0.0, None)[..., None]
 
     def describe(self):
         """把整条物理链条写出来 (含冲洗日志与印放光号)。"""

@@ -12,11 +12,12 @@
                    这里用该相纸实测特性曲线的影调形状做反转 (负 → 正)。真实相纸的三层染料
                    组合起来是中性的, 所以三个通道共用一条中性曲线 (三层曲线的平均)。
      黑白胶片按冲印店的做法用灰度模式扫描, 档案为该胶片本身。
-  5. 反转与校正    和真实的底片扫描仪一样, 片基 (未曝光处) 是每个通道的黑点, 中灰的平衡
-                   靠调整各通道的反差 (斜率) 完成 —— 黑点锚定, 黑始终是中性的。
+  5. 反转与校正    和光学印放一样, 校正只有整体反差 (自动色阶的拉伸, 三通道相同) 与每通道的
+                   曝光偏移 (C·M·Y 校正键 = 印放光号)。偏移校正后中间调中性, 剩余偏色落在暗部
+                   且方向与原偏色相反 (负片扫描的交叉偏色)。
                    亮度按整张底片的平均密度 (同 LATD) 校正, 但最多 ±1 档 (不把夜景拉成白天);
-                   颜色只校正一部分, 以免把日落、夜景这类主体"校死" —— 力度因扫描仪设置与
-                   操作员而异, 在一个范围内随机 (variation.py)。
+                   颜色只校正一部分且有范围上限, 以免把日落、夜景这类主体"校死" —— 力度因扫描仪
+                   设置与操作员而异, 在一个范围内随机 (variation.py)。
 
 ⚠ 光源峰值波长、档案选择、校正力度为估计值 (厂商未公开)。
 """
@@ -99,6 +100,9 @@ def neutral_paper_curve(paper):
     return c - c.min()
 
 
+COLOR_LIMIT = 0.45   # 自动颜色校正的最大偏移 (logH, ≈18 个印放光号), 估计值
+
+
 class Scanner:
     def __init__(self, engine, scanner="frontier", profile=None, strength=0.75, stretch_max=1.25):
         self.eng = engine
@@ -114,7 +118,7 @@ class Scanner:
         self.curve = neutral_paper_curve(self.paper)   # 中性的数字相纸曲线
         self.strength = 0.0 if self.mono else strength
         self.stretch_max = stretch_max
-        self.K, self.s = 0.0, np.ones(3)
+        self.K, self.s = np.zeros(3), np.ones(3)
 
     def normalized_density(self, T):
         """去片基 (片基 = 0, 即黑点) → 按档案拉齐三通道反差。"""
@@ -129,32 +133,38 @@ class Scanner:
             out = np.repeat(out.mean(-1, keepdims=True), 3, -1)
         return out
 
-    def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.18):
-        """自动定标。数字相纸曝光 logH = K − s·Dn (Dn: 去片基后的底片密度)。
+    def balance(self, ref_density, mid_gray=0.18, nominal=None, density_limit=0.18, color_limit=COLOR_LIMIT):
+        """自动定标。数字相纸曝光 logH_c = K_c − s·Dn_c (Dn: 去片基后、按档案拉齐反差的底片密度)。
 
-        灰点  参考密度 (灰卡或整张平均) → 中灰, 这一点总是满足。
+        和光学印放一样, 校正只有两种: 整体反差 s (三通道相同, 反差由胶片档案决定) 与
+        每通道的曝光偏移 K_c (= 印放光号 / 扫描仪的 C·M·Y 校正键)。不逐通道改反差。
+
+        灰点  参考密度 (灰卡或整张平均) → 中灰。亮度总是满足; 颜色按 strength 部分校正,
+              且每通道偏移不超过 color_limit (logH, 扫描仪校正键的范围)。
+              偏移校正的结果: 中间调被校正, 剩下的偏色在暗部 (方向与原偏色相反) —— 这就是
+              负片扫描的"交叉偏色", 例如钠灯夜景校正后暗部偏蓝紫。
         黑点  光学印放时, 正常曝光负片的片基 (Dn=0) 恰好印到相纸的最大密度 (纯黑);
               薄 (欠曝) 的负片片基印不到纯黑, 暗部发灰 —— 这是真实的物理现象。
               扫描仪会做自动色阶, 把反差拉伸让黑更深, 但拉伸幅度有限 (stretch_max, 扫描设置,
               在范围内随机); 超出上限时就保留发灰的黑。
-        nominal = None: 按灰卡定标 (亮度全校正, 颜色按 strength 部分校正)。
+        nominal = None: 按灰卡定标, 不校正时三通道按档案视为中性。
         nominal = 标准灰卡的密度: 按整张平均自动校正时, 参考密度相对标准只移动 ±density_limit
-                  (底片密度, ≈1 档) —— 不把夜景拉成白天; 颜色在标准灰卡的平衡上按 strength 部分跟随。"""
+                  (底片密度, ≈1 档) —— 不把夜景拉成白天; 颜色从标准灰卡的平衡出发按 strength 跟随。"""
         x = self.paper.log_exposure
         need = np.interp(-np.log10(mid_gray), self.curve, x)        # 数字相纸上中灰需要的曝光
         x_black = float(x[np.argmax(self.curve >= 0.97 * self.curve.max())])
-        ref = np.maximum(np.asarray(ref_density, float), 0.05)
+        ref = np.asarray(ref_density, float)
         if nominal is None:
-            g = ref[1]
-            ratio = 1.0 + self.strength * (ref[1] / ref - 1.0)
+            g, c0 = ref[1], np.zeros(3)
         else:
-            r0 = np.maximum(np.asarray(nominal, float), 0.05)
+            r0 = np.asarray(nominal, float)
             g = float(np.clip(ref[1], r0[1] - density_limit, r0[1] + density_limit))
-            ratio = r0[1] / r0 + self.strength * (ref[1] / ref - r0[1] / r0)
+            c0 = r0 - r0[1]                                         # 不校正时的通道平衡
         g = max(g, 0.05)
         stretch = float(np.clip((x_black - need) / g, 1.0, self.stretch_max))   # 让片基尽量接近纯黑
-        self.s = stretch * ratio
-        self.K = need + stretch * g                                   # 灰点精确落在中灰
+        corr = np.clip(self.strength * ((ref - ref[1]) - c0), -color_limit / stretch, color_limit / stretch)
+        self.s = np.full(3, stretch)
+        self.K = need + stretch * (g + c0 + corr)                   # 绿通道: 灰点精确落在中灰
 
     def render(self, T):
         """底片光谱透射率 → 线性 sRGB。"""

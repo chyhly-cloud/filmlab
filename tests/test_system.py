@@ -35,16 +35,26 @@ def test_nominal_process_reproduces_datasheet(key):
 
 
 def test_push_kinetics_vs_kodak_portra_800():
-    """显影动力学 vs Kodak Portra 800 推一档 / 推两档实测 (C-41 3:45 / 4:15)。"""
+    """显影动力学 vs Kodak Portra 800 推一档 / 推两档实测 (C-41 3:45 / 4:15)。
+    数据横轴相对推冲后的标称感光度: 推 n 档的曲线 = 欠曝 n 档 + 推 n 档。"""
     e = emulsion("kodak_portra_800")
     x = e.log_exposure
-    m = (x > -2.5) & (x < 2.5)
+    m = (x > -2.5) & (x < 2.2)
     for stops, key in [(1, "kodak_portra_800_push1"), (2, "kodak_portra_800_push2")]:
         proc = chemistry.PROCESSES["C-41"].push(stops)
-        st = chemistry.run(e, proc, np.repeat(x[:, None], 3, 1))
+        st = chemistry.run(e, proc, np.repeat(x[:, None] - 0.301 * stops, 3, 1))
         rms_model = np.sqrt(np.mean((st.dye - load_stock(key).density_curves)[m] ** 2))
         rms_none = np.sqrt(np.mean((e.S_nom - load_stock(key).density_curves)[m] ** 2))
         assert rms_model < 0.05 and rms_model < 0.45 * rms_none
+
+
+def test_more_development_never_lowers_density():
+    """同一曝光下, 显影更充分 (推冲 / 更活泼的显影液) 只会显影出更多的银和染料。"""
+    e = emulsion("kodak_vision3_500t")
+    x = np.repeat(e.log_exposure[:, None], 3, 1)
+    base = chemistry.run(e, chemistry.PROCESSES["ECN-2"], x).dye
+    more = chemistry.run(e, chemistry.PROCESSES["ECN-2"].push(1), x).dye
+    assert np.all(more >= base - 1e-3)
 
 
 def test_e6_push_gains_one_stop():

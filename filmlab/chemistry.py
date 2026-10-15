@@ -25,17 +25,19 @@ from scipy.ndimage import gaussian_filter
 from .materials import Emulsion
 
 # ------------------------------------------------------- 显影动力学 --
-# 用 Kodak Portra 800 的标准 / 推一档 / 推两档实测曲线拟合 (C-41 显影 3:15 / 3:45 / 4:15):
-#   S(τ) = S_nom 在密度域绕支点 pivot·Smax 放大 τ^A 倍, 暗部按软下限收敛
+# 用 Kodak Portra 800 的标准 / 推一档 / 推两档实测曲线拟合 (C-41 显影 3:15 / 3:45 / 4:15)。
+# 注意数据的横轴: 三条曲线在 logH=0 处密度相同 (0.757 / 0.761 / 0.762) —— 横轴是相对各自
+# 标称感光度 (EI 800 / 1600 / 3200) 的曝光, 即"欠曝 n 档 + 推 n 档"。拟合前先换回同一物理曝光
+# (推 n 档的曲线向右移 0.301·n)。在同一曝光下, 显影更充分只会让密度更高, 不会更低:
+#   推一档: 全段密度 ×1.25 (含趾部); 推两档: 趾部 ×2–3, 有真实的感光度提升。
+#   S(τ)(x) = S_nom(x + SHIFT·ln τ) · τ^A
+#   (更多颗粒被显影 → 感光度提升; 每个显影中心长出更多银 → 密度按比例增加。两项都只增不减)
 # τ = 相对显影程度 (时间 × 温度系数 × 显影液活性比)。
-# 拟合残差 0.040D (不建模时为 0.11–0.17D)。见 tests/test_system.py。
-KIN_A = 1.102
-KIN_PIVOT = 0.413      # 支点 = 0.413 × 该层最大密度 (Portra 800 绿层约 0.8D)
-KIN_W = 0.156          # 暗部软下限宽度
-
-
-def _softplus(d):
-    return KIN_W * np.logaddexp(0.0, d / KIN_W)
+# 拟合残差 0.048D (不建模时 0.32D)。见 tests/test_system.py。
+# 旁证: ECN-2 胶片进 C-41 (CineStill) τ≈1.18 → 感光度 +0.6 档、反差 ×1.16, 与 500T → EI 800 一致。
+KIN_A = 0.900          # 密度倍增 (τ 的指数)
+KIN_SHIFT = 1.048      # 感光度提升 (logH / ln τ)
+KIN_PIVOT = 0.413      # 黑白显影反差变化的支点 (× 该层最大密度)
 
 
 # 黑白显影液 (含 E-6 第一显影): 没有 DIR 成色剂, 延长显影让带潜影的弱颗粒也被显影 → 真实的感光度提升。
@@ -47,7 +49,7 @@ KIN_BW_A = 0.35       # 黑白显影的反差随时间增长较缓 (估计值)
 
 def kinetic_curve(curve: np.ndarray, tau: float, x: np.ndarray = None, kind: str = "color") -> np.ndarray:
     """标准显影的成像曲线 → 显影程度 τ 下的曲线。τ=1 时严格不变。
-    color: 彩色显影 (C-41 实测拟合), 曲线绕中间调旋转;
+    color: 彩色显影 (C-41 实测拟合), 曲线沿曝光轴平移 (感光度) 并按比例增加密度 (反差);
     bw:    黑白显影, 曲线沿曝光轴平移 (感光度变化) 并略增反差。"""
     if abs(tau - 1.0) < 1e-9:
         return curve
@@ -55,9 +57,8 @@ def kinetic_curve(curve: np.ndarray, tau: float, x: np.ndarray = None, kind: str
         shifted = np.stack([np.interp(x + KIN_BW_SHIFT * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
         dp = KIN_PIVOT * curve.max(0)
         return np.clip(dp + (shifted - dp) * tau ** KIN_BW_A, 0, None)
-    g = tau ** KIN_A
-    dp = KIN_PIVOT * curve.max(0)
-    return np.clip(_softplus(dp + (curve - dp) * g) - _softplus(curve) + curve, 0, None)
+    shifted = np.stack([np.interp(x + KIN_SHIFT * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
+    return shifted * tau ** KIN_A
 
 
 # ----------------------------------------------------------- 显影液 --

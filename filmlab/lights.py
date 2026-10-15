@@ -186,15 +186,21 @@ def linear_response(light_spec, receiver_weights):
 
     用几千条自然界典型的平滑反射光谱作训练集, 拟合 "相机 RGB → 反射率 × 光源光谱 × 接收者"
     的 3×3 线性映射 (类似相机特性化)。比"先除光源再重建光谱"稳定: 钠灯这类强色光下
-    蓝通道几乎没有信号, 除法会把噪声放大十几倍; 线性映射在不同光源之间也能平滑混合。"""
+    蓝通道几乎没有信号, 除法会把噪声放大十几倍; 线性映射在不同光源之间也能平滑混合。
+
+    系数约束为非负 (NNLS): 任何颜色的光多一些, 各层曝光只会增加, 不会减少。不加约束时,
+    钠灯这类近单色光下训练样本的相机颜色几乎共线, 最小二乘会给出正负相消的大系数,
+    遇到训练范围外的像素 (镜头眩光、重建的高光、噪声) 就会外推出离谱的曝光 (例如灯芯的
+    红层曝光为 0、周围蓝层却被曝光)。"""
     R = training_reflectances()
     rad = R * light_spec[None, :]
     rgb = camera_rgb(rad)
     scale = 1.0 / (camera_rgb(light_spec) @ np.array([0.2126, 0.7152, 0.0722]))
     target = (rad * scale) @ receiver_weights
     rgb = rgb * scale
+    from scipy.optimize import nnls
     w = 1.0 / np.maximum(target.mean(1, keepdims=True), 1e-6)     # 相对误差
-    M = np.linalg.lstsq(rgb * w, target * w, rcond=None)[0]
+    M = np.stack([nnls(rgb * w, target[:, k] * w[:, 0])[0] for k in range(target.shape[1])], 1)
     return lambda x: np.asarray(x) @ M
 
 
