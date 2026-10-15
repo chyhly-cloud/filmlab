@@ -13,18 +13,26 @@ from .stocks import Stock, WAVELENGTHS
 
 
 # ---------------------------------------------------------------- 曝光 ----
-def _light(scene_illuminant, scene_filter):
-    light = spectral.illuminant(scene_illuminant).copy()
-    return light * scene_filter if scene_filter is not None else light
+def _spec(light):
+    return spectral.illuminant(light) if isinstance(light, str) else np.asarray(light, float)
 
 
-def exposure_response(stock: Stock, scene_illuminant: str, scene_filter=None):
-    """场景线性 RGB → 三层乳剂曝光量。
+def _filt(scene_filter):
+    return np.ones(81) if scene_filter is None else np.asarray(scene_filter, float)
 
-    H_layer = Σ_λ 场景反射光谱(λ) · I(λ) · F(λ) · 10^logS_layer(λ)
-    场景光谱由 S0 光谱重建得到; I 为拍摄光源, F 为镜头前滤镜, S 为乳剂光谱感光度。"""
+
+def exposure_response(stock: Stock, light, scene_filter=None, method="spectral"):
+    """场景线性 RGB (日光白平衡) → 三层乳剂曝光量。
+
+    H_layer = Σ_λ 反射率(λ) · I(λ) · F(λ) · 10^logS_layer(λ)
+    I 为照明光源的光谱 (名称或 81 点光谱), 反射率由 S0 光谱重建得到 (先按光源颜色除去照明);
+    F 为胶片相机镜头前的滤镜 (数码 RAW 拍摄时没有), S 为乳剂光谱感光度。
+    method: spectral = 除去照明后重建反射光谱 (日光下最准);
+            linear   = 该光源下训练出的线性映射 (人造光源下更稳更准, 见 tools/check_lights.py)。"""
+    from . import lights
     sens = 10.0 ** stock.log_sensitivity
-    return spectral.spectral_response(_light(scene_illuminant, scene_filter)[:, None] * sens)
+    fn = lights.linear_response if method == "linear" else lights.response_under
+    return fn(_spec(light), _filt(scene_filter)[:, None] * sens)
 
 
 def expose(rgb_lin, response):
@@ -100,19 +108,21 @@ def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15
     return T_down, direct, back
 
 
-def halation_response(stock: Stock, scene_illuminant: str, scene_filter, v, back_reflect: float):
+def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float, method="spectral"):
     """场景线性 RGB → 每层"将以光晕形式返回的曝光" (未含空间核), 与直接曝光同一单位。
 
     = 光 × 穿透整个乳剂到达片基的比例 × 被散射为漫射光的比例 × 片基背面的反射能力
       × 返回途中被该层吸收的比例; 再按"该层直接吸收"与 datasheet 感光度的比值换算单位。
     back_reflect: 无 remjet 的透明片基 = 1 (菲涅耳 + 全反射); remjet 炭黑背涂 ≈ 0;
                   防光晕染料层 = 光往返两次被吸收后的剩余比例。"""
-    light = _light(scene_illuminant, scene_filter)
+    from . import lights
+    E, F = _spec(light), _filt(scene_filter)
     T_down, direct, back = emulsion_stack(stock, v.layer_absorbance, v.yellow_filter)
     sens = 10.0 ** stock.log_sensitivity
-    unit = (light @ sens) / (light @ direct)          # 吸收 → datasheet 曝光单位 (按中灰)
-    w = light[:, None] * T_down[:, None] * back * v.diffuse_fraction * back_reflect * unit[None, :]
-    return spectral.spectral_response(w)
+    unit = ((E * F) @ sens) / ((E * F) @ direct)      # 吸收 → datasheet 曝光单位 (按中灰)
+    w = F[:, None] * T_down[:, None] * back * v.diffuse_fraction * back_reflect * unit[None, :]
+    fn = lights.linear_response if method == "linear" else lights.response_under
+    return fn(E, w)
 
 
 def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4):

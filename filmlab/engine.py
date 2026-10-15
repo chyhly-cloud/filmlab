@@ -39,6 +39,9 @@ class Params:
     # (钨丝灯场景本身就是橙色的)。若输入已用相机白平衡"拉正", 设为 None = 胶片自己的平衡光源。
     scene_illuminant: str | None = "D55"
     lens_filter: np.ndarray | None = None      # (81,) 镜头前滤镜光谱透射率
+    # 场景照明: auto = 估计每个区域的光源类别 (日光 / 白炽 / 钠灯 / 荧光 / LED / 金卤),
+    # 用真实光源光谱计算胶片曝光 (lights.py); None = 整个场景按 scene_illuminant 一种光源
+    scene_lights: str | None = "auto"
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
@@ -105,7 +108,12 @@ class Engine:
         st = e.stock
         ref = st.reference_illuminant
         self.v = variation.sample(p.roll, p.frame, p.lab)
-        self.M_ref = film.exposure_response(st, ref, p.lens_filter)
+        # 参考光源下的测光 / 灰卡: M_ref 接收"反射率" RGB —— 在日光白平衡的输入里,
+        # 该光源照亮的中性灰卡本身带着光源的颜色 (钨丝灯下是橙色的), 先乘上它再计算曝光
+        from . import lights
+        _m_ref = film.exposure_response(st, ref, p.lens_filter)
+        _ill_ref = lights.light_rgb(spectral.illuminant(ref))
+        self.M_ref = lambda rgb: _m_ref(np.asarray(rgb) * _ill_ref)
         self.M = film.exposure_response(st, p.scene_illuminant or ref, p.lens_filter)
         self.halo = film.halation_response(st, p.scene_illuminant or ref, p.lens_filter, self.v, e.halation) \
             if e.halation > 0 and p.exposure_hook is None else None
@@ -138,7 +146,7 @@ class Engine:
         self.scanner = None
         if self.polarity == "negative" and p.output == "scan":
             from .scanner import Scanner
-            self.scanner = Scanner(self, p.scanner, p.scan_profile, self.v.scan_strength)
+            self.scanner = Scanner(self, p.scanner, p.scan_profile, self.v.scan_strength, self.v.scan_stretch)
             if p.timing != "frame":
                 st = self._gray_state(actual_light=(p.timing != "standard"))
                 self.scanner.balance(self.scanner.normalized_density(self._transmittance(st))[0], p.mid_gray)
@@ -259,16 +267,50 @@ class Engine:
         p, e = self.p, self.e
         h, w = rgb_lin.shape[:2]
         self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
-        H = self._expose_lin(rgb_lin, self.M)
+        if p.scene_lights == "auto" and p.exposure_hook is None and min(rgb_lin.shape[:2]) >= 32:
+            H, halo_src = self._expose_mixed(rgb_lin * 2.0 ** p.exposure_ev)
+        else:
+            H = self._expose_lin(rgb_lin, self.M)
+            halo_src = self.halo(rgb_lin * 2.0 ** p.exposure_ev) if self.halo is not None else None
         H = film.emulsion_scatter(H, self.px_um)
-        if self.halo is not None:
-            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v,
-                              film.bounce_retention(e.stock, self.v))
+        if halo_src is not None:
+            H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v))
+            H = np.clip(H, 1e-9, None)                   # 曝光量物理上非负
         st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
         self._agitation(st)
         self._grain(st)
         self.state = st
         return st
+
+    def _expose_mixed(self, rgb):
+        """S0/S1: 按区域估计光源类别, 用各类真实光源光谱计算曝光与光晕源, 按软权重混合。"""
+        from scipy.ndimage import zoom
+        from . import lights
+        e, p = self.e, self.p
+        h, w = rgb.shape[:2]
+        f = max(1, int(max(h, w) / 400))                     # 在低分辨率上估计照明 (照明是低频的)
+        small = rgb[::f, ::f]
+        scale = 0.08 * max(small.shape[:2])
+        ill = lights.illumination_map(small, scale)
+        W = lights.class_weights(ill, feas=lights.feasibility(small, scale))
+        W = zoom(W, (h / W.shape[0], w / W.shape[1], 1), order=1)[:h, :w]
+        members = lights.pick_members(self.v.frame_seed)
+        H = np.zeros(rgb.shape)
+        src = np.zeros(rgb.shape) if self.halo is not None else None
+        self.light_mix = {}
+        for k, c in enumerate(lights.classes()):
+            wk = W[..., k]
+            share = float(wk.mean())
+            self.light_mix[c.name] = (members[c.key][0], share)
+            if share < 0.003:
+                continue
+            spec = members[c.key][1]
+            method = "spectral" if c.key == "daylight" else "linear"   # 见 tools/check_lights.py
+            H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
+            if src is not None:
+                src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,
+                                                              e.halation, method)(rgb)
+        return np.clip(H, 1e-9, None), (np.clip(src, 0, None) if src is not None else None)
 
     def scan(self, st, chunk=1 << 17):
         """S4': 扫描底片 → 线性 sRGB。"""
@@ -283,7 +325,7 @@ class Engine:
             Dn[sl] = sc.normalized_density(self._transmittance(sub))
         if self.p.timing == "frame":           # 按整张底片的平均密度自动校正 (亮度校正有上限)
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=True)))[0]
-            sc.balance(Dn.mean(0), self.p.mid_gray, nominal=gray)
+            sc.balance(np.nanmean(Dn, 0), self.p.mid_gray, nominal=gray)
         return sc.to_rgb(Dn).reshape(shape)
 
     def render_xyz(self, rgb_lin):
@@ -349,6 +391,9 @@ class Engine:
             lines.append(f"第 {self.p.roll} 卷 / 第 {self.p.frame} 张: 片基 {v.base_um:.0f}µm, "
                          f"冲洗偏差 τ×{v.tau_factor:.3f} (时间 {v.dev_time_factor:.3f}, 温度 {v.dev_temp_offset:+.2f}°C, "
                          f"药液 {v.activity_factor:.3f})")
+        if getattr(self, "light_mix", None):
+            mix = ", ".join(f"{k}({n}) {v:.0%}" for k, (n, v) in self.light_mix.items() if v >= 0.01)
+            lines.append(f"场景照明估计: {mix}")
         lines.append(f"成像: {'负像' if self.polarity == 'negative' else '正像'}")
         if self.scanner is not None:
             lines.append(self.scanner.describe())
@@ -405,7 +450,10 @@ def _material_calibration(key: str):
     eng.e = e = emulsion(key)
     eng.proc = PROCESSES[e.native_process]
     eng.v = variation.NOMINAL
-    eng.M_ref = eng.M = film.exposure_response(e.stock, e.stock.reference_illuminant)
+    from . import lights
+    _m = film.exposure_response(e.stock, e.stock.reference_illuminant)
+    _ill = lights.light_rgb(spectral.illuminant(e.stock.reference_illuminant))
+    eng.M_ref = eng.M = lambda rgb: _m(np.asarray(rgb) * _ill)
     g = film.expose(np.full((1, 3), GRAY), eng.M_ref)[0]
     eng.log_k = _speed_point(e) - np.log10(g[1])
     eng.paper = None
