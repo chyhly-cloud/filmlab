@@ -88,7 +88,7 @@ def estimate_noise(img, block=8):
     return np.array(params)
 
 
-def denoise(img, params, chroma_boost=2.5):
+def denoise(img, params, chroma_boost=2.5, out_matrix=None, clipped=None):
     """去除数码传感器噪声 (胶片上不该有; 胶片颗粒由胶片模型自己生成)。
     1. 广义 Anscombe 方差稳定变换: 让噪声在所有亮度下都是单位方差的高斯噪声
     2. 转到亮度 / 色差空间: 色差 (彩色噪点) 降得更狠, 亮度保留细节
@@ -98,6 +98,15 @@ def denoise(img, params, chroma_boost=2.5):
     gat = 2.0 / a * np.sqrt(np.maximum(a * img + 0.375 * a * a + b, 0))
     M = np.array([[1 / 3, 1 / 3, 1 / 3], [0.5, 0.0, -0.5], [-0.25, 0.5, -0.25]])
     opp = gat @ M.T
+    if clipped is not None and np.any(clipped > 0):
+        # 截断像素的颜色是假的 (只有部分通道饱和), 不是信号: 色差通道按缺失数据处理,
+        # 用周围未截断像素的色差填补 (归一化卷积), 否则小波会把假色扩散成一片色斑
+        from scipy.ndimage import gaussian_filter as _g
+        # 下采样后像素里只要有截断的子像素, 平均颜色就被污染; 去马赛克还会把假色带到相邻像素
+        w = 1.0 - ndimage.binary_dilation(clipped > 0).astype(float)
+        for c in (1, 2):
+            fill = _g(opp[..., c] * w, 3.0) / np.maximum(_g(w, 3.0), 1e-6)
+            opp[..., c] = w * opp[..., c] + (1 - w) * fill
     out = np.empty_like(opp)
     out[..., 0] = denoise_wavelet(opp[..., 0], sigma=np.sqrt(1 / 3), wavelet="db2", mode="soft",
                                   method="BayesShrink", rescale_sigma=False)
@@ -111,7 +120,20 @@ def denoise(img, params, chroma_boost=2.5):
     from scipy.ndimage import gaussian_filter
     s = (6.0, 6.0, 0)
     ref, cur = gaussian_filter(img, s), gaussian_filter(den, s)
-    return den + (ref - cur)              # 加性校正: 局部均值回到无偏的原图均值, 对暗部稳定
+    # 加性校正: 局部均值回到无偏的原图均值。逆变换的偏差只在光子数少时存在 (信号 ≲ 几十个 a),
+    # 亮处不做 —— 否则细亮线被平滑掉的能量会被加回到它周围, 形成光圈。
+    w = 1.0 / (1.0 + np.clip(img, 0, None) / (20.0 * a))
+    den = den + w * (ref - cur)
+    # 与观测一致: 真实信号只可能落在观测值的噪声范围内 (±3σ, σ² = a·s + b)。
+    # 亮处 σ 相对很小, 这一约束去掉了小波在细亮线 (铁轨反光、灯丝) 两侧的振铃与色差溢出;
+    # 暗处 σ 大, 降噪不受影响。
+    # 约束在之后要使用的颜色空间里做 (out_matrix: 例如 XYZ → sRGB): 矩阵有很大的负系数,
+    # 各通道分别在范围内的小偏差, 换算后会放大成明显的色边。方差按矩阵传播 (各通道独立)。
+    Mo = np.eye(3) if out_matrix is None else np.asarray(out_matrix)
+    var = np.maximum(a * np.clip(img, 0, None) + b, 0)
+    sd = 3.0 * np.sqrt(var @ (Mo ** 2).T)
+    o_img, o_den = img @ Mo.T, den @ Mo.T
+    return np.clip(o_den, o_img - sd, o_img + sd) @ np.linalg.inv(Mo).T
 
 
 
@@ -134,7 +156,7 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         common = dict(gamma=(1, 1), no_auto_bright=True, output_bps=16, half_size=True, user_flip=None)
         xyz = raw.postprocess(output_color=rawpy.ColorSpace.XYZ, **common, **kw).astype(np.float32) / 65535.0
         clip = None
-        if highlights == "reconstruct":
+        if highlights == "reconstruct" or denoise_raw:
             # 在相机原始 RGB (未白平衡) 里找饱和像素: 任一通道到达该通道的最大值即为截断
             cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
             mx = cam.reshape(-1, 3).max(0).astype(np.float32)
@@ -142,9 +164,10 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
     step = max(1, int(round(max(xyz.shape[:2]) / max_size)))
     xyz = _downsample(xyz, step)
     if denoise_raw:      # 在线性的传感器信号上做 (下采样后噪声模型同样成立, 只是方差更小)
-        xyz = denoise(xyz.astype(np.float64), estimate_noise(xyz))
+        cl = None if clip is None else _downsample(clip, step)
+        xyz = denoise(xyz.astype(np.float64), estimate_noise(xyz), out_matrix=XYZ_TO_SRGB, clipped=cl)
     rgb = xyz @ XYZ_TO_SRGB.T
-    if clip is not None and clip.any():
+    if highlights == "reconstruct" and clip is not None and clip.any():
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
         rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed),
                                      clip_luminance(path))
@@ -163,6 +186,21 @@ HIGHLIGHT_PRIOR = [
     (1.0, (1e3, 1e4), (0.0, 1.5)),
 ]
 MAX_STOPS = 8.0
+# 细长的截断区 (宽 ≤ 2 像素, 长宽比 ≥ 4): 粗糙金属 / 湿地面上的镜面反光 (铁轨、车身边缘) 或霓虹灯管。
+# 反光的亮度 ≈ 反射率 × 灯的亮度 × (灯的立体角 / 散射瓣的立体角), 被拉成一条线正说明散射瓣远大于灯,
+# 所以比灯本身暗得多; 霓虹灯管本身约 1e3 cd/m²。估计范围 (对数均匀): 1e2 – 2e3。
+LINE_PRIOR = ((1e2, 2e3), (0.5, 2.5))
+
+
+def _line_like(blob):
+    """按截断区的形状判断是否为细线: 主轴长度与平均宽度 (面积 / 长度)。"""
+    ys, xs = np.nonzero(blob)
+    if len(ys) < 3:
+        return False
+    ev = np.linalg.eigvalsh(np.cov(np.stack([ys, xs]).astype(float)) + 1e-9 * np.eye(2))
+    length = np.sqrt(12.0 * ev[-1])
+    width = len(ys) / max(length, 1.0)
+    return width <= 2.0 and length >= 4.0 * width
 
 
 def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
@@ -172,7 +210,8 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
       颜色  取自其周围一圈未截断的像素 (光源的颜色保留在它周围的光晕 / 漫射里)
       亮度  在光源典型绝对亮度范围内随机 (真实值已无法得知), 由 EXIF 换算成截断点以上的档数;
             不会低于截断点
-      形状  从边缘 (= 截断亮度, 保证连续) 向内部逐渐变亮的穹顶, 模拟发光体中心最亮"""
+      形状  从边缘 (= 截断亮度, 保证连续) 向内部逐渐变亮的穹顶, 模拟发光体中心最亮
+      面积  只有像素里被截断的那部分子像素换成亮源 (clip_frac), 不放大细亮线的面积"""
     mask = ndimage.binary_dilation(clip_frac > 0.25)
     lab, n = ndimage.label(mask)
     if n == 0:
@@ -201,6 +240,8 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
         col = col / (col @ LUMA)
         base = np.percentile(Y[y0:y1, x0:x1][blob], 90)          # 截断亮度
         _, lum_range, stop_range = next(p for p in HIGHLIGHT_PRIOR if area / total < p[0])
+        if _line_like(clip_frac[y0:y1, x0:x1] * blob > 0.25):
+            lum_range, stop_range = LINE_PRIOR
         if l_clip is not None:
             L = np.exp(rng.uniform(*np.log(lum_range)))
             stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
@@ -210,7 +251,10 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
         dome = (d / max(d.max(), 1.0)) ** 0.7
         lum = base * 2.0 ** (stops * dome)
         region = out[y0:y1, x0:x1]
-        region[blob] = (lum[blob][:, None] * col[None, :])
+        # 下采样像素是盒式平均: 只有被截断的那部分 (f) 是被藏起来的亮源, 其余保持观测值。
+        # 细的反光线 (铁轨、金属边) 只占像素的一小部分, 不能把整个像素 (更不能把膨胀出的一圈) 都当成灯。
+        f = np.clip(clip_frac[y0:y1, x0:x1][blob], 0.0, 1.0)[:, None]
+        region[blob] = (1.0 - f) * region[blob] + f * (lum[blob][:, None] * col[None, :])
     return out
 
 
