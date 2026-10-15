@@ -82,9 +82,9 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 # ------------------------------------------------------------- 系统 --
 @pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))])
 def test_mid_gray_neutral(name):
-    """负片靠冲印店定光号, 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
+    """负片靠冲印店定光 (相纸印放, 灰卡全校正), 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""
-    out = Engine(Params(**{**recipe(name), "grain": 0})).render(RAMP)[0, 4]
+    out = Engine(Params(**{**recipe(name), "grain": 0, "output": "print", "roll": None})).render(RAMP)[0, 4]
     tol = 6.0 if name.startswith("push1_fujifilm") else 3.0
     assert chroma(out) < tol
     if not name.startswith("push1_fujifilm"):
@@ -167,8 +167,10 @@ def test_halation_light_is_red_from_emulsion_stack():
 def test_remjet_blocks_halation():
     img = np.full((120, 120, 3), 0.01)
     img[55:65, 55:65] = 200.0
-    a = Engine(Params(film="kodak_vision3_500t", process="ECN-2", grain=0, frame_width_mm=4, timing="standard")).render(img)
-    b = Engine(Params(**{**recipe("cinestill_800t"), "grain": 0, "frame_width_mm": 4, "timing": "standard"})).render(img)
+    a = Engine(Params(film="kodak_vision3_500t", process="ECN-2", grain=0, frame_width_mm=4, timing="standard",
+                      output="print")).render(img)
+    b = Engine(Params(**{**recipe("cinestill_800t"), "grain": 0, "frame_width_mm": 4, "timing": "standard",
+                         "output": "print"})).render(img)
     ring = (slice(60, 61), slice(68, 72))
     assert b[ring][..., 0].mean() > 3 * a[ring][..., 0].mean()
 
@@ -183,3 +185,17 @@ def test_roll_variation_within_process_tolerance():
     stops = np.log2(np.array(ys) / np.mean(ys))
     assert 0.005 < stops.std() < 0.15
     assert variation.sample(3) == variation.sample(3)
+
+
+# ------------------------------------------------------------- 扫描 --
+@pytest.mark.parametrize("name", ["kodak_portra_400", "kodak_gold_200", "fujifilm_pro_400h", "bw_pan"])
+def test_scan_neutral_with_matching_profile(name):
+    """扫描仪里有该胶片的档案时, 中灰扫描后应为中性。"""
+    out = Engine(Params(**{**recipe(name), "grain": 0, "roll": None})).render(RAMP)[0, 4]
+    assert chroma(out) < 3.0 and abs(out.mean() - 0.18) < 0.03
+
+
+def test_scan_without_profile_leaves_bounded_cast():
+    """电影负片没有扫描档案, 用通用 Kodak 档案扫描 + 部分自动校正 → 留下有限的偏色。"""
+    out = Engine(Params(film="kodak_vision3_250d", grain=0, roll=None)).render(RAMP)[0, 4]
+    assert 2.0 < chroma(out) < 15.0

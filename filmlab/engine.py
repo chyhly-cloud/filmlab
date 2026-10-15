@@ -53,6 +53,10 @@ class Params:
     printer_points: tuple = (0.0, 0.0, 0.0)    # 在自动光号上手动加减 (R G B, +号 = 该层多曝光)
     print_filter: tuple = (0.0, 0.0, 0.0)      # Durst 分色滤镜 C M Y
     mid_gray: float = 0.18
+    # ---- S4' 输出方式 (负片): scan = 冲印店扫描 (默认, 也是如今大多数胶片照片的样子); print = 放大机印到相纸
+    output: str = "scan"
+    scanner: str = "frontier"
+    scan_profile: str | None = None            # None = 有该胶片的档案就用, 没有就用通用档案
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
@@ -131,6 +135,13 @@ class Engine:
         self.white_xy = spectral.white_xy(self.view_illum)
         if self.paper is not None:
             self._timing()
+        self.scanner = None
+        if self.polarity == "negative" and p.output == "scan":
+            from .scanner import Scanner
+            self.scanner = Scanner(self, p.scanner, p.scan_profile, self.v.scan_strength)
+            if p.timing != "frame":
+                st = self._gray_state(actual_light=(p.timing != "standard"))
+                self.scanner.balance(self.scanner.normalized_density(self._transmittance(st))[0], p.mid_gray)
 
     # ---- S0/S1 ----
     def _expose_lin(self, rgb, M, compensation=True):
@@ -158,6 +169,14 @@ class Engine:
         if st.remjet:    # 没有去除的 remjet 残留: 近似为中性灰雾
             neutral = neutral + 0.4
         return 10.0 ** -(dens + neutral[..., None])
+
+    def _transmittance_base(self):
+        """未曝光片头 (片基 + 遮罩 + 残留 remjet) 的透射率, 扫描仪用它去片基。"""
+        z = np.zeros((1, 3))
+        st = chemistry.FilmState(latent=None, halide=z, silver=z, dye=z, coupler=None,
+                                 remjet=self.e.remjet and not any(isinstance(s, chemistry.RemjetRemoval)
+                                                                  for s in self.proc.steps))
+        return self._transmittance(st)[0]
 
     def _polarity(self):
         lo = self._develop(self._log_exposure(np.full((1, 3), 1e-4)))
@@ -227,6 +246,36 @@ class Engine:
         least_squares(resid, k0, bounds=(k0 - 3, k0 + 3))
 
     # ---- 主入口 ----
+    def negative(self, rgb_lin):
+        """S0–S3: 拍摄并冲洗, 得到底片状态。"""
+        p, e = self.p, self.e
+        h, w = rgb_lin.shape[:2]
+        self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
+        H = self._expose_lin(rgb_lin, self.M)
+        H = film.emulsion_scatter(H, self.px_um)
+        if self.halo is not None:
+            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v)
+        st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
+        self._agitation(st)
+        self._grain(st)
+        self.state = st
+        return st
+
+    def scan(self, st, chunk=1 << 17):
+        """S4': 扫描底片 → 线性 sRGB。"""
+        sc = self.scanner
+        shape = st.dye.shape
+        flat = lambda a: a.reshape(-1, 3)
+        Dn = np.empty((int(np.prod(shape[:-1])), 3))
+        for i in range(0, Dn.shape[0], chunk):
+            sl = slice(i, i + chunk)
+            sub = chemistry.FilmState(latent=None, halide=flat(st.halide)[sl], silver=flat(st.silver)[sl],
+                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet)
+            Dn[sl] = sc.normalized_density(self._transmittance(sub))
+        if self.p.timing == "frame":           # 按整张底片的平均密度自动校正
+            sc.balance(Dn.mean(0), self.p.mid_gray)
+        return sc.to_rgb(Dn).reshape(shape)
+
     def render_xyz(self, rgb_lin):
         p, e = self.p, self.e
         h, w = rgb_lin.shape[:2]
@@ -237,18 +286,12 @@ class Engine:
             avg = np.exp(np.log(lin).mean(0))
             avg *= GRAY / (avg @ np.array([0.2126, 0.7152, 0.0722]))
             self._timing(avg / 2.0 ** p.exposure_ev)
-        H = self._expose_lin(rgb_lin, self.M)
-        H = film.emulsion_scatter(H, self.px_um)
-        if self.halo is not None:
-            H = film.halation(H, self.halo(rgb_lin * 2.0 ** p.exposure_ev), self.px_um, self.v)
-        st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
-        self._agitation(st)
-        self._grain(st)
-        self.state = st
-        return self.view_xyz(st)
+        return self.view_xyz(self.negative(rgb_lin))
 
     def render(self, rgb_lin):
-        """→ 线性 sRGB (D65)。"""
+        """→ 线性 sRGB (D65)。负片默认经扫描仪输出, 其余经相纸 / 透射观看。"""
+        if self.scanner is not None:
+            return self.scan(self.negative(rgb_lin))
         return spectral.xyz_to_srgb(self.render_xyz(rgb_lin), self.white_xy)
 
     def _grain(self, st):
@@ -297,7 +340,9 @@ class Engine:
                          f"冲洗偏差 τ×{v.tau_factor:.3f} (时间 {v.dev_time_factor:.3f}, 温度 {v.dev_temp_offset:+.2f}°C, "
                          f"药液 {v.activity_factor:.3f})")
         lines.append(f"成像: {'负像' if self.polarity == 'negative' else '正像'}")
-        if self.paper is not None:
+        if self.scanner is not None:
+            lines.append(self.scanner.describe())
+        elif self.paper is not None:
             try:
                 ref = _reference_timing(self.e.key, self.paper.key)
             except FileNotFoundError:   # 派生材料没有标准底片可比

@@ -6,6 +6,7 @@
                     —— 制造公差 / 批次差异
   每次冲洗 (Lab)   显影时间、温度、药液活性 (补充液老化程度)
                     —— 冲洗机的工艺控制公差
+  扫描 (Scan)      自动颜色校正的力度 —— 扫描仪设置与操作员习惯
   每张底片 (Frame) 颗粒 (卤化银晶体的随机分布)、搅拌不均造成的低频密度起伏
                     —— 在 engine 中按 frame 种子生成
 
@@ -34,6 +35,8 @@ class Variation:
     frame_seed: int = 0
     agitation_density: float = 0.0         # 搅拌不均造成的低频密度起伏 (D, 1σ)
     back_reflect: float = 1.0              # 由材料决定 (remjet / 防光晕层), 不随机
+    # ---- 扫描
+    scan_strength: float = 0.75            # 扫描仪自动颜色校正的力度 (设置 / 操作员习惯)
 
     @property
     def tau_factor(self):
@@ -60,4 +63,5 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
         activity_factor=float(lab.normal(1.0, 0.025)),       # 补充液状态
         frame_seed=int(np.random.default_rng([roll_seed, 3, frame]).integers(1 << 31)),
         agitation_density=float(lab.uniform(0.004, 0.012)),
+        scan_strength=float(lab.uniform(0.6, 0.9)),
     )
