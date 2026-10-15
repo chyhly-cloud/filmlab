@@ -112,7 +112,7 @@ class Scanner:
         if profile is None:
             profile = e if self.mono else (e.key if e.key in SCANNER_PROFILES else self.m.default_profile)
         self.profile = profile if isinstance(profile, str) else profile.key
-        self.gain, _ = film_profile(profile, scanner)
+        self.gain, self.gray0 = film_profile(profile, scanner)   # 档案: 反差拉齐 + 该胶片中灰的通道平衡
         self.base = measure(engine._transmittance_base(), self.m)
         self.paper = emulsion(self.m.virtual_paper)
         self.curve = neutral_paper_curve(self.paper)   # 中性的数字相纸曲线
@@ -147,19 +147,21 @@ class Scanner:
               薄 (欠曝) 的负片片基印不到纯黑, 暗部发灰 —— 这是真实的物理现象。
               扫描仪会做自动色阶, 把反差拉伸让黑更深, 但拉伸幅度有限 (stretch_max, 扫描设置,
               在范围内随机); 超出上限时就保留发灰的黑。
-        nominal = None: 按灰卡定标, 不校正时三通道按档案视为中性。
-        nominal = 标准灰卡的密度: 按整张平均自动校正时, 参考密度相对标准只移动 ±density_limit
-                  (底片密度, ≈1 档) —— 不把夜景拉成白天; 颜色从标准灰卡的平衡出发按 strength 跟随。"""
+        不校正时的颜色 = 胶片档案里的中灰平衡 (gray0)。档案与实际胶片不符时 (CineStill 用通用的
+        Portra 800 档案), 二者中灰的差别就是需要自动校正去补的偏色, 校正不完的部分留在成片里。
+        nominal = None: 按灰卡定标。
+        nominal = 标准灰卡的密度: 按整张平均自动校正时, 亮度相对标准只移动 ±density_limit
+                  (底片密度, ≈1 档) —— 不把夜景拉成白天。"""
         x = self.paper.log_exposure
         need = np.interp(-np.log10(mid_gray), self.curve, x)        # 数字相纸上中灰需要的曝光
         x_black = float(x[np.argmax(self.curve >= 0.97 * self.curve.max())])
         ref = np.asarray(ref_density, float)
+        c0 = 0.0 if self.mono else self.gray0                      # 不校正时的通道平衡 (档案)
         if nominal is None:
-            g, c0 = ref[1], np.zeros(3)
+            g = ref[1]
         else:
             r0 = np.asarray(nominal, float)
             g = float(np.clip(ref[1], r0[1] - density_limit, r0[1] + density_limit))
-            c0 = r0 - r0[1]                                         # 不校正时的通道平衡
         g = max(g, 0.05)
         stretch = float(np.clip((x_black - need) / g, 1.0, self.stretch_max))   # 让片基尽量接近纯黑
         corr = np.clip(self.strength * ((ref - ref[1]) - c0), -color_limit / stretch, color_limit / stretch)

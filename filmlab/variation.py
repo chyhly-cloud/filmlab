@@ -3,7 +3,7 @@
 这里不是给图像"加随机效果", 而是让每个物理量在它真实的公差范围内取值:
 
   每卷胶片 (Roll)  片基厚度、乳剂各层的吸收强度、黄滤光层密度、乳剂散射特性
-                    —— 制造公差 / 批次差异
+                    —— 制造公差 / 批次差异; 交叉冲洗时染料光谱的变化 (没有实测数据, 取估计范围)
   每次冲洗 (Lab)   显影时间、温度、药液活性 (补充液老化程度)
                     —— 冲洗机的工艺控制公差
   扫描 (Scan)      自动颜色校正的力度、自动色阶的拉伸上限 —— 扫描仪设置与操作员习惯
@@ -27,6 +27,8 @@ class Variation:
     yellow_filter: float = 1.5             # 黄滤光层在蓝光波段的密度
     diffuse_fraction: float = 0.6          # 穿过乳剂后被散射为漫射光的比例
     forward: float = 1.5                   # 漫射光的前向程度 (cos^m)
+    dye_shift_nm: float = 7.0              # 成色剂遇到非设计显影剂时染料吸收峰的平移 (估计范围)
+    dye_broaden: float = 1.12              # 同上, 吸收带展宽倍数 (估计范围)
     # ---- 冲洗
     dev_time_factor: float = 1.0           # 实际显影时间 / 标称
     dev_temp_offset: float = 0.0           # 实际温度 − 标称 (°C)
@@ -59,6 +61,8 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
         yellow_filter=float(r.uniform(1.1, 1.9)),
         diffuse_fraction=float(r.uniform(0.45, 0.75)),
         forward=float(r.uniform(1.0, 2.5)),
+        dye_shift_nm=float(r.uniform(3.0, 12.0)),
+        dye_broaden=float(r.uniform(1.05, 1.20)),
         dev_time_factor=float(lab.normal(1.0, 0.01)),        # 3:15 的 ±2 秒
         dev_temp_offset=float(lab.normal(0.0, 0.10)),        # ±0.15 °C 的控制范围
         activity_factor=float(lab.normal(1.0, 0.025)),       # 补充液状态

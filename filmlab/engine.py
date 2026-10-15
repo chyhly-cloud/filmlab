@@ -22,6 +22,7 @@ from scipy.optimize import least_squares
 from . import chemistry, film, spectral
 from .chemistry import PROCESSES, Process
 from .materials import Emulsion, emulsion
+from .stocks import WAVELENGTHS
 from . import variation
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
@@ -172,11 +173,20 @@ class Engine:
 
     def _transmittance(self, st):
         e = self.e
-        dens = st.dye @ e.stock.dye_density.T + e.stock.base_density
+        dens = st.dye @ self._dye_spectra(st.dye_agent).T + e.stock.base_density
         neutral = (st.silver * e.silver_covering).mean(-1) + 0.3 * st.halide.mean(-1)
         if st.remjet:    # 没有去除的 remjet 残留: 近似为中性灰雾
             neutral = neutral + 0.4
         return 10.0 ** -(dens + neutral[..., None])
+
+    def _dye_spectra(self, agent):
+        """染料吸收光谱: 由形成染料的显影剂决定 (交叉冲洗时与设计不同)。"""
+        cache = self.__dict__.setdefault("_dye_cache", {})
+        if agent not in cache:
+            e = self.e
+            cache[agent] = chemistry.dye_spectra(e.stock.dye_density, WAVELENGTHS, chemistry.native_dye_agent(e),
+                                                 agent, self.v.dye_shift_nm, self.v.dye_broaden)
+        return cache[agent]
 
     def _transmittance_base(self):
         """未曝光片头 (片基 + 遮罩 + 残留 remjet) 的透射率, 扫描仪用它去片基。"""
@@ -222,7 +232,8 @@ class Engine:
         for i in range(0, n, chunk):
             sl = slice(i, i + chunk)
             sub = chemistry.FilmState(latent=None, halide=flat(st.halide)[sl], silver=flat(st.silver)[sl],
-                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet)
+                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet,
+                                      dye_agent=st.dye_agent)
             out[sl] = self._view(sub)
         return out.reshape(shape)
 
@@ -321,7 +332,8 @@ class Engine:
         for i in range(0, Dn.shape[0], chunk):
             sl = slice(i, i + chunk)
             sub = chemistry.FilmState(latent=None, halide=flat(st.halide)[sl], silver=flat(st.silver)[sl],
-                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet)
+                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet,
+                                      dye_agent=st.dye_agent)
             Dn[sl] = sc.normalized_density(self._transmittance(sub))
         if self.p.timing == "frame":           # 按整张底片的平均密度自动校正 (亮度校正有上限)
             # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。

@@ -72,15 +72,16 @@ class Developer:
     temp_doubling: float = 6.0   # 温度每升高这么多 °C, 显影速度翻倍 (估计值)
     grain: float = 1.0     # 颗粒倍数 (黑白显影液差异大)
     acutance: float = 0.0  # 边缘效应 (显影液在高密度区局部耗竭)
+    agent: str = ""        # 彩色显影剂 (决定染料的化学结构, 见 dye_spectra)
 
 
 # 时间 / 温度来自公开的 Kodak 工艺说明 (Z-131, Z-119, E-6, D-76 数据); 活性比为估计值
 DEVELOPERS = {
-    "C-41 CD": Developer("C-41 彩色显影 (CD-4)", "color", 3.25, 37.8, 1.00),
-    "ECN-2 CD": Developer("ECN-2 彩色显影 (CD-3)", "color", 3.00, 41.1, 0.85),
+    "C-41 CD": Developer("C-41 彩色显影 (CD-4)", "color", 3.25, 37.8, 1.00, agent="CD-4"),
+    "ECN-2 CD": Developer("ECN-2 彩色显影 (CD-3)", "color", 3.00, 41.1, 0.85, agent="CD-3"),
     "E-6 FD": Developer("E-6 第一显影 (黑白 PQ)", "bw", 6.00, 38.0, 1.60),
-    "E-6 CD": Developer("E-6 彩色显影 (CD-3)", "color", 6.00, 38.0, 0.80),
-    "RA-4 CD": Developer("RA-4 相纸彩色显影", "color", 0.75, 35.0, 1.00),
+    "E-6 CD": Developer("E-6 彩色显影 (CD-3)", "color", 6.00, 38.0, 0.80, agent="CD-3"),
+    "RA-4 CD": Developer("RA-4 相纸彩色显影", "color", 0.75, 35.0, 1.00, agent="CD-3"),
     "D-76": Developer("Kodak D-76 原液", "bw", 6.75, 20.0, 1.00),
     "Rodinal 1+50": Developer("Rodinal 1+50", "bw", 11.0, 20.0, 0.95, grain=1.35, acutance=0.6),
     "HC-110 B": Developer("HC-110 稀释 B", "bw", 5.0, 20.0, 1.03, grain=1.1, acutance=0.2),
@@ -90,6 +91,37 @@ DEVELOPERS = {
 # 每种设计的乳剂在哪种显影液里形成影像 (S_nom 就是在这个显影液、标准时间下的结果)
 NATIVE_IMAGE_DEVELOPER = {"C-41": "C-41 CD", "ECN-2": "ECN-2 CD", "E-6": "E-6 FD",
                           "BW-D76": "D-76", "RA-4": "RA-4 CD"}
+
+
+
+
+def native_dye_agent(e: Emulsion) -> str:
+    """乳剂的成色剂是按哪种彩色显影剂设计的 (原生工艺里形成染料的显影液)。"""
+    proc = PROCESSES.get(e.native_process)
+    if proc is None:
+        return ""
+    agents = [DEVELOPERS[s.developer].agent for s in proc.steps
+              if isinstance(s, Develop) and DEVELOPERS[s.developer].kind == "color"]
+    return agents[-1] if agents else ""
+
+
+def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, actual: str,
+                shift_nm: float, broaden: float) -> np.ndarray:
+    """成色剂与非设计的显影剂反应: 偶联生成的偶氮甲碱染料结构不同, 吸收光谱改变。
+    文献 (定性): CD-4 生成的染料比 CD-3 的吸收峰偏长波且更宽、稳定性更差。
+    这里按估计范围平移峰值 (shift_nm, CD-3 → CD-4 为正) 并展宽 (broaden), 展宽时保持积分吸收
+    (振子强度) 不变, 所以峰值降低。⚠ 幅度为估计值 (没有找到公开的实测数据), 按每卷在范围内随机。"""
+    if not native or not actual or native == actual:
+        return dye_density
+    sign = 1.0 if (native, actual) == ("CD-3", "CD-4") else -1.0
+    out = np.empty_like(dye_density)
+    for c in range(dye_density.shape[1]):
+        d = dye_density[:, c]
+        peak = wavelengths[np.argmax(d)]
+        src = peak + (wavelengths - peak - sign * shift_nm) / broaden
+        new = np.interp(src, wavelengths, d, left=d[0], right=d[-1])
+        out[:, c] = new * d.sum() / max(new.sum(), 1e-12)
+    return out
 
 
 # -------------------------------------------------------------- 步骤 --
@@ -174,6 +206,7 @@ class FilmState:
     remjet: bool = False
     image_silver: np.ndarray = None   # 成像显影形成的银 (决定颗粒)
     grain_factor: float = 1.0
+    dye_agent: str = ""               # 形成染料的显影剂
     log: list = field(default_factory=list)
 
     def density(self, silver_covering: float):
@@ -261,6 +294,8 @@ def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0,
             if dev.kind == "color":
                 new_dye = np.minimum(dS, st.coupler)
                 st.dye = st.dye + new_dye
+                if np.any(new_dye > 0):
+                    st.dye_agent = dev.agent
                 st.coupler = st.coupler - new_dye
                 if not e.has_couplers:
                     st.log.append("  乳剂没有成色剂 → 不生成染料")

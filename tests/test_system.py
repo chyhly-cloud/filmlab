@@ -209,3 +209,21 @@ def test_scan_without_profile_leaves_bounded_cast():
     """电影负片没有扫描档案, 用通用 Kodak 档案扫描 + 部分自动校正 → 留下有限的偏色。"""
     out = Engine(Params(film="kodak_vision3_250d", grain=0, roll=None)).render(RAMP)[0, 4]
     assert 1.0 < chroma(out) < 15.0
+
+
+def test_dye_spectra_change_only_when_cross_processed():
+    """染料由成色剂和显影剂共同决定: 只有遇到非设计的显影剂 (CD-3 胶片进 CD-4) 时光谱才改变,
+    且展宽时积分吸收不变、峰值后移。"""
+    from filmlab.stocks import WAVELENGTHS
+    def spectra(**kw):
+        eng = Engine(Params(grain=0, **kw))
+        st = eng._develop(np.full((1, 3), 0.0))
+        return eng._dye_spectra(st.dye_agent), eng.e.stock.dye_density
+    s, d = spectra(film="kodak_vision3_500t", process="ECN-2")
+    assert np.allclose(s, d)
+    s, d = spectra(film="kodak_portra_400")
+    assert np.allclose(s, d)
+    s, d = spectra(**recipe("cinestill_800t"))
+    assert not np.allclose(s, d)
+    assert np.allclose(s.sum(0), d.sum(0))
+    assert np.all(WAVELENGTHS[np.argmax(s, 0)] >= WAVELENGTHS[np.argmax(d, 0)])
