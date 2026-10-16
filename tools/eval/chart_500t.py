@@ -8,7 +8,8 @@ Fuji X100V RAW (X100V_02_01_Null.RAF)。
 只剩"颜色相对灰阶的分离方向与大小" —— 对比真实扫描、理想光谱曝光 (Ohta 色卡光谱 × 3200K × 500T 感光度)
 与本系统各阶段 (曝光 → 染料 → 扫描密度 → 输出)。
 
-用法: python3 tools/eval/chart_500t.py 扫描.jpg X100V.RAF
+用法: python3 tools/eval/chart_500t.py 数据目录 [场景 ...]
+  数据目录下: img/dlf_v3500T_500T_Noritsu_Bild_*.jpg 与 ref/dlf_x100v/X100V_*.RAF
 """
 import sys
 import numpy as np
@@ -22,9 +23,15 @@ from filmlab.materials import emulsion
 from filmlab.rawio import load_raw
 from filmlab.spectral import WAVELENGTHS, illuminant
 
-# 色块中心网格 (x0, y0, 每列 dx, 每行 x 偏移, 每列 y 偏移, 每行 dy, 采样半宽), 全分辨率像素
-GRID_SCAN = (3845, 2145, 106, -10, 7, 105, 20)          # 6774×4492 扫描
-GRID_RAW = (1835, 1176.7, 37, -0.7, 0, 39, 8)            # load_raw(max_size=3000) 的 3123×2085
+# 色块中心网格 (x0, y0, 每列 dx, 每行 x 偏移, 每列 y 偏移, 每行 dy, 采样半宽), 全分辨率像素:
+# 扫描 6774×4492; RAW 为 load_raw(max_size=3000) 的 3123×2085。理想曝光用的光源: 场记板上的色温。
+SCENES = {
+    "tungsten": dict(scan="Bild_4_NULL", raf="X100V_02_01_Null", light=("BB3200",),
+                     grid_scan=(3845, 2145, 106, -10, 7, 105, 20), grid_raw=(1835, 1176.7, 37, -0.7, 0, 39, 8)),
+    # Aputure 300X 设为 5600K (LED, 实际光谱未知: 用 D55 与 CIE LED-B4 两种估计)
+    "led5600": dict(scan="Bild_10_NULL", raf="X100V_04_01_Null", light=("D55", "LED-B4"),
+                    grid_scan=(1918, 2848, 94.4, 0, 0, 93.3, 18), grid_raw=(1240.7, 1341.7, 36.2, -1.7, 1.3, 36.7, 8)),
+}
 NEUTRAL = np.log10([0.90, 0.59, 0.36, 0.19, 0.09, 0.031])
 NAMES = "深肤 浅肤 蓝天 树叶 蓝花 青绿 橙 紫蓝 中红 紫 黄绿 橙黄 蓝 绿 红 黄 品红 青".split()
 
@@ -59,20 +66,26 @@ def summary(name, V, ref, detail=False):
             print(f"    {NAMES[i]:4s} 比 {m[i]:4.2f}  Δ {a[i]:+4.0f}°")
 
 
-def ideal_exposure():
+def ideal_exposure(light="BB3200"):
     sds = colour.SDS_COLOURCHECKERS["ColorChecker N Ohta"]
     W = WAVELENGTHS
     R = np.array([sds[k].copy().align(colour.SpectralShape(W[0], W[-1], W[1] - W[0])).values for k in sds])
-    return (R * illuminant("BB3200")) @ 10.0 ** emulsion("kodak_vision3_500t").stock.log_sensitivity
+    return (R * illuminant(light)) @ 10.0 ** emulsion("kodak_vision3_500t").stock.log_sensitivity
 
 
-def main(scan_path, raf_path):
-    ideal = vec(np.log10(ideal_exposure()))
-    summary("真实 Noritsu 扫描", vec(patches(np.asarray(Image.open(scan_path)), GRID_SCAN)), ideal)
-    raw = load_raw(raf_path, max_size=3000)
+def main(data, scene):
+    S = SCENES[scene]
+    print(f"== {scene}")
+    ideal = vec(np.log10(ideal_exposure(S["light"][0])))
+    for alt in S["light"][1:]:
+        summary(f"理想 ({alt}) vs 理想 ({S['light'][0]})", vec(np.log10(ideal_exposure(alt))), ideal)
+    real = patches(np.asarray(Image.open(f"{data}/img/dlf_v3500T_500T_Noritsu_{S['scan']}.jpg")), S["grid_scan"])
+    summary("真实 Noritsu 扫描", vec(real), ideal)
+    raw = load_raw(f"{data}/ref/dlf_x100v/{S['raf']}.RAF", max_size=3000)
     raw = raw[0] if isinstance(raw, tuple) else raw
-    summary("X100V 相机 RGB (输入)", vec(np.log10(np.maximum(patches(raw, GRID_RAW), 1e-6))), ideal)
-    gray = patches(raw, GRID_RAW)[21] @ np.array([0.2126, 0.7152, 0.0722])   # 线性亮度 (n5 色块)
+    G = S["grid_raw"]
+    summary("X100V 相机 RGB (输入)", vec(np.log10(np.maximum(patches(raw, G), 1e-6))), ideal)
+    gray = patches(raw, G)[21] @ np.array([0.2126, 0.7152, 0.0722])   # 线性亮度 (n5 色块)
     for scanner in ("noritsu", "frontier"):
         eng = Engine(Params(film="kodak_vision3_500t", process="ECN-2", scanner=scanner, timing="frame"))
         rec = {}
@@ -82,12 +95,14 @@ def main(scan_path, raf_path):
         # 场记板: ISO 500 测光 → 色卡中灰 (n5, 反射率 ≈ 0.19) 落在胶片中灰
         out = eng.render(raw[::2, ::2] * 0.184 / gray)
         h, w = out.shape[:2]
-        summary(f"{scanner}: 曝光 log H", vec(patches(rec["logH"], GRID_RAW, 0.5)), ideal)
-        summary(f"{scanner}: 染料量", vec(patches(eng.state.dye, GRID_RAW, 0.5)), ideal)
-        summary(f"{scanner}: 扫描密度", vec(-patches(rec["Dn"].reshape(h, w, 3), GRID_RAW, 0.5)), ideal)
-        summary(f"{scanner}: 输出", vec(patches(np.round(srgb_encode(np.clip(out, 0, 1)) * 255), GRID_RAW, 0.5)),
-                ideal)
+        summary(f"{scanner}: 曝光 log H", vec(patches(rec["logH"], G, 0.5)), ideal)
+        summary(f"{scanner}: 染料量", vec(patches(eng.state.dye, G, 0.5)), ideal)
+        summary(f"{scanner}: 扫描密度", vec(-patches(rec["Dn"].reshape(h, w, 3), G, 0.5)), ideal)
+        O = patches(np.round(srgb_encode(np.clip(out, 0, 1)) * 255), G, 0.5)
+        summary(f"{scanner}: 输出", vec(O), ideal)
+        print(f"    输出灰阶 G {O[18:, 1].round(0)}   真实扫描灰阶 G {real[18:, 1].round(0)}")
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:3])
+    for sc in sys.argv[2:] or list(SCENES):
+        main(sys.argv[1], sc)
