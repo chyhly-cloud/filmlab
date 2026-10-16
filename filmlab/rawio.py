@@ -95,8 +95,10 @@ def estimate_noise(img, bins=16):
         for lo, hi in zip(edges[:-1], edges[1:]):
             sel = ok & (mc >= lo) & (mc < hi)
             if sel.sum() > 200:
-                xs.append(mc[sel].mean())
-                ys.append((np.median(np.abs(hc[sel])) / 0.6745) ** 2)
+                v = (np.median(np.abs(hc[sel])) / 0.6745) ** 2
+                if v > 0:          # 极暗区量化后 |HH| 中位数可为 0: 无法估计, 且会让加权拟合除以零
+                    xs.append(mc[sel].mean())
+                    ys.append(v)
         if len(xs) >= 3:
             from scipy.optimize import nnls
             A = np.column_stack([xs, np.ones(len(xs))])

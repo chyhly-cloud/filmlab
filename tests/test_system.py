@@ -228,3 +228,13 @@ def test_dye_spectra_change_only_when_cross_processed():
     assert not np.allclose(s, d)
     assert np.allclose(s.sum(0), d.sum(0))
     assert np.all(WAVELENGTHS[np.argmax(s, 0)] >= WAVELENGTHS[np.argmax(d, 0)])
+
+
+def test_noise_estimate_survives_quantized_dark_frames():
+    """极暗、量化严重的画面 (大部分 2×2 块完全相同) 不能让噪声拟合崩溃。"""
+    from filmlab.rawio import estimate_noise
+    rng = np.random.default_rng(0)
+    img = np.round(rng.poisson(0.3, (256, 256, 3)) * 0.5) / 4000.0
+    img[:128] = 0.002
+    p = estimate_noise(img)
+    assert np.all(np.isfinite(p)) and np.all(p > 0)
