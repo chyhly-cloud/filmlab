@@ -188,7 +188,8 @@ class Engine:
         if agent not in cache:
             e = self.e
             cache[agent] = chemistry.dye_spectra(e.stock.dye_density, WAVELENGTHS, chemistry.native_dye_agent(e),
-                                                 agent, self.v.dye_shift_nm, self.v.dye_broaden)
+                                                 agent, self.v.dye_shift_nm, self.v.dye_broaden,
+                                                 self.v.dye_shift_other_nm)
         return cache[agent]
 
     def _transmittance_base(self):

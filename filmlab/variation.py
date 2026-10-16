@@ -27,8 +27,9 @@ class Variation:
     yellow_filter: float = 1.5             # 黄滤光层在蓝光波段的密度
     diffuse_fraction: float = 0.6          # 穿过乳剂后被散射为漫射光的比例
     forward: float = 1.5                   # 漫射光的前向程度 (cos^m)
-    dye_shift_nm: float = 7.0              # 成色剂遇到非设计显影剂时染料吸收峰的平移 (估计范围)
-    dye_broaden: float = 1.12              # 同上, 吸收带展宽倍数 (估计范围)
+    dye_shift_nm: float = 11.0             # 青色染料遇到非设计显影剂的峰平移 (US 5,183,729 实测 7–15 nm)
+    dye_shift_other_nm: float = 6.0        # 品红 / 黄的峰平移 (无公开数据, 估计范围)
+    dye_broaden: float = 1.0               # 带宽: 实测基本不变
     # ---- 冲洗
     dev_time_factor: float = 1.0           # 实际显影时间 / 标称
     dev_temp_offset: float = 0.0           # 实际温度 − 标称 (°C)
@@ -63,8 +64,8 @@ def sample(roll_seed: int | None, frame: int = 0, lab_seed: int | None = None) -
         yellow_filter=float(r.uniform(1.1, 1.9)),
         diffuse_fraction=float(r.uniform(0.45, 0.75)),
         forward=float(r.uniform(1.0, 2.5)),
-        dye_shift_nm=float(r.uniform(3.0, 12.0)),
-        dye_broaden=float(r.uniform(1.05, 1.20)),
+        dye_shift_nm=float(r.uniform(7.0, 15.0)),
+        dye_shift_other_nm=float(r.uniform(2.0, 10.0)),
         dev_time_factor=float(lab.normal(1.0, 0.01)),        # 3:15 的 ±2 秒
         dev_temp_offset=float(lab.normal(0.0, 0.10)),        # ±0.15 °C 的控制范围
         activity_factor=float(lab.normal(1.0, 0.025)),       # 补充液状态

@@ -108,11 +108,13 @@ def native_dye_agent(e: Emulsion) -> str:
 
 
 def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, actual: str,
-                shift_nm: float, broaden: float) -> np.ndarray:
-    """成色剂与非设计的显影剂反应: 偶联生成的偶氮甲碱染料结构不同, 吸收光谱改变。
-    文献 (定性): CD-4 生成的染料比 CD-3 的吸收峰偏长波且更宽、稳定性更差。
-    这里按估计范围平移峰值 (shift_nm, CD-3 → CD-4 为正) 并展宽 (broaden), 展宽时保持积分吸收
-    (振子强度) 不变, 所以峰值降低。⚠ 幅度为估计值 (没有找到公开的实测数据), 按每卷在范围内随机。"""
+                shift_nm: float, broaden: float, shift_other_nm: float | None = None) -> np.ndarray:
+    """成色剂与非设计的显影剂反应: 偶氮甲碱染料的供电子端来自显影剂, 吸收光谱随之改变。
+    CD-4 (N-羟乙基) 比 CD-3 (N-甲磺酰胺乙基, 吸电子) 供电子更强 → 吸收峰偏长波。
+    实测 (US 5,183,729 表中常规青色成色剂, CD-3 对 CD-4): 青色峰平移 +7…+15 nm, 带宽基本不变
+    → shift_nm 用于青色 (峰 > 600 nm), broaden 默认 1。
+    品红 / 黄没有找到公开对比数据: 方向按同一供电子机理取正, 幅度 shift_other_nm 为估计值。
+    展宽时保持积分吸收 (振子强度) 不变。"""
     if not native or not actual or native == actual:
         return dye_density
     sign = 1.0 if (native, actual) == ("CD-3", "CD-4") else -1.0
@@ -120,7 +122,8 @@ def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, a
     for c in range(dye_density.shape[1]):
         d = dye_density[:, c]
         peak = wavelengths[np.argmax(d)]
-        src = peak + (wavelengths - peak - sign * shift_nm) / broaden
+        sh = shift_nm if (peak > 600 or shift_other_nm is None) else shift_other_nm
+        src = peak + (wavelengths - peak - sign * sh) / broaden
         new = np.interp(src, wavelengths, d, left=d[0], right=d[-1])
         out[:, c] = new * d.sum() / max(new.sum(), 1e-12)
     return out
@@ -223,11 +226,24 @@ def initial_state(e: Emulsion, logH: np.ndarray) -> FilmState:
 
 
 # -------------------------------------------------------------- 执行 --
-def _dir_matrix(amount):
-    A = np.full((3, 3), 0.30 * amount)
+def _dir_matrix(amount, negative=True):
+    """A[i, j]: 第 i 层显影释放的抑制剂对第 j 层的作用。
+    标定目标: Kodak US 6,210,870 实测 C-41 负片 "分色曝光 gamma / 中性曝光 gamma":
+    R 1.15–1.49, G 1.42–1.64, B 1.29–1.50 (绿层受到的层间效应最强)。
+    这组值给出 Portra 800 [1.31 1.45 1.33]; 500T(C-41) 绿层受肩部限制为 1.31。
+    R↔B 不相邻 (中间隔着绿层), 扩散距离更远 → 打折。
+    反转片没有对应实测 (且第一显影是黑白显影), 保持原来较弱的估计值。"""
+    if not negative:
+        A = np.full((3, 3), 0.30 * amount)
+        np.fill_diagonal(A, 0.15 * amount)
+        A[2, 0] *= 0.5
+        A[0, 2] *= 0.5
+        return A
+    A = np.full((3, 3), 0.60 * amount)
+    A[:, 1] = 0.80 * amount
     np.fill_diagonal(A, 0.15 * amount)
-    A[2, 0] *= 0.5
-    A[0, 2] *= 0.5
+    A[2, 0] *= 0.75
+    A[0, 2] *= 0.75
     return A
 
 
@@ -251,7 +267,7 @@ def develop_image(e: Emulsion, logH, tau, inhib_amount, blur_px, kind="color"):
     S = kinetic_curve(e.S_nom, tau, x, kind)
     if inhib_amount <= 0:
         return _curves_at(logH, x, S)
-    A = _dir_matrix(inhib_amount)
+    A = _dir_matrix(inhib_amount, e.design == "negative")
     if e.design in ("bw", "paper"):     # 单层银影像: 只有同层的边缘效应
         A = np.diag(np.diag(A))
     C = _intrinsic_curve(e, S, A)
