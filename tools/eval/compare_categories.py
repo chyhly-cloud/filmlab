@@ -2,7 +2,8 @@
 import sys, glob, numpy as np, colour, warnings; warnings.filterwarnings("ignore")
 from PIL import Image
 SP="/tmp/claude-0/-home-user-filmlab/f67b7686-eba5-58fc-b23b-cf537590be15/scratchpad"
-sys.path.insert(0, SP); from ref_labels import REF, OURS
+sys.path.insert(0, SP); from ref_labels import OURS
+from ref3_labels import REF3 as REF
 refs=open(SP+"/reflist.txt").read().split("\n")
 def metrics(path):
     im8=np.asarray(Image.open(path).convert("RGB").resize((480,320))).astype(float)
@@ -21,6 +22,19 @@ outdir=sys.argv[1]
 ours=glob.glob(SP+f"/{outdir}/*.jpg")
 for cat in REF:
     print(cat)
-    show("真实",[metrics(refs[i]) for i in REF[cat]])
+    show("真实",[metrics(p) for p in REF[cat]])
     sel=[f for f in ours if any(f.split("/")[-1].startswith(p) for p in OURS[cat])]
     show("模拟",[metrics(f) for f in sel])
+
+# 综合误差: 每类每项 |模拟中位 − 真实中位| / 真实四分位距, 求和 (越小越接近)
+def score(outdir):
+    tot=0; parts={}
+    for cat in REF:
+        r=np.array([metrics(p) for p in REF[cat]]); o=np.array([metrics(f) for f in glob.glob(SP+f"/{outdir}/*.jpg") if any(f.split("/")[-1].startswith(p) for p in OURS[cat])])
+        iqr=np.maximum(np.nanpercentile(r,75,0)-np.nanpercentile(r,25,0),1.0)
+        e=np.abs(np.nanmedian(o,0)-np.nanmedian(r,0))/iqr
+        parts[cat]=dict(zip(NAMES,e.round(2))); tot+=e.sum()
+    return tot, parts
+t,p=score(outdir)
+print("综合误差", round(t,2))
+for c,v in p.items(): print(" ",c, " ".join(f"{k}:{x}" for k,x in v.items() if x>0.5))

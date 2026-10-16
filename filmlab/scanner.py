@@ -134,8 +134,18 @@ COLOR_LIMIT = 0.6    # 自动颜色校正的最大偏移 (底片密度), 估计�
 # 高光侧 (绿通道密度 95–99%) 的目标反射率: 冲印店扫描给高光留有余量。没有公开数据,
 # 由 32 张真实 800T 夜景 / 室内扫描的亮度 95 百分位推得 (中位数 0.58–0.76)。
 HIGHLIGHT_AIM = 0.65
-CONTRAST_RANGE = (0.8, 3.0)   # 逐张反差拟合的上下限, 估计值
-SLOPE_LIMIT = 0.35   # 灰平衡 LUT 对单通道反差的最大改变 (±35%), 估计值
+# 高光侧取绿通道密度的哪一段 (百分位)。夜景里最密的 1–3% 是光源与光晕 (在胶片肩部), 不是场景的高光;
+# 印放机拟合影调范围时不应按光源压缩反差。
+HL_PCT = [92.0, 96.0]
+# 逐张反差拟合的上下限。94 张真实 800T 扫描显示冲印店基本保持底片自身的反差 (拟合到相纸全范围
+# 会让影调范围比真实宽 5–15), 所以不做逐张反差拉伸。
+CONTRAST_RANGE = (1.0, 1.0)
+# 灰平衡对单通道反差的最大改变。真实扫描: 暗部接近中性而高光保留胶片的黄绿交叉偏色 —— 冲印店主要
+# 按偏移校正, 只能少量改变通道反差 (±15%, 由 94 张真实扫描的综合误差最小推得)。
+SLOPE_LIMIT = 0.15
+
+
+SHOULDER_WHITE = 0.93   # 高光肩部的渐近亮度 (真实 800T 扫描 99 百分位中位数 0.74–0.91), 估计值
 
 
 class Scanner:
@@ -157,6 +167,7 @@ class Scanner:
         self.strength = 0.0 if self.mono else strength
         self.stretch_max = stretch_max
         self.K, self.s, self.M = np.zeros(3), np.ones(3), None
+        self.x_knee = None
 
     def normalized_density(self, T):
         """去片基 (片基 = 0, 即黑点) → 按档案拉齐三通道反差。"""
@@ -167,7 +178,14 @@ class Scanner:
         x = self.paper.log_exposure
         if self.M is not None:              # 逐张的两点灰平衡 (每通道线性映射)
             Dn = self.M[0] + self.M[1] * Dn
-        Dp = np.interp(self.K - Dn * self.s, x, self.curve)
+        xe = self.K - Dn * self.s
+        if self.x_knee is not None:
+            # 高光肩部 (Fuji 2001: 高光区灰阶非线性): 比高光侧更亮的部分 (光源、反光) 在相纸曝光域里
+            # 平滑地压向接近纸白的 x_white, 而不是越过相纸趾部被截成纯白
+            xk, xw = self.x_knee, self.x_white
+            d = np.maximum(xk - xe, 0.0)
+            xe = np.where(xe < xk, xk - (xk - xw) * (1.0 - np.exp(-d / max(xk - xw, 1e-3))), xe)
+        Dp = np.interp(xe, x, self.curve)
         k = 10.0 ** -self.curve.max()
         if self.mono:
             out = (10.0 ** -Dp - k) / (1.0 - k)
@@ -214,7 +232,8 @@ class Scanner:
                 R = 10.0 ** -(d @ ps.dye_density.T + ps.base_density)
                 xyz = spectral.spectrum_to_xyz(R, illum) / white[1]
                 return np.log10(np.clip(xyz, 1e-9, None)) - np.log10(wn * 10.0 ** -D)
-            d0 = least_squares(resid, d0, bounds=(0, 6)).x
+            # 初值取在边界内 (从边界 d=0 出发时优化器会停在原地, 曾导致低密度全部被映射成纸白)
+            d0 = least_squares(resid, np.maximum(d0, 0.0) + max(D, 1e-3), bounds=(0, 6)).x
             layers[j] = d0
         return Dg, layers, illum, white, wxy
 
@@ -269,7 +288,7 @@ class Scanner:
         Dn = np.asarray(Dn, float)
         ok = np.all(np.isfinite(Dn), -1)
         g = Dn[ok, 1]
-        lo, hi = np.percentile(g, [1, 5, 95, 99]).reshape(2, 2)
+        lo, hi = np.percentile(g, [1, 5] + HL_PCT).reshape(2, 2)
         sh = Dn[ok][(g >= lo[0]) & (g <= lo[1])].mean(0)
         hl = Dn[ok][(g >= hi[0]) & (g <= hi[1])].mean(0)
         c0 = 0.0 if self.mono else self.gray0
@@ -298,6 +317,10 @@ class Scanner:
                      color_limit=0.0, stretch=stretch)
         self.gray0 = saved
         self.K = np.full(3, self.K[1])
+        # 肩部起点: 高光侧在相纸上的位置, 但不比高光目标更亮 (亮度校正把高光侧推过目标时, 从目标处开始压缩)
+        x_band = float(self.K[1] - stretch * float(off[1] + r[1] * hl[1]))
+        self.x_knee = max(x_band, x_hl)
+        self.x_white = float(np.interp(-np.log10(SHOULDER_WHITE), cv, x))
 
     def render(self, T):
         """底片光谱透射率 → 线性 sRGB。"""

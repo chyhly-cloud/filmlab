@@ -4,7 +4,7 @@ from multiprocessing import Pool
 from pathlib import Path
 SP="/tmp/claude-0/-home-user-filmlab/f67b7686-eba5-58fc-b23b-cf537590be15/scratchpad"
 out=Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
-files=[f for f in sorted(glob.glob(SP+'/rawcache/*.npy')) if os.path.basename(f).startswith(tuple(os.environ.get('ONLY','').split(','))) ] if os.environ.get('ONLY') else [f for f in sorted(glob.glob(SP+"/rawcache/*.npy")) if not os.path.basename(f).startswith(("day_s7","day_x1","day_z6","day_ip","day_gr","day_q2"))]
+files=[f for f in sorted(glob.glob(SP+'/rawcache/*.npy')) if os.path.basename(f).startswith(tuple(os.environ.get('ONLY','').split(','))) ] if os.environ.get('ONLY') else sorted(glob.glob(SP+"/rawcache/*.npy"))
 def job(a):
     i,f=a
     from filmlab.engine import Engine, Params
