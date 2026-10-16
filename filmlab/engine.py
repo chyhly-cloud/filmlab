@@ -27,8 +27,9 @@ from . import variation
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
-# 正常曝光的日光场景, LATD 比灰卡密度低多少 (Portra 400, 10 张正常曝光 RAW 的中位数, 范围 0.06–0.21)
-LATD_NORMAL = -0.127
+# 正常曝光的日光场景, LATD 比灰卡密度低多少 (Portra 400, 15 张日光 RAW 按胶片测光模型曝光的中位数,
+# 范围 −0.39…+0.03; 扫描链路改为印放密度后重新标定)
+LATD_NORMAL = -0.27
 
 
 @dataclass

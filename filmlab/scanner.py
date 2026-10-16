@@ -297,9 +297,15 @@ class Scanner:
         r = np.clip(1.0 + self.strength * (full - 1.0), 1.0 - slope_limit, 1.0 + slope_limit)
         # 不校正: 只按档案的中灰平衡 (Dn_c − c0_c); 完全校正: 暗部侧映射到绿通道的暗部侧。
         # 部分校正: 暗部侧的目标在两者之间按 strength 插值, 偏离"不校正"不超过 color_limit
-        none_sh = sh - c0
-        target = none_sh + np.clip(self.strength * (sh[1] - none_sh), -color_limit, color_limit)
-        off = target - r * sh
+        # 颜色偏移的两种依据 (Fuji 专利: 由 LATD 与暗部 / 高光侧共同求灰平衡):
+        #   暗部侧中性 —— 夜景里暗部不受灯光颜色影响, 是可靠的中性参考;
+        #   LATD 中性 (印放机的积分中性法) —— 日光 / 蓝调里暗部是天光照的阴影, 本身偏蓝。
+        lat = -np.log10(np.mean(10.0 ** -(r * Dn[ok]), 0))
+        none_l, none_sh = lat - c0, r * sh - c0
+        off_l = none_l + np.clip(self.strength * (lat[1] - none_l), -color_limit, color_limit) - lat
+        off_s = none_sh + np.clip(self.strength * (r[1] * sh[1] - none_sh), -color_limit, color_limit) - r * sh
+        wl = 0.5          # 两者各半 (94 张真实扫描的综合误差: 仅暗部 16.9, 仅 LATD 17.7, 各半 16.7)
+        off = wl * off_l + (1 - wl) * off_s
         r[1], off[1] = 1.0, 0.0
         self.M = (off, r)
         Dm = off + r * Dn[ok]
