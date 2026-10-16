@@ -41,6 +41,10 @@ class ScannerModel:
     virtual_paper: str        # 数字相纸
     default_profile: str      # 没有对应档案时冲印店用的通用档案
     output_tint: tuple = ((0.0, 0.0, 0.0), (100.0, 0.0, 0.0))   # 输出灰平衡目标 (L, a, b) 锚点; 默认严格中性
+    # 输出是否复现相纸染料的串扰 (参考印放)。Frontier: Fuji 2001 称其目标是复现银盐相纸印放。
+    # Noritsu: 真实 Noritsu 扫描的 ColorChecker (Vision3 500T, 3200K, tools/eval/chart_500t.py) 的色彩方向
+    # 与"理想光谱曝光"一致 (黄绿 −8°, 绿 −6°), 而加上相纸串扰后模拟偏转 +20–30° → 不复现串扰。
+    print_crosstalk: bool = True
 
 
 # 冲印店扫描仪输出的灰平衡目标 (随亮度变化的色调, Lab a/b)。Fuji 专利: 扫描仪按暗部 / 高光侧建立
@@ -56,7 +60,7 @@ SCANNERS = {
     "frontier_neutral": ScannerModel("Frontier 型, 严格中性输出", (650.0, 540.0, 450.0), (14.0, 16.0, 14.0),
                                      "fujifilm_crystal_archive_typeii", "kodak_portra_800"),
     "noritsu": ScannerModel("Noritsu 型 (估计参数)", (660.0, 525.0, 455.0), (11.0, 13.0, 11.0),
-                            "kodak_portra_endura", "kodak_portra_800"),
+                            "kodak_portra_endura", "kodak_portra_800", print_crosstalk=False),
 }
 
 # 扫描仪自带档案的胶片 (主流民用 / 专业负片)。电影负片、CineStill 不在其中。
@@ -224,6 +228,11 @@ class Scanner:
         按这一关系换算为第 c 层的染料量, 再由染料光谱、D50 观看光源算出颜色。
         输出是数字文件: 相纸白 = 白, 相纸最大密度 (k) = 黑 (相对介质渲染 + 黑点补偿)。"""
         from . import spectral
+        if not self.m.print_crosstalk:
+            # 各通道独立: 每个通道按相纸的中性灰阶 (相对纸白的反射率 10^-Dp) 输出, 灰阶与参考印放完全相同
+            b0 = OUTPUT_BLACK
+            out = b0 + (1.0 - b0) * (10.0 ** -Dp - k) / (1.0 - k)
+            return _output_tint(out, self.m.output_tint)
         if self._print_lut is None:
             self._print_lut = self._neutral_layers()
         Dg, layers, illum, white, wxy = self._print_lut
