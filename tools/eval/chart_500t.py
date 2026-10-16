@@ -72,15 +72,15 @@ def main(scan_path, raf_path):
     raw = load_raw(raf_path, max_size=3000)
     raw = raw[0] if isinstance(raw, tuple) else raw
     summary("X100V 相机 RGB (输入)", vec(np.log10(np.maximum(patches(raw, GRID_RAW), 1e-6))), ideal)
-    gray = colour.sRGB_to_XYZ(patches(raw, GRID_RAW)[21])[1]
+    gray = patches(raw, GRID_RAW)[21] @ np.array([0.2126, 0.7152, 0.0722])   # 线性亮度 (n5 色块)
     for scanner in ("noritsu", "frontier"):
         eng = Engine(Params(film="kodak_vision3_500t", process="ECN-2", scanner=scanner, timing="frame"))
         rec = {}
         dev, to_rgb = eng._develop, eng.scanner.to_rgb
         eng._develop = lambda x, **kw: rec.setdefault("logH", x) is not None and dev(x, **kw)
         eng.scanner.to_rgb = lambda Dn: (rec.__setitem__("Dn", Dn.copy()), to_rgb(Dn))[1]
-        # 0.25: 让中灰落在输出中间调 (此场景大面积白墙, 自动 LATD 校正有上限)
-        out = eng.render(raw[::2, ::2] * 0.184 / gray * 0.25)
+        # 场记板: ISO 500 测光 → 色卡中灰 (n5, 反射率 ≈ 0.19) 落在胶片中灰
+        out = eng.render(raw[::2, ::2] * 0.184 / gray)
         h, w = out.shape[:2]
         summary(f"{scanner}: 曝光 log H", vec(patches(rec["logH"], GRID_RAW, 0.5)), ideal)
         summary(f"{scanner}: 染料量", vec(patches(eng.state.dye, GRID_RAW, 0.5)), ideal)
