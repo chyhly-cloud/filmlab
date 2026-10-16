@@ -53,6 +53,13 @@ SATURATION_MATRIX = np.array([[0.790, -0.064, 0.274],
                               [-0.053, 0.200, 0.853]])
 
 
+# 逐帧灰平衡方法: "two_point" = 现行 (暗部 / 整体平均偏移 + 受限斜率);
+# "us6160634" = Fuji US6160634 三种估计 0.2:0.5:0.3 加权 (待定: ref3 B 20.78→20.48, C 18.50→17.67,
+# EPFL 夜景 13.25→13.20, SillyStill 12.00→12.04; 见 tools/eval/CRITERIA.md)。高彩度阈值在调参集 A 上选出 0.2。
+GRAY_BALANCE = "two_point"
+GB_CHROMA_THRESHOLD = 0.2
+
+
 # 冲印店扫描仪输出的灰平衡目标 (随亮度变化的色调, Lab a/b)。Fuji 专利: 扫描仪按暗部 / 高光侧建立
 # 灰平衡 LUT, 但其目标值未公开。由一半真实 800T 冲印店扫描 (调参集 A) 估计: 暗部略偏暖品红、中间调偏暖、
 # 高光偏黄绿; 在另一半 (验证集 B, 未参与估计) 上综合误差 29.5 → 23.9 (真实 A 与 B 之间为 26–27)。
@@ -343,6 +350,8 @@ class Scanner:
         wl = 0.5          # 两者各半 (94 张真实扫描的综合误差: 仅暗部 16.9, 仅 LATD 17.7, 各半 16.7)
         off = wl * off_l + (1 - wl) * off_s
         r[1], off[1] = 1.0, 0.0
+        if GRAY_BALANCE == "us6160634":
+            off, r = self._gray_balance_us6160634(Dn[ok], sh, hl, c0, color_limit, GB_CHROMA_THRESHOLD)
         self.M = (off, r)
         Dm = off + r * Dn[ok]
         # 亮度依据: 数码冲印机由密度直方图求平均密度 (Fuji US6668096B1), 不是光学印放机光电池测的
@@ -366,6 +375,30 @@ class Scanner:
         x_band = float(self.K[1] - stretch * float(off[1] + r[1] * hl[1]))
         self.x_knee = max(x_band, x_hl)
         self.x_white = float(np.interp(-np.log10(SHOULDER_WHITE), cv, x))
+
+    def _gray_balance_us6160634(self, D, sh, hl, c0, color_limit, chroma_thr, k=(0.2, 0.5, 0.3)):
+        """Fuji US6160634 的灰平衡: 三种估计按 k1:k2:k3 = 0.2:0.5:0.3 加权 (专利示例值)。
+        在标准化密度 u = Dn − c0 (c0: 档案的中灰平衡) 中, 中性 ⇔ u_r = u_g = u_b; 每通道 u' = o + r·u。
+          1. 该胶片类型的平均灰轴 (大量照片统计)  → 不做逐帧校正: o = 0, r = 1
+          2. 本帧高光 / 暗部参考点连成的灰轴 (专利: 5% / 95% 点, 面积 > 3%)  → 两点映射到绿通道
+          3. 剔除高彩度像素后的平均密度  → 只校正偏移
+        估计 1 占 0.2, 所以总体只校正约 80%, 与 Fuji US7146041 "减弱到 60–80%" 一致。
+        高彩度阈值 chroma_thr 专利未给出 (相对本帧中位色平衡的通道密度差)。"""
+        u = D - c0
+        ush, uhl = sh - c0, hl - c0
+        span = uhl - ush
+        r2 = np.where(np.abs(span) > 0.02, span[1] / np.where(np.abs(span) > 0.02, span, 1.0), 1.0)
+        o2 = ush[1] - r2 * ush
+        dev = u - np.median(u, 0)
+        chroma = np.max(np.abs(dev - dev[:, 1:2]), axis=1)
+        keep = chroma <= chroma_thr
+        m3 = u[keep].mean(0) if keep.sum() > 0.03 * len(u) else u.mean(0)
+        o3 = m3[1] - m3
+        r = k[0] + k[1] * r2 + k[2]
+        o = k[1] * o2 + k[2] * o3
+        o = np.clip(o, -color_limit, color_limit)
+        r[1], o[1] = 1.0, 0.0
+        return o - r * c0, r
 
     def render(self, T):
         """底片光谱透射率 → 线性 sRGB。"""
