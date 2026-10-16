@@ -296,7 +296,13 @@ def film_exposure(rgb, path=None, gray=0.184):
     return rgb * gray / (10.0 / 78.0)
 
 
-def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=None, bias_ev=0.7):
+# 摄影师实际给 CineStill 800T 的曝光 (相对 EI 800 的档数), 来自参考集来源页中摄影师对自己拍摄的陈述
+# (正常显影; 不含推冲、只给建议的页面与存疑的页面): EI 320/400/500×4/"500或640"/640×2/800×4。
+# 中位数 +0.5 档; 夜景 / 室内 (n=9) 中位 +0.68 档, 日光样本很少。tools/eval/ei_survey.tsv
+EI_SURVEY_EV = (1.32, 1.0, 0.68, 0.68, 0.68, 0.68, 0.5, 0.32, 0.32, 0.0, 0.0, 0.0, 0.0)
+
+
+def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=None, bias_ev=None):
     """胶片摄影师用胶片相机拍同一场景: 按 EI 测光, 但受相机的物理极限约束。
 
     rgb     load_raw 的输出 (1.0 = 传感器截断), l_clip: 截断点的场景亮度 (cd/m², EXIF)。
@@ -306,8 +312,8 @@ def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=N
             欠多少由绝对亮度决定 —— 夜景比室内更容易欠曝, 这是真实的物理约束。
             最小光圈 / 最高快门限制强光 (f/16, 1/1000)。
             原片用了比手持更长的曝光 (t_original, EXIF) 说明用了三脚架: 胶片摄影师同样可以。
-    补偿    bias_ev: 负片 "宁过勿欠" 的习惯 (CineStill 日光下也建议按 EI 500 曝光), 默认 +0.7 档 (估计);
-            同样受相机极限约束 —— 光线不够时补偿不了, 所以夜景仍然偏暗。
+    补偿    bias_ev: 摄影师在测光读数上多给 / 少给的曝光。默认按实测分布 EI_SURVEY_EV 每张随机抽取
+            (摄影师自述的拍摄 EI); 同样受相机极限约束 —— 光线不够时补偿不了。
     随机    每张的镜头与快门在常见范围内取 (rng): N_min ∈ {1.4, 1.8, 2} (夜拍 800T 常用大光圈定焦),
             手持 t_max ∈ [1/60, 1/15] s。
     返回    胶片曝光 (中灰 = gray, 即胶片按 EI 正确曝光时中灰卡的位置) 与说明。"""
@@ -319,7 +325,9 @@ def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=N
     wgt = wgt * (Y < 0.9)                                   # 不计光源 / 截断的高光
     y_meter = float((Y * wgt).sum() / max(wgt.sum(), 1e-9))
     y_meter = max(y_meter, 1e-6)
-    scale, note = gray / y_meter * 2.0 ** bias_ev, "测光"
+    if bias_ev is None:
+        bias_ev = float(rng.choice(EI_SURVEY_EV))
+    scale, note = gray / y_meter * 2.0 ** bias_ev, f"测光 (补偿 {bias_ev:+.2f} 档)"
     if l_clip is not None:
         L = y_meter * l_clip                                # 测光读数 (cd/m²)
         need = L * ei / 12.5 / 2.0 ** bias_ev               # 需要的 N²/t (含负片 "宁过勿欠" 的曝光补偿)
