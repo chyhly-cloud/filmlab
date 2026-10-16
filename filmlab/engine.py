@@ -27,9 +27,9 @@ from . import variation
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
-# 正常曝光的日光场景, LATD 比灰卡密度低多少 (Portra 400, 15 张日光 RAW 按胶片测光模型曝光的中位数,
-# 范围 −0.39…+0.03; 扫描链路改为印放密度后重新标定)
-LATD_NORMAL = -0.27
+# 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
+# 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
+LATD_NORMAL = -0.14
 
 
 @dataclass
@@ -343,9 +343,8 @@ class Engine:
             # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。
             # 冲印店不知道场景用的什么光; RAW 的日光白平衡与此无关。
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
-            # LATD (大面积透射密度): 整张底片平均透射光的密度 —— 印放机 / 扫描仪测的是透过来的光,
-            # 薄 (暗部) 的区域透光多, 权重大。夜景底片大部分接近片基, LATD 很低 → 冲印店大幅提亮。
-            # 印放机按"正常场景的 LATD 印成正常"标定, 正常场景的 LATD 比灰卡低 LATD_NORMAL。
+            # 数码冲印机按整张底片的平均密度 (密度直方图) 定亮度; 夜景底片大部分接近片基, 平均密度很低
+            # → 冲印店提亮, 但有上限。按"正常场景印成正常"标定, 正常场景的平均密度比灰卡低 LATD_NORMAL。
             sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
         out = sc.to_rgb(Dn)
         if self.p.timing == "frame":
