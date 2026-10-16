@@ -43,6 +43,16 @@ class ScannerModel:
     output_tint: tuple = ((0.0, 0.0, 0.0), (100.0, 0.0, 0.0))   # 输出灰平衡目标 (L, a, b) 锚点; 默认严格中性
 
 
+# 扫描仪灰平衡之后的"饱和度校正运算矩阵" (Fuji US6668096B1: 条件设定部决定灰平衡 LUT 与
+# "an operation matrix for performing saturation correction"), 作用于线性输出 RGB, 行和 = 1 (中性不变)。
+# 系数未公开: 由 SillyStill 的 5 对 CineStill 800T 实拍配对 (同一三脚架的数码原片 + 冲印店扫描) 拟合,
+# 每帧允许独立的通道增益 (冲印店逐张定光), 矩阵共用。留一验证 5 对全部改善 (ΔE 中位 11.5→9.7 等);
+# 在未参与拟合的 ref3 验证集 B 上 23.8→20.8, 测试集 C 19.8→18.5。tools/eval/fit_scan_matrix.py
+SATURATION_MATRIX = np.array([[0.790, -0.064, 0.274],
+                              [0.099, 0.765, 0.136],
+                              [-0.053, 0.200, 0.853]])
+
+
 # 冲印店扫描仪输出的灰平衡目标 (随亮度变化的色调, Lab a/b)。Fuji 专利: 扫描仪按暗部 / 高光侧建立
 # 灰平衡 LUT, 但其目标值未公开。由一半真实 800T 冲印店扫描 (调参集 A) 估计: 暗部略偏暖品红、中间调偏暖、
 # 高光偏黄绿; 在另一半 (验证集 B, 未参与估计) 上综合误差 29.5 → 23.9 (真实 A 与 B 之间为 26–27)。
@@ -238,6 +248,7 @@ class Scanner:
             b0 = OUTPUT_BLACK
             xyz = b0 * white / white[1] + (1.0 - b0) * (xyz - k * white / white[1]) / (1.0 - k)
             out[i:i + chunk] = spectral.xyz_to_srgb(xyz, wxy)
+        out = np.clip(out, 0.0, None) @ SATURATION_MATRIX.T
         return _output_tint(out, self.m.output_tint).reshape(shape)
 
     def _neutral_layers(self):

@@ -138,12 +138,13 @@ def test_status_m_sees_unwanted_absorption():
 
 def test_tungsten_film_daylight_vs_tungsten_light():
     """灯光片 (500T): 日光下拍、冲印店不逐张校正 → 偏蓝; 钨丝灯下拍 → 接近中性。
-    输入为日光白平衡的 RGB, 钨丝灯照明的灰卡在其中本身就是橙色的 (2856K 黑体相对 D55)。"""
+    输入为日光白平衡的 RGB, 钨丝灯照明的灰卡在其中本身就是橙色的 (3200K 黑体相对 D55)。
+    用胶片的设计光源 3200K (Kodak 5219 datasheet); 2856K 的 A 光源比设计更暖, 本身就留有偏色。"""
     import colour
     def gray_out(rgb):
         eng = Engine(Params(film="kodak_vision3_500t", grain=0, timing="standard"))
         return eng.render(np.asarray(rgb, float).reshape(1, 1, 3))[0, 0]
-    xyz_a = colour.sd_to_XYZ(colour.SDS_ILLUMINANTS["A"]); xyz_d = colour.sd_to_XYZ(colour.SDS_ILLUMINANTS["D55"])
+    xyz_a = colour.sd_to_XYZ(colour.sd_blackbody(3200)); xyz_d = colour.sd_to_XYZ(colour.SDS_ILLUMINANTS["D55"])
     M = colour.models.RGB_COLOURSPACE_sRGB.matrix_XYZ_to_RGB
     tung = (M @ xyz_a) / (M @ xyz_d)
     tung = 0.184 * tung / (tung @ np.array([0.2126, 0.7152, 0.0722]))
