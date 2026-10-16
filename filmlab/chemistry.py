@@ -33,10 +33,12 @@ from .materials import Emulsion
 #   S(τ)(x) = S_nom(x + SHIFT·ln τ) · τ^A
 #   (更多颗粒被显影 → 感光度提升; 每个显影中心长出更多银 → 密度按比例增加。两项都只增不减)
 # τ = 相对显影程度 (时间 × 温度系数 × 显影液活性比)。
-# 拟合残差 0.048D (不建模时 0.32D)。见 tests/test_system.py。
+# 不建模时残差 0.32D。见 tests/test_system.py。
 # 旁证: ECN-2 胶片进 C-41 (CineStill) τ≈1.18 → 感光度 +0.6 档、反差 ×1.16, 与 500T → EI 800 一致。
-KIN_A = 0.900          # 密度倍增 (τ 的指数)
-KIN_SHIFT = 1.048      # 感光度提升 (logH / ln τ)
+# 每层分别拟合 (R, G, B): 各层乳剂对显影程度的响应不同 (每层残差 0.020 / 0.028 / 0.029 D,
+# 三层共用一组参数时为 0.048 D)。绿感层随显影延长增加的反差明显较少。
+KIN_A = np.array([1.100, 0.651, 0.965])      # 密度倍增 (τ 的指数)
+KIN_SHIFT = np.array([0.807, 1.192, 1.044])  # 感光度提升 (logH / ln τ)
 KIN_PIVOT = 0.413      # 黑白显影反差变化的支点 (× 该层最大密度)
 
 
@@ -57,8 +59,8 @@ def kinetic_curve(curve: np.ndarray, tau: float, x: np.ndarray = None, kind: str
         shifted = np.stack([np.interp(x + KIN_BW_SHIFT * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
         dp = KIN_PIVOT * curve.max(0)
         return np.clip(dp + (shifted - dp) * tau ** KIN_BW_A, 0, None)
-    shifted = np.stack([np.interp(x + KIN_SHIFT * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
-    return shifted * tau ** KIN_A
+    shifted = np.stack([np.interp(x + KIN_SHIFT[c] * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
+    return shifted * tau ** KIN_A[None, :]
 
 
 # ----------------------------------------------------------- 显影液 --

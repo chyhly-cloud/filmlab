@@ -200,8 +200,8 @@ def test_roll_variation_within_process_tolerance():
 # ------------------------------------------------------------- 扫描 --
 @pytest.mark.parametrize("name", ["kodak_portra_400", "kodak_gold_200", "fujifilm_pro_400h", "bw_pan"])
 def test_scan_neutral_with_matching_profile(name):
-    """扫描仪里有该胶片的档案时, 中灰扫描后应为中性。"""
-    out = Engine(Params(**{**recipe(name), "grain": 0, "roll": None})).render(RAMP)[0, 4]
+    """扫描仪里有该胶片的档案时, 中灰扫描后应为中性 (输出目标严格中性的扫描仪; 冲印店的偏暖目标另计)。"""
+    out = Engine(Params(**{**recipe(name), "grain": 0, "roll": None, "scanner": "frontier_neutral"})).render(RAMP)[0, 4]
     assert chroma(out) < 3.0 and abs(out.mean() - 0.18) < 0.03
 
 

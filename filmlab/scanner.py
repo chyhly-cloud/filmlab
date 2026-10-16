@@ -40,11 +40,21 @@ class ScannerModel:
     led_widths: tuple         # 高斯 σ (nm)
     virtual_paper: str        # 数字相纸
     default_profile: str      # 没有对应档案时冲印店用的通用档案
+    output_tint: tuple = ((0.0, 0.0, 0.0), (100.0, 0.0, 0.0))   # 输出灰平衡目标 (L, a, b) 锚点; 默认严格中性
+
+
+# 冲印店扫描仪输出的灰平衡目标 (随亮度变化的色调, Lab a/b)。Fuji 专利: 扫描仪按暗部 / 高光侧建立
+# 灰平衡 LUT, 但其目标值未公开。由一半真实 800T 冲印店扫描 (调参集 A) 估计: 暗部略偏暖品红、中间调偏暖、
+# 高光偏黄绿; 在另一半 (验证集 B, 未参与估计) 上综合误差 29.5 → 23.9 (真实 A 与 B 之间为 26–27)。
+# (L, a, b) 锚点, 纯黑 / 纯白保持中性。只由 800T 扫描估计, 可能包含尚未建模的胶片交叉偏色。
+LAB_TINT = ((0.0, 0.0, 0.0), (10.0, 1.6, 1.1), (45.0, 3.4, 6.1), (85.0, -3.7, 4.2), (100.0, 0.0, 0.0))
 
 
 SCANNERS = {
     "frontier": ScannerModel("Frontier 型 (估计参数)", (650.0, 540.0, 450.0), (14.0, 16.0, 14.0),
-                             "fujifilm_crystal_archive_typeii", "kodak_portra_800"),
+                             "fujifilm_crystal_archive_typeii", "kodak_portra_800", LAB_TINT),
+    "frontier_neutral": ScannerModel("Frontier 型, 严格中性输出", (650.0, 540.0, 450.0), (14.0, 16.0, 14.0),
+                                     "fujifilm_crystal_archive_typeii", "kodak_portra_800"),
     "noritsu": ScannerModel("Noritsu 型 (估计参数)", (660.0, 525.0, 455.0), (11.0, 13.0, 11.0),
                             "kodak_portra_endura", "kodak_portra_800"),
 }
@@ -145,7 +155,21 @@ CONTRAST_RANGE = (1.0, 1.0)
 SLOPE_LIMIT = 0.15
 
 
+OUTPUT_BLACK = 0.002   # 数字相纸最大密度对应的输出亮度 (冲印店扫描的黑不是 0; 在调参 / 验证两半真实扫描上都改善)
 SHOULDER_WHITE = 0.93   # 高光肩部的渐近亮度 (真实 800T 扫描 99 百分位中位数 0.74–0.91), 估计值
+
+
+def _output_tint(rgb, tint):
+    """扫描仪输出的灰平衡目标: 在 Lab 中按亮度加上 tint 的 a/b 偏移。"""
+    import colour
+    shape = rgb.shape
+    lab = colour.XYZ_to_Lab(colour.sRGB_to_XYZ(np.clip(rgb.reshape(-1, 3), 0, None), apply_cctf_decoding=False))
+    Ls, As, Bs = (np.array(v) for v in zip(*tint))
+    if not np.any(As) and not np.any(Bs):
+        return rgb
+    lab[:, 1] += np.interp(lab[:, 0], Ls, As)
+    lab[:, 2] += np.interp(lab[:, 0], Ls, Bs)
+    return colour.XYZ_to_sRGB(colour.Lab_to_XYZ(lab), apply_cctf_encoding=False).reshape(shape)
 
 
 class Scanner:
@@ -211,9 +235,10 @@ class Scanner:
             d = np.stack([np.interp(flat[i:i + chunk, c], Dg, layers[:, c]) for c in range(3)], -1)
             R = 10.0 ** -(d @ ps.dye_density.T + ps.base_density)
             xyz = spectral.spectrum_to_xyz(R, illum) / white[1]
-            xyz = (xyz - k * white / white[1]) / (1.0 - k)
+            b0 = OUTPUT_BLACK
+            xyz = b0 * white / white[1] + (1.0 - b0) * (xyz - k * white / white[1]) / (1.0 - k)
             out[i:i + chunk] = spectral.xyz_to_srgb(xyz, wxy)
-        return out.reshape(shape)
+        return _output_tint(out, self.m.output_tint).reshape(shape)
 
     def _neutral_layers(self):
         """中性灰阶: 对每个视觉密度 D, 求相纸三层的染料量, 使反射光在 D50 下呈中性、亮度 = 10^-D (相对纸白)。"""
