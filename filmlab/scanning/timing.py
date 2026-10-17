@@ -117,8 +117,9 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
     wl = 0.5          # 两者各半 (94 张真实扫描的综合误差: 仅暗部 16.9, 仅 LATD 17.7, 各半 16.7)
     off = wl * off_l + (1 - wl) * off_s
     r[1], off[1] = 1.0, 0.0
-    if gray_balance == "us6160634":
-        off, r = gray_balance_us6160634(Dn[ok], sh, hl, c0, color_limit, chroma_thr)
+    if gray_balance in ("us6160634", "us6160634_axis"):
+        off, r = gray_balance_us6160634(Dn[ok], sh, hl, c0, color_limit, chroma_thr,
+                                        axis=gray_balance == "us6160634_axis")
     Dm = off + r * Dn[ok]
     # 亮度依据: 数码冲印机由密度直方图求平均密度 (Fuji US6668096B1), 不是光学印放机光电池的积分透射。
     # 在 39 张正常曝光的日光 RAW 上, 平均密度相对灰卡的离散 (σ 0.076) 小于 LATD (σ 0.097)。
@@ -139,7 +140,7 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
                        x_white=float(np.interp(-np.log10(SHOULDER_WHITE), cv, x)))
 
 
-def gray_balance_us6160634(D, sh, hl, c0, color_limit, chroma_thr, k=(0.2, 0.5, 0.3)):
+def gray_balance_us6160634(D, sh, hl, c0, color_limit, chroma_thr, k=(0.2, 0.5, 0.3), axis=False):
     """Fuji US6160634 的灰平衡: 三种估计按 k1:k2:k3 = 0.2:0.5:0.3 加权 (专利示例值)。
     在标准化密度 u = Dn − c0 中, 中性 ⇔ u_r = u_g = u_b; 每通道 u' = o + r·u。
       1. 该胶片类型的平均灰轴 (大量照片统计)  → 不做逐帧校正: o = 0, r = 1
@@ -151,11 +152,19 @@ def gray_balance_us6160634(D, sh, hl, c0, color_limit, chroma_thr, k=(0.2, 0.5, 
     span = uhl - ush
     r2 = np.where(np.abs(span) > 0.02, span[1] / np.where(np.abs(span) > 0.02, span, 1.0), 1.0)
     o2 = ush[1] - r2 * ush
-    dev = u - np.median(u, 0)
-    chroma = np.max(np.abs(dev - dev[:, 1:2]), axis=1)
-    keep = chroma <= chroma_thr
-    m3 = u[keep].mean(0) if keep.sum() > 0.03 * len(u) else u.mean(0)
-    o3 = m3[1] - m3
+    if axis:
+        # 专利原文: 标准化 (按该胶片类型的平均灰平衡) 之后, 各通道密度差大的像素是高彩度被摄体 → 相对灰轴度量。
+        # 近中性像素太少时 (整幅都是高彩度) 估计 3 不可用 → 不做逐帧偏移 (等同估计 1), 而不是对全部像素取平均。
+        chroma = np.max(np.abs(u - u[:, 1:2]), axis=1)
+        keep = chroma <= chroma_thr
+        o3 = (lambda m: m[1] - m)(u[keep].mean(0)) if keep.sum() > 0.03 * len(u) else np.zeros(3)
+    else:
+        # 现行 (候选 C): 相对本帧中位色度量, 均匀偏色画面的像素都会被当作近中性
+        dev = u - np.median(u, 0)
+        chroma = np.max(np.abs(dev - dev[:, 1:2]), axis=1)
+        keep = chroma <= chroma_thr
+        m3 = u[keep].mean(0) if keep.sum() > 0.03 * len(u) else u.mean(0)
+        o3 = m3[1] - m3
     r = k[0] + k[1] * r2 + k[2]
     o = k[1] * o2 + k[2] * o3
     o = np.clip(o, -color_limit, color_limit)

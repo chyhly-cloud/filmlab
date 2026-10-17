@@ -135,10 +135,10 @@ def policies():
     from filmlab.engine import LATD_NORMAL
     P = {}
 
-    def frame(d, sc, tm, gray0, strength, density_limit=None, gb=None):
+    def frame(d, sc, tm, gray0, strength, density_limit=None, gb=None, thr=None):
         lim = float(d["latd_limit"]) if density_limit is None else density_limit
         return tm.frame_auto(sc.digital_paper, d["Dn"].reshape(-1, 3), d["gray_ref"], gray0, strength,
-                             float(d["stretch_max"]), 0.18, lim, LATD_NORMAL, gray_balance=gb)
+                             float(d["stretch_max"]), 0.18, lim, LATD_NORMAL, gray_balance=gb, chroma_thr=thr)
     g32 = lambda d: d["gray_ref"] - d["gray_ref"][1]
     P["auto (现行)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]))
     P["固定: 档案中灰 (Portra 800)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], 0.0)
@@ -163,11 +163,14 @@ def policies():
         P[f"3200K 中灰, 力度 {k}"] = (lambda kk: lambda d, sc, tm: frame(d, sc, tm, g32(d), kk))(k)
     # Fuji US6160634 的灰平衡 (三种估计 0.2:0.5:0.3, 剔除高彩度像素; 系数为专利示例值)
     P["US6160634 (档案中灰)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]), gb="us6160634")
+    for thr in (0.1, 0.2, 0.3):
+        P[f"US 相对中位 {thr}"] = (lambda t: lambda d, sc, tm: frame(d, sc, tm, d["gray0"], 0.0, gb="us6160634", thr=t))(thr)
+        P[f"US 相对灰轴 {thr}"] = (lambda t: lambda d, sc, tm: frame(d, sc, tm, d["gray0"], 0.0, gb="us6160634_axis", thr=t))(thr)
     P["US6160634 (3200K 中灰)"] = lambda d, sc, tm: frame(d, sc, tm, g32(d), float(d["strength"]), gb="us6160634")
     return P
 
 
-KEY = ["auto (现行)", "固定: 胶片 3200K 中灰", "US6160634 (档案中灰)", "高光为白 (95–99%)", "高光为白 (99–99.9%)"]
+KEY = ["auto (现行)", "US 相对中位 0.1", "US 相对灰轴 0.1", "US 相对中位 0.2", "US 相对灰轴 0.2", "US 相对中位 0.3", "US 相对灰轴 0.3"]
 
 
 def eval_cond(cond, names=None):
