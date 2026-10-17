@@ -123,6 +123,11 @@ def cache_one(args):
 
 
 # ------------------------------------------------------------------ 策略 --
+def tm_limit():
+    from filmlab.scanning import timing
+    return timing.COLOR_LIMIT
+
+
 def policies():
     """名称 → f(d, sc, tm) → PrintTiming。d: 缓存; 只用底片信息, 不用真实扫描。"""
     from filmlab.engine import LATD_NORMAL
@@ -141,12 +146,26 @@ def policies():
     # 亮度不逐帧校正 (按标准中灰的印放曝光), 与颜色分开检验
     P["亮度固定 + 颜色 auto"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]), 0.0)
     P["全固定 (3200K)"] = lambda d, sc, tm: frame(d, sc, tm, g32(d), 0.0, 0.0)
+    def highlight_white(d, sc, tm, pct=(95.0, 99.0), limit=tm_limit()):
+        """以画面最亮的区域 (绿通道密度最高的一段) 为白: 每通道偏移使其中性, 偏移不超过 limit。亮度 / 肩部同现行。"""
+        t = frame(d, sc, tm, d["gray0"], 0.0)
+        D = d["Dn"].reshape(-1, 3); D = D[np.all(np.isfinite(D), -1)]
+        lo, hi = np.percentile(D[:, 1], pct)
+        h = D[(D[:, 1] >= lo) & (D[:, 1] <= hi)].mean(0)
+        off = np.clip(-(h - h[1]), -limit, limit); off[1] = 0.0
+        t.M = (off, np.ones(3))
+        return t
+    P["高光为白 (95–99%)"] = highlight_white
+    P["高光为白 (99–99.9%)"] = lambda d, sc, tm: highlight_white(d, sc, tm, (99.0, 99.9))
     for k in (0.25, 0.5, 0.75):
         P[f"3200K 中灰, 力度 {k}"] = (lambda kk: lambda d, sc, tm: frame(d, sc, tm, g32(d), kk))(k)
     # Fuji US6160634 的灰平衡 (三种估计 0.2:0.5:0.3, 剔除高彩度像素; 系数为专利示例值)
     P["US6160634 (档案中灰)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]), gb="us6160634")
     P["US6160634 (3200K 中灰)"] = lambda d, sc, tm: frame(d, sc, tm, g32(d), float(d["strength"]), gb="us6160634")
     return P
+
+
+KEY = ["auto (现行)", "固定: 胶片 3200K 中灰", "US6160634 (档案中灰)", "高光为白 (95–99%)", "高光为白 (99–99.9%)"]
 
 
 def eval_cond(cond, names=None):
@@ -198,10 +217,11 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(sid, "对齐失败", e, flush=True)
         import multiprocessing as mp
+        run = os.environ["SCENES"].split(",") if os.environ.get("SCENES") else SCENES
         with mp.get_context("spawn").Pool(int(os.environ.get("NPROC", "4"))) as p:
-            for sid, msg in p.imap_unordered(cache_one, [(s, cond) for s in SCENES]):
+            for sid, msg in p.imap_unordered(cache_one, [(s, cond) for s in run]):
                 print(sid, msg, flush=True)
     else:
-        rows, names = eval_cond(cond)
+        rows, names = eval_cond(cond, KEY if os.environ.get("KEYONLY") else None)
         json.dump(rows, open(f"{OUT}/eval_{cond}.json", "w"), indent=1)
         report(rows, names)
