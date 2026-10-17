@@ -25,7 +25,8 @@ def install():
         import mask_variant
         mask_variant.install(os.environ["MASK"])
     if os.environ.get("PID"):
-        scm.printing_matrix = lambda *a, **k: np.eye(3)
+        from filmlab.scanning import conversion
+        conversion.printing_matrix = lambda *a, **k: np.eye(3)
     if os.environ.get("LED") == "noritsu":
         f = scm.SCANNERS["frontier"]; n = scm.SCANNERS["noritsu"]
         scm.SCANNERS["frontier"] = replace(f, led_peaks=n.led_peaks, led_widths=n.led_widths)
