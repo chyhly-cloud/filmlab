@@ -23,7 +23,14 @@ GROUPS = {"day": ["cafe"], "night": IDS[:8], "tungsten": IDS[8:11]}
 CELL = 24
 
 
+SILLY_JPEG = ["film1", "film2", "film3", "film4", "film5", "castle", "chess", "swisstech", "single"]
+
+
 def sources(sid):
+    if sid.startswith("ss:"):        # SillyStill 其他配对: 数码端是相机 JPEG / PNG (已做白平衡), 结论需打折扣
+        n = sid[3:]
+        d, f = (f"digital{n[-1]}.jpeg", f"{n}.jpeg") if n.startswith("film") else (f"digital-{n}.png", f"film-{n}.png")
+        return f"{SP}/pairs/sillystill/{d}", f"{SP}/pairs/sillystill/{f}", 0.5
     if sid == "cafe":
         return SP + "/pairs/sillystill/table_cafe_digital.ARW", SP + "/pairs/sillystill/table_cafe_film.JPG", 1.5
     r = MAN[sid]

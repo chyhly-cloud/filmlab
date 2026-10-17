@@ -33,14 +33,19 @@ def wedge_steps(img, box, n=13):
         out.append(np.median(img[ya:yb, a:b].reshape(-1, img.shape[-1]), 0))
     return np.array(out)
 SKIP = {"R1-18-19"}                                                  # 噪声卡 (无颜色信息)
-SCENES = [s for s in MAN if s not in SKIP] + ["cafe"]
+import oracle_timing as _ot
+SS = ["ss:" + n for n in _ot.SILLY_JPEG]
+SCENES = [s for s in MAN if s not in SKIP] + ["cafe"] + SS
 LAB = {s: "epfl_frontier" for s in MAN}
 LAB["cafe"] = "sillystill"
+LAB.update({s: "sillystill_jpeg" for s in SS})
 
 
 def group(sid):
     if sid == "cafe":
         return "day"
+    if sid.startswith("ss:"):
+        return "jpeg"
     if "光晕测试" in MAN[sid]["description"]:
         return "halo_test"          # 数码有三组等效曝光, 与胶片曝光不对应; 不用于颜色评估
     c = MAN[sid]["scene_category"]
@@ -49,10 +54,7 @@ def group(sid):
 
 
 def sources(sid):
-    if sid == "cafe":
-        return SP + "/pairs/sillystill/table_cafe_digital.ARW", SP + "/pairs/sillystill/table_cafe_film.JPG", 1.5
-    r = MAN[sid]
-    return f"{EP}/{r['raw_file']}", f"{EP}/{r['film_file']}", 0.53
+    return _ot.sources(sid)
 
 
 def lab_lin(rgb):
@@ -77,7 +79,7 @@ def cache_one(args):
     import pair_compare as pc
     import oracle_timing as ot
     from filmlab.rawio import film_metering
-    f = f"{OUT}/{cond}/{sid}.npz"
+    f = f"{OUT}/{cond}/{sid.replace(':', '_')}.npz"
     if os.path.exists(f):
         return sid, "cached"
     rawp, scan, bias = sources(sid)
@@ -156,7 +158,7 @@ def eval_cond(cond, names=None):
     names = names or list(P)
     rows = {}
     for sid in SCENES:
-        f = f"{OUT}/{cond}/{sid}.npz"
+        f = f"{OUT}/{cond}/{sid.replace(':', '_')}.npz"
         if not os.path.exists(f):
             continue
         d = dict(np.load(f))
