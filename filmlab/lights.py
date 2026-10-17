@@ -174,6 +174,19 @@ def class_weights(ill_lc, sigma=0.25, feas=None, sharpness=6.0):
     return w / w.sum(-1, keepdims=True)
 
 
+def nearest_members(ill_lc, W):
+    """每类光源: 取与该类所照区域 (按类别权重加权) 的平均照明色度最接近的一款。
+    与 class_weights 用同一判据 (到成员颜色的最近距离), 让光源识别与曝光计算用同一款灯。"""
+    out = {}
+    lc = ill_lc.reshape(-1, 2)
+    for k, c in enumerate(classes()):
+        w = W.reshape(-1, W.shape[-1])[:, k]
+        m = (lc * w[:, None]).sum(0) / max(w.sum(), 1e-9)
+        pts = _logchroma(np.array([light_rgb(sp) for _, sp in c.members]))
+        out[c.key] = c.members[int(np.argmin(((pts - m) ** 2).sum(1)))]
+    return out
+
+
 def pick_members(seed):
     """每类光源里具体是哪款灯: 按每张底片的种子随机 (物理上都合理)。"""
     rng = np.random.default_rng(seed)

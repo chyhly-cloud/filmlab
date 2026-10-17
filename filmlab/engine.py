@@ -47,6 +47,9 @@ class Params:
     # 场景照明: auto = 估计每个区域的光源类别 (日光 / 白炽 / 钠灯 / 荧光 / LED / 金卤),
     # 用真实光源光谱计算胶片曝光 (lights.py); None = 整个场景按 scene_illuminant 一种光源
     scene_lights: str | None = "auto"
+    # 每类光源里用哪一款计算曝光: "random" = 按底片种子随机; "nearest" = 与该类所照区域的照明色度最接近的一款
+    # (与光源识别用的同一判据, 见 lights.class_weights)
+    light_member: str = "random"
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
@@ -331,9 +334,11 @@ class Engine:
         scale = 0.08 * max(small.shape[:2])
         ill = lights.illumination_map(small, scale)
         W = lights.class_weights(ill, feas=lights.feasibility(small, scale))
-        self.light_W = W
+        self.light_W = W_small = W
         W = zoom(W, (h / W.shape[0], w / W.shape[1], 1), order=1)[:h, :w]
         members = lights.pick_members(self.v.frame_seed)
+        if p.light_member == "nearest":
+            members = lights.nearest_members(ill, W_small)
         H = np.zeros(rgb.shape)
         src = np.zeros(rgb.shape) if self.halo is not None else None
         self.light_mix = {}
