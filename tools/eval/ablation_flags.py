@@ -8,6 +8,7 @@ PID=1    扫描仪印放密度换算 P = 单位矩阵 (直接用窄带扫描密�
 LED=noritsu   扫描仪 LED 峰值改用 Noritsu 型估计
 SUN=1    日光类加入 CIE D40 / D45 (低太阳高度的直射阳光; CIE 日光公式适用于 4000K 以上)
 TAU=<值>  ECN-2 胶片在 C-41 中的有效显影程度 τ (冻结区间 [1.0, 1.3] 内的敏感性; 现行 1/0.85)
+DYESHIFT=none|cyan  C-41 中染料光谱平移: 不平移 / 只平移青色 (品红、黄的平移无实测数据)
 LIGHT=<类别>  光源识别预言机: 整幅只用该类光源 (daylight / tungsten / hps / fluorescent / led / metal_halide)"""
 import os
 
@@ -73,6 +74,15 @@ def install():
                 tau_factor = tau_factor * tau * chemistry.DEVELOPERS["ECN-2 CD"].activity
             return run0(e, process, logH, blur_px, tau_factor)
         chemistry.run = run
+    if os.environ.get("DYESHIFT"):
+        from filmlab import chemistry
+        ds0, mode = chemistry.dye_spectra, os.environ["DYESHIFT"]
+
+        def dye_spectra(dd, wl, native, actual, shift_nm, broaden, shift_other_nm=None):
+            if mode == "none":
+                return dd
+            return ds0(dd, wl, native, actual, shift_nm, broaden, 0.0)
+        chemistry.dye_spectra = dye_spectra
     if os.environ.get("LIGHT"):
         from filmlab import lights
         k = [c.key for c in lights.classes()].index(os.environ["LIGHT"])
@@ -91,4 +101,4 @@ def install():
 
 
 def tag():
-    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT", "TAU") if os.environ.get(k)) or "base"
+    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT", "TAU", "DYESHIFT") if os.environ.get(k)) or "base"
