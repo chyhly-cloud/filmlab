@@ -90,7 +90,8 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 
 
 # ------------------------------------------------------------- 系统 --
-@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))])
+@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))
+                                  and not r.endswith("_reference")])   # 不定光: 光源偏色按物理保留
 def test_mid_gray_neutral(name):
     """负片靠冲印店定光 (相纸印放, 灰卡全校正), 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""

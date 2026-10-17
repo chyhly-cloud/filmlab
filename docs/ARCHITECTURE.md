@@ -48,7 +48,7 @@ RAW ──S0 输入──▶ 相机线性 RGB (日光白平衡, WB_REFERENCE)
 | 预设 | S4c | S4e | 用途 |
 |---|---|---|---|
 | 正式基线 (`timing="frame"`, `frontier`) | Frontier 型逐帧 | 矩阵 + tint | 与现行输出逐位一致 |
-| 物理参考 (`timing="standard"`, `output_conditioning=None`) | 胶片在设计光源下的中灰一次定标, 不逐帧 | 无 | 检验物理核心 + 扫描硬件, 不含操作员与风格 |
+| 物理参考 (`recipe("cinestill_800t_reference")`: `timing="standard"`, `output_conditioning=None`) | 胶片在设计光源下的中灰一次定标, 不逐帧 | 无 | 检验物理核心 + 扫描硬件, 不含操作员与风格 (光源偏色按物理保留) |
 | 定光预言机 (评估专用) | 按真实扫描拟合每帧的光号 (只有操作员的自由度) | 无 / 有 | 把操作员误差从物理误差中剥离 |
 
 ## 4. 定光预言机: 把"冲印店怎么校色"从误差里剥离

@@ -164,13 +164,18 @@ def job(sid):
 
 if __name__ == "__main__":
     from multiprocessing import Pool
-    for sid in IDS:            # 单应性先串行求好 (缓存)
+    run = os.environ["SCENES"].split(",") if os.environ.get("SCENES") else IDS
+    for sid in run:            # 单应性先串行求好 (缓存)
         geometry(sid)
-    with Pool(int(os.environ.get("NPROC", "6"))) as p:
-        out = dict(p.map(job, IDS))
+    import multiprocessing as mp
+    with mp.get_context("spawn").Pool(int(os.environ.get("NPROC", "4"))) as p:
+        out = dict(p.map(job, run))
     json.dump(out, open(sys.argv[1], "w"), indent=1)
     for g, ids in GROUPS.items():
+        ids = [i for i in ids if i in out]
+        if not ids:
+            continue
         a = np.mean([out[s]["auto"] for s in ids]); o1 = np.mean([out[s]["O1"]["dE"] for s in ids]); o2 = np.mean([out[s]["O2"]["dE"] for s in ids])
         print(f"{g:9s} 自动 {a:5.2f}  O1 {o1:5.2f}  O2 {o2:5.2f}")
-    print(f"{'all':9s} 自动 {np.mean([out[s]['auto'] for s in IDS]):5.2f}  O1 {np.mean([out[s]['O1']['dE'] for s in IDS]):5.2f}"
-          f"  O2 {np.mean([out[s]['O2']['dE'] for s in IDS]):5.2f}")
+    print(f"{'all':9s} 自动 {np.mean([out[s]['auto'] for s in out]):5.2f}  O1 {np.mean([out[s]['O1']['dE'] for s in out]):5.2f}"
+          f"  O2 {np.mean([out[s]['O2']['dE'] for s in out]):5.2f}")
