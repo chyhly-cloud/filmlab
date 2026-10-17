@@ -172,6 +172,7 @@ def policies():
     return P
 
 
+KEY2 = ["auto (现行)", "固定: 胶片 3200K 中灰", "US 相对中位 0.2", "US 相对灰轴 0.2"]
 KEY = ["auto (现行)", "US 相对中位 0.1", "US 相对灰轴 0.1", "US 相对中位 0.2", "US 相对灰轴 0.2", "US 相对中位 0.3", "US 相对灰轴 0.3"]
 
 
@@ -229,6 +230,6 @@ if __name__ == "__main__":
             for sid, msg in p.imap_unordered(cache_one, [(s, cond) for s in run]):
                 print(sid, msg, flush=True)
     else:
-        rows, names = eval_cond(cond, KEY if os.environ.get("KEYONLY") else None)
+        rows, names = eval_cond(cond, KEY2 if os.environ.get("KEYONLY") == "2" else KEY if os.environ.get("KEYONLY") else None)
         json.dump(rows, open(f"{OUT}/eval_{cond}.json", "w"), indent=1)
         report(rows, names)
