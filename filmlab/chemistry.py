@@ -25,17 +25,23 @@ from scipy.ndimage import gaussian_filter
 from .materials import Emulsion
 
 # ------------------------------------------------------- 显影动力学 --
-# 用 Kodak Portra 800 的标准 / 推一档 / 推两档实测曲线拟合 (C-41 显影 3:15 / 3:45 / 4:15):
-#   S(τ) = S_nom 在密度域绕支点 pivot·Smax 放大 τ^A 倍, 暗部按软下限收敛
+# 用 Kodak Portra 800 的标准 / 推一档 / 推两档实测曲线拟合 (C-41 显影 3:15 / 3:45 / 4:15)。
+# 注意数据的横轴: 三条曲线在 logH=0 处密度相同 (0.757 / 0.761 / 0.762) —— 横轴是相对各自
+# 标称感光度 (EI 800 / 1600 / 3200) 的曝光, 即"欠曝 n 档 + 推 n 档"。拟合前先换回同一物理曝光
+# (推 n 档的曲线向右移 0.301·n)。在同一曝光下, 显影更充分只会让密度更高, 不会更低:
+#   推一档: 全段密度 ×1.25 (含趾部); 推两档: 趾部 ×2–3, 有真实的感光度提升。
+#   S(τ)(x) = S_nom(x + SHIFT·ln τ) · τ^A
+#   (更多颗粒被显影 → 感光度提升; 每个显影中心长出更多银 → 密度按比例增加。两项都只增不减)
 # τ = 相对显影程度 (时间 × 温度系数 × 显影液活性比)。
-# 拟合残差 0.040D (不建模时为 0.11–0.17D)。见 tests/test_system.py。
-KIN_A = 1.102
-KIN_PIVOT = 0.413      # 支点 = 0.413 × 该层最大密度 (Portra 800 绿层约 0.8D)
-KIN_W = 0.156          # 暗部软下限宽度
-
-
-def _softplus(d):
-    return KIN_W * np.logaddexp(0.0, d / KIN_W)
+# 不建模时残差 0.32D。见 tests/test_system.py。
+# ECN-2 胶片进 C-41 (CineStill): τ = 1/0.85 ≈ 1.18 是估计值, 公开资料不能辨识 (见 tools/eval/CRITERIA.md
+# "C-41 τ 冻结"): CineStill 2012 对照称密度"几乎相同" (偏向 τ≈1), 2020 文章给出 C-41 / ECN-2 的工艺目标 gamma
+# 0.6–0.65 / 0.45–0.55 (偏向 τ≈1.15–1.3)。冻结范围 τ ∈ [1.0, 1.3], 名义值不再调整。
+# 每层分别拟合 (R, G, B): 各层乳剂对显影程度的响应不同 (每层残差 0.020 / 0.028 / 0.029 D,
+# 三层共用一组参数时为 0.048 D)。绿感层随显影延长增加的反差明显较少。
+KIN_A = np.array([1.100, 0.651, 0.965])      # 密度倍增 (τ 的指数)
+KIN_SHIFT = np.array([0.807, 1.192, 1.044])  # 感光度提升 (logH / ln τ)
+KIN_PIVOT = 0.413      # 黑白显影反差变化的支点 (× 该层最大密度)
 
 
 # 黑白显影液 (含 E-6 第一显影): 没有 DIR 成色剂, 延长显影让带潜影的弱颗粒也被显影 → 真实的感光度提升。
@@ -47,7 +53,7 @@ KIN_BW_A = 0.35       # 黑白显影的反差随时间增长较缓 (估计值)
 
 def kinetic_curve(curve: np.ndarray, tau: float, x: np.ndarray = None, kind: str = "color") -> np.ndarray:
     """标准显影的成像曲线 → 显影程度 τ 下的曲线。τ=1 时严格不变。
-    color: 彩色显影 (C-41 实测拟合), 曲线绕中间调旋转;
+    color: 彩色显影 (C-41 实测拟合), 曲线沿曝光轴平移 (感光度) 并按比例增加密度 (反差);
     bw:    黑白显影, 曲线沿曝光轴平移 (感光度变化) 并略增反差。"""
     if abs(tau - 1.0) < 1e-9:
         return curve
@@ -55,9 +61,8 @@ def kinetic_curve(curve: np.ndarray, tau: float, x: np.ndarray = None, kind: str
         shifted = np.stack([np.interp(x + KIN_BW_SHIFT * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
         dp = KIN_PIVOT * curve.max(0)
         return np.clip(dp + (shifted - dp) * tau ** KIN_BW_A, 0, None)
-    g = tau ** KIN_A
-    dp = KIN_PIVOT * curve.max(0)
-    return np.clip(_softplus(dp + (curve - dp) * g) - _softplus(curve) + curve, 0, None)
+    shifted = np.stack([np.interp(x + KIN_SHIFT[c] * np.log(tau), x, curve[:, c]) for c in range(3)], 1)
+    return shifted * tau ** KIN_A[None, :]
 
 
 # ----------------------------------------------------------- 显影液 --
@@ -71,15 +76,16 @@ class Developer:
     temp_doubling: float = 6.0   # 温度每升高这么多 °C, 显影速度翻倍 (估计值)
     grain: float = 1.0     # 颗粒倍数 (黑白显影液差异大)
     acutance: float = 0.0  # 边缘效应 (显影液在高密度区局部耗竭)
+    agent: str = ""        # 彩色显影剂 (决定染料的化学结构, 见 dye_spectra)
 
 
 # 时间 / 温度来自公开的 Kodak 工艺说明 (Z-131, Z-119, E-6, D-76 数据); 活性比为估计值
 DEVELOPERS = {
-    "C-41 CD": Developer("C-41 彩色显影 (CD-4)", "color", 3.25, 37.8, 1.00),
-    "ECN-2 CD": Developer("ECN-2 彩色显影 (CD-3)", "color", 3.00, 41.1, 0.85),
+    "C-41 CD": Developer("C-41 彩色显影 (CD-4)", "color", 3.25, 37.8, 1.00, agent="CD-4"),
+    "ECN-2 CD": Developer("ECN-2 彩色显影 (CD-3)", "color", 3.00, 41.1, 0.85, agent="CD-3"),
     "E-6 FD": Developer("E-6 第一显影 (黑白 PQ)", "bw", 6.00, 38.0, 1.60),
-    "E-6 CD": Developer("E-6 彩色显影 (CD-3)", "color", 6.00, 38.0, 0.80),
-    "RA-4 CD": Developer("RA-4 相纸彩色显影", "color", 0.75, 35.0, 1.00),
+    "E-6 CD": Developer("E-6 彩色显影 (CD-3)", "color", 6.00, 38.0, 0.80, agent="CD-3"),
+    "RA-4 CD": Developer("RA-4 相纸彩色显影", "color", 0.75, 35.0, 1.00, agent="CD-3"),
     "D-76": Developer("Kodak D-76 原液", "bw", 6.75, 20.0, 1.00),
     "Rodinal 1+50": Developer("Rodinal 1+50", "bw", 11.0, 20.0, 0.95, grain=1.35, acutance=0.6),
     "HC-110 B": Developer("HC-110 稀释 B", "bw", 5.0, 20.0, 1.03, grain=1.1, acutance=0.2),
@@ -89,6 +95,40 @@ DEVELOPERS = {
 # 每种设计的乳剂在哪种显影液里形成影像 (S_nom 就是在这个显影液、标准时间下的结果)
 NATIVE_IMAGE_DEVELOPER = {"C-41": "C-41 CD", "ECN-2": "ECN-2 CD", "E-6": "E-6 FD",
                           "BW-D76": "D-76", "RA-4": "RA-4 CD"}
+
+
+
+
+def native_dye_agent(e: Emulsion) -> str:
+    """乳剂的成色剂是按哪种彩色显影剂设计的 (原生工艺里形成染料的显影液)。"""
+    proc = PROCESSES.get(e.native_process)
+    if proc is None:
+        return ""
+    agents = [DEVELOPERS[s.developer].agent for s in proc.steps
+              if isinstance(s, Develop) and DEVELOPERS[s.developer].kind == "color"]
+    return agents[-1] if agents else ""
+
+
+def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, actual: str,
+                shift_nm: float, broaden: float, shift_other_nm: float | None = None) -> np.ndarray:
+    """成色剂与非设计的显影剂反应: 偶氮甲碱染料的供电子端来自显影剂, 吸收光谱随之改变。
+    CD-4 (N-羟乙基) 比 CD-3 (N-甲磺酰胺乙基, 吸电子) 供电子更强 → 吸收峰偏长波。
+    实测 (US 5,183,729 表中常规青色成色剂, CD-3 对 CD-4): 青色峰平移 +7…+15 nm, 带宽基本不变
+    → shift_nm 用于青色 (峰 > 600 nm), broaden 默认 1。
+    品红 / 黄没有找到公开对比数据: 方向按同一供电子机理取正, 幅度 shift_other_nm 为估计值。
+    展宽时保持积分吸收 (振子强度) 不变。"""
+    if not native or not actual or native == actual:
+        return dye_density
+    sign = 1.0 if (native, actual) == ("CD-3", "CD-4") else -1.0
+    out = np.empty_like(dye_density)
+    for c in range(dye_density.shape[1]):
+        d = dye_density[:, c]
+        peak = wavelengths[np.argmax(d)]
+        sh = shift_nm if (peak > 600 or shift_other_nm is None) else shift_other_nm
+        src = peak + (wavelengths - peak - sign * sh) / broaden
+        new = np.interp(src, wavelengths, d, left=d[0], right=d[-1])
+        out[:, c] = new * d.sum() / max(new.sum(), 1e-12)
+    return out
 
 
 # -------------------------------------------------------------- 步骤 --
@@ -173,6 +213,7 @@ class FilmState:
     remjet: bool = False
     image_silver: np.ndarray = None   # 成像显影形成的银 (决定颗粒)
     grain_factor: float = 1.0
+    dye_agent: str = ""               # 形成染料的显影剂
     log: list = field(default_factory=list)
 
     def density(self, silver_covering: float):
@@ -187,11 +228,24 @@ def initial_state(e: Emulsion, logH: np.ndarray) -> FilmState:
 
 
 # -------------------------------------------------------------- 执行 --
-def _dir_matrix(amount):
-    A = np.full((3, 3), 0.30 * amount)
+def _dir_matrix(amount, negative=True):
+    """A[i, j]: 第 i 层显影释放的抑制剂对第 j 层的作用。
+    标定目标: Kodak US 6,210,870 实测 C-41 负片 "分色曝光 gamma / 中性曝光 gamma":
+    R 1.15–1.49, G 1.42–1.64, B 1.29–1.50 (绿层受到的层间效应最强)。
+    这组值给出 Portra 800 [1.31 1.45 1.33]; 500T(C-41) 绿层受肩部限制为 1.31。
+    R↔B 不相邻 (中间隔着绿层), 扩散距离更远 → 打折。
+    反转片没有对应实测 (且第一显影是黑白显影), 保持原来较弱的估计值。"""
+    if not negative:
+        A = np.full((3, 3), 0.30 * amount)
+        np.fill_diagonal(A, 0.15 * amount)
+        A[2, 0] *= 0.5
+        A[0, 2] *= 0.5
+        return A
+    A = np.full((3, 3), 0.60 * amount)
+    A[:, 1] = 0.80 * amount
     np.fill_diagonal(A, 0.15 * amount)
-    A[2, 0] *= 0.5
-    A[0, 2] *= 0.5
+    A[2, 0] *= 0.75
+    A[0, 2] *= 0.75
     return A
 
 
@@ -215,7 +269,7 @@ def develop_image(e: Emulsion, logH, tau, inhib_amount, blur_px, kind="color"):
     S = kinetic_curve(e.S_nom, tau, x, kind)
     if inhib_amount <= 0:
         return _curves_at(logH, x, S)
-    A = _dir_matrix(inhib_amount)
+    A = _dir_matrix(inhib_amount, e.design == "negative")
     if e.design in ("bw", "paper"):     # 单层银影像: 只有同层的边缘效应
         A = np.diag(np.diag(A))
     C = _intrinsic_curve(e, S, A)
@@ -225,7 +279,9 @@ def develop_image(e: Emulsion, logH, tau, inhib_amount, blur_px, kind="color"):
     return _curves_at(logH - first @ A, x, C)
 
 
-def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0) -> FilmState:
+def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0,
+        tau_factor: float = 1.0) -> FilmState:
+    """tau_factor: 这一次冲洗实际的显影程度偏差 (时间 / 温度 / 药液活性公差, 见 variation.py)。"""
     st = initial_state(e, logH)
     native_dev = DEVELOPERS[NATIVE_IMAGE_DEVELOPER[e.native_process]]
     for step in process.steps:
@@ -241,7 +297,7 @@ def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0) -
                 st.log.append(f"{dev.name}: 显影全部剩余卤化银")
             elif not st.latent_used:
                 tau = (minutes / dev.t_nom) * 2.0 ** ((temp - dev.temp_nom) / dev.temp_doubling) \
-                    * dev.activity / native_dev.activity
+                    * dev.activity / native_dev.activity * tau_factor
                 inhib = e.dir_amount if dev.kind == "color" or e.design != "negative" else 0.3 * e.dir_amount
                 inhib += dev.acutance
                 dS = np.minimum(develop_image(e, logH, tau, inhib, blur_px * (1 + 2 * dev.acutance), dev.kind),
@@ -258,6 +314,8 @@ def run(e: Emulsion, process: Process, logH: np.ndarray, blur_px: float = 0.0) -
             if dev.kind == "color":
                 new_dye = np.minimum(dS, st.coupler)
                 st.dye = st.dye + new_dye
+                if np.any(new_dye > 0):
+                    st.dye_agent = dev.agent
                 st.coupler = st.coupler - new_dye
                 if not e.has_couplers:
                     st.log.append("  乳剂没有成色剂 → 不生成染料")

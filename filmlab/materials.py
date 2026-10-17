@@ -37,7 +37,7 @@ class Emulsion:
     coupler_cap: np.ndarray   # (3,) 成色剂可生成的最大染料量 (黑白 = 0)
     silver_covering: float
     dir_amount: float         # DIR 成色剂 / 层间效应强度
-    halation: float           # 光晕强度, 由防光晕层 / remjet 决定
+    halation: float           # 片基背面的反射能力: 透明片基 1 (菲涅耳+全反射), remjet ≈ 0, 防光晕层 = 往返剩余比例
     remjet: bool = False      # 电影负片的炭黑背涂
     speed_loss: np.ndarray = None   # (3,) 过期造成的感光度损失 (logH)
     fog_exposure: np.ndarray = None  # (3,) 过期造成的潜影灰雾 (等效曝光 logH)
@@ -50,7 +50,8 @@ class Emulsion:
         return bool(np.any(self.coupler_cap > 0))
 
 
-HALATION = {"strong": 0.008, "weak": 0.035}
+# 防光晕层: 光往返两次穿过吸收层后剩下的比例 (估计值)。strong ≈ 透射 10% 两次; weak ≈ 35% 两次
+HALATION = {"strong": 0.01, "weak": 0.12}
 
 
 def from_stock(stock: Stock) -> Emulsion:
@@ -81,7 +82,7 @@ def from_stock(stock: Stock) -> Emulsion:
         log_exposure=x, S_nom=S, halide_cap=halide, coupler_cap=coupler,
         silver_covering=1.0 if design == "bw" else SILVER_COVERING_COLOR,
         dir_amount={"bw": 0.3, "paper": 0.0}.get(design, 1.0),
-        halation=HALATION.get(stock.antihalation, 0.01),
+        halation=0.0 if stock.key in ECN2_STOCKS else HALATION.get(stock.antihalation, 0.01),
         remjet=stock.key in ECN2_STOCKS,
         speed_loss=np.zeros(3), fog_exposure=np.full(3, -np.inf),
     )
@@ -95,7 +96,7 @@ def emulsion(key: str) -> Emulsion:
 # ------------------------------------------------------------ 材料变体 --
 def without_remjet(e: Emulsion, name=None) -> Emulsion:
     """去掉 remjet 背涂 (CineStill 的做法): 片基背面失去吸光层 → 强光晕。"""
-    return e.with_(remjet=False, halation=0.08, name=name or f"{e.name} (no remjet)",
+    return e.with_(remjet=False, halation=1.0, name=name or f"{e.name} (no remjet)",
                    key=e.key + "_noremjet")
 
 
