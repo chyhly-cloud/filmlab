@@ -7,6 +7,7 @@ MASK=signed|signed_pos   500T 染料谱保留带符号的成色剂遮罩项 (mas
 PID=1    扫描仪印放密度换算 P = 单位矩阵 (直接用窄带扫描密度)
 LED=noritsu   扫描仪 LED 峰值改用 Noritsu 型估计
 SUN=1    日光类加入 CIE D40 / D45 (低太阳高度的直射阳光; CIE 日光公式适用于 4000K 以上)
+TAU=<值>  ECN-2 胶片在 C-41 中的有效显影程度 τ (冻结区间 [1.0, 1.3] 内的敏感性; 现行 1/0.85)
 LIGHT=<类别>  光源识别预言机: 整幅只用该类光源 (daylight / tungsten / hps / fluorescent / led / metal_halide)"""
 import os
 
@@ -62,6 +63,16 @@ def install():
             rng = np.random.default_rng(seed)
             return {c.key: c.members[rng.integers(len(c.members))] for c in orig()}
         lights.pick_members = pick_members
+    if os.environ.get("TAU"):
+        from filmlab import chemistry, engine
+        run0, tau = chemistry.run, float(os.environ["TAU"])
+
+        def run(e, process, logH, blur_px=0.0, tau_factor=1.0):
+            if e.native_process == "ECN-2" and any(isinstance(st, chemistry.Develop) and st.developer == "C-41 CD"
+                                                   for st in process.steps):
+                tau_factor = tau_factor * tau * chemistry.DEVELOPERS["ECN-2 CD"].activity
+            return run0(e, process, logH, blur_px, tau_factor)
+        chemistry.run = run
     if os.environ.get("LIGHT"):
         from filmlab import lights
         k = [c.key for c in lights.classes()].index(os.environ["LIGHT"])
@@ -80,4 +91,4 @@ def install():
 
 
 def tag():
-    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT") if os.environ.get(k)) or "base"
+    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT", "TAU") if os.environ.get(k)) or "base"
