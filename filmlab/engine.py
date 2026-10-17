@@ -50,6 +50,12 @@ class Params:
     # 每类光源里用哪一款计算曝光: "random" = 按底片种子随机; "nearest" = 与该类所照区域的照明色度最接近的一款
     # (与光源识别用的同一判据, 见 lights.class_weights)
     light_member: str = "random"
+    # 已核实的计算修正 (默认不开, 正式基线不变; 见 tools/eval/CRITERIA.md "计算审计"):
+    #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
+    #   "gray_halo"      定光用的中灰: 光晕与直接曝光用同一光源, 总量按画面用的多次反射核
+    #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染)
+    #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算
+    corrections: tuple = ()
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
@@ -129,7 +135,7 @@ class Engine:
         # 该光源照亮的中性灰卡本身带着光源的颜色 (钨丝灯下是橙色的), 先乘上它再计算曝光
         from . import lights
         _m_ref = film.exposure_response(st, ref, p.lens_filter)
-        _ill_ref = lights.light_rgb(spectral.illuminant(ref))
+        _ill_ref = self._ill_ref = lights.light_rgb(spectral.illuminant(ref))
         self.M_ref = lambda rgb: _m_ref(np.asarray(rgb) * _ill_ref)
         self.M = film.exposure_response(st, p.scene_illuminant or ref, p.lens_filter)
         self.halo = film.halation_response(st, p.scene_illuminant or ref, p.lens_filter, self.v, e.halation) \
@@ -165,7 +171,8 @@ class Engine:
             from .scanner import Scanner
             self.scanner = Scanner(self, p.scanner, p.scan_profile,
                                    self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
-                                   self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance)
+                                   self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance,
+                                   paper_white="paper_white" in p.corrections)
             if p.scan_neutral == "film" and not self.scanner.mono:
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 self.scanner.conversion.gray0 = g - g[1]
@@ -265,8 +272,31 @@ class Engine:
         H = self._expose_lin(rgb, self.M if actual_light else self.M_ref)
         if getattr(self, "halo", None) is not None:
             # 大面积均匀区域也会接收到自身的光晕 (整个光环的能量), 冲印店看到的底片包含这部分
-            H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
+            if "gray_halo" in self.p.corrections:
+                # 光晕与直接曝光用同一光源 (参考光源下 M_ref 接收的是反射率, 先乘上光源颜色); 总量用画面的多次反射核
+                halo = self.halo if actual_light else self._halo_ref()
+                src = rgb if actual_light else rgb * self._ill_ref
+                H = H + halo(src * 2.0 ** self.p.exposure_ev) * self._halo_total_multi()
+            else:
+                H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
         return self._develop(self._log_exposure(H))
+
+    def _halo_ref(self):
+        if not hasattr(self, "_halo_ref_cache"):
+            st = self.e.stock
+            self._halo_ref_cache = film.halation_response(st, st.reference_illuminant, self.p.lens_filter, self.v,
+                                                          self.e.halation)
+        return self._halo_ref_cache
+
+    def _halo_total_multi(self):
+        """每层光晕核的总量, 与 film.halation 对画面用的核一致 (红层含多次反射)。"""
+        if not hasattr(self, "_halo_total_multi_cache"):
+            rho = film.bounce_retention(self.e.stock, self.v)
+            self._halo_total_multi_cache = np.array([
+                (film.multi_bounce_kernel(10.0, self.v.base_um, self.v.forward, rho[c]) if rho[c] > 0.01
+                 else film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward)).sum()
+                for c in range(3)])
+        return self._halo_total_multi_cache
 
     def _halo_total(self):
         if not hasattr(self, "_halo_total_cache"):
@@ -349,7 +379,8 @@ class Engine:
             if share < 0.003:
                 continue
             spec = members[c.key][1]
-            method = "spectral" if c.key == "daylight" else "linear"   # 见 tools/check_lights.py
+            method = "spectral" if c.key == "daylight" else \
+                ("linear_wp" if "linear_white" in p.corrections else "linear")   # 见 tools/check_lights.py
             H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
             if src is not None:
                 src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,
@@ -405,7 +436,8 @@ class Engine:
         iso = _iso(e)
         rms48 = 0.0038 * np.sqrt(iso / 100.0) * (1.6 if e.design == "reversal" else 1.0) \
             * (1.4 if e.design == "bw" else 1.0) * st.grain_factor * self.p.grain
-        sigma = rms48 * 48.0 / self.px_um
+        # RMS 颗粒度按 48 µm 直径圆孔径测得; 等面积正方形边长 √(π·24²) = 42.5 µm
+        sigma = rms48 * (42.5 if "grain_aperture" in self.p.corrections else 48.0) / self.px_um
         blur = (1.0 + iso / 100.0) / self.px_um
         rng = np.random.default_rng(self.v.frame_seed)
         from scipy.ndimage import gaussian_filter

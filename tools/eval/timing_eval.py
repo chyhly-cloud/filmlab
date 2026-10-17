@@ -67,6 +67,8 @@ def engine_for(sid, cond_none=True):
     from filmlab.recipes import recipe
     seed = zlib.crc32(sid.encode()) % 1000
     extra = {"output_conditioning": None} if cond_none else {}
+    if os.environ.get("CORRECTIONS"):
+        extra["corrections"] = tuple(os.environ["CORRECTIONS"].split(","))
     if os.environ.get("LIGHT_MEMBER"):
         extra["light_member"] = os.environ["LIGHT_MEMBER"]
     return Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, **extra})), seed

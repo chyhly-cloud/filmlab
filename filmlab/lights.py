@@ -207,7 +207,7 @@ def training_reflectances(n=3000, seed=7):
     return np.vstack([R, gray])
 
 
-def linear_response(light_spec, receiver_weights):
+def linear_response(light_spec, receiver_weights, white_preserving=False):
     """返回函数: 场景线性 RGB (日光白平衡) → 该光源下接收者 (乳剂各层等) 的响应。
 
     用几千条自然界典型的平滑反射光谱作训练集, 拟合 "相机 RGB → 反射率 × 光源光谱 × 接收者"
@@ -227,6 +227,12 @@ def linear_response(light_spec, receiver_weights):
     from scipy.optimize import nnls
     w = 1.0 / np.maximum(target.mean(1, keepdims=True), 1e-6)     # 相对误差
     M = np.stack([nnls(rgb * w, target[:, k] * w[:, 0])[0] for k in range(target.shape[1])], 1)
+    if white_preserving:
+        # 保白点 (Finlayson & Drew 1996): 中性反射率在该光源下的响应必须精确 (可直接积分得到);
+        # 无约束的拟合在 3200K 下会让中灰的蓝层曝光偏高 0.06 log。按列缩放, 保持非负。
+        wt = (light_spec * scale) @ receiver_weights
+        wp = (camera_rgb(light_spec) * scale) @ M
+        M = M * (wt / np.maximum(wp, 1e-12))[None, :]
     return lambda x: np.asarray(x) @ M
 
 

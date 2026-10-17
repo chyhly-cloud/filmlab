@@ -24,7 +24,8 @@ def neutral_paper_curve(paper):
 
 
 class DigitalPaper:
-    def __init__(self, paper_key):
+    def __init__(self, paper_key, paper_white=False):
+        self.paper_white = paper_white          # True: 以相纸白 (而不是 D50 完美白) 为白点做色适应 → 相纸白 = 输出白
         self.paper = emulsion(paper_key)
         self.x = self.paper.log_exposure
         self.curve = neutral_paper_curve(self.paper)
@@ -66,7 +67,8 @@ class DigitalPaper:
         ps = self.paper.stock
         illum = spectral.illuminant("D50")
         white = spectral.spectrum_to_xyz(10.0 ** -ps.base_density, illum)
-        wxy = spectral.white_xy(illum)
+        import colour
+        wxy = colour.XYZ_to_xy(white) if self.paper_white else spectral.white_xy(illum)
         wn = white / white[1]
         Dg = np.linspace(0.0, float(self.curve.max()) + 0.05, 64)
         layers = np.zeros((len(Dg), 3))
@@ -85,8 +87,9 @@ class DigitalPaper:
 _PAPERS = {}
 
 
-def digital_paper(paper_key):
+def digital_paper(paper_key, paper_white=False):
     """同一种数字相纸只标定一次 (中性灰阶的染料量求解较慢)。"""
-    if paper_key not in _PAPERS:
-        _PAPERS[paper_key] = DigitalPaper(paper_key)
-    return _PAPERS[paper_key]
+    key = (paper_key, paper_white)
+    if key not in _PAPERS:
+        _PAPERS[key] = DigitalPaper(paper_key, paper_white)
+    return _PAPERS[key]
