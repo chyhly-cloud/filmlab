@@ -54,9 +54,28 @@ def geometry(sid):
     mod, inl = ransac((kp[0][mt[:, 0]][:, ::-1], kp[1][mt[:, 1]][:, ::-1]), ProjectiveTransform, min_samples=4,
                       residual_threshold=3, max_trials=20000, rng=0)
     if mod is None or inl.sum() < 25:
+        mod, inl = _sift(prev, real)           # 大块均匀色块 (灯箱) 上 ORB 特征点太少, 改用 SIFT
+    if mod is None or inl.sum() < 20:
         raise RuntimeError(f"{sid}: 对齐失败")
     np.savez(f, H=mod.params, real=real, inliers=int(inl.sum()))
     return mod.params, real
+
+
+def _sift(prev, real, s=0.5):
+    import pair_compare as pc
+    from skimage.feature import SIFT, match_descriptors
+    from skimage.measure import ransac
+    from skimage.transform import ProjectiveTransform, resize
+    from skimage.exposure import equalize_adapthist
+    kp, de = [], []
+    for im in (prev, real):
+        g = equalize_adapthist(resize(pc._gray(im), (int(im.shape[0] * s), int(im.shape[1] * s))))
+        d = SIFT(); d.detect_and_extract(g); kp.append(d.keypoints / s); de.append(d.descriptors)
+    mt = match_descriptors(de[0], de[1], max_ratio=0.8, cross_check=True)
+    if len(mt) < 8:
+        return None, None
+    return ransac((kp[0][mt[:, 0]][:, ::-1], kp[1][mt[:, 1]][:, ::-1]), ProjectiveTransform, min_samples=4,
+                  residual_threshold=4, max_trials=20000, rng=0)
 
 
 def cells(img, ok):
