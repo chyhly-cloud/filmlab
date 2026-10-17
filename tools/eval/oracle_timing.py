@@ -118,6 +118,8 @@ def job(sid):
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
     extra = {"output_conditioning": None} if os.environ.get("COND_NONE") else {}
+    if os.environ.get("CORRECTIONS"):
+        extra["corrections"] = tuple(os.environ["CORRECTIONS"].split(","))
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, **extra}))
     neg = eng.develop_negative(m)
     tr = {}
