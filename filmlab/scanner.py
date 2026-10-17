@@ -97,7 +97,7 @@ class Scanner:
     (冲印店风格); None = 不做输出调整 (物理参考)。"""
 
     def __init__(self, engine, scanner="frontier", profile=None, strength=0.75, stretch_max=1.25,
-                 conditioning="lab"):
+                 conditioning="lab", gray_balance=None):
         self.eng = engine
         self.m = SCANNERS[scanner]
         e = engine.e
@@ -116,6 +116,7 @@ class Scanner:
         self.strength = 0.0 if self.mono else strength
         self.stretch_max = stretch_max
         self.timing = PrintTiming()
+        self.gray_balance = gray_balance
         # S4e 输出调整
         self.conditioning = conditioning
 
@@ -150,7 +151,8 @@ class Scanner:
                       slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT):
         """按整张底片自动定光 (见 scanning.timing.frame_auto)。"""
         self.timing = tm.frame_auto(self.digital_paper, Dn, nominal, self._c0, self.strength, self.stretch_max,
-                                    mid_gray, density_limit, latd_normal, slope_limit, color_limit)
+                                    mid_gray, density_limit, latd_normal, slope_limit, color_limit,
+                                    gray_balance=self.gray_balance)
 
     # ---- S4d + S4e
     def to_rgb(self, Dn):

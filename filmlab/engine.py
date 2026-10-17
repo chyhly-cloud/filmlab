@@ -67,6 +67,13 @@ class Params:
     scan_profile: str | None = None            # None = 有该胶片的档案就用, 没有就用通用档案
     # 扫描的输出调整 (S4e, 冲印店风格的经验部分): "lab" = 饱和度矩阵 + 型号的输出 tint; None = 不做 (物理参考)
     output_conditioning: str | None = "lab"
+    # 扫描定光 (S4c, 操作员变量)。scan_neutral: 不做逐帧颜色校正时以什么为中性 ——
+    #   "profile" = 扫描仪通用档案 (Portra 800) 的中灰; "film" = 该胶片自己在设计光源下的中灰
+    # scan_color_strength: 逐帧颜色校正力度; None = 按冲印店的随机范围 (variation.py)
+    # scan_gray_balance: 逐帧灰平衡方法; None = scanning.timing.GRAY_BALANCE
+    scan_neutral: str = "profile"
+    scan_color_strength: float | None = None
+    scan_gray_balance: str | None = None
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
@@ -153,8 +160,12 @@ class Engine:
         self.scanner = None
         if self.polarity == "negative" and p.output == "scan":
             from .scanner import Scanner
-            self.scanner = Scanner(self, p.scanner, p.scan_profile, self.v.scan_strength, self.v.scan_stretch,
-                                   p.output_conditioning)
+            self.scanner = Scanner(self, p.scanner, p.scan_profile,
+                                   self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
+                                   self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance)
+            if p.scan_neutral == "film" and not self.scanner.mono:
+                g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
+                self.scanner.conversion.gray0 = g - g[1]
             if p.timing != "frame":
                 st = self._gray_state(actual_light=(p.timing != "standard"))
                 self.scanner.balance(self.scanner.normalized_density(self._transmittance(st))[0], p.mid_gray)

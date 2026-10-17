@@ -41,6 +41,8 @@ LAB["cafe"] = "sillystill"
 def group(sid):
     if sid == "cafe":
         return "day"
+    if "光晕测试" in MAN[sid]["description"]:
+        return "halo_test"          # 数码有三组等效曝光, 与胶片曝光不对应; 不用于颜色评估
     c = MAN[sid]["scene_category"]
     return {"neon_led": "night", "blue_sky": "night", "other": "night" if sid == "R1-03-4" else "uniform",
             "colorchecker": "chart"}.get(c, c)
@@ -124,14 +126,24 @@ def policies():
     from filmlab.engine import LATD_NORMAL
     P = {}
 
-    def frame(d, sc, tm, gray0, strength):
+    def frame(d, sc, tm, gray0, strength, density_limit=None, gb=None):
+        lim = float(d["latd_limit"]) if density_limit is None else density_limit
         return tm.frame_auto(sc.digital_paper, d["Dn"].reshape(-1, 3), d["gray_ref"], gray0, strength,
-                             float(d["stretch_max"]), 0.18, float(d["latd_limit"]), LATD_NORMAL)
+                             float(d["stretch_max"]), 0.18, lim, LATD_NORMAL, gray_balance=gb)
+    g32 = lambda d: d["gray_ref"] - d["gray_ref"][1]
     P["auto (现行)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]))
     P["固定: 档案中灰 (Portra 800)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], 0.0)
     P["固定: 胶片 3200K 中灰"] = lambda d, sc, tm: frame(d, sc, tm, d["gray_ref"] - d["gray_ref"][1], 0.0)
     P["固定: 胶片日光中灰"] = lambda d, sc, tm: frame(d, sc, tm, d["gray_day"] - d["gray_day"][1], 0.0)
     P["固定: 只去片基"] = lambda d, sc, tm: frame(d, sc, tm, np.zeros(3), 0.0)
+    # 亮度不逐帧校正 (按标准中灰的印放曝光), 与颜色分开检验
+    P["亮度固定 + 颜色 auto"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]), 0.0)
+    P["全固定 (3200K)"] = lambda d, sc, tm: frame(d, sc, tm, g32(d), 0.0, 0.0)
+    for k in (0.25, 0.5, 0.75):
+        P[f"3200K 中灰, 力度 {k}"] = (lambda kk: lambda d, sc, tm: frame(d, sc, tm, g32(d), kk))(k)
+    # Fuji US6160634 的灰平衡 (三种估计 0.2:0.5:0.3, 剔除高彩度像素; 系数为专利示例值)
+    P["US6160634 (档案中灰)"] = lambda d, sc, tm: frame(d, sc, tm, d["gray0"], float(d["strength"]), gb="us6160634")
+    P["US6160634 (3200K 中灰)"] = lambda d, sc, tm: frame(d, sc, tm, g32(d), float(d["strength"]), gb="us6160634")
     return P
 
 
@@ -169,7 +181,7 @@ def report(rows, names):
     print(f"{'冲印店 / 组':28s}" + "".join(f"{n[:14]:>16s}" for n in names))
     for (lab, g), ids in sorted(groups.items()):
         print(f"{lab + ' / ' + g + f' ({len(ids)})':28s}" + "".join(f"{np.mean([rows[s][n][0] for s in ids]):16.2f}" for n in names))
-    same = [s for s in rows if LAB[s] == "epfl_frontier"]
+    same = [s for s in rows if LAB[s] == "epfl_frontier" and group(s) != "halo_test"]
     print(f"{'同店全部 (' + str(len(same)) + ')':28s}" + "".join(f"{np.mean([rows[s][n][0] for s in same]):16.2f}" for n in names))
 
 
