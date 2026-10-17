@@ -14,14 +14,8 @@ def install():
     from dataclasses import replace
     from filmlab import scanner as scm
     if os.environ.get("WB65"):
-        from functools import lru_cache
-        from filmlab import lights, spectral
-
-        @lru_cache(maxsize=None)
-        def wb():
-            w = spectral.illuminant("D65") @ spectral.cmfs()
-            return lights._M_SRGB, w[1]
-        lights._daylight_wb = wb
+        from filmlab import lights
+        lights.WB_REFERENCE = "D65"
     if os.environ.get("NOMAT"):
         scm.SATURATION_MATRIX = np.eye(3)
     if os.environ.get("NOTINT"):

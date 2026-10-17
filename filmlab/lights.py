@@ -76,17 +76,30 @@ def classes():
 _M_SRGB = colour.models.RGB_COLOURSPACE_sRGB.matrix_XYZ_to_RGB
 
 
-@lru_cache(maxsize=None)
+# RAW 日光白平衡下视为中性的光源。dcraw / libraw 的 daylight_whitebalance 由相机矩阵与 sRGB (D65) 求得,
+# 实测 X100V / G81 / ARW 三台相机均使 D65 中性 (tools/eval/CRITERIA.md "RAW → 曝光审计")。
+# 默认仍为 "D55": 下游 SATURATION_MATRIX / LAB_TINT 是在 D55 假设下标定的, 改为 D65 后 RAW 配对 10/12 改善,
+# 但 ref3 B 在 3 个随机种子下均变差 (+0.3…+1.2), 按验证规则暂不作为默认。
+WB_REFERENCE = "D55"
+
+
 def _daylight_wb():
-    """RAW 的日光白平衡: D55 白 → sRGB 白 (Bradford)。"""
-    w = spectral.illuminant("D55") @ spectral.cmfs()
+    return _wb_for(WB_REFERENCE)
+
+
+@lru_cache(maxsize=None)
+def _wb_for(ref):
+    """RAW 的日光白平衡: ref 白 → sRGB 白 (Bradford; ref = D65 时无需适应)。"""
+    w = spectral.illuminant(ref) @ spectral.cmfs()
+    if ref == "D65":
+        return _M_SRGB, w[1]
     d65 = colour.xy_to_XYZ(colour.CCS_ILLUMINANTS["CIE 1931 2 Degree Standard Observer"]["D65"])
     cat = colour.adaptation.matrix_chromatic_adaptation_VonKries(w / w[1], d65, "Bradford")
     return _M_SRGB @ cat, w[1]
 
 
 def camera_rgb(spec):
-    """光谱辐射 (..., 81) 在日光白平衡下的线性 sRGB (理想相机 = CIE 观察者, 中灰白 = D55 Y)。"""
+    """光谱辐射 (..., 81) 在日光白平衡下的线性 sRGB (理想相机 = CIE 观察者, 中灰白 = WB_REFERENCE 的 Y)。"""
     M, wy = _daylight_wb()
     return (spec @ spectral.cmfs()) / wy @ M.T
 
