@@ -90,7 +90,8 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 
 
 # ------------------------------------------------------------- 系统 --
-@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))])
+@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))
+                                  and not r.endswith("_reference")])   # 不定光: 光源偏色按物理保留
 def test_mid_gray_neutral(name):
     """负片靠冲印店定光 (相纸印放, 灰卡全校正), 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""
@@ -238,3 +239,33 @@ def test_noise_estimate_survives_quantized_dark_frames():
     img[:128] = 0.002
     p = estimate_noise(img)
     assert np.all(np.isfinite(p)) and np.all(p > 0)
+
+
+# ------------------------------------------------- 阶段契约 (docs/ARCHITECTURE.md) --
+def test_negative_is_physical_endpoint():
+    """Negative 携带三层曝光、染料量与光谱透射率; 扫描 Negative 与扫描 FilmState 结果相同。"""
+    rgb = np.repeat(RAMP, 40, 0)
+    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1}))
+    neg = eng.develop_negative(rgb)
+    assert neg.log_exposure.shape == rgb.shape and neg.dye.shape == rgb.shape
+    T = neg.transmittance(np.arange(5))
+    assert T.shape == (5, 81) and np.all((T > 0) & (T <= 1))
+    sm = neg.status_m()
+    assert np.all(np.diff(sm[0, :, 1]) > 0)                 # 曝光越多, 负片绿密度越高
+    tr = {}
+    a = eng.scan(neg, trace=tr)
+    b = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1})).render(rgb)
+    assert np.array_equal(a, b) and tr["Dn"].shape == rgb.shape and tr["timing"].M is not None
+
+
+def test_output_conditioning_is_separable():
+    """输出调整 (经验风格) 关闭后, 定光与负片密度不变, 只有最终 RGB 改变。"""
+    rgb = np.repeat(RAMP, 40, 0)
+    out = {}
+    for c in ("lab", None):
+        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "output_conditioning": c}))
+        tr = {}
+        out[c] = (eng.scan(eng.develop_negative(rgb), trace=tr), tr)
+    assert np.array_equal(out["lab"][1]["Dn"], out[None][1]["Dn"])
+    assert np.array_equal(out["lab"][1]["timing"].K, out[None][1]["timing"].K)
+    assert not np.allclose(out["lab"][0], out[None][0])

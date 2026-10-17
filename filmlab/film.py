@@ -31,6 +31,8 @@ def exposure_response(stock: Stock, light, scene_filter=None, method="spectral")
             linear   = 该光源下训练出的线性映射 (人造光源下更稳更准, 见 tools/check_lights.py)。"""
     from . import lights
     sens = 10.0 ** stock.log_sensitivity
+    if method == "linear_wp":
+        return lights.linear_response(_spec(light), _filt(scene_filter)[:, None] * sens, white_preserving=True)
     fn = lights.linear_response if method == "linear" else lights.response_under
     return fn(_spec(light), _filt(scene_filter)[:, None] * sens)
 
@@ -121,6 +123,8 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
     sens = 10.0 ** stock.log_sensitivity
     unit = ((E * F) @ sens) / ((E * F) @ direct)      # 吸收 → datasheet 曝光单位 (按中灰)
     w = F[:, None] * T_down[:, None] * back * v.diffuse_fraction * back_reflect * unit[None, :]
+    if method == "linear_wp":
+        return lights.linear_response(E, w, white_preserving=True)
     fn = lights.linear_response if method == "linear" else lights.response_under
     return fn(E, w)
 

@@ -24,6 +24,7 @@ from .chemistry import PROCESSES, Process
 from .materials import Emulsion, emulsion
 from .stocks import WAVELENGTHS
 from . import variation
+from .negative import Negative
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
@@ -46,6 +47,15 @@ class Params:
     # 场景照明: auto = 估计每个区域的光源类别 (日光 / 白炽 / 钠灯 / 荧光 / LED / 金卤),
     # 用真实光源光谱计算胶片曝光 (lights.py); None = 整个场景按 scene_illuminant 一种光源
     scene_lights: str | None = "auto"
+    # 每类光源里用哪一款计算曝光: "random" = 按底片种子随机; "nearest" = 与该类所照区域的照明色度最接近的一款
+    # (与光源识别用的同一判据, 见 lights.class_weights)
+    light_member: str = "random"
+    # 已核实的计算修正 (默认不开, 正式基线不变; 见 tools/eval/CRITERIA.md "计算审计"):
+    #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
+    #   "gray_halo"      定光用的中灰: 光晕与直接曝光用同一光源, 总量按画面用的多次反射核
+    #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染)
+    #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算
+    corrections: tuple = ()
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
@@ -64,6 +74,15 @@ class Params:
     output: str = "scan"
     scanner: str = "frontier"
     scan_profile: str | None = None            # None = 有该胶片的档案就用, 没有就用通用档案
+    # 扫描的输出调整 (S4e, 冲印店风格的经验部分): "lab" = 饱和度矩阵 + 型号的输出 tint; None = 不做 (物理参考)
+    output_conditioning: str | None = "lab"
+    # 扫描定光 (S4c, 操作员变量)。scan_neutral: 不做逐帧颜色校正时以什么为中性 ——
+    #   "profile" = 扫描仪通用档案 (Portra 800) 的中灰; "film" = 该胶片自己在设计光源下的中灰
+    # scan_color_strength: 逐帧颜色校正力度; None = 按冲印店的随机范围 (variation.py)
+    # scan_gray_balance: 逐帧灰平衡方法; None = scanning.timing.GRAY_BALANCE
+    scan_neutral: str = "profile"
+    scan_color_strength: float | None = None
+    scan_gray_balance: str | None = None
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
@@ -116,7 +135,7 @@ class Engine:
         # 该光源照亮的中性灰卡本身带着光源的颜色 (钨丝灯下是橙色的), 先乘上它再计算曝光
         from . import lights
         _m_ref = film.exposure_response(st, ref, p.lens_filter)
-        _ill_ref = lights.light_rgb(spectral.illuminant(ref))
+        _ill_ref = self._ill_ref = lights.light_rgb(spectral.illuminant(ref))
         self.M_ref = lambda rgb: _m_ref(np.asarray(rgb) * _ill_ref)
         self.M = film.exposure_response(st, p.scene_illuminant or ref, p.lens_filter)
         self.halo = film.halation_response(st, p.scene_illuminant or ref, p.lens_filter, self.v, e.halation) \
@@ -150,7 +169,13 @@ class Engine:
         self.scanner = None
         if self.polarity == "negative" and p.output == "scan":
             from .scanner import Scanner
-            self.scanner = Scanner(self, p.scanner, p.scan_profile, self.v.scan_strength, self.v.scan_stretch)
+            self.scanner = Scanner(self, p.scanner, p.scan_profile,
+                                   self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
+                                   self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance,
+                                   paper_white="paper_white" in p.corrections)
+            if p.scan_neutral == "film" and not self.scanner.mono:
+                g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
+                self.scanner.conversion.gray0 = g - g[1]
             if p.timing != "frame":
                 st = self._gray_state(actual_light=(p.timing != "standard"))
                 self.scanner.balance(self.scanner.normalized_density(self._transmittance(st))[0], p.mid_gray)
@@ -247,8 +272,31 @@ class Engine:
         H = self._expose_lin(rgb, self.M if actual_light else self.M_ref)
         if getattr(self, "halo", None) is not None:
             # 大面积均匀区域也会接收到自身的光晕 (整个光环的能量), 冲印店看到的底片包含这部分
-            H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
+            if "gray_halo" in self.p.corrections:
+                # 光晕与直接曝光用同一光源 (参考光源下 M_ref 接收的是反射率, 先乘上光源颜色); 总量用画面的多次反射核
+                halo = self.halo if actual_light else self._halo_ref()
+                src = rgb if actual_light else rgb * self._ill_ref
+                H = H + halo(src * 2.0 ** self.p.exposure_ev) * self._halo_total_multi()
+            else:
+                H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
         return self._develop(self._log_exposure(H))
+
+    def _halo_ref(self):
+        if not hasattr(self, "_halo_ref_cache"):
+            st = self.e.stock
+            self._halo_ref_cache = film.halation_response(st, st.reference_illuminant, self.p.lens_filter, self.v,
+                                                          self.e.halation)
+        return self._halo_ref_cache
+
+    def _halo_total_multi(self):
+        """每层光晕核的总量, 与 film.halation 对画面用的核一致 (红层含多次反射)。"""
+        if not hasattr(self, "_halo_total_multi_cache"):
+            rho = film.bounce_retention(self.e.stock, self.v)
+            self._halo_total_multi_cache = np.array([
+                (film.multi_bounce_kernel(10.0, self.v.base_um, self.v.forward, rho[c]) if rho[c] > 0.01
+                 else film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward)).sum()
+                for c in range(3)])
+        return self._halo_total_multi_cache
 
     def _halo_total(self):
         if not hasattr(self, "_halo_total_cache"):
@@ -278,8 +326,13 @@ class Engine:
 
     # ---- 主入口 ----
     def negative(self, rgb_lin):
-        """S0–S3: 拍摄并冲洗, 得到底片状态。"""
+        """S0–S3: 拍摄并冲洗, 得到底片状态 (FilmState)。"""
+        return self.develop_negative(rgb_lin).state
+
+    def develop_negative(self, rgb_lin):
+        """S0–S3: 拍摄并冲洗 → Negative (物理核心终点: 三层曝光、染料量、光谱透射率)。"""
         p, e = self.p, self.e
+        self.light_W = None
         h, w = rgb_lin.shape[:2]
         self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
         if p.scene_lights == "auto" and p.exposure_hook is None and min(rgb_lin.shape[:2]) >= 32:
@@ -291,11 +344,14 @@ class Engine:
         if halo_src is not None:
             H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v))
             H = np.clip(H, 1e-9, None)                   # 曝光量物理上非负
-        st = self._develop(self._log_exposure(H), blur_px=12.0 / self.px_um)
+        logH = self._log_exposure(H)
+        st = self._develop(logH, blur_px=12.0 / self.px_um)
         self._agitation(st)
         self._grain(st)
         self.state = st
-        return st
+        return Negative(film=e, state=st, spectral=self._transmittance, log_exposure=logH,
+                        light_weights=self.light_W, light_mix=getattr(self, "light_mix", None) if self.light_W is not None
+                        else None, base=self._transmittance_base())
 
     def _expose_mixed(self, rgb):
         """S0/S1: 按区域估计光源类别, 用各类真实光源光谱计算曝光与光晕源, 按软权重混合。"""
@@ -308,8 +364,11 @@ class Engine:
         scale = 0.08 * max(small.shape[:2])
         ill = lights.illumination_map(small, scale)
         W = lights.class_weights(ill, feas=lights.feasibility(small, scale))
+        self.light_W = W_small = W
         W = zoom(W, (h / W.shape[0], w / W.shape[1], 1), order=1)[:h, :w]
         members = lights.pick_members(self.v.frame_seed)
+        if p.light_member == "nearest":
+            members = lights.nearest_members(ill, W_small)
         H = np.zeros(rgb.shape)
         src = np.zeros(rgb.shape) if self.halo is not None else None
         self.light_mix = {}
@@ -320,25 +379,23 @@ class Engine:
             if share < 0.003:
                 continue
             spec = members[c.key][1]
-            method = "spectral" if c.key == "daylight" else "linear"   # 见 tools/check_lights.py
+            method = "spectral" if c.key == "daylight" else \
+                ("linear_wp" if "linear_white" in p.corrections else "linear")   # 见 tools/check_lights.py
             H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
             if src is not None:
                 src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,
                                                               e.halation, method)(rgb)
         return np.clip(H, 1e-9, None), (np.clip(src, 0, None) if src is not None else None)
 
-    def scan(self, st, chunk=1 << 17):
-        """S4': 扫描底片 → 线性 sRGB。"""
+    def scan(self, st, chunk=1 << 17, trace=None):
+        """S4': 扫描底片 (Negative 或 FilmState) → 线性 sRGB。trace: dict 时记录各级中间量
+        (Dn, 定光 PrintTiming, 相纸密度在 to_rgb 里不单独保留)。"""
         sc = self.scanner
-        shape = st.dye.shape
-        flat = lambda a: a.reshape(-1, 3)
-        Dn = np.empty((int(np.prod(shape[:-1])), 3))
-        for i in range(0, Dn.shape[0], chunk):
-            sl = slice(i, i + chunk)
-            sub = chemistry.FilmState(latent=None, halide=flat(st.halide)[sl], silver=flat(st.silver)[sl],
-                                      dye=flat(st.dye)[sl], coupler=None, remjet=st.remjet,
-                                      dye_agent=st.dye_agent)
-            Dn[sl] = sc.normalized_density(self._transmittance(sub))
+        neg = st if isinstance(st, Negative) else Negative(self.e, st, self._transmittance)
+        shape = neg.shape
+        # S4a + S4b: 光学测量 → 去片基 / 印放密度 / 档案 (按块, 直接积分到扫描通道)
+        Dn = neg.measure(sc.normalized_density, chunk).reshape(-1, 3)
+        # S4c: 定光
         if self.p.timing == "frame":           # 按整张底片的 LATD 自动校正 (亮度校正有上限)
             # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。
             # 冲印店不知道场景用的什么光; RAW 的日光白平衡与此无关。
@@ -346,10 +403,11 @@ class Engine:
             # 数码冲印机按整张底片的平均密度 (密度直方图) 定亮度; 夜景底片大部分接近片基, 平均密度很低
             # → 冲印店提亮, 但有上限。按"正常场景印成正常"标定, 正常场景的平均密度比灰卡低 LATD_NORMAL。
             sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
-        out = sc.to_rgb(Dn)
-        if self.p.timing == "frame":
-            pass  # 影调范围由 balance_frame 的反差拟合完成 (Fuji 2001); 不再额外做线性黑白点
-        return out.reshape(shape)
+        if trace is not None:
+            trace["Dn"] = Dn.reshape(*shape, 3).copy()
+            trace["timing"] = sc.timing
+        # S4d + S4e: 数字相纸 → 输出调整
+        return sc.to_rgb(Dn).reshape(*shape, 3)
 
     def render_xyz(self, rgb_lin):
         p, e = self.p, self.e
@@ -378,7 +436,8 @@ class Engine:
         iso = _iso(e)
         rms48 = 0.0038 * np.sqrt(iso / 100.0) * (1.6 if e.design == "reversal" else 1.0) \
             * (1.4 if e.design == "bw" else 1.0) * st.grain_factor * self.p.grain
-        sigma = rms48 * 48.0 / self.px_um
+        # RMS 颗粒度按 48 µm 直径圆孔径测得; 等面积正方形边长 √(π·24²) = 42.5 µm
+        sigma = rms48 * (42.5 if "grain_aperture" in self.p.corrections else 48.0) / self.px_um
         blur = (1.0 + iso / 100.0) / self.px_um
         rng = np.random.default_rng(self.v.frame_seed)
         from scipy.ndimage import gaussian_filter

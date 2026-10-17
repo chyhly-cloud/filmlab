@@ -49,12 +49,16 @@ def near_infrared_estimate(strength=1.0):
 # --------------------------------------------------------------- 配方 --
 def recipe(name: str) -> dict:
     """返回 engine.Params 的关键字参数。"""
+    if name == "cinestill_800t_reference":
+        # 物理参考 (docs/ARCHITECTURE.md): 同一张 CineStill 800T 底片, 扫描时按胶片在设计光源 (3200K) 下的中灰
+        # 一次定光、不做逐帧自动校色 (操作员变量), 不做输出调整 (冲印店风格)。用来检验胶片物理与扫描硬件。
+        return dict(recipe("cinestill_800t"), timing="standard", output_conditioning=None, scanner="frontier_neutral")
     if name == "cinestill_800t":
         # CineStill 800T 的实际生产与冲洗:
         #   1. 乳剂 = Kodak Vision3 500T (3200K 灯光平衡, 设计在 ECN-2 中冲洗)
         #   2. 出厂前去掉 remjet 背涂 → 片基背面全反射 → 红色光环
         #   3. 标称 EI 800, 乳剂本身 500 → 按 800 测光等于欠曝 log2(800/500) ≈ 0.68 档
-        #   4. 用 C-41 而非 ECN-2 冲洗 → 显影程度 τ≈1.18, 反差升高、层间不再完全平衡
+        #   4. 用 C-41 而非 ECN-2 冲洗 → 显影程度升高 (τ 由公开资料不可辨识, 冻结在 [1.0, 1.3], 见 chemistry.py)
         return dict(film=without_remjet(emulsion("kodak_vision3_500t"), "CineStill 800T"),
                     process="C-41", paper="kodak_portra_endura", exposure_ev=-np.log2(800 / 500))
     if name.startswith("bw_"):
@@ -106,7 +110,7 @@ RECIPES = [
     "push2_kodak_portra_400", "pull1_kodak_portra_400", "push1_fujifilm_velvia_100",
     "xpro_fujifilm_velvia_100", "xpro_kodak_portra_400",
     "bypass_kodak_vision3_250d", "bypass_kodak_portra_400",
-    "expired15_kodak_gold_200", "cinestill_800t", "standard_kodak_vision3_500t",
+    "expired15_kodak_gold_200", "cinestill_800t", "cinestill_800t_reference", "standard_kodak_vision3_500t",
     "aerochrome",
 ]
 
