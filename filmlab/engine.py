@@ -50,12 +50,13 @@ class Params:
     # 每类光源里用哪一款计算曝光: "random" = 按底片种子随机; "nearest" = 与该类所照区域的照明色度最接近的一款
     # (与光源识别用的同一判据, 见 lights.class_weights)
     light_member: str = "random"
-    # 已核实的计算修正 (默认不开, 正式基线不变; 见 tools/eval/CRITERIA.md "计算审计"):
+    # 已核实的计算修正 (见 tools/eval/CRITERIA.md "计算审计"):
+    #   "gray_halo"      定光用的中灰: 光晕与直接曝光用同一光源, 总量按画面用的多次反射核   [默认]
+    #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算                               [默认]
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
-    #   "gray_halo"      定光用的中灰: 光晕与直接曝光用同一光源, 总量按画面用的多次反射核
-    #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染)
-    #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算
-    corrections: tuple = ()
+    #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
+    # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
+    corrections: tuple = ("gray_halo", "grain_aperture")
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗

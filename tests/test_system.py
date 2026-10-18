@@ -269,3 +269,27 @@ def test_output_conditioning_is_separable():
     assert np.array_equal(out["lab"][1]["Dn"], out[None][1]["Dn"])
     assert np.array_equal(out["lab"][1]["timing"].K, out[None][1]["timing"].K)
     assert not np.allclose(out["lab"][0], out[None][0])
+
+
+# ---------------------------------------------- 计算修正的独立标准 (CRITERIA.md "计算审计") --
+def test_reference_gray_card_prints_neutral():
+    """胶片设计光源下的灰卡, 在物理参考 (标准定光、无输出调整) 中应印成中性: 定光用的中灰与画面用同一光源、同一光晕核。"""
+    from filmlab import lights
+    e = emulsion("kodak_vision3_500t")
+    ref = e.stock.reference_illuminant
+    rgb = np.tile(0.184 * lights.light_rgb(spectral.illuminant(ref)), (64, 64, 1))
+    eng = Engine(Params(**{**recipe("cinestill_800t_reference"), "roll": None, "grain": 0, "scene_lights": None,
+                           "scene_illuminant": ref}))
+    assert chroma(eng.render(rgb)[32, 32]) < 0.5
+
+
+@pytest.mark.parametrize("light", ["Cool White FL", "F32T8/TL830 (Triphosphor)", "HPS", "LED-B3"])
+def test_white_preserving_linear_exposure(light):
+    """保白点: 中性反射率在已知光源下的层曝光必须等于精确积分。"""
+    from filmlab import film, lights
+    st = emulsion("kodak_vision3_500t").stock
+    spec = lights._sd(light)
+    scale = 1.0 / (lights.camera_rgb(spec) @ np.array([0.2126, 0.7152, 0.0722]))
+    exact = 0.184 * (spec * scale) @ (10.0 ** st.log_sensitivity)
+    got = film.exposure_response(st, spec, None, "linear_wp")((0.184 * lights.light_rgb(spec))[None])[0]
+    assert np.max(np.abs(np.log10(got / exact))) < 0.005
