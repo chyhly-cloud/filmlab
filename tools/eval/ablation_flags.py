@@ -23,6 +23,9 @@ def install():
         return
     _INSTALLED = True
     import numpy as np
+    if os.environ.get("GENERATION"):
+        from filmlab import generation
+        generation.use(os.environ["GENERATION"])
     from dataclasses import replace
     from functools import lru_cache
     from filmlab import scanner as scm

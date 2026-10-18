@@ -189,6 +189,7 @@ KEY = ["auto (现行)", "US 相对中位 0.1", "US 相对灰轴 0.1", "US 相对
 
 def eval_cond(cond, names=None):
     import colour
+    import ablation_flags as af; af.install()
     from filmlab.scanning import timing as tm
     _inject_lab_look()
     eng, _ = engine_for("R1-00-1", cond_none=not os.environ.get("COND_LAB"))
