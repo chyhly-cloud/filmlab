@@ -293,3 +293,20 @@ def test_white_preserving_linear_exposure(light):
     exact = 0.184 * (spec * scale) @ (10.0 ** st.log_sensitivity)
     got = film.exposure_response(st, spec, None, "linear_wp")((0.184 * lights.light_rgb(spec))[None])[0]
     assert np.max(np.abs(np.log10(got / exact))) < 0.005
+
+
+def test_pipeline_generations_switch_cleanly():
+    """管线代际: legacy / current / next 互不相同, 切回 current 后结果复原 (缓存随切换清空)。"""
+    from filmlab import generation
+    rgb = np.repeat(RAMP, 8, 0)
+    P = lambda: Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "grain": 0})
+    try:
+        out = {}
+        for g in ("current", "legacy", "next", "current"):
+            generation.use(g)
+            out.setdefault(g, []).append(Engine(P()).render(rgb))
+        assert np.array_equal(out["current"][0], out["current"][1])
+        assert not np.allclose(out["next"][0], out["current"][0])
+        assert P().corrections == ("gray_halo", "grain_aperture")
+    finally:
+        generation.use("current")

@@ -7,11 +7,19 @@ import numpy as np
 warnings.filterwarnings("ignore")
 sys.path.insert(0, "/home/user/filmlab/tools/eval"); sys.path.insert(0, "/home/user/filmlab")
 
-CANDIDATES = {
-    "现行基线": {},
-    "候选 C: US6160634 灰平衡": {"scan_gray_balance": "us6160634"},
-    "冲印店预设: 锁定颜色 (胶片 3200K 中灰)": {"scan_neutral": "film", "scan_color_strength": 0.0},
+SETS = {
+    "timing": {
+        "现行基线": {},
+        "候选 C: US6160634 灰平衡": {"scan_gray_balance": "us6160634"},
+        "冲印店预设: 锁定颜色 (胶片 3200K 中灰)": {"scan_neutral": "film", "scan_color_strength": 0.0},
+    },
+    "generation": {
+        "旧基线 (legacy)": {"_generation": "legacy"},
+        "正式基线 (current)": {},
+        "下一代候选 (next)": {"_generation": "next"},
+    },
 }
+CANDIDATES = SETS[os.environ.get("SHEET_SET", "timing")]
 
 
 def render(sid, extra):
@@ -25,8 +33,13 @@ def render(sid, extra):
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
-    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, **extra}))
-    return srgb_encode(np.clip(eng.render(m), 0, 1))
+    from filmlab import generation
+    extra = dict(extra); generation.use(extra.pop("_generation", "current"))
+    try:
+        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, **extra}))
+        return srgb_encode(np.clip(eng.render(m), 0, 1))
+    finally:
+        generation.use("current")
 
 
 def sheet(args):

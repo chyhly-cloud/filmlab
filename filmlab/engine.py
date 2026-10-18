@@ -28,6 +28,8 @@ from .negative import Negative
 
 PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行业惯例)
 GRAY = 0.184
+# 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
+DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14
@@ -56,7 +58,7 @@ class Params:
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
-    corrections: tuple = ("gray_halo", "grain_aperture")
+    corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
