@@ -37,7 +37,6 @@ def print_color(rgb_patch, member, cls, extra=LOCK):
 
 if __name__ == "__main__":
     import oracle_timing as ot, pair_compare as pc
-    from PIL import Image
     sid = sys.argv[1]
     box = tuple(map(float, sys.argv[2:6])) if len(sys.argv) > 5 else (0.35, 0.65, 0.35, 0.65)
     generation.use("next")
@@ -47,10 +46,7 @@ if __name__ == "__main__":
     c = region(rgb, box)
     ill = np.log(c[[0, 2]] / c[1])
     patch = 0.18 * c / (c @ [0.2126, 0.7152, 0.0722])
-    real = Image.open(scan).convert("RGB"); real.thumbnail((800, 800))
     print(f"{sid}: 相机照明色度 log(R/G) {ill[0]:+.3f} log(B/G) {ill[1]:+.3f}")
-    print(f"自动识别 (锁定颜色, 无输出调整): Lab {np.round(print_color.__wrapped__(patch) if hasattr(print_color, '__wrapped__') else 0, 1)}" if False else "")
-    lights.class_weights, lights.pick_members = cw, pm
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": 0, **LOCK}))
     print(f"  自动识别 → Lab {np.round(lab(eng.render(np.ones((48, 48, 3)) * patch)[16:32, 16:32].reshape(-1, 3).mean(0)), 1)}"
           f"   光源 {', '.join(f'{k}({n}) {v:.0%}' for k, (n, v) in eng.light_mix.items() if v >= 0.01)}")
