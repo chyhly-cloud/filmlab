@@ -30,6 +30,7 @@ PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行�
 GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
+HALATION_MEASURED = 0.1     # 光源外侧红边与 EPFL 真实扫描一致的强度倍数 (tools/eval/halo_edge.py; 区间约 0.1–0.3)
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14
@@ -58,6 +59,7 @@ class Params:
     #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算                               [默认]
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
+    #   "halation_measured" 光晕强度按 EPFL 配对实测 ×HALATION_MEASURED (实验; 机理未定, 见 CRITERIA.md "光晕强度")
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -146,7 +148,7 @@ class Engine:
         self._ill_scene = lights.light_rgb(spectral.illuminant(scene_ill)) \
             if p.scene_illuminant not in ("raw", None) else np.ones(3)
         self.M = film.exposure_response(st, scene_ill or ref, p.lens_filter)
-        self.halo = film.halation_response(st, scene_ill or ref, p.lens_filter, self.v, e.halation) \
+        self.halo = film.halation_response(st, scene_ill or ref, p.lens_filter, self.v, self._back_reflect) \
             if e.halation > 0 and p.exposure_hook is None else None
         g = self._expose_lin(np.full((1, 1, 3), GRAY), self.M_ref, compensation=False)[0, 0]
         self.log_k = _speed_point(e) - np.log10(g[1])        # 测光 (透过滤镜, 含滤镜因数)
@@ -291,11 +293,17 @@ class Engine:
                 H = H + self.halo(rgb * 2.0 ** self.p.exposure_ev) * self._halo_total()
         return self._develop(self._log_exposure(H))
 
+    @property
+    def _back_reflect(self):
+        """片基背面的反射能力 (材料决定); halation_measured 时按实测强度缩放。"""
+        k = HALATION_MEASURED if "halation_measured" in self.p.corrections else 1.0
+        return self.e.halation * k
+
     def _halo_ref(self):
         if not hasattr(self, "_halo_ref_cache"):
             st = self.e.stock
             self._halo_ref_cache = film.halation_response(st, st.reference_illuminant, self.p.lens_filter, self.v,
-                                                          self.e.halation)
+                                                          self._back_reflect)
         return self._halo_ref_cache
 
     def _halo_total_multi(self):
@@ -394,7 +402,7 @@ class Engine:
             H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
             if src is not None:
                 src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,
-                                                              e.halation, method)(rgb)
+                                                              self._back_reflect, method)(rgb)
         return np.clip(H, 1e-9, None), (np.clip(src, 0, None) if src is not None else None)
 
     def scan(self, st, chunk=1 << 17, trace=None):
