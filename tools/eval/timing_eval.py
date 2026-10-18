@@ -62,6 +62,17 @@ def lab_lin(rgb):
     return colour.XYZ_to_Lab(colour.sRGB_to_XYZ(np.clip(rgb, 0, 1), apply_cctf_decoding=False))
 
 
+def _inject_lab_look():
+    """评估时的输出调整: COND_LAB=1 用冲印店风格; TINT / FL_MAT 注入重新标定的 tint 与饱和度矩阵。"""
+    from dataclasses import replace
+    from filmlab import scanner as scm
+    if os.environ.get("TINT"):
+        pts = tuple(tuple(float(v) for v in q.split(",")) for q in os.environ["TINT"].split(";"))
+        scm.SCANNERS["frontier"] = replace(scm.SCANNERS["frontier"], output_tint=((0.0, 0.0, 0.0),) + pts + ((100.0, 0.0, 0.0),))
+    if os.environ.get("FL_MAT"):
+        scm.SATURATION_MATRIX = np.load(os.environ["FL_MAT"])
+
+
 def engine_for(sid, cond_none=True):
     from filmlab.engine import Engine, Params
     from filmlab.recipes import recipe
@@ -179,7 +190,8 @@ KEY = ["auto (现行)", "US 相对中位 0.1", "US 相对灰轴 0.1", "US 相对
 def eval_cond(cond, names=None):
     import colour
     from filmlab.scanning import timing as tm
-    eng, _ = engine_for("R1-00-1")
+    _inject_lab_look()
+    eng, _ = engine_for("R1-00-1", cond_none=not os.environ.get("COND_LAB"))
     sc = eng.scanner
     P = policies()
     names = names or list(P)
