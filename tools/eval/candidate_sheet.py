@@ -18,6 +18,15 @@ SETS = {
         "正式基线 (current)": {},
         "下一代候选 (next)": {"_generation": "next"},
     },
+    "all": {
+        "旧基线 legacy": {"_generation": "legacy"},
+        "正式默认 current": {},
+        "研究基准 next": {"_generation": "next"},
+        "实验 next_k5219 (Kodak 原始 5219)": {"_generation": "next_k5219"},
+        "next + 候选 C (US6160634)": {"_generation": "next", "scan_gray_balance": "us6160634"},
+        "next + US6160634 相对灰轴": {"_generation": "next", "scan_gray_balance": "us6160634_axis"},
+        "next + 锁定颜色预设": {"_generation": "next", "scan_neutral": "film", "scan_color_strength": 0.0},
+    },
 }
 CANDIDATES = SETS[os.environ.get("SHEET_SET", "timing")]
 
@@ -69,8 +78,9 @@ def sheet(args):
         canvas = Image.new("RGB", (im.width, h + 30), (20, 20, 20)); canvas.paste(im, (0, 30))
         ImageDraw.Draw(canvas).text((6, 5), l, fill=(235, 235, 235), font=font)
         ims.append(canvas)
-    W = sum(i.width for i in ims[:2]); rows = [ims[:2], ims[2:]]
-    full = Image.new("RGB", (max(sum(i.width for i in r) for r in rows), 2 * (h + 30)), (20, 20, 20))
+    per = int(os.environ.get("SHEET_COLS", "2" if len(ims) <= 4 else "4"))
+    rows = [ims[i:i + per] for i in range(0, len(ims), per)]
+    full = Image.new("RGB", (max(sum(i.width for i in r) for r in rows), len(rows) * (h + 30)), (20, 20, 20))
     for y, r in enumerate(rows):
         x = 0
         for i in r:
