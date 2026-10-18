@@ -53,6 +53,11 @@ def recipe(name: str) -> dict:
         # 物理参考 (docs/ARCHITECTURE.md): 同一张 CineStill 800T 底片, 扫描时按胶片在设计光源 (3200K) 下的中灰
         # 一次定光、不做逐帧自动校色 (操作员变量), 不做输出调整 (冲印店风格)。用来检验胶片物理与扫描硬件。
         return dict(recipe("cinestill_800t"), timing="standard", output_conditioning=None, scanner="frontier_neutral")
+    if name == "cinestill_800t_frontier_plain":
+        # 冲印店扫描预设 (可选, 不是默认): Frontier 逐帧自动定光, 不加输出调整 (饱和度矩阵 + LAB_TINT)。
+        # 依据 EPFL 同店 RAW 配对 (tools/eval/CRITERIA.md "输出调整的拆分"): 不加调整时彩度比 1.04 (加上 0.88),
+        # 自动定光误差 11.79 vs 12.32, 目视更接近; 但 ref3 网络总体明显偏好加调整 → 只适用于这类冲印店。
+        return dict(recipe("cinestill_800t"), output_conditioning=None)
     if name == "cinestill_800t":
         # CineStill 800T 的实际生产与冲洗:
         #   1. 乳剂 = Kodak Vision3 500T (3200K 灯光平衡, 设计在 ECN-2 中冲洗)
@@ -110,7 +115,7 @@ RECIPES = [
     "push2_kodak_portra_400", "pull1_kodak_portra_400", "push1_fujifilm_velvia_100",
     "xpro_fujifilm_velvia_100", "xpro_kodak_portra_400",
     "bypass_kodak_vision3_250d", "bypass_kodak_portra_400",
-    "expired15_kodak_gold_200", "cinestill_800t", "cinestill_800t_reference", "standard_kodak_vision3_500t",
+    "expired15_kodak_gold_200", "cinestill_800t", "cinestill_800t_reference", "cinestill_800t_frontier_plain", "standard_kodak_vision3_500t",
     "aerochrome",
 ]
 
