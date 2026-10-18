@@ -8,7 +8,7 @@
 偏色: 整幅 15 < L* < 90 像素的 a*、b* 中位数 (真实扫描与模拟同法)。
 条件 (均为 next 代际): 正式定光 ± 输出调整 (矩阵 + tint, 由以 JPEG 为主的数据拟合), 锁定颜色 ± 输出调整。
 
-用法: python3 wb_cast.py 输出.json [场景…]
+用法: [LIGHT=类别] [CONDS_IDX=1,3] python3 wb_cast.py 输出.json [场景…]
 """
 import json, os, sys, zlib, csv, warnings
 import numpy as np
@@ -21,6 +21,8 @@ CONDS = {
     "锁定颜色 + 输出调整": {"scan_neutral": "film", "scan_color_strength": 0.0},
     "锁定颜色, 无输出调整": {"scan_neutral": "film", "scan_color_strength": 0.0, "output_conditioning": None},
 }
+if os.environ.get("CONDS_IDX"):       # 只跑部分条件, 例如 CONDS_IDX=1,3
+    CONDS = {k: v for i, (k, v) in enumerate(CONDS.items()) if str(i) in os.environ["CONDS_IDX"].split(",")}
 
 
 def scenes():
@@ -44,6 +46,7 @@ def cast(srgb):
 
 
 def job(sid):
+    import ablation_flags as af; af.install()          # LIGHT=<类别> 等实验开关
     import oracle_timing as ot
     import pair_compare as pc
     from PIL import Image
