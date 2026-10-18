@@ -27,6 +27,13 @@ SETS = {
         "next + US6160634 相对灰轴": {"_generation": "next", "scan_gray_balance": "us6160634_axis"},
         "next + 锁定颜色预设": {"_generation": "next", "scan_neutral": "film", "scan_color_strength": 0.0},
     },
+    "cast": {      # 冷暖跟随 (wb_cast.py); 配合 SHEET_METRIC=cast: 不对齐, 标注整体偏色, 空灯箱也能用
+        "正式默认 (逐帧定光 + 输出调整)": {"_generation": "next"},
+        "逐帧定光, 无输出调整": {"_generation": "next", "output_conditioning": None},
+        "锁定颜色 (不校色) + 输出调整": {"_generation": "next", "scan_neutral": "film", "scan_color_strength": 0.0},
+        "锁定颜色, 无输出调整": {"_generation": "next", "scan_neutral": "film", "scan_color_strength": 0.0,
+                                "output_conditioning": None},
+    },
 }
 CANDIDATES = SETS[os.environ.get("SHEET_SET", "timing")]
 
@@ -57,9 +64,18 @@ def sheet(args):
     from PIL import Image, ImageDraw, ImageFont
     from skimage.transform import warp, ProjectiveTransform
     import oracle_timing as ot
+    lab = lambda x: colour.XYZ_to_Lab(colour.sRGB_to_XYZ(np.clip(x, 0, 1)))
+    if os.environ.get("SHEET_METRIC") == "cast":
+        from wb_cast import cast
+        real = Image.open(ot.sources(sid)[1]).convert("RGB"); real.thumbnail((1600, 1600)); real = np.asarray(real, float) / 255
+        tag = lambda x: "a* %+.1f  b* %+.1f" % tuple(cast(x))
+        tiles, labels = [real], ["真实扫描  " + tag(real)]
+        for name, extra in CANDIDATES.items():
+            sim = render(sid, extra)
+            tiles.append(sim); labels.append(f"{name}  {tag(sim)}")
+        return _save(out, sid, tiles, labels)
     Hm, real = ot.geometry(sid)
     tiles, labels = [real], ["真实扫描"]
-    lab = lambda x: colour.XYZ_to_Lab(colour.sRGB_to_XYZ(np.clip(x, 0, 1)))
     Lr = lab(real)
     for name, extra in CANDIDATES.items():
         sim = render(sid, extra)
@@ -67,6 +83,11 @@ def sheet(args):
         ok = np.all(np.isfinite(w), -1)
         de = colour.delta_E(lab(np.where(ok[..., None], w, 0))[ok], Lr[ok], method="CIE 2000")
         tiles.append(np.where(ok[..., None], w, 0)); labels.append(f"{name}  ΔE00 中位 {np.median(de):.1f}")
+    return _save(out, sid, tiles, labels)
+
+
+def _save(out, sid, tiles, labels):
+    from PIL import Image, ImageDraw, ImageFont
     h = 420; ims = []
     try:
         font = ImageFont.truetype("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", 18)
@@ -77,6 +98,10 @@ def sheet(args):
         im = im.resize((int(im.width * h / im.height), h))
         canvas = Image.new("RGB", (im.width, h + 30), (20, 20, 20)); canvas.paste(im, (0, 30))
         ImageDraw.Draw(canvas).text((6, 5), l, fill=(235, 235, 235), font=font)
+        if ImageDraw.Draw(canvas).textlength(l, font=font) > im.width - 12:      # 窄格: 标题与数值分两行
+            canvas = Image.new("RGB", (im.width, h + 30), (20, 20, 20)); canvas.paste(im.crop((0, 22, im.width, h)), (0, 52))
+            for k, part in enumerate(l.split("  ", 1)):
+                ImageDraw.Draw(canvas).text((6, 4 + 24 * k), part, fill=(235, 235, 235), font=font)
         ims.append(canvas)
     per = int(os.environ.get("SHEET_COLS", "2" if len(ims) <= 4 else "4"))
     rows = [ims[i:i + per] for i in range(0, len(ims), per)]
