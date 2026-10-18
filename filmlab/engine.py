@@ -44,7 +44,8 @@ class Params:
     exposure_ev: float = 0.0                   # 相对于按包装感光度测光
     # 输入 RGB 的参考光源。默认 D55: RAW 以固定日光白平衡读入, 场景光色已包含在 RGB 里
     # (钨丝灯场景本身就是橙色的)。若输入已用相机白平衡"拉正", 设为 None = 胶片自己的平衡光源。
-    scene_illuminant: str | None = "D55"
+    # "raw" = RAW 日光白平衡下视为中性的光源 (lights.WB_REFERENCE: current 为 D55, next 为 LibRaw 实际的 D65)
+    scene_illuminant: str | None = "raw"
     lens_filter: np.ndarray | None = None      # (81,) 镜头前滤镜光谱透射率
     # 场景照明: auto = 估计每个区域的光源类别 (日光 / 白炽 / 钠灯 / 荧光 / LED / 金卤),
     # 用真实光源光谱计算胶片曝光 (lights.py); None = 整个场景按 scene_illuminant 一种光源
@@ -140,8 +141,12 @@ class Engine:
         _m_ref = film.exposure_response(st, ref, p.lens_filter)
         _ill_ref = self._ill_ref = lights.light_rgb(spectral.illuminant(ref))
         self.M_ref = lambda rgb: _m_ref(np.asarray(rgb) * _ill_ref)
-        self.M = film.exposure_response(st, p.scene_illuminant or ref, p.lens_filter)
-        self.halo = film.halation_response(st, p.scene_illuminant or ref, p.lens_filter, self.v, e.halation) \
+        scene_ill = lights.WB_REFERENCE if p.scene_illuminant == "raw" else p.scene_illuminant
+        # 拍摄光下的灰卡在相机 (RAW 日光白平衡) 中的颜色: 拍摄光源 = 白平衡参考 (或输入已白平衡) 时为中性
+        self._ill_scene = lights.light_rgb(spectral.illuminant(scene_ill)) \
+            if p.scene_illuminant not in ("raw", None) else np.ones(3)
+        self.M = film.exposure_response(st, scene_ill or ref, p.lens_filter)
+        self.halo = film.halation_response(st, scene_ill or ref, p.lens_filter, self.v, e.halation) \
             if e.halation > 0 and p.exposure_hook is None else None
         g = self._expose_lin(np.full((1, 1, 3), GRAY), self.M_ref, compensation=False)[0, 0]
         self.log_k = _speed_point(e) - np.log10(g[1])        # 测光 (透过滤镜, 含滤镜因数)
@@ -271,7 +276,9 @@ class Engine:
 
     def _gray_state(self, actual_light=False, rgb=None):
         """灰卡 (或任意 rgb) 的冲洗结果。actual_light=True: 用实际拍摄光源。"""
-        rgb = np.full((1, 3), GRAY) if rgb is None else np.asarray(rgb, float).reshape(1, 3)
+        if rgb is None:      # 灰卡: 参考光源下 M_ref 接收反射率; 拍摄光下是灰卡在相机中的颜色
+            rgb = np.full((1, 3), GRAY) * (self._ill_scene if actual_light else 1.0)
+        rgb = np.asarray(rgb, float).reshape(1, 3)
         H = self._expose_lin(rgb, self.M if actual_light else self.M_ref)
         if getattr(self, "halo", None) is not None:
             # 大面积均匀区域也会接收到自身的光晕 (整个光环的能量), 冲印店看到的底片包含这部分

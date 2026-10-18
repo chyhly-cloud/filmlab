@@ -47,8 +47,38 @@ def _clean(a):
     return a
 
 
+# 胶片数据的修订 (按管线代际启用, 见 filmlab.generation): 档案键 → 修订函数
+REVISIONS = {}
+
+
+def _kodak_raw_5219(st: Stock) -> Stock:
+    """Vision3 5219: 改用 Kodak 原始测量的染料光谱 (保留有色成色剂遮罩的负值), 并按 Kodak 实测的 Status M 特性曲线
+    重新解混分层曲线 (tools/eval/unmix_5219.py)。独立验证: 合成的中性中间调光谱密度与 Kodak 实测相差 RMS 0.006 D
+    (spektrafilm 解混 + 截断谱为 0.026 D, 且整片 Status M 的蓝 / 红反差比 Kodak 实测高约 10% / 8%)。
+    Kodak 曲线覆盖 log H −2.38…+2.41; 超出部分沿用原档案曲线的形状, 在边界处连续衔接。"""
+    k = np.load(PROFILE_DIR / "kodak_vision3_500t_kodak_raw.npz")
+    x, C = k["x"], k["C"]
+    xs, D0 = st.log_exposure, st.density_curves
+    D = np.empty_like(D0)
+    for c in range(3):
+        inside = np.interp(xs, x, C[:, c])
+        lo = D0[:, c] - np.interp(x[0], xs, D0[:, c]) + C[0, c]
+        hi = D0[:, c] - np.interp(x[-1], xs, D0[:, c]) + C[-1, c]
+        D[:, c] = np.where(xs < x[0], lo, np.where(xs > x[-1], hi, inside))
+    return st.with_(dye_density=np.asarray(k["E"], float), density_curves=np.clip(D, 0, None))
+
+
 @lru_cache(maxsize=None)
 def load_stock(key: str) -> Stock:
+    st = _load_stock(key)
+    rev = REVISIONS.get(key)
+    return REVISIONS_FN[rev](st) if rev else st
+
+
+REVISIONS_FN = {"kodak_raw": _kodak_raw_5219}
+
+
+def _load_stock(key: str) -> Stock:
     d = json.loads((PROFILE_DIR / f"{key}.json").read_text())
     info, D = d["info"], d["data"]
     assert np.allclose(D["wavelengths"], WAVELENGTHS)

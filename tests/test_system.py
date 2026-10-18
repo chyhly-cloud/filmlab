@@ -95,7 +95,12 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 def test_mid_gray_neutral(name):
     """负片靠冲印店定光 (相纸印放, 灰卡全校正), 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""
-    out = Engine(Params(**{**recipe(name), "grain": 0, "output": "print", "roll": None})).render(RAMP)[0, 4]
+    from filmlab import lights
+    e = recipe(name)["film"]
+    ref = (emulsion(e) if isinstance(e, str) else e).stock.reference_illuminant
+    # 灰卡由胶片的参考光源照明 (在 RAW 日光白平衡的 RGB 里带着该光源相对白平衡参考的颜色)
+    eng = Engine(Params(**{**recipe(name), "grain": 0, "output": "print", "roll": None, "scene_illuminant": ref}))
+    out = eng.render(RAMP * lights.light_rgb(spectral.illuminant(ref)))[0, 4]
     tol = 6.0 if name.startswith("push1_fujifilm") else 3.0
     assert chroma(out) < tol
     if not name.startswith("push1_fujifilm"):
@@ -278,8 +283,9 @@ def test_reference_gray_card_prints_neutral():
     e = emulsion("kodak_vision3_500t")
     ref = e.stock.reference_illuminant
     rgb = np.tile(0.184 * lights.light_rgb(spectral.illuminant(ref)), (64, 64, 1))
+    # 颜色校正力度 1: 只检验定光中灰与画面的一致性 (部分校正时残差取决于档案与胶片中灰之差)
     eng = Engine(Params(**{**recipe("cinestill_800t_reference"), "roll": None, "grain": 0, "scene_lights": None,
-                           "scene_illuminant": ref}))
+                           "scene_illuminant": ref, "scan_color_strength": 1.0}))
     assert chroma(eng.render(rgb)[32, 32]) < 0.5
 
 
