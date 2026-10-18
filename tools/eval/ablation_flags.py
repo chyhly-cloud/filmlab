@@ -10,6 +10,7 @@ SUN=1    日光类加入 CIE D40 / D45 (低太阳高度的直射阳光; CIE 日�
 TAU=<值>  ECN-2 胶片在 C-41 中的有效显影程度 τ (冻结区间 [1.0, 1.3] 内的敏感性; 现行 1/0.85)
 DYESHIFT=none|cyan  C-41 中染料光谱平移: 不平移 / 只平移青色 (品红、黄的平移无实测数据)
 CORR=a,b   为所有引擎打开 Params.corrections 中的计算修正
+HALO=<k>  光晕强度 × k (片基背面反射能力的倍数; 画面与定光中灰同时缩放)
 LIGHT=<类别>  光源识别预言机: 整幅只用该类光源 (daylight / tungsten / hps / fluorescent / led / metal_halide)"""
 import os
 
@@ -95,6 +96,13 @@ def install():
         def init_c(self, p):
             init_e(self, replace(p, corrections=tuple(set(p.corrections) | set(corr))))
         _eng.Engine.__init__ = init_c
+    if os.environ.get("HALO"):
+        from filmlab import film as _film
+        hr0, kh = _film.halation_response, float(os.environ["HALO"])
+
+        def halation_response(stock, light, scene_filter, v, back_reflect, method="spectral"):
+            return hr0(stock, light, scene_filter, v, back_reflect * kh, method)
+        _film.halation_response = halation_response
     if os.environ.get("LIGHT"):
         from filmlab import lights
         k = [c.key for c in lights.classes()].index(os.environ["LIGHT"])
@@ -113,4 +121,4 @@ def install():
 
 
 def tag():
-    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT", "TAU", "DYESHIFT", "CORR") if os.environ.get(k)) or "base"
+    return "_".join(k for k in ("WB65", "NOMAT", "NOTINT", "BAL0", "MASK", "PID", "LED", "SUN", "LIGHT", "TAU", "DYESHIFT", "CORR", "HALO") if os.environ.get(k)) or "base"
