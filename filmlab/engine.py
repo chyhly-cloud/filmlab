@@ -30,7 +30,7 @@ PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行�
 GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
-HALATION_MEASURED = 0.1     # 光源外侧红边与 EPFL 真实扫描一致的强度倍数 (tools/eval/halo_edge.py; 区间约 0.1–0.3)
+HALATION_MEASURED = 0.1     # 实验候选: EPFL 配对支持的光晕强度倍数 (halo_edge.py; 不可辨识区间 0.1–0.3, 非实测物理量)
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14

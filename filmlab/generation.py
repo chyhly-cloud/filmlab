@@ -21,8 +21,8 @@ GENERATIONS = {
     # 实验: next + Vision3 5219 按 Kodak 原始测量重新解混。底片层面与 Kodak 实测一致 (独立验证), 但成片在全部评估上变差,
     # 机理未查明 (见 CRITERIA.md "Kodak 原始 5219"), 不并入 next。
     "next_k5219": ("D65", ("gray_halo", "grain_aperture", "linear_white"), {"kodak_vision3_500t": "kodak_raw"}),
-    # 实验: next + 光晕强度 ×0.1。光源外侧红边与真实扫描一致、公平定光误差略降, 但依赖截断光源的亮度先验,
-    # 现模型偏强约 10 倍的物理原因未查明 (见 CRITERIA.md "光晕强度"), 不并入 next。
+    # 实验候选: next + 光晕强度 ×0.1 (EPFL 全部帧支持; 可比子集给出约 ×0.3, 强度与核形状均不可辨识, 已冻结)。
+    # 不是测得的物理强度 (见 CRITERIA.md "光晕强度"、"光晕复核"), 不并入 next。
     "next_halo": ("D65", ("gray_halo", "grain_aperture", "linear_white", "halation_measured"), {}),
 }
 _active = "current"
