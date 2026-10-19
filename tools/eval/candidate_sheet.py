@@ -27,6 +27,10 @@ SETS = {
         "next + US6160634 相对灰轴": {"_generation": "next", "scan_gray_balance": "us6160634_axis"},
         "next + 锁定颜色预设": {"_generation": "next", "scan_neutral": "film", "scan_color_strength": 0.0},
     },
+    "sensor": {
+        "研究基准 next": {"_generation": "next"},
+        "next_sensor (传感器饱和判定)": {"_generation": "next_sensor"},
+    },
     "cast": {      # 冷暖跟随 (wb_cast.py); 配合 SHEET_METRIC=cast: 不对齐, 标注整体偏色, 空灯箱也能用
         "正式默认 (逐帧定光 + 输出调整)": {"_generation": "next"},
         "逐帧定光, 无输出调整": {"_generation": "next", "output_conditioning": None},
@@ -45,12 +49,12 @@ def render(sid, extra):
     from filmlab.recipes import recipe
     from filmlab.rawio import film_metering
     from filmlab.io import srgb_encode
+    from filmlab import generation
+    extra = dict(extra); generation.use(extra.pop("_generation", "current"))      # 先切代际: RAW 解码也随代际 (截断判定)
     rawp, _, bias = ot.sources(sid)
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
-    from filmlab import generation
-    extra = dict(extra); generation.use(extra.pop("_generation", "current"))
     try:
         eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, **extra}))
         return srgb_encode(np.clip(eng.render(m), 0, 1))
