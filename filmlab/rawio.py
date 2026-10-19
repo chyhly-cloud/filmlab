@@ -158,14 +158,60 @@ def denoise(img, params, chroma_boost=2.5, out_matrix=None, clipped=None):
 
 
 
-def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True):
+# 截断判定: "channel_max" = 每张图各通道最大值的 97% (历史做法; 没有任何饱和的画面也会把最亮的部分判为截断);
+#           "sensor"      = 传感器数据在饱和值处的堆积 (见 sensor_saturation)。current / next 保持 channel_max。
+CLIP_DETECT = "channel_max"
+
+
+def sensor_saturation(raw):
+    """传感器实际饱和的半尺寸掩膜 (与 postprocess(half_size=True) 的输出同方向), 没有饱和时返回 None。
+    必须在 postprocess 之前调用 (half_size 处理后 libraw 内部的原始数据已被缩小)。
+
+    元数据里的白电平不可靠 (G81 标 4079, 数据堆积在 4095; 这台索尼标 15360, 堆积在 16372, 有损压缩还留下少量更高的码值),
+    所以按数据判断: 在每个 CFA 通道最高 3% 量程内找计数最多的码值 (堆积), 若其附近 (容差 0.2% 量程) 的计数 ≥ 50
+    且是下方相邻区间平均计数的 10 倍以上, 该通道在此饱和, 阈值取堆积的下沿。未饱和的通道不产生截断。"""
+    data = raw.raw_image_visible
+    col = raw.raw_colors_visible
+    black = np.asarray(raw.black_level_per_channel, float)
+    thr = np.full(4, np.inf)
+    for c in range(4):
+        v = data[col == c]
+        if v.size == 0:
+            continue
+        mx = float(v.max())
+        rng = max(mx - black[c], 1.0)
+        vals, cnt = np.unique(v[v >= mx - 0.03 * rng], return_counts=True)
+        vm = float(vals[np.argmax(cnt)])
+        tol = max(1.0, 0.002 * rng)
+        top = int((v >= vm - tol).sum())
+        below = int(((v >= vm - 21 * tol) & (v < vm - tol)).sum()) / 20.0
+        if top >= 50 and top > 10.0 * max(below, 1.0):
+            thr[c] = vm - tol
+    if not np.isfinite(thr).any():
+        return None
+    sat = data >= thr[col]
+    h2, w2 = data.shape[0] // 2, data.shape[1] // 2
+    m = sat[:2 * h2, :2 * w2].reshape(h2, 2, w2, 2).any((1, 3))
+    flip = raw.sizes.flip
+    if flip == 3:
+        m = m[::-1, ::-1]
+    elif flip == 5:
+        m = np.rot90(m, 1)
+    elif flip == 6:
+        m = np.rot90(m, -1)
+    return m
+
+
+def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True,
+             clip_detect=None):
     """white_balance:
       daylight  固定日光白平衡 (默认): 保留场景真实的光色, 由胶片自己决定钨丝灯 / 日光下的表现,
                 就像胶片相机没有自动白平衡一样
       camera    相机记录的白平衡 (场景被"拉正")
       auto      自动白平衡
     highlights: reconstruct = 重建截断高光 (默认); clip = 保留传感器截断
-    denoise_raw: 去除数码传感器噪声 (默认开)"""
+    denoise_raw: 去除数码传感器噪声 (默认开)
+    clip_detect: 截断判定方法, None = 模块默认 CLIP_DETECT"""
     with rawpy.imread(str(path)) as raw:
         kw = dict(use_camera_wb=(white_balance == "camera"), use_auto_wb=(white_balance == "auto"))
         if white_balance == "daylight":
@@ -175,13 +221,21 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
             else:
                 kw["user_wb"] = wb[:3] + [wb[1] if wb[3] <= 0 else wb[3]]
         common = dict(gamma=(1, 1), no_auto_bright=True, output_bps=16, half_size=True, user_flip=None)
+        detect = clip_detect or CLIP_DETECT
+        sensor = sensor_saturation(raw) if detect == "sensor" and (highlights == "reconstruct" or denoise_raw) else None
         xyz = raw.postprocess(output_color=rawpy.ColorSpace.XYZ, **common, **kw).astype(np.float32) / 65535.0
         clip = None
         if highlights == "reconstruct" or denoise_raw:
-            # 在相机原始 RGB (未白平衡) 里找饱和像素: 任一通道到达该通道的最大值即为截断
-            cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
-            mx = cam.reshape(-1, 3).max(0).astype(np.float32)
-            clip = (cam >= 0.97 * mx).any(-1).astype(np.float32)
+            if detect == "sensor":
+                clip = np.zeros(xyz.shape[:2], np.float32)
+                if sensor is not None:
+                    h, w = min(sensor.shape[0], clip.shape[0]), min(sensor.shape[1], clip.shape[1])
+                    clip[:h, :w] = sensor[:h, :w]
+            else:
+                # 在相机原始 RGB (未白平衡) 里找饱和像素: 任一通道到达该通道的最大值即为截断
+                cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
+                mx = cam.reshape(-1, 3).max(0).astype(np.float32)
+                clip = (cam >= 0.97 * mx).any(-1).astype(np.float32)
     step = max(1, int(round(max(xyz.shape[:2]) / max_size)))
     xyz = _downsample(xyz, step)
     if denoise_raw:      # 在线性的传感器信号上做 (下采样后噪声模型同样成立, 只是方差更小)

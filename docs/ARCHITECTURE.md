@@ -80,6 +80,7 @@ RAW ──S0 输入──▶ 相机线性 RGB (日光白平衡, WB_REFERENCE)
 | `legacy` | 历史复现 | 2026-10-18 之前的基线 (分支 `baseline-legacy`) |
 | `current` | 正式默认 | legacy + `gray_halo`、`grain_aperture` |
 | `next` | 色彩准确性研究的基准 | current + WB65 (RAW 日光白平衡按 D65 中性) + `linear_white`; 经验常数不变 |
+| `next_sensor` | 修正候选 | next + RAW 截断按传感器饱和堆积判定 (未过曝画面不再被当作截断重建; 过曝画面与旧法重合 ≥ 97%) |
 | `next_halo` | 实验 | next + 光晕强度 ×0.1 (光源外侧红边与 EPFL 真实扫描一致; 定标依赖截断光源的亮度先验, 机理未定) |
 | `next_k5219` | 实验 | next + 5219 按 Kodak 原始测量重新解混 (底片层面正确, 成片变差, 机理未明) |
 

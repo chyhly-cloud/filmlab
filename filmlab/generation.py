@@ -6,12 +6,13 @@
            非日光光源的线性曝光映射保白点 (linear_white)。扫描仪的经验常数 (饱和度矩阵、LAB_TINT、定光参数) 不变。
   next_k5219  实验: next + Vision3 5219 按 Kodak 原始测量重新解混 (stocks._kodak_raw_5219)
   next_halo   实验: next + 光晕强度按 EPFL 配对实测缩放 (halation_measured)
+  next_sensor 修正候选: next + RAW 截断按传感器饱和堆积判定 (rawio.sensor_saturation), 不再把未过曝画面中最亮的 3% 当作截断
 
 用法: from filmlab import generation; generation.use("next")   (整个进程生效; 默认为 current)
 WB 参考与默认修正集是进程级的: 扫描仪档案等内部会再构造引擎、并缓存与相机 RGB 有关的结果,
 切换时必须一起改并清空这些缓存, 否则子引擎会悄悄沿用旧设置。
 """
-from . import engine, lights, materials, stocks
+from . import engine, lights, materials, rawio, stocks
 from .scanning import conversion, paper
 
 GENERATIONS = {
@@ -25,6 +26,9 @@ GENERATIONS = {
     # 不是测得的物理强度 (见 CRITERIA.md "光晕强度"、"光晕复核"), 不并入 next。
     "next_halo": ("D65", ("gray_halo", "grain_aperture", "linear_white", "halation_measured"), {}),
 }
+# RAW 截断判定 (rawio.CLIP_DETECT); 未列出的代际用历史的 channel_max
+CLIP_DETECT = {"next_sensor": "sensor"}
+GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
 
@@ -32,6 +36,7 @@ def use(name: str):
     global _active
     wb, corr, revisions = GENERATIONS[name]
     lights.WB_REFERENCE = wb
+    rawio.CLIP_DETECT = CLIP_DETECT.get(name, "channel_max")
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
     stocks.load_stock.cache_clear()

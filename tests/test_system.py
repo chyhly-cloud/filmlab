@@ -316,3 +316,15 @@ def test_pipeline_generations_switch_cleanly():
         assert P().corrections == ("gray_halo", "grain_aperture")
     finally:
         generation.use("current")
+
+
+def test_sensor_clip_generation_is_opt_in():
+    """传感器饱和判定只在 next_sensor 代际生效; current / next 保持历史的 channel_max。"""
+    from filmlab import generation, rawio
+    try:
+        for g, want in (("current", "channel_max"), ("next", "channel_max"), ("next_sensor", "sensor"),
+                        ("current", "channel_max")):
+            generation.use(g)
+            assert rawio.CLIP_DETECT == want
+    finally:
+        generation.use("current")
