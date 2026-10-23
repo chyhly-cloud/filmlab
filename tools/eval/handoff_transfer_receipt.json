@@ -1,0 +1,22 @@
+{
+  "name": "research-cache-private.tar.zst",
+  "bytes": 10375078508,
+  "sha256": "40553f43b4be92c573e675f1c0731177764c3548df9b7e80c54b44b21a69c238",
+  "zstd_integrity_test": "PASS",
+  "delivery_status": "Prepared on source workspace, not yet received on Claude host",
+  "transfer_access": "Private user-controlled transfer only; not published to GitHub or external storage",
+  "source_file_verification": {
+    "expected": 1427,
+    "verified": 1427,
+    "errors": []
+  },
+  "date": "2026-10-23",
+  "code_branch": "handoff/recovered-research-2026-10-23",
+  "small_pack": {
+    "name": "briefs-and-records.zip",
+    "bytes": 6072771,
+    "sha256": "65a4ebc657de8f2008064d3b41f7bf3fbc99ed970cf992de44e18f212c7545eb",
+    "zip_integrity_test": "PASS",
+    "image_pixels_included": false
+  }
+}

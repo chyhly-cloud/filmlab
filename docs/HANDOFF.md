@@ -547,3 +547,8 @@ negative_scan_intake.py只读检查TIFF及代码值，16位不自动批准线性
 用户上传四页中文原创提要，全文读取并归档[ANALOG_CAFE_2026_BRIEF_REVIEW.md](ANALOG_CAFE_2026_BRIEF_REVIEW.md)，PDF SHA=0b69365c3f1606ea8a40ca2e795a31a79d99656073fed5df36dd28e46d300ac9。原文/实验摄影图/本组原TIFF仍未取得；提要A/B/C不自动升级为一手证据，附件建议未授权外联。
 提要转述：Amaran F21x LED 3200/5500K、Flic Film C-41 Pro、Nikon 5000ED/VueScan正片RGB16自动曝光对焦、film Q灰阶校正；三档−2/0/+2分别f8/500、f5.6/250、f4/125。光圈变化可混入镜头PSF变化，CCT不当SPD；800T欠曝未同样亮度匹配，无滤镜日光+2缺失。不能将此Nikon实验与已收PrimeFilm厨房样本混用。
 自动曝光阻止未经校准的跨帧绝对比较，但在线性、暗偏置已知、恒定增益、无裁切条件下同帧相对比可消增益；不能笼统认定原始扫描全无价值。条件在本实验尚未验证，现阶段仅二手方法线索，不改管线/不启动拍摄/不开发新核。59生产SHA保持。
+
+## 2026-10-23：工作区恢复与实际交付
+
+恢复后源码/工具/报告已提交推送到`handoff/recovered-research-2026-10-23`，首个提交1fef411，父提交为Claude回归修复a53e6d4。见[完整交接入口](CLAUDE_CODE_HANDOFF.md)。327项测试实际通过；EPFL主72文件和59生产快照SHA重验一致。
+随后另导出1427文件私有数据载荷，排除共有EPFL主72文件、Analog.Cafe图像区域及重复用户RAW ZIP；约6MB小包含提要/研究md/许可文字/记录，约10.375GB大包含缓存。详见[跨机器数据迁移](HANDOFF_DATA_TRANSFER.md)。源机逐文件SHA通过不代表Claude已收到；大包和附件不随Git自动迁移。imagecodecs需在目标机另装兼容版本，导入时保留其原rawcache/配准/基准，不将补充根误当完整FILMLAB_DATA。
