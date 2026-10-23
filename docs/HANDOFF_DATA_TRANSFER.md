@@ -4,11 +4,11 @@
 
 用户明确说明Claude Code运行于云端，不能依靠下载后手工上传。因此文字附件现已直接提交到[research-materials](research-materials/README.md)：研究提要PDF、三份研究Markdown及厨房样本LICENSE文字，带原件SHA。Claude更新交接分支即可读取，不需访问Codex主机的路径。
 
-已检查主仓库`chyhly-cloud/filmlab`为**公开**仓库。照片、用户RAW和像素缓存不默认公开，受限厨房图像仍不交付到GitHub。完整数据计划通过Claude有权限的**私有GitHub仓库Release**传输，避免把约10GB塞入源码Git历史。
+已检查主仓库`chyhly-cloud/filmlab`为**公开**仓库。用户希望继续使用同一仓库。现已创建仅供有推送权限的协作者访问的草稿Release，tag为`filmlab-cache-2026-10-23`，Release ID为`421987096`。**保持草稿，不发布含像素缓存的大包**；未来删除仓库不等于撤回已经公开的副本。明确限制再分发的厨房图像仍排除。
 
-现有大包已切为10个≤1GiB分片，逐片及拼接SHA已核对，清单`tools/eval/handoff_release_parts.json`。当前清单状态为`PREPARED_LOCAL_ONLY`、repository未设置：**尚未上传Release**，不可据此认为远端可下载。
+现有大包已切为10个≤1GiB分片，逐片及拼接SHA已核对，清单`tools/eval/handoff_release_parts.json`。**草稿目前没有任何资产，Claude尚不能下载缓存**。大包包含来自不同来源的像素缓存，不视为具有统一公开再分发许可的数据集。
 
-当前两个前置条件未满足：用户需给出Claude可访问的私有数据仓库；本环境`api.github.com`请求被代理CONNECT403阻断（不是凭据错误已被证明）。`api.github.com`、`uploads.github.com`已追加到原环境网络草稿，保存不等于当前运行策略已应用。普通Git推送成功不证明Release API可用，不在日志/代码里写token。
+网络已可访问GitHub API，代码推送和草稿创建成功，但实际`gh release upload`返回`uploads.github.com`的HTTP401（Bad credentials）。现有注入认证没有完成附件上传。已在环境配置草稿声明`FILMLAB_RELEASE_TOKEN`，目标域为`api.github.com`与`uploads.github.com`；需在环境设置安全填入仅限本仓库、Contents读写的凭据，不能把值发到聊天或提交Git。配置保存不等于凭据已提供或上传已成功。
 
 Release实际发布且清单更新为`PUBLISHED`后，Claude可以：
 
@@ -31,7 +31,7 @@ python tools/eval/verify_handoff_payload.py --manifest tools/eval/handoff_transf
 
 ## 当前状态
 
-代码/报告已在`handoff/recovered-research-2026-10-23`，但另一机器不能直接访问这里的`/workspace/...`。本次导出了迁移包，**未声称Claude已接收数据**，也没有将大包上传到GitHub/公共存储。需要用户下载后传到Claude主机，或通过用户控制的私有传输通道搬运。
+代码/报告已在`handoff/recovered-research-2026-10-23`，但另一机器不能直接访问这里的`/workspace/...`。本次导出了迁移包，**未声称Claude已接收数据**，也没有将大包上传到GitHub/公共存储。主要传输方式为同仓库草稿Release；当前上传认证未完成。
 
 原数据目录合计约13GB。迁移包排除两边已SHA确认一致的72个主要EPFL文件、受限Analog.Cafe图片和本地衍生区域，以及重复的DSC原件ZIP；保留1427个文件，原始载荷10.225GiB。其他补充数据可能与Claude已有数据重复，不因同名假设相同。
 
@@ -57,7 +57,7 @@ DSC03906.ARW.zip原附件为33486819字节，可单独从原对话下载。大�
 
 压缩完整性已通过`zstd -t`。归档大小和SHA见`tools/eval/handoff_transfer_receipt.json`，每个载荷文件SHA见`tools/eval/handoff_transfer_manifest.json`。清单中excluded列逐项说明排除理由。
 
-同一台机器上的路径链接不是另一台主机的下载地址。只把路径贴给Claude不能完成传输；必须先实际下载/私有拷贝文件，确认目标收到后再验收。大包接近10GB，不一定适合聊天附件上传，可用用户自有私有存储或主机间传输；没有提供目的地，因此尚未执行此步。
+同一台机器上的路径链接不是另一台主机的下载地址。只把路径贴给Claude不能完成传输；必须先实际下载/私有拷贝文件，确认目标收到后再验收。大包接近10GB，不一定适合聊天附件上传，可用用户自有私有存储或主机间传输；目前已选定同仓库草稿Release，但上传认证失败，尚无资产传输成功。
 
 ## 目标机安全导入与验证
 

@@ -1,8 +1,8 @@
 {
   "format": 1,
   "tag": "filmlab-cache-2026-10-23",
-  "repository": null,
-  "publication_status": "PREPARED_LOCAL_ONLY; PRIVATE_DESTINATION_AND_RELEASE_API_ACCESS_REQUIRED",
+  "repository": "chyhly-cloud/filmlab",
+  "publication_status": "DRAFT_EMPTY_UPLOAD_AUTH_BLOCKED",
   "archive_name": "research-cache-private.tar.zst",
   "archive_bytes": 10375078508,
   "archive_sha256": "40553f43b4be92c573e675f1c0731177764c3548df9b7e80c54b44b21a69c238",
@@ -57,5 +57,7 @@
       "bytes": 711402092,
       "sha256": "7ee80ad591eae251ef9e4896be789461d40a4476f2152517bc6278860e0877c5"
     }
-  ]
+  ],
+  "release_id": 421987096,
+  "draft": true
 }
