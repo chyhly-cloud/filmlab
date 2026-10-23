@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "tag": "filmlab-cache-2026-10-23",
+  "repository": null,
+  "publication_status": "PREPARED_LOCAL_ONLY; PRIVATE_DESTINATION_AND_RELEASE_API_ACCESS_REQUIRED",
+  "archive_name": "research-cache-private.tar.zst",
+  "archive_bytes": 10375078508,
+  "archive_sha256": "40553f43b4be92c573e675f1c0731177764c3548df9b7e80c54b44b21a69c238",
+  "parts": [
+    {
+      "name": "research-cache-private.tar.zst.part000",
+      "bytes": 1073741824,
+      "sha256": "ed1c06d359ac03328d5314d21e8ecbedc90b3d322410c87106737cd8a1af992d"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part001",
+      "bytes": 1073741824,
+      "sha256": "88263f1013f42443f8c99616aff2b45fbb876b060176292b4e6c75aa80c4270d"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part002",
+      "bytes": 1073741824,
+      "sha256": "1d80da515820ba81be6c55490a9668aab31ae2d613f6be073d6e4c258ca331b2"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part003",
+      "bytes": 1073741824,
+      "sha256": "b1899f088805559127e9fdb9e2a186bf59137834b27fa1aad91e3089ff3a8a77"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part004",
+      "bytes": 1073741824,
+      "sha256": "31cf4dd8553ad20a0a34512b50c92b7b541266cbf8c505df8acd0dd48356e2b8"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part005",
+      "bytes": 1073741824,
+      "sha256": "7f9c6669f25aed83aa5580d21ccb5e1bb341e92e610dafb9e06902e1a8aa6f85"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part006",
+      "bytes": 1073741824,
+      "sha256": "0ffe9a59a89627cb98a0af50e141492a91dab5ff783617c734bbe04fa3fb479c"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part007",
+      "bytes": 1073741824,
+      "sha256": "c903eaf0b038b57674e4d5c661ce5a431adf2193c89645cafbba54b3d9a76a5b"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part008",
+      "bytes": 1073741824,
+      "sha256": "23e03939d4c410dba960c5fcf54194f000fc0d6f3e6a5f1e62b13d509f21a22e"
+    },
+    {
+      "name": "research-cache-private.tar.zst.part009",
+      "bytes": 711402092,
+      "sha256": "7ee80ad591eae251ef9e4896be789461d40a4476f2152517bc6278860e0877c5"
+    }
+  ]
+}

@@ -1,5 +1,34 @@
 # Claude Code外部缓存迁移
 
+## 最新交付方式：GitHub优先
+
+用户明确说明Claude Code运行于云端，不能依靠下载后手工上传。因此文字附件现已直接提交到[research-materials](research-materials/README.md)：研究提要PDF、三份研究Markdown及厨房样本LICENSE文字，带原件SHA。Claude更新交接分支即可读取，不需访问Codex主机的路径。
+
+已检查主仓库`chyhly-cloud/filmlab`为**公开**仓库。照片、用户RAW和像素缓存不默认公开，受限厨房图像仍不交付到GitHub。完整数据计划通过Claude有权限的**私有GitHub仓库Release**传输，避免把约10GB塞入源码Git历史。
+
+现有大包已切为10个≤1GiB分片，逐片及拼接SHA已核对，清单`tools/eval/handoff_release_parts.json`。当前清单状态为`PREPARED_LOCAL_ONLY`、repository未设置：**尚未上传Release**，不可据此认为远端可下载。
+
+当前两个前置条件未满足：用户需给出Claude可访问的私有数据仓库；本环境`api.github.com`请求被代理CONNECT403阻断（不是凭据错误已被证明）。`api.github.com`、`uploads.github.com`已追加到原环境网络草稿，保存不等于当前运行策略已应用。普通Git推送成功不证明Release API可用，不在日志/代码里写token。
+
+Release实际发布且清单更新为`PUBLISHED`后，Claude可以：
+
+```bash
+python tools/eval/github_handoff_cache.py --repo OWNER/PRIVATE_DATA_REPO --directory "$HOME/filmlab-cache-parts"
+```
+
+脚本使用目标机正常`gh`认证，只获取缺失分片，核验每片及完整拼接SHA，不自动解包、不再组装一份10GB副本。当前未发布状态下会明确失败，避免无效重试。`--verify-only`可用于源机离线核对。
+
+分片可按清单顺序拼接后解压：
+
+```bash
+mkdir -p "$HOME/filmlab-import-2026-10-23"
+set -o pipefail
+cat "$HOME"/filmlab-cache-parts/research-cache-private.tar.zst.part[0-9][0-9][0-9] | zstd -dc | tar -xf - -C "$HOME/filmlab-import-2026-10-23"
+python tools/eval/verify_handoff_payload.py --manifest tools/eval/handoff_transfer_manifest.json --root "$HOME/filmlab-import-2026-10-23"
+```
+
+先通过下载脚本的SHA验证再解包，并保留原数据。后文小包/大包本地路径是备用导出，不是主要云端交付手段。
+
 ## 当前状态
 
 代码/报告已在`handoff/recovered-research-2026-10-23`，但另一机器不能直接访问这里的`/workspace/...`。本次导出了迁移包，**未声称Claude已接收数据**，也没有将大包上传到GitHub/公共存储。需要用户下载后传到Claude主机，或通过用户控制的私有传输通道搬运。

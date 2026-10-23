@@ -141,6 +141,8 @@ SHA256 `0b69365c3f1606ea8a40ca2e795a31a79d99656073fed5df36dd28e46d300ac9`。
 
 **数据搬运补充：** 已另导出约6MB的提要/文字记录小包与10375078508字节的私有缓存大包，排除72个已共有EPFL主文件及受限Analog.Cafe图像区域。1427个载荷文件逐个SHA在源机核验通过，大包zstd完整性通过；这些不代表目标机已经收到。见[数据迁移说明](HANDOFF_DATA_TRANSFER.md)、`tools/eval/handoff_transfer_manifest.json`与`handoff_transfer_receipt.json`。必须实际下载/私有传输到Claude主机，而不是只发送本机绝对路径。
 
+**用户后续指定GitHub通信：** 研究提要PDF、三份原研究Markdown、许可文字现在已直接放入[research-materials](research-materials/README.md)，更新分支即能读取。主仓库公开，大像素缓存不自动公开，计划用私有仓库Release分片；仓库地址和API通路尚待解决，实际发布状态以`handoff_release_parts.json`为准。不要再要求Claude访问源机绝对路径或将尚未发布的分片当已交付。
+
 ## 9. 给Claude的接手指令
 
 > 先阅读本文件、HANDOFF.md和CRITERIA.md，核对新分支及数据清单。保留a53e6d4回归修复，current/next不变。研究文件已实际取回，不再只靠聊天数字，也不必重写已恢复的验收工具。按详细报告较晚记录判断实验状态，注意旧a*反号不代表所有后续候选。厨房TIFF仅本地受限练习，2026实验仅有二手提要；14帧仍备用。新数据先验收独立判别能力，再决定候选。不要把文件恢复、测试通过或历史拟合改善说成真实800T光晕已修复。

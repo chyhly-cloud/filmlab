@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "name": "CineStill_800T_ISO800_2026_Codex_Research_Brief.pdf",
+      "bytes": 175712,
+      "sha256": "0b69365c3f1606ea8a40ca2e795a31a79d99656073fed5df36dd28e46d300ac9",
+      "origin": "User-uploaded research text/PDF or license; no image pixels"
+    },
+    {
+      "name": "FilmLab_800T_Halation_Deep_Research_2026-10-20.md",
+      "bytes": 32096,
+      "sha256": "8b1842593a68ab18204cc10feb8fe5447f96170522a782feb66f896242c78892",
+      "origin": "User-uploaded research text/PDF or license; no image pixels"
+    },
+    {
+      "name": "FilmLab_800T_halation_research_and_execution_2026-10-20.md",
+      "bytes": 20540,
+      "sha256": "764f70ac981563a8c86dc964bd7144ec63d92ab12dc19b69eda27863707a24dd",
+      "origin": "User-uploaded research text/PDF or license; no image pixels"
+    },
+    {
+      "name": "LICENSE.txt",
+      "bytes": 757,
+      "sha256": "778cc0dc09ea509229ebe987d3ea6a3a3fbbaa0bedbf52bbbd5257d6c4e08ce9",
+      "origin": "User-uploaded research text/PDF or license; no image pixels"
+    },
+    {
+      "name": "FilmLab_800T_halation_physics_research_2026-10-20.md",
+      "bytes": 11858,
+      "sha256": "fdafbe5f153d142b6b76c6d753323c6ff174273861592067846c44d5fbc42741",
+      "origin": "User-uploaded research text/PDF or license; no image pixels"
+    }
+  ],
+  "excluded": "Kitchen TIFF/derivatives, user RAW and pixel caches are not included in public Git"
+}

@@ -1,0 +1,24 @@
+LICENSE:
+
+YOU CAN use this image to practice your image editing techniques for your personal and professional purposes.
+YOU CAN edit it in any way you wish
+
+DO NOT distribute this image (in its original version or with any changes) to anyone without its author's written permission.
+DO NOT use this image in any of your personal or professional projects that you plan to distribute.
+DO NOT use this image to train machine learning algorithms.
+
+
+
+IMAGE AUTHOR:
+
+Dmitri Tcherbadji
+https://www.analog.cafe/u/dmitrizzle
+https://www.analog.cafe/about#contact
+
+
+
+IMAGE METADATA:
+
+File name:	SAMPLE-35mm-scan-primefilm-xa-cinestill800t-Analog.Cafe.tif
+File size:	21.1MB, 2,000x1,332px, 16 bit per channel
+Scanner:	PrimeFilm XA, "scanned as a slide, no adjustments"
