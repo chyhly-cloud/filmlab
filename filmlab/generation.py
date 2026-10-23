@@ -4,6 +4,7 @@
   current  正式基线: legacy + 已核实且不引起退步的修正 (gray_halo, grain_aperture)
   next     下一代候选: current + 输入端的两处已核实计算修正 —— RAW 日光白平衡按 D65 中性 (LibRaw 约定)、
            非日光光源的线性曝光映射保白点 (linear_white)。扫描仪的经验常数 (饱和度矩阵、LAB_TINT、定光参数) 不变。
+  next_cal  T01 可选校准；仅在合格候选文件启用时可用，独立验收状态见 T01_REPORT。
   next_k5219  实验: next + Vision3 5219 按 Kodak 原始测量重新解混 (stocks._kodak_raw_5219)
   next_halo   历史实验复现: next + 未标定光晕倍数（旧评估重复解码，原倍率证据已撤销）
   next_sensor 修正候选: next + RAW 截断按传感器饱和堆积判定 (rawio.sensor_saturation), 不再把未过曝画面中最亮的 3% 当作截断
@@ -30,11 +31,30 @@ GENERATIONS = {
 CLIP_DETECT = {"next_sensor": "sensor"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
+_calibration_restore = None
 
 
 def use(name: str):
-    global _active
+    global _active, _calibration_restore
+    if name == "next_cal":
+        import json
+        from pathlib import Path
+        from . import chemistry, variation
+        from tools.eval.accept_calibration import apply
+        candidate = json.loads((Path(__file__).parent / "data/next_cal.json").read_text())
+        if not candidate["enabled"]:
+            raise ValueError("next_cal is unavailable: T01 has no qualified interior candidate")
+        use("next")
+        originals = chemistry.run, chemistry.develop_image, variation.sample
+        apply(candidate["params"])
+        _calibration_restore = originals
+        _active = name
+        return
     wb, corr, revisions = GENERATIONS[name]
+    if _calibration_restore is not None:
+        from . import chemistry, variation
+        chemistry.run, chemistry.develop_image, variation.sample = _calibration_restore
+        _calibration_restore = None
     lights.WB_REFERENCE = wb
     rawio.CLIP_DETECT = CLIP_DETECT.get(name, "channel_max")
     engine.DEFAULT_CORRECTIONS = corr
