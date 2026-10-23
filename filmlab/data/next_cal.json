@@ -1,6 +1,10 @@
 {
   "enabled": false,
-  "params": null,
-  "status": "calibration_running",
+  "params": {
+    "tau": 1.1618891807415646,
+    "dir": 1.0235444182395073,
+    "diffuse_fraction": 0.45394668524892745
+  },
+  "status": "stopped_boundary",
   "acceptance": "pending independent Claude validation"
 }

@@ -39,14 +39,19 @@
         "dir": 1.0,
         "diffuse_fraction": 0.6
       },
-      "status": "pending",
+      "status": "complete",
       "scenes": {
         "R1-00-1": 4.117469636321017,
         "R1-02-3": 3.1667794548744,
         "R1-04-5": 5.604672447581434,
         "R1-06-7": 6.1088033266376955,
         "R1-07-8": 6.21335197162535,
-        "R1-26-27": 6.242876901050089
+        "R1-26-27": 6.242876901050089,
+        "R1-28-29": 5.7042804610819395,
+        "R1-31-32": 4.346405182737397,
+        "R1-33-34": 4.684441131887314,
+        "R1-21-22": 3.6160097359096377,
+        "R1-25-26": 3.4982262783362383
       },
       "gamma": {
         "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
@@ -80,9 +85,4071 @@
           ]
         },
         "passed": false
-      }
+      },
+      "train_mean_dE00": 4.845756048003865
+    },
+    {
+      "index": 1,
+      "params": {
+        "tau": 1.03,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5488463186997511,
+          0.48639140372350603,
+          0.599134775409766
+        ],
+        "separation_gamma": [
+          0.6347582126321802,
+          0.6283186015316785,
+          0.6954627680487907
+        ],
+        "ratios": {
+          "R": 1.1565317849556858,
+          "G": 1.2917962709078887,
+          "B": 1.1607785035898528
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 2,
+      "params": {
+        "tau": 1.03,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5488463186997511,
+          0.48639140372350603,
+          0.599134775409766
+        ],
+        "separation_gamma": [
+          0.6347582126321802,
+          0.6283186015316785,
+          0.6954627680487907
+        ],
+        "ratios": {
+          "R": 1.1565317849556858,
+          "G": 1.2917962709078887,
+          "B": 1.1607785035898528
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 3,
+      "params": {
+        "tau": 1.03,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5488463186997511,
+          0.48639140372350603,
+          0.599134775409766
+        ],
+        "separation_gamma": [
+          0.6347582126321802,
+          0.6283186015316785,
+          0.6954627680487907
+        ],
+        "ratios": {
+          "R": 1.1565317849556858,
+          "G": 1.2917962709078887,
+          "B": 1.1607785035898528
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 4,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.0,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.544996501170447,
+          0.48632682674789457,
+          0.6029028371709241
+        ],
+        "separation_gamma": [
+          0.690741311403534,
+          0.7250797672765786,
+          0.7506553626047078
+        ],
+        "ratios": {
+          "R": 1.2674233869760305,
+          "G": 1.4909310517070251,
+          "B": 1.2450685522182998
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 5,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.0,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.544996501170447,
+          0.48632682674789457,
+          0.6029028371709241
+        ],
+        "separation_gamma": [
+          0.690741311403534,
+          0.7250797672765786,
+          0.7506553626047078
+        ],
+        "ratios": {
+          "R": 1.2674233869760305,
+          "G": 1.4909310517070251,
+          "B": 1.2450685522182998
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 6,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.0,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.544996501170447,
+          0.48632682674789457,
+          0.6029028371709241
+        ],
+        "separation_gamma": [
+          0.690741311403534,
+          0.7250797672765786,
+          0.7506553626047078
+        ],
+        "ratios": {
+          "R": 1.2674233869760305,
+          "G": 1.4909310517070251,
+          "B": 1.2450685522182998
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 7,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5496279465999448,
+          0.4875071115448658,
+          0.5997747918663338
+        ],
+        "separation_gamma": [
+          0.6947316343635066,
+          0.7427440944672006,
+          0.7624372822281852
+        ],
+        "ratios": {
+          "R": 1.264003474825449,
+          "G": 1.5235554043786395,
+          "B": 1.2712059469116577
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 8,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.04,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5496279465999448,
+          0.4875071115448658,
+          0.5997747918663338
+        ],
+        "separation_gamma": [
+          0.6947316343635066,
+          0.7427440944672006,
+          0.7624372822281852
+        ],
+        "ratios": {
+          "R": 1.264003474825449,
+          "G": 1.5235554043786395,
+          "B": 1.2712059469116577
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 9,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.04,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5496279465999448,
+          0.4875071115448658,
+          0.5997747918663338
+        ],
+        "separation_gamma": [
+          0.6947316343635066,
+          0.7427440944672006,
+          0.7624372822281852
+        ],
+        "ratios": {
+          "R": 1.264003474825449,
+          "G": 1.5235554043786395,
+          "B": 1.2712059469116577
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 10,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.16,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.249434489249156,
+        "R1-02-3": 3.24423788592355,
+        "R1-04-5": 5.453718358011246,
+        "R1-06-7": 5.4590355141347295,
+        "R1-07-8": 6.522174367834476,
+        "R1-26-27": 6.7898006220677605,
+        "R1-28-29": 6.386747916246617,
+        "R1-31-32": 4.863547815194781,
+        "R1-33-34": 5.077400951628396,
+        "R1-21-22": 3.7864575722801983,
+        "R1-25-26": 3.8769560003237165
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5471788707484718,
+          0.4859782085426169,
+          0.5999266337971351
+        ],
+        "separation_gamma": [
+          0.7186707888436753,
+          0.7932829247910961,
+          0.7945197783991976
+        ],
+        "ratios": {
+          "R": 1.3134110749938575,
+          "G": 1.6323425841871482,
+          "B": 1.324361569631303
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 5.064501044808602
+    },
+    {
+      "index": 11,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.16,
+        "diffuse_fraction": 0.6
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.357064059152901,
+        "R1-02-3": 3.343032308770145,
+        "R1-04-5": 5.5661688568698136,
+        "R1-06-7": 5.508592185458468,
+        "R1-07-8": 6.562739449006835,
+        "R1-26-27": 6.956236182097799,
+        "R1-28-29": 6.503227230831383,
+        "R1-31-32": 4.885674435849122,
+        "R1-33-34": 5.12767531142281,
+        "R1-21-22": 3.827714608456341,
+        "R1-25-26": 3.92647613324467
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5471788707484718,
+          0.4859782085426169,
+          0.5999266337971351
+        ],
+        "separation_gamma": [
+          0.7186707888436753,
+          0.7932829247910961,
+          0.7945197783991976
+        ],
+        "ratios": {
+          "R": 1.3134110749938575,
+          "G": 1.6323425841871482,
+          "B": 1.324361569631303
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 5.142236432832754
+    },
+    {
+      "index": 12,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.16,
+        "diffuse_fraction": 0.72
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.436578138238116,
+        "R1-02-3": 3.4212135173401705,
+        "R1-04-5": 5.678620954180641,
+        "R1-06-7": 5.5763564735221625,
+        "R1-07-8": 6.587430700845053,
+        "R1-26-27": 7.056422980884115,
+        "R1-28-29": 6.609571378112584,
+        "R1-31-32": 4.886939725682603,
+        "R1-33-34": 5.182751637156576,
+        "R1-21-22": 3.830553334639676,
+        "R1-25-26": 3.9789804631371832
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5471788707484718,
+          0.4859782085426169,
+          0.5999266337971351
+        ],
+        "separation_gamma": [
+          0.7186707888436753,
+          0.7932829247910961,
+          0.7945197783991976
+        ],
+        "ratios": {
+          "R": 1.3134110749938575,
+          "G": 1.6323425841871482,
+          "B": 1.324361569631303
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 5.204129027612626
+    },
+    {
+      "index": 13,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5489161187542777,
+          0.4882884063057255,
+          0.6078355259773421
+        ],
+        "separation_gamma": [
+          0.7481406230429977,
+          0.8720514181131875,
+          0.8267915978457755
+        ],
+        "ratios": {
+          "R": 1.3629416180032103,
+          "G": 1.7859351294267298,
+          "B": 1.3602225643464532
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 14,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5489161187542777,
+          0.4882884063057255,
+          0.6078355259773421
+        ],
+        "separation_gamma": [
+          0.7481406230429977,
+          0.8720514181131875,
+          0.8267915978457755
+        ],
+        "ratios": {
+          "R": 1.3629416180032103,
+          "G": 1.7859351294267298,
+          "B": 1.3602225643464532
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 15,
+      "params": {
+        "tau": 1.03,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5489161187542777,
+          0.4882884063057255,
+          0.6078355259773421
+        ],
+        "separation_gamma": [
+          0.7481406230429977,
+          0.8720514181131875,
+          0.8267915978457755
+        ],
+        "ratios": {
+          "R": 1.3629416180032103,
+          "G": 1.7859351294267298,
+          "B": 1.3602225643464532
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 16,
+      "params": {
+        "tau": 1.15,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6178179297325121,
+          0.5221235944493076,
+          0.663066316418443
+        ],
+        "separation_gamma": [
+          0.7266719379677268,
+          0.6967622513230448,
+          0.7831019870945966
+        ],
+        "ratios": {
+          "R": 1.176191079922759,
+          "G": 1.3344776193420862,
+          "B": 1.1810311694379636
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 17,
+      "params": {
+        "tau": 1.15,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6178179297325121,
+          0.5221235944493076,
+          0.663066316418443
+        ],
+        "separation_gamma": [
+          0.7266719379677268,
+          0.6967622513230448,
+          0.7831019870945966
+        ],
+        "ratios": {
+          "R": 1.176191079922759,
+          "G": 1.3344776193420862,
+          "B": 1.1810311694379636
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 18,
+      "params": {
+        "tau": 1.15,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6178179297325121,
+          0.5221235944493076,
+          0.663066316418443
+        ],
+        "separation_gamma": [
+          0.7266719379677268,
+          0.6967622513230448,
+          0.7831019870945966
+        ],
+        "ratios": {
+          "R": 1.176191079922759,
+          "G": 1.3344776193420862,
+          "B": 1.1810311694379636
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 19,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.0,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.618679203079442,
+          0.5287764796078785,
+          0.6740222531141496
+        ],
+        "separation_gamma": [
+          0.7977145618117772,
+          0.827932264890673,
+          0.8591910114973871
+        ],
+        "ratios": {
+          "R": 1.289383185730499,
+          "G": 1.5657509303451573,
+          "B": 1.2747220251671394
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 20,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.0,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.618679203079442,
+          0.5287764796078785,
+          0.6740222531141496
+        ],
+        "separation_gamma": [
+          0.7977145618117772,
+          0.827932264890673,
+          0.8591910114973871
+        ],
+        "ratios": {
+          "R": 1.289383185730499,
+          "G": 1.5657509303451573,
+          "B": 1.2747220251671394
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 21,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.0,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.618679203079442,
+          0.5287764796078785,
+          0.6740222531141496
+        ],
+        "separation_gamma": [
+          0.7977145618117772,
+          0.827932264890673,
+          0.8591910114973871
+        ],
+        "ratios": {
+          "R": 1.289383185730499,
+          "G": 1.5657509303451573,
+          "B": 1.2747220251671394
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 22,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.081513093434736,
+        "R1-02-3": 3.128644023226352,
+        "R1-04-5": 5.439238180193309,
+        "R1-06-7": 6.009117348675211,
+        "R1-07-8": 6.201168242621533,
+        "R1-26-27": 6.136484114055498,
+        "R1-28-29": 5.570796051054488,
+        "R1-31-32": 4.339958916559307,
+        "R1-33-34": 4.633093340723704,
+        "R1-21-22": 3.6295272750359624,
+        "R1-25-26": 3.5153793675686322
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6210800755292374,
+          0.5262597230807192,
+          0.6644061607563734
+        ],
+        "separation_gamma": [
+          0.8058089697850781,
+          0.8520262788072485,
+          0.873177966274365
+        ],
+        "ratios": {
+          "R": 1.297431686402802,
+          "G": 1.6190223979511391,
+          "B": 1.3142231632535157
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.789538177558976
+    },
+    {
+      "index": 23,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.04,
+        "diffuse_fraction": 0.6
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.136911281496614,
+        "R1-02-3": 3.1614252807846444,
+        "R1-04-5": 5.533779608430126,
+        "R1-06-7": 6.016277481618934,
+        "R1-07-8": 6.230577604191891,
+        "R1-26-27": 6.27543431950067,
+        "R1-28-29": 5.717972183480558,
+        "R1-31-32": 4.39102175997032,
+        "R1-33-34": 4.689590953275887,
+        "R1-21-22": 3.6153459381084576,
+        "R1-25-26": 3.5355105795965187
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6210800755292374,
+          0.5262597230807192,
+          0.6644061607563734
+        ],
+        "separation_gamma": [
+          0.8058089697850781,
+          0.8520262788072485,
+          0.873177966274365
+        ],
+        "ratios": {
+          "R": 1.297431686402802,
+          "G": 1.6190223979511391,
+          "B": 1.3142231632535157
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.84580427185951
+    },
+    {
+      "index": 24,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.04,
+        "diffuse_fraction": 0.72
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.185064181618717,
+        "R1-02-3": 3.208501334512807,
+        "R1-04-5": 5.613661680325504,
+        "R1-06-7": 6.014036649441121,
+        "R1-07-8": 6.269030830939906,
+        "R1-26-27": 6.397258900803498,
+        "R1-28-29": 5.8650460912577715,
+        "R1-31-32": 4.445975494474266,
+        "R1-33-34": 4.725463133336635,
+        "R1-21-22": 3.642543058236487,
+        "R1-25-26": 3.6153991311571763
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6210800755292374,
+          0.5262597230807192,
+          0.6644061607563734
+        ],
+        "separation_gamma": [
+          0.8058089697850781,
+          0.8520262788072485,
+          0.873177966274365
+        ],
+        "ratios": {
+          "R": 1.297431686402802,
+          "G": 1.6190223979511391,
+          "B": 1.3142231632535157
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.907452771463989
+    },
+    {
+      "index": 25,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.16,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6157307938916736,
+          0.5288338663091443,
+          0.668792407226582
+        ],
+        "separation_gamma": [
+          0.8328477556839451,
+          0.9175386102696004,
+          0.9068120529595295
+        ],
+        "ratios": {
+          "R": 1.3526167018868787,
+          "G": 1.7350224119973967,
+          "B": 1.3558946590317797
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 26,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.16,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6157307938916736,
+          0.5288338663091443,
+          0.668792407226582
+        ],
+        "separation_gamma": [
+          0.8328477556839451,
+          0.9175386102696004,
+          0.9068120529595295
+        ],
+        "ratios": {
+          "R": 1.3526167018868787,
+          "G": 1.7350224119973967,
+          "B": 1.3558946590317797
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 27,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.16,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6157307938916736,
+          0.5288338663091443,
+          0.668792407226582
+        ],
+        "separation_gamma": [
+          0.8328477556839451,
+          0.9175386102696004,
+          0.9068120529595295
+        ],
+        "ratios": {
+          "R": 1.3526167018868787,
+          "G": 1.7350224119973967,
+          "B": 1.3558946590317797
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 28,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6213075583876682,
+          0.5265526902892687,
+          0.6664768195302843
+        ],
+        "separation_gamma": [
+          0.8865919458269867,
+          1.0297857960120902,
+          0.9582134853647923
+        ],
+        "ratios": {
+          "R": 1.4269775634594695,
+          "G": 1.9557127235383867,
+          "B": 1.437729651332985
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 29,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6213075583876682,
+          0.5265526902892687,
+          0.6664768195302843
+        ],
+        "separation_gamma": [
+          0.8865919458269867,
+          1.0297857960120902,
+          0.9582134853647923
+        ],
+        "ratios": {
+          "R": 1.4269775634594695,
+          "G": 1.9557127235383867,
+          "B": 1.437729651332985
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 30,
+      "params": {
+        "tau": 1.15,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6213075583876682,
+          0.5265526902892687,
+          0.6664768195302843
+        ],
+        "separation_gamma": [
+          0.8865919458269867,
+          1.0297857960120902,
+          0.9582134853647923
+        ],
+        "ratios": {
+          "R": 1.4269775634594695,
+          "G": 1.9557127235383867,
+          "B": 1.437729651332985
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 31,
+      "params": {
+        "tau": 1.27,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6879455383958819,
+          0.5547926472551937,
+          0.7415228357721324
+        ],
+        "separation_gamma": [
+          0.822145670858455,
+          0.763991074583568,
+          0.8780377462439901
+        ],
+        "ratios": {
+          "R": 1.1950737739727109,
+          "G": 1.3770749817312324,
+          "B": 1.1841007503561338
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 32,
+      "params": {
+        "tau": 1.27,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6879455383958819,
+          0.5547926472551937,
+          0.7415228357721324
+        ],
+        "separation_gamma": [
+          0.822145670858455,
+          0.763991074583568,
+          0.8780377462439901
+        ],
+        "ratios": {
+          "R": 1.1950737739727109,
+          "G": 1.3770749817312324,
+          "B": 1.1841007503561338
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 33,
+      "params": {
+        "tau": 1.27,
+        "dir": 0.6799999999999999,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6879455383958819,
+          0.5547926472551937,
+          0.7415228357721324
+        ],
+        "separation_gamma": [
+          0.822145670858455,
+          0.763991074583568,
+          0.8780377462439901
+        ],
+        "ratios": {
+          "R": 1.1950737739727109,
+          "G": 1.3770749817312324,
+          "B": 1.1841007503561338
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 34,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.0,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6923383774011589,
+          0.556772736127901,
+          0.73766249271869
+        ],
+        "separation_gamma": [
+          0.9082148260633208,
+          0.9384724420369172,
+          0.9746172918099286
+        ],
+        "ratios": {
+          "R": 1.3118077167302218,
+          "G": 1.6855574656251355,
+          "B": 1.3212238678666317
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 35,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.0,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6923383774011589,
+          0.556772736127901,
+          0.73766249271869
+        ],
+        "separation_gamma": [
+          0.9082148260633208,
+          0.9384724420369172,
+          0.9746172918099286
+        ],
+        "ratios": {
+          "R": 1.3118077167302218,
+          "G": 1.6855574656251355,
+          "B": 1.3212238678666317
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 36,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.0,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6923383774011589,
+          0.556772736127901,
+          0.73766249271869
+        ],
+        "separation_gamma": [
+          0.9082148260633208,
+          0.9384724420369172,
+          0.9746172918099286
+        ],
+        "ratios": {
+          "R": 1.3118077167302218,
+          "G": 1.6855574656251355,
+          "B": 1.3212238678666317
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 37,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6908444594263463,
+          0.5529330415028458,
+          0.7364560561338424
+        ],
+        "separation_gamma": [
+          0.9162430835370482,
+          0.959088573808523,
+          0.9904080100509093
+        ],
+        "ratios": {
+          "R": 1.3262653713657415,
+          "G": 1.7345474077688785,
+          "B": 1.3448297448326152
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 38,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.04,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6908444594263463,
+          0.5529330415028458,
+          0.7364560561338424
+        ],
+        "separation_gamma": [
+          0.9162430835370482,
+          0.959088573808523,
+          0.9904080100509093
+        ],
+        "ratios": {
+          "R": 1.3262653713657415,
+          "G": 1.7345474077688785,
+          "B": 1.3448297448326152
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 39,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.04,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6908444594263463,
+          0.5529330415028458,
+          0.7364560561338424
+        ],
+        "separation_gamma": [
+          0.9162430835370482,
+          0.959088573808523,
+          0.9904080100509093
+        ],
+        "ratios": {
+          "R": 1.3262653713657415,
+          "G": 1.7345474077688785,
+          "B": 1.3448297448326152
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 40,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.16,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.692301625590127,
+          0.5546450052493778,
+          0.7377601123676933
+        ],
+        "separation_gamma": [
+          0.9618584232139256,
+          1.0545005800531726,
+          1.0338402181212132
+        ],
+        "ratios": {
+          "R": 1.389363230794128,
+          "G": 1.9012171209926452,
+          "B": 1.4013230056627892
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 41,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.16,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.692301625590127,
+          0.5546450052493778,
+          0.7377601123676933
+        ],
+        "separation_gamma": [
+          0.9618584232139256,
+          1.0545005800531726,
+          1.0338402181212132
+        ],
+        "ratios": {
+          "R": 1.389363230794128,
+          "G": 1.9012171209926452,
+          "B": 1.4013230056627892
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 42,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.16,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.692301625590127,
+          0.5546450052493778,
+          0.7377601123676933
+        ],
+        "separation_gamma": [
+          0.9618584232139256,
+          1.0545005800531726,
+          1.0338402181212132
+        ],
+        "ratios": {
+          "R": 1.389363230794128,
+          "G": 1.9012171209926452,
+          "B": 1.4013230056627892
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 43,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6950543290555028,
+          0.5549180562985774,
+          0.7414089722625639
+        ],
+        "separation_gamma": [
+          1.020522059194231,
+          1.2166086885891414,
+          1.1052848874598047
+        ],
+        "ratios": {
+          "R": 1.4682622876128268,
+          "G": 2.192411428642605,
+          "B": 1.4907897379320858
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 44,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.6
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6950543290555028,
+          0.5549180562985774,
+          0.7414089722625639
+        ],
+        "separation_gamma": [
+          1.020522059194231,
+          1.2166086885891414,
+          1.1052848874598047
+        ],
+        "ratios": {
+          "R": 1.4682622876128268,
+          "G": 2.192411428642605,
+          "B": 1.4907897379320858
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 45,
+      "params": {
+        "tau": 1.27,
+        "dir": 1.3199999999999998,
+        "diffuse_fraction": 0.72
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6950543290555028,
+          0.5549180562985774,
+          0.7414089722625639
+        ],
+        "separation_gamma": [
+          1.020522059194231,
+          1.2166086885891414,
+          1.1052848874598047
+        ],
+        "ratios": {
+          "R": 1.4682622876128268,
+          "G": 2.192411428642605,
+          "B": 1.4907897379320858
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 46,
+      "params": {
+        "tau": 1.1145898033750314,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5934075209650018,
+          0.5156399186705585,
+          0.6556493267088561
+        ],
+        "separation_gamma": [
+          0.7718195380395757,
+          0.8111059454663518,
+          0.8421343437082344
+        ],
+        "ratios": {
+          "R": 1.3006568180740943,
+          "G": 1.5730084427085758,
+          "B": 1.2844279852089098
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 47,
+      "params": {
+        "tau": 1.1854101966249684,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6427538704383876,
+          0.5330944971356725,
+          0.6896412696026866
+        ],
+        "separation_gamma": [
+          0.8398549976201528,
+          0.8831240379625862,
+          0.900835205410723
+        ],
+        "ratios": {
+          "R": 1.3066510156482343,
+          "G": 1.6565994260072643,
+          "B": 1.3062373803843101
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 48,
+      "params": {
+        "tau": 1.070820393249937,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.5750225175917681,
+          0.499939294881837,
+          0.625900740503604
+        ],
+        "separation_gamma": [
+          0.7376971203307221,
+          0.7792851145506055,
+          0.7951707647546625
+        ],
+        "ratios": {
+          "R": 1.2829012738844485,
+          "G": 1.5587594784578658,
+          "B": 1.2704422814947667
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 49,
+      "params": {
+        "tau": 1.1312277078382351,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.048916541446234,
+        "R1-02-3": 3.1087045808241474,
+        "R1-04-5": 5.442171119750111,
+        "R1-06-7": 5.941393925907709,
+        "R1-07-8": 6.237984716484063,
+        "R1-26-27": 6.218565385712008,
+        "R1-28-29": 5.60792519865622,
+        "R1-31-32": 4.4163135989687525,
+        "R1-33-34": 4.704558336981022,
+        "R1-21-22": 3.6369630298363163,
+        "R1-25-26": 3.545034010469128
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6073882854396483,
+          0.5190616402832607,
+          0.659342518093581
+        ],
+        "separation_gamma": [
+          0.7876368163737685,
+          0.8300193198578459,
+          0.8546674839786387
+        ],
+        "ratios": {
+          "R": 1.296759972582695,
+          "G": 1.599076594072508,
+          "B": 1.2962420297872175
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.809866404094156
+    },
+    {
+      "index": 50,
+      "params": {
+        "tau": 1.1499999294766081,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.081513604663193,
+        "R1-02-3": 3.1286440984432384,
+        "R1-04-5": 5.439238447251099,
+        "R1-06-7": 6.009116974381401,
+        "R1-07-8": 6.201168315202259,
+        "R1-26-27": 6.136483991131557,
+        "R1-28-29": 5.570796070365916,
+        "R1-31-32": 4.3399588423170385,
+        "R1-33-34": 4.6330937167387685,
+        "R1-21-22": 3.629527269530064,
+        "R1-25-26": 3.515379362677137
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6210800172290354,
+          0.5262598180155302,
+          0.664406182984294
+        ],
+        "separation_gamma": [
+          0.8058088958938308,
+          0.8520262056186506,
+          0.8731779347546892
+        ],
+        "ratios": {
+          "R": 1.2974316892193185,
+          "G": 1.6190219668139414,
+          "B": 1.31422307184539
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.7895382447910615
+    },
+    {
+      "index": 51,
+      "params": {
+        "tau": 1.163525447976568,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.082159060977913,
+        "R1-02-3": 3.1308912770298236,
+        "R1-04-5": 5.442359266556905,
+        "R1-06-7": 6.064778852086456,
+        "R1-07-8": 6.183047085802465,
+        "R1-26-27": 6.0637558965018865,
+        "R1-28-29": 5.496885332661616,
+        "R1-31-32": 4.29065111809095,
+        "R1-33-34": 4.608158198716921,
+        "R1-21-22": 3.6166778748496067,
+        "R1-25-26": 3.4984989678698746
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6213247525722636,
+          0.5271166767757417,
+          0.6771203969122845
+        ],
+        "separation_gamma": [
+          0.8093094099541693,
+          0.8595700797256021,
+          0.8810527464839392
+        ],
+        "ratios": {
+          "R": 1.3025545925921276,
+          "G": 1.630701735682896,
+          "B": 1.3011759068277962
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.770714811922219
+    },
+    {
+      "index": 52,
+      "params": {
+        "tau": 1.1718846781250085,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6293884002818037,
+          0.528885274370363,
+          0.6834342524726124
+        ],
+        "separation_gamma": [
+          0.8216729405316333,
+          0.8709647299468608,
+          0.8993140363987939
+        ],
+        "ratios": {
+          "R": 1.3055101431226501,
+          "G": 1.646793306892015,
+          "B": 1.3158749845287168
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 53,
+      "params": {
+        "tau": 1.1583591596250487,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.078156218352866,
+        "R1-02-3": 3.1155725069512585,
+        "R1-04-5": 5.437525731370714,
+        "R1-06-7": 6.0432870820359925,
+        "R1-07-8": 6.19401845157583,
+        "R1-26-27": 6.094302360468332,
+        "R1-28-29": 5.504795996776443,
+        "R1-31-32": 4.31138971285992,
+        "R1-33-34": 4.611507965878768,
+        "R1-21-22": 3.628642247376832,
+        "R1-25-26": 3.505260841848644
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6227465438450638,
+          0.5253850009325041,
+          0.6715364976660437
+        ],
+        "separation_gamma": [
+          0.8104933614551035,
+          0.8558706022239936,
+          0.8765863112249852
+        ],
+        "ratios": {
+          "R": 1.3014819102018977,
+          "G": 1.629035089895813,
+          "B": 1.305344257939221
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.774950828681418
+    },
+    {
+      "index": 54,
+      "params": {
+        "tau": 1.1669360580235353,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6225257883601704,
+          0.528242424360477,
+          0.6802968489156943
+        ],
+        "separation_gamma": [
+          0.8122924204189985,
+          0.8669098300473317,
+          0.888447852057977
+        ],
+        "ratios": {
+          "R": 1.3048333669175425,
+          "G": 1.6411211785892934,
+          "B": 1.305970847100128
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 55,
+      "params": {
+        "tau": 1.1615521014219703,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.08028338127207,
+        "R1-02-3": 3.119922378905157,
+        "R1-04-5": 5.441269452751444,
+        "R1-06-7": 6.056485429635462,
+        "R1-07-8": 6.1850203078442885,
+        "R1-26-27": 6.076518847511184,
+        "R1-28-29": 5.497650583161819,
+        "R1-31-32": 4.294794040264491,
+        "R1-33-34": 4.607012764098042,
+        "R1-21-22": 3.6201744373424454,
+        "R1-25-26": 3.497488676926073
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6219992462565642,
+          0.5298933699853349,
+          0.6751273436048321
+        ],
+        "separation_gamma": [
+          0.809860835546715,
+          0.854202259151277,
+          0.8766365375939651
+        ],
+        "ratios": {
+          "R": 1.3020286446017026,
+          "G": 1.612026697323874,
+          "B": 1.2984758296311594
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.7706018454284065
+    },
+    {
+      "index": 56,
+      "params": {
+        "tau": 1.1624345865375727,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.0810634252279705,
+        "R1-02-3": 3.123924935894026,
+        "R1-04-5": 5.442099482428679,
+        "R1-06-7": 6.061321653274622,
+        "R1-07-8": 6.184903020314282,
+        "R1-26-27": 6.069522419238865,
+        "R1-28-29": 5.496531352145336,
+        "R1-31-32": 4.295165747222799,
+        "R1-33-34": 4.607530648120101,
+        "R1-21-22": 3.6187112312273286,
+        "R1-25-26": 3.497270292983356
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6217177410709545,
+          0.5282203160473468,
+          0.6760326650988061
+        ],
+        "separation_gamma": [
+          0.8096294290199434,
+          0.856675658057936,
+          0.8786272594054481
+        ],
+        "ratios": {
+          "R": 1.3022459800251112,
+          "G": 1.6218150495770562,
+          "B": 1.2996816644607425
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.770731291643397
+    },
+    {
+      "index": 57,
+      "params": {
+        "tau": 1.1603325061796463,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.085274866769784,
+        "R1-02-3": 3.1197921865755114,
+        "R1-04-5": 5.437960413048051,
+        "R1-06-7": 6.050826618459632,
+        "R1-07-8": 6.187631021889388,
+        "R1-26-27": 6.084808053168882,
+        "R1-28-29": 5.50481725703736,
+        "R1-31-32": 4.303000528832913,
+        "R1-33-34": 4.613208383019021,
+        "R1-21-22": 3.623693115875128,
+        "R1-25-26": 3.5000067030029474
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6223347853475454,
+          0.5289128713944332,
+          0.6738389143329512
+        ],
+        "separation_gamma": [
+          0.8101402571305698,
+          0.8553324823892581,
+          0.8766283188008727
+        ],
+        "ratios": {
+          "R": 1.3017756297812337,
+          "G": 1.6171519519542938,
+          "B": 1.3009464133852635
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.773729013425329
+    },
+    {
+      "index": 58,
+      "params": {
+        "tau": 1.1610862574919203,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.08214922008018,
+        "R1-02-3": 3.1195989964063244,
+        "R1-04-5": 5.441167719987151,
+        "R1-06-7": 6.053640924165854,
+        "R1-07-8": 6.18595683606502,
+        "R1-26-27": 6.07969713145013,
+        "R1-28-29": 5.495565251112821,
+        "R1-31-32": 4.299733582872087,
+        "R1-33-34": 4.614652847493483,
+        "R1-21-22": 3.6215439247037526,
+        "R1-25-26": 3.498600751976251
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6221347323138227,
+          0.5292718268925845,
+          0.6746403084401403
+        ],
+        "separation_gamma": [
+          0.8099730915962807,
+          0.8544307826030361,
+          0.8765450015793509
+        ],
+        "ratios": {
+          "R": 1.3019255307991822,
+          "G": 1.6143515282487206,
+          "B": 1.2992775418445446
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.772027926028459
+    },
+    {
+      "index": 59,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.078948590626449,
+        "R1-02-3": 3.119205516307902,
+        "R1-04-5": 5.441513256685013,
+        "R1-06-7": 6.057781648463205,
+        "R1-07-8": 6.1845844302614275,
+        "R1-26-27": 6.074303357123154,
+        "R1-28-29": 5.497137648115217,
+        "R1-31-32": 4.2951130978813845,
+        "R1-33-34": 4.607145116518632,
+        "R1-21-22": 3.6193187307675965,
+        "R1-25-26": 3.4970735937537745
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6218955612212085,
+          0.5276111172844529,
+          0.6754758211280075
+        ],
+        "separation_gamma": [
+          0.8097753446527999,
+          0.8551609264534038,
+          0.8773999313197172
+        ],
+        "ratios": {
+          "R": 1.3021082560271924,
+          "G": 1.6208167311841495,
+          "B": 1.2989361038186495
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.77019318059125
+    },
+    {
+      "index": 60,
+      "params": {
+        "tau": 1.1620975072179784,
+        "dir": 1.04,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.07892772032679,
+        "R1-02-3": 3.1209331784408567,
+        "R1-04-5": 5.442455752937793,
+        "R1-06-7": 6.06040924328525,
+        "R1-07-8": 6.1845193541101775,
+        "R1-26-27": 6.072863882406636,
+        "R1-28-29": 5.49688269043328,
+        "R1-31-32": 4.294391278603599,
+        "R1-33-34": 4.609629531970724,
+        "R1-21-22": 3.61882723480863,
+        "R1-25-26": 3.497290559989373
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6218291073610089,
+          0.5278517085080239,
+          0.6756895388781297
+        ],
+        "separation_gamma": [
+          0.809720717338288,
+          0.855744817814996,
+          0.8778698780718709
+        ],
+        "ratios": {
+          "R": 1.302159560807109,
+          "G": 1.6211841394503848,
+          "B": 1.299220762732879
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.770648220664828
+    },
+    {
+      "index": 61,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 0.9055728090000841,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6215665274438444,
+          0.5270622753859503,
+          0.67840046091026
+        ],
+        "separation_gamma": [
+          0.7772512132735626,
+          0.7895136069936208,
+          0.8481667483939158
+        ],
+        "ratios": {
+          "R": 1.2504714764322369,
+          "G": 1.4979512741933314,
+          "B": 1.2502449471450356
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 62,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0944271909999157,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6257962595232779,
+          0.5208995321633145,
+          0.677427243444689
+        ],
+        "separation_gamma": [
+          0.8263232878029417,
+          0.8884733340285363,
+          0.8989339606189982
+        ],
+        "ratios": {
+          "R": 1.3204350061670587,
+          "G": 1.7056520099733523,
+          "B": 1.3269822985682669
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 63,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 0.7888543819998317,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6207790534303967,
+          0.5214209449259865,
+          0.6762681933517213
+        ],
+        "separation_gamma": [
+          0.7538856545260971,
+          0.7392984158366614,
+          0.8186307516830311
+        ],
+        "ratios": {
+          "R": 1.2144186411576863,
+          "G": 1.4178533160795868,
+          "B": 1.2105119828654551
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 64,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 0.9577544555325282,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261772240448279,
+          0.5263243976426436,
+          0.6761776808685421
+        ],
+        "separation_gamma": [
+          0.7936082671684355,
+          0.8178208512489229,
+          0.8576946093712324
+        ],
+        "ratios": {
+          "R": 1.2673860317724064,
+          "G": 1.5538342036049704,
+          "B": 1.268445607772108
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 65,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 0.9807155170953439,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6191868898830373,
+          0.5260098324842407,
+          0.679330903634179
+        ],
+        "separation_gamma": [
+          0.798117226845209,
+          0.8262737577318019,
+          0.8674699070057029
+        ],
+        "ratios": {
+          "R": 1.2889763008321626,
+          "G": 1.5708332937988514,
+          "B": 1.2769475116839923
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 66,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0241495116092458,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.062016833224226,
+        "R1-02-3": 3.1202861819558683,
+        "R1-04-5": 5.4738135519651,
+        "R1-06-7": 6.0518590523868205,
+        "R1-07-8": 6.194656669179723,
+        "R1-26-27": 6.116260444711327,
+        "R1-28-29": 5.509635530235975,
+        "R1-31-32": 4.306017892442574,
+        "R1-33-34": 4.632425019376033,
+        "R1-21-22": 3.622764390516349,
+        "R1-25-26": 3.4923665837967164
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261070182644873,
+          0.5261793508129813,
+          0.6808860863235557
+        ],
+        "separation_gamma": [
+          0.8094453770234266,
+          0.8524469289556171,
+          0.8788411093425046
+        ],
+        "ratios": {
+          "R": 1.2928227178592195,
+          "G": 1.620069141137012,
+          "B": 1.2907314850385723
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.78019110452643
+    },
+    {
+      "index": 67,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0509931964860137,
+        "diffuse_fraction": 0.48
+      },
+      "status": "physics_rejected",
+      "scenes": {},
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6183351504822505,
+          0.5269325959727992,
+          0.677135308567683
+        ],
+        "separation_gamma": [
+          0.8100857127898442,
+          0.8681797972733746,
+          0.8850100086376317
+        ],
+        "ratios": {
+          "R": 1.3101078147636342,
+          "G": 1.6476107265115763,
+          "B": 1.3069913759329101
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": false
+      },
+      "train_mean_dE00": null
+    },
+    {
+      "index": 68,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0158544021473093,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.059257476827295,
+        "R1-02-3": 3.1193673099481645,
+        "R1-04-5": 5.493801021503803,
+        "R1-06-7": 6.049123257028966,
+        "R1-07-8": 6.190571837190317,
+        "R1-26-27": 6.123129733221386,
+        "R1-28-29": 5.513707685373421,
+        "R1-31-32": 4.313392141217127,
+        "R1-33-34": 4.638190617719009,
+        "R1-21-22": 3.62678736665348,
+        "R1-25-26": 3.4900248559017357
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6260373763677762,
+          0.5262826713829521,
+          0.6769408456511883
+        ],
+        "separation_gamma": [
+          0.8069059694433106,
+          0.8482369029883168,
+          0.876496037131931
+        ],
+        "ratios": {
+          "R": 1.2889102151135463,
+          "G": 1.6117515341315372,
+          "B": 1.2947897039493594
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.783395754780428
+    },
+    {
+      "index": 69,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0200021399539558,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.060546775584752,
+        "R1-02-3": 3.11458439419887,
+        "R1-04-5": 5.481956395962804,
+        "R1-06-7": 6.050811009991579,
+        "R1-07-8": 6.195934126083017,
+        "R1-26-27": 6.119974505597217,
+        "R1-28-29": 5.508598546651984,
+        "R1-31-32": 4.3076434318204955,
+        "R1-33-34": 4.637233925676891,
+        "R1-21-22": 3.6261817141129327,
+        "R1-25-26": 3.4910407782384283
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6263641709141926,
+          0.5267225844029001,
+          0.6789069220477748
+        ],
+        "separation_gamma": [
+          0.8082695953559907,
+          0.851130681810251,
+          0.8785470625627697
+        ],
+        "ratios": {
+          "R": 1.2904147984331593,
+          "G": 1.6158993500821772,
+          "B": 1.2940611356750111
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.781318691265361
+    },
+    {
+      "index": 70,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.027002361268692,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.066706170790196,
+        "R1-02-3": 3.1241972307581327,
+        "R1-04-5": 5.470811574084877,
+        "R1-06-7": 6.053002912673363,
+        "R1-07-8": 6.194868132025638,
+        "R1-26-27": 6.110087152366139,
+        "R1-28-29": 5.512115892477464,
+        "R1-31-32": 4.301407470601938,
+        "R1-33-34": 4.6342524085621,
+        "R1-21-22": 3.6227126807363237,
+        "R1-25-26": 3.493113212223153
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6259293560065738,
+          0.5256065611896312,
+          0.6788650627167304
+        ],
+        "separation_gamma": [
+          0.8098678965527922,
+          0.8530334183444991,
+          0.8784137208846394
+        ],
+        "ratios": {
+          "R": 1.2938646969999064,
+          "G": 1.6229504753779833,
+          "B": 1.2939445099285873
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.780297712481755
+    },
+    {
+      "index": 71,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.025152990834904,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.061950712899292,
+        "R1-02-3": 3.123858283660081,
+        "R1-04-5": 5.473098604939498,
+        "R1-06-7": 6.051773938132749,
+        "R1-07-8": 6.196255685649836,
+        "R1-26-27": 6.1150311642907305,
+        "R1-28-29": 5.511116403001107,
+        "R1-31-32": 4.30266697615673,
+        "R1-33-34": 4.632483929703845,
+        "R1-21-22": 3.622693086206308,
+        "R1-25-26": 3.492585297190208
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.626044598357339,
+          0.5259765992299695,
+          0.6782138375794082
+        ],
+        "separation_gamma": [
+          0.8095943525112099,
+          0.8526508932835506,
+          0.8786914084169959
+        ],
+        "ratios": {
+          "R": 1.293189582076871,
+          "G": 1.621081421743539,
+          "B": 1.2955964029768339
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.780319461984582
+    },
+    {
+      "index": 72,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.022565356600903,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.059582937638684,
+        "R1-02-3": 3.117810138471115,
+        "R1-04-5": 5.476259599845364,
+        "R1-06-7": 6.051555667415827,
+        "R1-07-8": 6.195662403811947,
+        "R1-26-27": 6.116949788673217,
+        "R1-28-29": 5.509139458416828,
+        "R1-31-32": 4.306672914289948,
+        "R1-33-34": 4.635552150467483,
+        "R1-21-22": 3.622840370823796,
+        "R1-25-26": 3.491803292457356
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6262053991456469,
+          0.5265022347612752,
+          0.6801285438119261
+        ],
+        "separation_gamma": [
+          0.8092094117126051,
+          0.8521300590653352,
+          0.8790760459045097
+        ],
+        "ratios": {
+          "R": 1.2922427893733217,
+          "G": 1.6184737742883561,
+          "B": 1.2925145605234265
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.780348065664688
+    },
+    {
+      "index": 73,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.48
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.059558925081678,
+        "R1-02-3": 3.1193971499476945,
+        "R1-04-5": 5.475206971867004,
+        "R1-06-7": 6.051818339615529,
+        "R1-07-8": 6.194965307848474,
+        "R1-26-27": 6.116509657083498,
+        "R1-28-29": 5.509651486846802,
+        "R1-31-32": 4.3062629490095095,
+        "R1-33-34": 4.632447273186442,
+        "R1-21-22": 3.6227955100448392,
+        "R1-25-26": 3.4920711423988826
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.780062246630032
+    },
+    {
+      "index": 74,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.5645898033750315
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.116103758211598,
+        "R1-02-3": 3.1384611119443964,
+        "R1-04-5": 5.528219604795265,
+        "R1-06-7": 6.049930077124916,
+        "R1-07-8": 6.226344837605106,
+        "R1-26-27": 6.221765101405309,
+        "R1-28-29": 5.672096955022333,
+        "R1-31-32": 4.360187795323222,
+        "R1-33-34": 4.671499982206677,
+        "R1-21-22": 3.6264738019334977,
+        "R1-25-26": 3.537299824177118
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.83167116815904
+    },
+    {
+      "index": 75,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.6354101966249684
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.1436104975198695,
+        "R1-02-3": 3.180693203350751,
+        "R1-04-5": 5.574993092928024,
+        "R1-06-7": 6.053161882601595,
+        "R1-07-8": 6.23117192447225,
+        "R1-26-27": 6.291074723990351,
+        "R1-28-29": 5.761823997153064,
+        "R1-31-32": 4.37539753603332,
+        "R1-33-34": 4.687231865146873,
+        "R1-21-22": 3.6449878251188217,
+        "R1-25-26": 3.535941304236236
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.861826168413741
+    },
+    {
+      "index": 76,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.5208203932499369
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.078165019742829,
+        "R1-02-3": 3.1293651900377917,
+        "R1-04-5": 5.49878242549144,
+        "R1-06-7": 6.049006739879596,
+        "R1-07-8": 6.202481080426084,
+        "R1-26-27": 6.171852138433243,
+        "R1-28-29": 5.605961341844717,
+        "R1-31-32": 4.330014886097954,
+        "R1-33-34": 4.659760203543169,
+        "R1-21-22": 3.620152266003354,
+        "R1-25-26": 3.4944694588909173
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.803637340944645
+    },
+    {
+      "index": 77,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.4937694101250947
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.06678108273853,
+        "R1-02-3": 3.122735696976603,
+        "R1-04-5": 5.4851416742789,
+        "R1-06-7": 6.051178242603022,
+        "R1-07-8": 6.190883067441588,
+        "R1-26-27": 6.130444422259552,
+        "R1-28-29": 5.540760968607447,
+        "R1-31-32": 4.3137115515765485,
+        "R1-33-34": 4.637860537160586,
+        "R1-21-22": 3.628138840393925,
+        "R1-25-26": 3.4951334158105247
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.7875244999861115
+    },
+    {
+      "index": 78,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.4770509831248423
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.058750227692683,
+        "R1-02-3": 3.124541442186386,
+        "R1-04-5": 5.471482816298746,
+        "R1-06-7": 6.051895788015344,
+        "R1-07-8": 6.196855201018046,
+        "R1-26-27": 6.111748863609843,
+        "R1-28-29": 5.504947581652616,
+        "R1-31-32": 4.302383051132283,
+        "R1-33-34": 4.633747218095713,
+        "R1-21-22": 3.6221319277344195,
+        "R1-25-26": 3.4899169658041886
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.778945553021843
+    },
+    {
+      "index": 79,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.4667184270002524
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.065748179699379,
+        "R1-02-3": 3.1137436201041897,
+        "R1-04-5": 5.467773114651315,
+        "R1-06-7": 6.052486244825011,
+        "R1-07-8": 6.189268016454762,
+        "R1-26-27": 6.085620415358013,
+        "R1-28-29": 5.477500814206866,
+        "R1-31-32": 4.301378672218025,
+        "R1-33-34": 4.634134991777264,
+        "R1-21-22": 3.623488404177184,
+        "R1-25-26": 3.4895622630942538
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.772791339687843
+    },
+    {
+      "index": 80,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.4603325561245899
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.066705357869022,
+        "R1-02-3": 3.1123807738134364,
+        "R1-04-5": 5.462407676597456,
+        "R1-06-7": 6.051465430909579,
+        "R1-07-8": 6.1840811315641755,
+        "R1-26-27": 6.070878844816926,
+        "R1-28-29": 5.457895138656675,
+        "R1-31-32": 4.301987469107844,
+        "R1-33-34": 4.626365312054531,
+        "R1-21-22": 3.623784929845891,
+        "R1-25-26": 3.4848449824165377
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.767527004332006
+    },
+    {
+      "index": 81,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.45638587087566246
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.0655485145676975,
+        "R1-02-3": 3.114385543468326,
+        "R1-04-5": 5.460968984253364,
+        "R1-06-7": 6.051435095660483,
+        "R1-07-8": 6.180643448636104,
+        "R1-26-27": 6.060953396640708,
+        "R1-28-29": 5.451960881470266,
+        "R1-31-32": 4.302148425240585,
+        "R1-33-34": 4.622420909912503,
+        "R1-21-22": 3.623684124137871,
+        "R1-25-26": 3.486280980226989
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.7654936640195364
+    },
+    {
+      "index": 82,
+      "params": {
+        "tau": 1.1618891807415646,
+        "dir": 1.0235444182395073,
+        "diffuse_fraction": 0.45394668524892745
+      },
+      "status": "complete",
+      "scenes": {
+        "R1-00-1": 4.060703467969349,
+        "R1-02-3": 3.107009969870129,
+        "R1-04-5": 5.458259865851469,
+        "R1-06-7": 6.051400117662907,
+        "R1-07-8": 6.178786036601854,
+        "R1-26-27": 6.057430236873224,
+        "R1-28-29": 5.447769733215568,
+        "R1-31-32": 4.302315827195236,
+        "R1-33-34": 4.621788478336116,
+        "R1-21-22": 3.6233490471166565,
+        "R1-25-26": 3.4866725850794293
+      },
+      "gamma": {
+        "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+        "neutral_gamma": [
+          0.6261446193958429,
+          0.5263022761939412,
+          0.6805965016209095
+        ],
+        "separation_gamma": [
+          0.8093553593589604,
+          0.8523251568142639,
+          0.8789310479000311
+        ],
+        "ratios": {
+          "R": 1.292601316513579,
+          "G": 1.6194593779415538,
+          "B": 1.2914128206753455
+        },
+        "ranges": {
+          "R": [
+            1.15,
+            1.49
+          ],
+          "G": [
+            1.42,
+            1.64
+          ],
+          "B": [
+            1.29,
+            1.5
+          ]
+        },
+        "passed": true
+      },
+      "train_mean_dE00": 4.7632259423429035
     }
   ],
-  "status": "running",
-  "final": null
+  "status": "stopped_boundary",
+  "final": {
+    "index": 82,
+    "params": {
+      "tau": 1.1618891807415646,
+      "dir": 1.0235444182395073,
+      "diffuse_fraction": 0.45394668524892745
+    },
+    "status": "complete",
+    "scenes": {
+      "R1-00-1": 4.060703467969349,
+      "R1-02-3": 3.107009969870129,
+      "R1-04-5": 5.458259865851469,
+      "R1-06-7": 6.051400117662907,
+      "R1-07-8": 6.178786036601854,
+      "R1-26-27": 6.057430236873224,
+      "R1-28-29": 5.447769733215568,
+      "R1-31-32": 4.302315827195236,
+      "R1-33-34": 4.621788478336116,
+      "R1-21-22": 3.6233490471166565,
+      "R1-25-26": 3.4866725850794293
+    },
+    "gamma": {
+      "definition": "max slope on 4097-point stock logH axis; unexposed layers at axis minimum; C-41 dye density",
+      "neutral_gamma": [
+        0.6261446193958429,
+        0.5263022761939412,
+        0.6805965016209095
+      ],
+      "separation_gamma": [
+        0.8093553593589604,
+        0.8523251568142639,
+        0.8789310479000311
+      ],
+      "ratios": {
+        "R": 1.292601316513579,
+        "G": 1.6194593779415538,
+        "B": 1.2914128206753455
+      },
+      "ranges": {
+        "R": [
+          1.15,
+          1.49
+        ],
+        "G": [
+          1.42,
+          1.64
+        ],
+        "B": [
+          1.29,
+          1.5
+        ]
+      },
+      "passed": true
+    },
+    "train_mean_dE00": 4.7632259423429035
+  },
+  "baseline_train_mean_dE00": 4.845756048003865,
+  "training_improvement": 0.08253010566096108,
+  "environment": {
+    "python": "3.14.8",
+    "platform": "macOS-15.8-arm64-arm-64bit-Mach-O",
+    "packages": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "colour-science": "0.4.7",
+      "rawpy": "0.27.1",
+      "scikit-image": "0.26.0",
+      "pillow": "13.0.0"
+    }
+  }
 }
