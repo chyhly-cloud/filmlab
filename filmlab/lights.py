@@ -174,6 +174,19 @@ def class_weights(ill_lc, sigma=0.25, feas=None, sharpness=6.0):
     return w / w.sum(-1, keepdims=True)
 
 
+def nearest_members(ill_lc, W):
+    """每类光源: 取与该类所照区域 (按类别权重加权) 的平均照明色度最接近的一款。
+    与 class_weights 用同一判据 (到成员颜色的最近距离), 让光源识别与曝光计算用同一款灯。"""
+    out = {}
+    lc = ill_lc.reshape(-1, 2)
+    for k, c in enumerate(classes()):
+        w = W.reshape(-1, W.shape[-1])[:, k]
+        m = (lc * w[:, None]).sum(0) / max(w.sum(), 1e-9)
+        pts = _logchroma(np.array([light_rgb(sp) for _, sp in c.members]))
+        out[c.key] = c.members[int(np.argmin(((pts - m) ** 2).sum(1)))]
+    return out
+
+
 def pick_members(seed):
     """每类光源里具体是哪款灯: 按每张底片的种子随机 (物理上都合理)。"""
     rng = np.random.default_rng(seed)
@@ -194,7 +207,7 @@ def training_reflectances(n=3000, seed=7):
     return np.vstack([R, gray])
 
 
-def linear_response(light_spec, receiver_weights):
+def linear_response(light_spec, receiver_weights, white_preserving=False):
     """返回函数: 场景线性 RGB (日光白平衡) → 该光源下接收者 (乳剂各层等) 的响应。
 
     用几千条自然界典型的平滑反射光谱作训练集, 拟合 "相机 RGB → 反射率 × 光源光谱 × 接收者"
@@ -214,6 +227,12 @@ def linear_response(light_spec, receiver_weights):
     from scipy.optimize import nnls
     w = 1.0 / np.maximum(target.mean(1, keepdims=True), 1e-6)     # 相对误差
     M = np.stack([nnls(rgb * w, target[:, k] * w[:, 0])[0] for k in range(target.shape[1])], 1)
+    if white_preserving:
+        # 保白点 (Finlayson & Drew 1996): 中性反射率在该光源下的响应必须精确 (可直接积分得到);
+        # 无约束的拟合在 3200K 下会让中灰的蓝层曝光偏高 0.06 log。按列缩放, 保持非负。
+        wt = (light_spec * scale) @ receiver_weights
+        wp = (camera_rgb(light_spec) * scale) @ M
+        M = M * (wt / np.maximum(wp, 1e-12))[None, :]
     return lambda x: np.asarray(x) @ M
 
 

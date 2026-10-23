@@ -90,11 +90,17 @@ def test_polarity_emerges_from_chemistry(film, process, polarity):
 
 
 # ------------------------------------------------------------- 系统 --
-@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))])
+@pytest.mark.parametrize("name", [r for r in RECIPES if not r.startswith(("xpro", "expired", "aerochrome", "standard"))
+                                  and not r.endswith("_reference")])   # 不定光: 光源偏色按物理保留
 def test_mid_gray_neutral(name):
     """负片靠冲印店定光 (相纸印放, 灰卡全校正), 反转片靠材料校准: 标准条件下中灰应为中性 18% 灰。
     (推冲反转片的偏色是真实现象, 允许稍大)"""
-    out = Engine(Params(**{**recipe(name), "grain": 0, "output": "print", "roll": None})).render(RAMP)[0, 4]
+    from filmlab import lights
+    e = recipe(name)["film"]
+    ref = (emulsion(e) if isinstance(e, str) else e).stock.reference_illuminant
+    # 灰卡由胶片的参考光源照明 (在 RAW 日光白平衡的 RGB 里带着该光源相对白平衡参考的颜色)
+    eng = Engine(Params(**{**recipe(name), "grain": 0, "output": "print", "roll": None, "scene_illuminant": ref}))
+    out = eng.render(RAMP * lights.light_rgb(spectral.illuminant(ref)))[0, 4]
     tol = 6.0 if name.startswith("push1_fujifilm") else 3.0
     assert chroma(out) < tol
     if not name.startswith("push1_fujifilm"):
@@ -238,3 +244,87 @@ def test_noise_estimate_survives_quantized_dark_frames():
     img[:128] = 0.002
     p = estimate_noise(img)
     assert np.all(np.isfinite(p)) and np.all(p > 0)
+
+
+# ------------------------------------------------- 阶段契约 (docs/ARCHITECTURE.md) --
+def test_negative_is_physical_endpoint():
+    """Negative 携带三层曝光、染料量与光谱透射率; 扫描 Negative 与扫描 FilmState 结果相同。"""
+    rgb = np.repeat(RAMP, 40, 0)
+    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1}))
+    neg = eng.develop_negative(rgb)
+    assert neg.log_exposure.shape == rgb.shape and neg.dye.shape == rgb.shape
+    T = neg.transmittance(np.arange(5))
+    assert T.shape == (5, 81) and np.all((T > 0) & (T <= 1))
+    sm = neg.status_m()
+    assert np.all(np.diff(sm[0, :, 1]) > 0)                 # 曝光越多, 负片绿密度越高
+    tr = {}
+    a = eng.scan(neg, trace=tr)
+    b = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1})).render(rgb)
+    assert np.array_equal(a, b) and tr["Dn"].shape == rgb.shape and tr["timing"].M is not None
+
+
+def test_output_conditioning_is_separable():
+    """输出调整 (经验风格) 关闭后, 定光与负片密度不变, 只有最终 RGB 改变。"""
+    rgb = np.repeat(RAMP, 40, 0)
+    out = {}
+    for c in ("lab", None):
+        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "output_conditioning": c}))
+        tr = {}
+        out[c] = (eng.scan(eng.develop_negative(rgb), trace=tr), tr)
+    assert np.array_equal(out["lab"][1]["Dn"], out[None][1]["Dn"])
+    assert np.array_equal(out["lab"][1]["timing"].K, out[None][1]["timing"].K)
+    assert not np.allclose(out["lab"][0], out[None][0])
+
+
+# ---------------------------------------------- 计算修正的独立标准 (CRITERIA.md "计算审计") --
+def test_reference_gray_card_prints_neutral():
+    """胶片设计光源下的灰卡, 在物理参考 (标准定光、无输出调整) 中应印成中性: 定光用的中灰与画面用同一光源、同一光晕核。"""
+    from filmlab import lights
+    e = emulsion("kodak_vision3_500t")
+    ref = e.stock.reference_illuminant
+    rgb = np.tile(0.184 * lights.light_rgb(spectral.illuminant(ref)), (64, 64, 1))
+    # 颜色校正力度 1: 只检验定光中灰与画面的一致性 (部分校正时残差取决于档案与胶片中灰之差)
+    eng = Engine(Params(**{**recipe("cinestill_800t_reference"), "roll": None, "grain": 0, "scene_lights": None,
+                           "scene_illuminant": ref, "scan_color_strength": 1.0}))
+    assert chroma(eng.render(rgb)[32, 32]) < 0.5
+
+
+@pytest.mark.parametrize("light", ["Cool White FL", "F32T8/TL830 (Triphosphor)", "HPS", "LED-B3"])
+def test_white_preserving_linear_exposure(light):
+    """保白点: 中性反射率在已知光源下的层曝光必须等于精确积分。"""
+    from filmlab import film, lights
+    st = emulsion("kodak_vision3_500t").stock
+    spec = lights._sd(light)
+    scale = 1.0 / (lights.camera_rgb(spec) @ np.array([0.2126, 0.7152, 0.0722]))
+    exact = 0.184 * (spec * scale) @ (10.0 ** st.log_sensitivity)
+    got = film.exposure_response(st, spec, None, "linear_wp")((0.184 * lights.light_rgb(spec))[None])[0]
+    assert np.max(np.abs(np.log10(got / exact))) < 0.005
+
+
+def test_pipeline_generations_switch_cleanly():
+    """管线代际: legacy / current / next 互不相同, 切回 current 后结果复原 (缓存随切换清空)。"""
+    from filmlab import generation
+    rgb = np.repeat(RAMP, 8, 0)
+    P = lambda: Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "grain": 0})
+    try:
+        out = {}
+        for g in ("current", "legacy", "next", "current"):
+            generation.use(g)
+            out.setdefault(g, []).append(Engine(P()).render(rgb))
+        assert np.array_equal(out["current"][0], out["current"][1])
+        assert not np.allclose(out["next"][0], out["current"][0])
+        assert P().corrections == ("gray_halo", "grain_aperture")
+    finally:
+        generation.use("current")
+
+
+def test_sensor_clip_generation_is_opt_in():
+    """传感器饱和判定只在 next_sensor 代际生效; current / next 保持历史的 channel_max。"""
+    from filmlab import generation, rawio
+    try:
+        for g, want in (("current", "channel_max"), ("next", "channel_max"), ("next_sensor", "sensor"),
+                        ("current", "channel_max")):
+            generation.use(g)
+            assert rawio.CLIP_DETECT == want
+    finally:
+        generation.use("current")

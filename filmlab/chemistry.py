@@ -120,6 +120,9 @@ def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, a
     if not native or not actual or native == actual:
         return dye_density
     sign = 1.0 if (native, actual) == ("CD-3", "CD-4") else -1.0
+    # 带符号的染料谱 (Kodak 原始测量): 负值是被消耗的有色成色剂 (遮罩补偿), 其吸收与显影剂无关, 不随显影剂平移
+    coupler = np.minimum(dye_density, 0.0)
+    dye_density = dye_density - coupler
     out = np.empty_like(dye_density)
     for c in range(dye_density.shape[1]):
         d = dye_density[:, c]
@@ -128,7 +131,7 @@ def dye_spectra(dye_density: np.ndarray, wavelengths: np.ndarray, native: str, a
         src = peak + (wavelengths - peak - sign * sh) / broaden
         new = np.interp(src, wavelengths, d, left=d[0], right=d[-1])
         out[:, c] = new * d.sum() / max(new.sum(), 1e-12)
-    return out
+    return out + coupler
 
 
 # -------------------------------------------------------------- 步骤 --

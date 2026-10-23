@@ -158,14 +158,70 @@ def denoise(img, params, chroma_boost=2.5, out_matrix=None, clipped=None):
 
 
 
-def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True):
+# 截断判定: "channel_max" = 每张图各通道最大值的 97% (历史做法; 没有任何饱和的画面也会把最亮的部分判为截断);
+#           "sensor"      = 传感器数据在饱和值处的堆积 (见 sensor_saturation)。current / next 保持 channel_max。
+CLIP_DETECT = "channel_max"
+# 截断高光的重建: "prior" = 旧法 (整像素用周围颜色 × 亮度先验覆盖); "per_channel" = 保留未饱和通道的实测值 (实验, 只在 sensor 判定下可用)
+HIGHLIGHT_RECON = "prior"
+
+
+def sensor_saturation(raw, per_channel=False):
+    """传感器实际饱和的半尺寸掩膜 (与 postprocess(half_size=True) 的输出同方向), 没有饱和时返回 None。
+    必须在 postprocess 之前调用 (half_size 处理后 libraw 内部的原始数据已被缩小)。
+
+    元数据里的白电平不可靠 (G81 标 4079, 数据堆积在 4095; 这台索尼标 15360, 堆积在 16372, 有损压缩还留下少量更高的码值),
+    所以按数据判断: 在每个 CFA 通道最高 3% 量程内找计数最多的码值 (堆积), 若其附近 (容差 0.2% 量程) 的计数 ≥ 50
+    且是下方相邻区间平均计数的 10 倍以上, 该通道在此饱和, 阈值取堆积的下沿。未饱和的通道不产生截断。"""
+    data = raw.raw_image_visible
+    col = raw.raw_colors_visible
+    black = np.asarray(raw.black_level_per_channel, float)
+    thr = np.full(4, np.inf)
+    for c in range(4):
+        v = data[col == c]
+        if v.size == 0:
+            continue
+        mx = float(v.max())
+        rng = max(mx - black[c], 1.0)
+        vals, cnt = np.unique(v[v >= mx - 0.03 * rng], return_counts=True)
+        vm = float(vals[np.argmax(cnt)])
+        tol = max(1.0, 0.002 * rng)
+        top = int((v >= vm - tol).sum())
+        below = int(((v >= vm - 21 * tol) & (v < vm - tol)).sum()) / 20.0
+        if top >= 50 and top > 10.0 * max(below, 1.0):
+            thr[c] = vm - tol
+    if not np.isfinite(thr).any():
+        return None
+    sat = data >= thr[col]
+    h2, w2 = data.shape[0] // 2, data.shape[1] // 2
+    if per_channel:
+        # 半尺寸像素里每种颜色 (R, G, B) 的传感元是否饱和 (两个绿任一饱和即算), 顺序与 postprocess 输出一致
+        desc = raw.color_desc.decode()
+        blk = sat[:2 * h2, :2 * w2].reshape(h2, 2, w2, 2)
+        cc = col[:2 * h2, :2 * w2].reshape(h2, 2, w2, 2)
+        m = np.stack([(blk & np.isin(cc, [i for i, ch in enumerate(desc) if ch == name])).any((1, 3))
+                      for name in "RGB"], -1)
+    else:
+        m = sat[:2 * h2, :2 * w2].reshape(h2, 2, w2, 2).any((1, 3))
+    flip = raw.sizes.flip
+    if flip == 3:
+        m = m[::-1, ::-1]
+    elif flip == 5:
+        m = np.rot90(m, 1)
+    elif flip == 6:
+        m = np.rot90(m, -1)
+    return m
+
+
+def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True,
+             clip_detect=None):
     """white_balance:
       daylight  固定日光白平衡 (默认): 保留场景真实的光色, 由胶片自己决定钨丝灯 / 日光下的表现,
                 就像胶片相机没有自动白平衡一样
       camera    相机记录的白平衡 (场景被"拉正")
       auto      自动白平衡
     highlights: reconstruct = 重建截断高光 (默认); clip = 保留传感器截断
-    denoise_raw: 去除数码传感器噪声 (默认开)"""
+    denoise_raw: 去除数码传感器噪声 (默认开)
+    clip_detect: 截断判定方法, None = 模块默认 CLIP_DETECT"""
     with rawpy.imread(str(path)) as raw:
         kw = dict(use_camera_wb=(white_balance == "camera"), use_auto_wb=(white_balance == "auto"))
         if white_balance == "daylight":
@@ -175,18 +231,46 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
             else:
                 kw["user_wb"] = wb[:3] + [wb[1] if wb[3] <= 0 else wb[3]]
         common = dict(gamma=(1, 1), no_auto_bright=True, output_bps=16, half_size=True, user_flip=None)
+        detect = clip_detect or CLIP_DETECT
+        sensor = sensor_saturation(raw, per_channel=True) if detect == "sensor" and (highlights == "reconstruct" or denoise_raw) \
+            else None
         xyz = raw.postprocess(output_color=rawpy.ColorSpace.XYZ, **common, **kw).astype(np.float32) / 65535.0
         clip = None
         if highlights == "reconstruct" or denoise_raw:
-            # 在相机原始 RGB (未白平衡) 里找饱和像素: 任一通道到达该通道的最大值即为截断
-            cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
-            mx = cam.reshape(-1, 3).max(0).astype(np.float32)
-            clip = (cam >= 0.97 * mx).any(-1).astype(np.float32)
+            if detect == "sensor":
+                clip = np.zeros(xyz.shape[:2], np.float32)
+                sat3 = np.zeros(xyz.shape[:2] + (3,), bool)
+                if sensor is not None:
+                    h, w = min(sensor.shape[0], clip.shape[0]), min(sensor.shape[1], clip.shape[1])
+                    sat3[:h, :w] = sensor[:h, :w]
+                    clip = sat3.any(-1).astype(np.float32)
+                    if highlights == "reconstruct" and HIGHLIGHT_RECON == "per_channel":
+                        cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
+                        cam = cam.astype(np.float32) / 65535.0
+            else:
+                # 在相机原始 RGB (未白平衡) 里找饱和像素: 任一通道到达该通道的最大值即为截断
+                cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
+                mx = cam.reshape(-1, 3).max(0).astype(np.float32)
+                clip = (cam >= 0.97 * mx).any(-1).astype(np.float32)
     step = max(1, int(round(max(xyz.shape[:2]) / max_size)))
+    per_channel = detect == "sensor" and HIGHLIGHT_RECON == "per_channel" and highlights == "reconstruct" \
+        and clip is not None and clip.any()
+    if per_channel:
+        # 相机原始通道 → XYZ 的线性关系 (同一张图、未饱和像素上拟合; libraw 在截断以下是线性的)
+        ok = ~sat3.any(-1) & (cam.max(-1) > 0.01) & (cam.max(-1) < 0.9)
+        A = np.linalg.lstsq(cam[ok].astype(np.float64), xyz[ok].astype(np.float64), rcond=None)[0]
+        clip_lv = np.array([np.median(cam[..., c][sat3[..., c]]) if sat3[..., c].any() else np.inf for c in range(3)])
+        f3 = _downsample(sat3.astype(np.float32), step)
     xyz = _downsample(xyz, step)
     if denoise_raw:      # 在线性的传感器信号上做 (下采样后噪声模型同样成立, 只是方差更小)
-        cl = None if clip is None else _downsample(clip, step)
+        # 逐通道重建时, 截断像素里未饱和的通道是实测值, 不按缺失数据抹掉它们的颜色
+        cl = None if (clip is None or per_channel) else _downsample(clip, step)
         xyz = denoise(xyz.astype(np.float64), estimate_noise(xyz), out_matrix=XYZ_TO_SRGB, clipped=cl)
+    if per_channel:
+        frame_seed = zlib.crc32(str(path).encode()) ^ seed
+        cam_d = reconstruct_highlights_cam(xyz @ np.linalg.inv(A), f3, clip_lv, np.random.default_rng(frame_seed),
+                                           clip_luminance(path))
+        return (cam_d @ A) @ XYZ_TO_SRGB.T
     rgb = xyz @ XYZ_TO_SRGB.T
     if highlights == "reconstruct" and clip is not None and clip.any():
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
@@ -276,6 +360,73 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
         # 细的反光线 (铁轨、金属边) 只占像素的一小部分, 不能把整个像素 (更不能把膨胀出的一圈) 都当成灯。
         f = np.clip(clip_frac[y0:y1, x0:x1][blob], 0.0, 1.0)[:, None]
         region[blob] = (1.0 - f) * region[blob] + f * (lum[blob][:, None] * col[None, :])
+    return out
+
+
+def reconstruct_highlights_cam(cam, sat_frac, clip_lv, rng, l_clip=None):
+    """逐通道重建截断高光 (相机原始通道, 传感器饱和判定时使用)。
+
+    与 reconstruct_highlights 的区别: 截断像素里**未饱和的通道是实测值, 保留**, 并用来约束饱和通道:
+      · 像素里还有未饱和的通道: 饱和通道 = 实测通道 × 光源颜色比例 (颜色取自周围一圈未截断像素, 同旧法), 不低于截断值。
+        这样的光源最多只比截断点亮出颜色比例那么多, 不再套用"亮几档"的先验。
+      · 三个通道全部饱和: 亮度不可辨识, 沿用旧法的亮度先验与穹顶形状 (HIGHLIGHT_PRIOR), 且不低于截断值与相邻实测推算值。
+    下采样像素里饱和传感元的比例为 f_c, 观测值是截断值与未饱和部分的平均 → 只加回 f_c × (估计值 − 截断值)。"""
+    any_sat = sat_frac.max(-1)
+    mask = ndimage.binary_dilation(any_sat > 0.25)
+    lab, n = ndimage.label(mask)
+    if n == 0:
+        return cam
+    out = cam.copy()
+    total = mask.size
+    Y = cam.mean(-1)
+    lv = np.where(np.isfinite(clip_lv), clip_lv, np.inf)
+    for k, sl in enumerate(ndimage.find_objects(lab), start=1):
+        pad = max(4, int(0.6 * np.sqrt((sl[0].stop - sl[0].start) * (sl[1].stop - sl[1].start))))
+        y0, y1 = max(sl[0].start - pad, 0), min(sl[0].stop + pad, cam.shape[0])
+        x0, x1 = max(sl[1].start - pad, 0), min(sl[1].stop + pad, cam.shape[1])
+        blob = lab[y0:y1, x0:x1] == k
+        f = sat_frac[y0:y1, x0:x1][blob]                       # (n, 3) 饱和传感元比例
+        if not (f > 0).any():
+            continue
+        ring = ndimage.binary_dilation(blob, iterations=pad) & ~ndimage.binary_dilation(blob, iterations=2) \
+            & (lab[y0:y1, x0:x1] == 0)
+        sub = cam[y0:y1, x0:x1]
+        if ring.sum() >= 5:
+            ry = Y[y0:y1, x0:x1][ring]
+            sel = ring.copy()
+            sel[ring] = ry >= np.percentile(ry, 70)
+            col = np.median(sub[sel], 0)
+        else:
+            col = np.median(sub[blob], 0)
+        col = np.clip(col, 1e-6, None)
+        obs = sub[blob]                                         # (n, 3)
+        measured = f <= 0.0
+        # 有实测通道的像素: 光源颜色标度 = 实测通道 / 颜色 (取最大, 偏保守地不低估)
+        ratio = np.where(measured, obs / col[None, :], -np.inf)
+        s_meas = ratio.max(1)
+        est = s_meas[:, None] * col[None, :]
+        full = ~measured.any(1)
+        if full.any():
+            area = blob.sum()
+            _, lum_range, stop_range = next(p for p in HIGHLIGHT_PRIOR if area / total < p[0])
+            if _line_like(any_sat[y0:y1, x0:x1] * blob > 0.25):
+                lum_range, stop_range = LINE_PRIOR
+            if l_clip is not None:
+                L = np.exp(rng.uniform(*np.log(lum_range)))
+                stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
+            else:
+                stops = rng.uniform(*stop_range)
+            d = ndimage.distance_transform_edt(blob)
+            dome = 2.0 ** (stops * (d / max(d.max(), 1.0)) ** 0.7)[blob]
+            satc = np.isfinite(lv)
+            ref = int(np.argmax(np.where(satc, col / np.where(satc, lv, 1.0), -np.inf)))
+            base = lv[ref] / col[ref]                              # 颜色标度: 最受限的饱和通道刚好到截断
+            floor = np.nanmax(np.where(np.isfinite(s_meas), s_meas, np.nan)) if np.isfinite(s_meas).any() else 0.0
+            est[full] = np.maximum(dome[full] * base, floor)[:, None] * col[None, :]
+        est = np.maximum(est, np.where(np.isfinite(lv), lv, 0.0)[None, :])
+        excess = np.where(f > 0, f * np.maximum(est - np.where(np.isfinite(lv), lv, est)[None, :], 0.0), 0.0)
+        region = out[y0:y1, x0:x1]
+        region[blob] = region[blob] + np.nan_to_num(excess, posinf=0.0)
     return out
 
 
