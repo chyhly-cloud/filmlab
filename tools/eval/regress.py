@@ -33,8 +33,19 @@ for cn, c in CONF.items():
 if sys.argv[1] == "save":
     np.savez(sys.argv[2], **out); print("saved", len(out))
 else:
+    # 严格: 期望键必须全部渲染 (缺输入不能静默跳过), 逐位相同 (NaN 位置一致); 任何不符都以非零退出
     ref = np.load(sys.argv[2]); bad = 0
-    for k, v in out.items():
-        d = np.nanmax(np.abs(v - ref[k])); 
-        if not (d == 0 or (np.isnan(d) and np.array_equal(np.isnan(v), np.isnan(ref[k])))): bad += 1; print("DIFF", k, d)
-    print("checked", len(out), "differ", bad)
+    want = set(ref.keys()) if not (os.environ.get("ONLY") or os.environ.get("NIMG")) \
+        else {k for k in ref.keys() if k.split("/")[0] in CONF and k.split("/")[1] in IMGS}
+    missing, extra = sorted(want - set(out)), sorted(set(out) - set(ref.keys()))
+    for k in missing:
+        print("MISSING", k)
+    for k in extra:
+        print("NO_REFERENCE", k)
+    for k in sorted(set(out) & set(ref.keys())):
+        v, r = out[k], ref[k]
+        if v.shape != r.shape or not np.array_equal(v, r, equal_nan=True):
+            bad += 1
+            print("DIFF", k, np.nanmax(np.abs(v - r)) if v.shape == r.shape else f"shape {v.shape} vs {r.shape}")
+    print("checked", len(set(out) & set(ref.keys())), "of", len(want), "differ", bad, "missing", len(missing))
+    sys.exit(1 if (bad or missing or extra or not out) else 0)
