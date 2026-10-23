@@ -10,13 +10,15 @@
 用法: python3 oracle_timing.py 输出.json   (物理条件用 ablation_flags 的环境变量; COND_NONE=1 关闭输出调整)
 """
 import json, os, sys, zlib, csv, warnings
+from pathlib import Path
 import numpy as np
 warnings.filterwarnings("ignore")
-sys.path.insert(0, "/home/user/filmlab/tools/eval"); sys.path.insert(0, "/home/user/filmlab")
-SP = "/tmp/claude-0/-home-user-filmlab/f67b7686-eba5-58fc-b23b-cf537590be15/scratchpad"
+REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "tools/eval")); sys.path.insert(0, str(REPO))
+SP = os.environ.get("FILMLAB_DATA", str(REPO / "data_cache"))
 EP = SP + "/epfl/data"
 GEO = SP + "/oracle"
-MAN = {r["scene_id"]: r for r in csv.DictReader(open("/home/user/filmlab/tools/eval/epfl_800t_manifest.csv"))}
+MAN = {r["scene_id"]: r for r in csv.DictReader(open(REPO / "tools/eval/epfl_800t_manifest.csv"))}
 IDS = ["R1-07-8", "R1-03-4", "R1-01-2", "R1-00-1", "R1-02-3", "R1-04-5", "R1-05-6", "R1-06-7",
        "R1-27-28", "R1-28-29", "R1-30-31", "cafe"]
 GROUPS = {"day": ["cafe"], "night": IDS[:8], "tungsten": IDS[8:11]}

@@ -1,0 +1,53 @@
+{
+  "coordinates": "x,y in the previous 1600-pixel-wide real scan; chosen from real images before new renders",
+  "regions": [
+    {
+      "scene": "R1-04-5",
+      "name": "warm_walkway",
+      "center": [
+        350,
+        900
+      ]
+    },
+    {
+      "scene": "R1-04-5",
+      "name": "red_beacon",
+      "center": [
+        1381,
+        480
+      ]
+    },
+    {
+      "scene": "R1-07-8",
+      "name": "twilight_lamp_left",
+      "center": [
+        764,
+        489
+      ]
+    },
+    {
+      "scene": "R1-07-8",
+      "name": "twilight_lamp_right",
+      "center": [
+        845,
+        529
+      ]
+    },
+    {
+      "scene": "R1-00-1",
+      "name": "facade_lamp",
+      "center": [
+        987,
+        360
+      ]
+    },
+    {
+      "scene": "R1-02-3",
+      "name": "ceiling_lamp",
+      "center": [
+        676,
+        92
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3280 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-20",
+  "scope": "Public-source audit only. No image rendering, final-RGB ablations, coefficient fitting, author contact, new transport integration, or baseline changes.",
+  "external_acceptance_constraint": {
+    "source": "docs/LOCAL_BACKGROUND_AND_RESEARCH_BOUNDARY.md",
+    "near_ceiling_outer_minus_inner_a_star": {
+      "real": 6.84,
+      "full_model": -9.96,
+      "model_translation_sensitivity_range": [
+        -14.49,
+        -5.35
+      ]
+    },
+    "meaning": "Opposite local spatial trends survive the existing translation sensitivity check; not a measured pure halation PSF. Exact radii and differences remain registration-limited; middle lamp lacks inner ceiling support."
+  },
+  "decision": "Freeze material/source/scanner attribution and candidate development until new independently identifying measurements are acquired. No newly verified measurement in this bounded audit unfreezes the hypotheses.",
+  "network_limit": "Google/Bing, Drive, GitHub API, manufacturer and data-portal entries were blocked before origin HTTP. GitHub web/raw succeeded. Not an exhaustive worldwide absence claim; private author holdings unknown.",
+  "access_counts": {
+    "blocked_at_proxy_connect": 16,
+    "retrieved": 48,
+    "invalid_request_wrong_commit": 1
+  },
+  "source_groups": [
+    {
+      "id": "epfl",
+      "grade": "direct_800t_published_output_only",
+      "references": [
+        "epfl_web",
+        "epfl_main_readme",
+        "epfl_dataset_tree",
+        "epfl_dataset_film",
+        "epfl_dataset_digital",
+        "epfl_branches_web",
+        "epfl_grain_data_corrected",
+        "epfl_grain_notes",
+        "epfl_releases_web",
+        "epfl_issues_web",
+        "epfl_drive"
+      ],
+      "local_evidence": "36 single-page RGB uint8 TIFFs, all with sRGB ICC; no high-bit or transmission payload in these files. Main GitHub dataset dirs contain only .gitignore; README links the known Drive folder. Grain notes compare TIFF nonlinearity to sensor RAW, not a separate scanner measurement.",
+      "can_identify": "Conditional published appearance and local spatial failure.",
+      "cannot_identify": "True negative density, scanner response, unedited scan state, or whether authors privately retained higher-bit originals.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "sillystill",
+      "grade": "direct_800t_published_output_only",
+      "references": [
+        "sillystill_web"
+      ],
+      "previous_record": "tools/eval/sillystill_sources.json",
+      "finding": "Current public head unchanged at b1ebdb971207b403b7126b759c1d30d30954a722. Prior recovered cafe ARW/JPEG and report retained. Processed film targets use Lab luminance histogram matching; no newly verified transmission or density source.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "epfl_brackets",
+      "grade": "direct_same_scene_camera_measurement_with_partial_support",
+      "previous_records": [
+        "tools/eval/epfl_night_brackets.json",
+        "docs/MEASURED_SOURCE_COVERAGE.json",
+        "docs/MEASURED_SOURCE_VALIDATION.md"
+      ],
+      "finding": "Existing six alternate RAWs accepted 677 half-size Bayer cells: 671 transmission-hole controls, 6 wall-lamp edge cells; no recovered full main-lamp cores.",
+      "can_identify": "Relative camera-channel signal only for validated cells; preserves saturation, registration and temporal coverage limits.",
+      "cannot_identify": "Main-lamp radiance/SPD, lens-flare-free source image, negative density, or scanner mapping.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "colour_hdri",
+      "grade": "generic_algorithm_data_candidate_not_800t",
+      "references": [
+        "colour_hdr_web",
+        "colour_hdr_frobisher",
+        "colour_hdr_unity",
+        "hdr_original_docs"
+      ],
+      "finding": "Pinned public tree lists five Canon CR2s IMG_2598..2602 and an EXR example; source docs describe HDRI processing. This audit inspected listings/docs, not the CR2 payloads or their calibration.",
+      "can_identify": "Potential generic RAW/HDR pipeline checks after file, EXIF and license verification.",
+      "cannot_identify": "EPFL lamp SPD/radiance or lens flare; no verified same-scene 800T pair or absolute calibration.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "flare7k",
+      "grade": "generic_lens_flare_algorithm_data_not_800t",
+      "references": [
+        "flare7k_web"
+      ],
+      "finding": "Author README: 7000 synthetic patterns + 962 real smartphone flare patterns captured with lens contaminants in dark room; patterns added to backgrounds. No independently calibrated EPFL lamp input.",
+      "reuse": "README specifies S-Lab License 1.0, non-commercial; no dataset imported.",
+      "can_identify": "Generic flare-removal algorithm behaviour, with experimental/device domain limits.",
+      "cannot_identify": "Actual film/camera lens flare kernel, lamp energy/SPD, or 800T exposure/development/scan.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "redlamp_800t",
+      "grade": "other_stock_proxy_not_actual_800t_measurement",
+      "references": [
+        "redlamp_film_data",
+        "redlamp_800t_json",
+        "redlamp_5219_json"
+      ],
+      "finding": "800T-labelled JSON and 5219 JSON have identical source, characteristicCurves, spectralSensitivity, dyeDensity, granularity, MTF and interlayer fields. JSON explicitly says published curves ECN-2 while marketed 800T C-41; original Kodak PDF not retrieved here.",
+      "comparison": {
+        "source": {
+          "equal": true,
+          "canonical_json_sha256": "d9e54d2e3475727555ee3cddbe0f31cec11d52b12e2cd18ef727aed493bc8e70"
+        },
+        "characteristicCurves": {
+          "equal": true,
+          "canonical_json_sha256": "8d2b6217972b911d26bef2d94650b63e8691586bd1cd04ca0d4a4618536afbd2"
+        },
+        "spectralSensitivity": {
+          "equal": true,
+          "canonical_json_sha256": "2d7c2c59d55c1f60a3bbd64fb53e8a02df2c8fb5c18d2c05429432a049a2909a"
+        },
+        "dyeDensity": {
+          "equal": true,
+          "canonical_json_sha256": "3e0771cbdc10b0fa26ab7e3466d20d76a976158d8141718c137128d90310202b"
+        },
+        "granularity": {
+          "equal": true,
+          "canonical_json_sha256": "20bc28faef7e59ba4503bf9cc190c8f72d0af351f7170f3e1c9c1e49dcd66c67"
+        },
+        "mtf": {
+          "equal": true,
+          "canonical_json_sha256": "123885de97f9e0a01bfe090178ef84209b033b3ab48e0a4dbc890f49d0a590a8"
+        },
+        "interlayer": {
+          "equal": true,
+          "canonical_json_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+        }
+      },
+      "source_document_as_claimed_by_third_party": {
+        "title": "KODAK VISION3 500T Color Negative Film 5219 / 7219 — Technical Data",
+        "document": "H-1-5219",
+        "edition": "Revised 3-26 (March 2026)",
+        "url": "https://www.kodak.com/content/products-brochures/motion-picture/KODAK-VISION3-5219-7219-technical-information.pdf",
+        "fetchedVia": "direct",
+        "retrieved": "2026-09-30",
+        "sha256": "6d037d8090373ee50d10bedfff3df14777a575dd107c50edcafc7ec5862d0972",
+        "pages": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "can_identify": "Data provenance and proxy status, not independent measurement.",
+      "cannot_identify": "800T C-41 nonneutral development or undeveloped absorption/scattering.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "spektrafilm",
+      "grade": "manufacturer_curve_based_simulation_not_new_800t_measurement",
+      "references": [
+        "agx_web",
+        "agx_profile_files"
+      ],
+      "finding": "agx-emulsion redirects to spektrafilm; checked profile tree has Kodak Vision3 500T and other manufacturer-derived profiles, no CineStill 800T profile. README describes neutral characteristic curves, generic dye information and modelled couplers.",
+      "cannot_identify": "Actual 800T C-41 nonneutral response or optical transport constants.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "iphone_to_film",
+      "grade": "explicit_5219_proxy_not_actual_800t_measurement",
+      "references": [
+        "iphone_to_film_web"
+      ],
+      "quote": "Cinestill is modeled as Kodak Vision3 500T (sfl.KODAK_5219) with tungsten white balance (3200K) and cranked halation.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "lumiere",
+      "grade": "simulation_readme_lead_only",
+      "references": [
+        "lumiere_web",
+        "lumiere_product"
+      ],
+      "finding": "README describes manufacturer-data-driven simulation and internal tests. No independent 800T laboratory table verified from inspected pages; simulation self-tests not accepted as material evidence. No exhaustive code/data inventory claimed.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "delta100_tests",
+      "grade": "other_material_actual_sensitometry_algorithm_reference",
+      "references": [
+        "historical_sensitometry_web",
+        "historical_delta_csv",
+        "historical_delta_documentation",
+        "historical_license"
+      ],
+      "finding": "21 rows, 13 columns: relative log exposure and six development times, each with two exposure durations. Author documents Delta100 4x5, green Eseco SL-2 exposure, DDX1+4 at20C and Heiland TRD2 absolute density readings. Repository license GPLv2; no table imported into FilmLab.",
+      "can_identify": "Candidate real exposure-density data for generic curve-analysis validation; author-reported procedure, not independently replicated.",
+      "cannot_identify": "Colour 800T response, CMY interlayer effects, undeveloped optical properties or halo.",
+      "new_independent_measurement_for_800t": false
+    },
+    {
+      "id": "historical_optics_mcml",
+      "grade": "algorithm_reference_or_unverified_lead_not_800t",
+      "previous_records": [
+        "tools/eval/historical_emulsion_sources.json",
+        "docs/HISTORICAL_EMULSION_SOURCE_AUDIT.md",
+        "docs/PHOTON_TRANSPORT_VALIDATION.md"
+      ],
+      "finding": "MCML validates transport implementation with hypothetical/reference materials; historical optical papers remain original-table-unverified due earlier proxy failures. Neither supplies verified 800T material constants.",
+      "new_independent_measurement": false
+    },
+    {
+      "id": "manufacturer_and_index_entries",
+      "grade": "unverified_due_access_block",
+      "references": [
+        "cinestill_faq",
+        "cinestill_faq_alt",
+        "cinestill_product",
+        "kodak_5219",
+        "kodak_ahu",
+        "search_sensitometry800",
+        "search_sensitometry800_bing",
+        "search_zenodo",
+        "search_datacite"
+      ],
+      "finding": "Proxy CONNECT403; no original body received. Attachment/third-party claims not promoted to factory-verified facts.",
+      "new_independent_measurement": false
+    }
+  ],
+  "local_scan_header_audit": [
+    {
+      "name": "A002382raphael-R1-00-1.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:39",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "53df5e63f2640ffa00369274c37875adc756dec37945ca98c4e1b43aec951e5b",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-01-2.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:42",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "712ea36c453bbe549da4e99e1961401107ee433b18c12d80da63547d40b07feb",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-02-3.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:45",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "0489a4f12be953c826929362d236325f6a72b42f78b5749960985eb1e101d772",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-03-4.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:48",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "b2de7e002904fd76d0108fd6ed174086fc61e0eae23d31ac9304784e0420703e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-04-5.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:51",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "9e257a7f2a6d91dd0b5f54be5165f0d69cd923fa19abbb36faa19571c1a0aff7",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-05-6.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:54",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "3b08499a33eb6e068545a1f212a5e1e0bc00724551547e80419cd2b3b1e0e2e4",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-06-7.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:04:58",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "e21ea559b8575c112244a8bde6f813f0b679b6dbd325b8311deaca17a11acaef",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-07-8.TIF",
+      "shape": [
+        3415,
+        5106,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:27:32",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15522,
+        "sha256": "c34f2364f18b3ae4bfca3dc47cd6ade16688d0289cda3fe7929d199966d03823",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-08-9.TIF",
+      "shape": [
+        3575,
+        5344,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:28:09",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15522,
+        "sha256": "6e73721bdefdfa84f54560f54852dd62e3bc7b667e273308fc4a3d924e343e70",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-09-10.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:06",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "fd483b9b3c09e95ee146166a5fedfb78f645db9e79b0476484a1c83f4efd074f",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-10-11.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:10",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "61890255fc6355b245e942b5f0828a9a521e3656116a9ce697e0c6485bf6c812",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-11-12.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:13",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "dc1b6c9734728760c8cd027ccef8f0337e0e07ee6f6c95234d2bb566b457dad4",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-12-13.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:16",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "c0b30ffadc998e203597c860bcd9a8a9792804502a184d266dbdb11a81953d4b",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-13-14.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:20",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "338c964a7cc7f52e850dcb7f59e1bbe97f1805a88ee44555610890af18f2d9f1",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-14-15.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:24",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "876495d0330602aa5bb4b50786de81659a0229bef0740df8518385511fc2508d",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-15-16.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:27",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "4f2d000e545c4b25f1ae6337b9a29b322936084e205a60ee251ddae1656e068b",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-16-17.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:31",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "d6bf4ac656d2a3187dd01c717233742f230e425192524240b1eb1be2b82b5d7b",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-17-18.TIF",
+      "shape": [
+        3621,
+        5414,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:28:56",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15522,
+        "sha256": "c9ddb898293375d8e4c567df7f0091c0d388cf97fe796607474a774de113412b",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-18-19.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:37",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "347bcce6dc9d981de7de4e6d3fe21321070373c3b7f28063d3904f609d371495",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-19-20.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:39",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "95c005c8e38cd27ff67e38f22802ef58da3ab1e20f3abe997c898d11e20df255",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-20-21.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:41",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "eae55bf55017039106b4434950367f3a20cba09513b70c37592628f6810246c6",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-21-22.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:44",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "efb79d348898a843fa3be89b7bb563a249d37ad647be452a16da2db62bc0acc5",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-22-23.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:47",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "080eb9c15fe8fced600f0231106189a750e19ca3d58a037b001759602797f1ed",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-23-24.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:53",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "8b242c7666e23655aff1193ce12eef0f5210bd27db07c04963de3c5614cf92a6",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-24-25.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:05:59",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "7c2d201590969d72bcd701208eb75760b97835f619960d181ecab33d27029e3d",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-25-26.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:04",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "6d04bb10fb41f63a268bf46b6bf7a7eb9540b8f81d734fec73a831705f46353e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-26-27.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:08",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "f400e19de30d0c77c4fef024235185f042e0669d22e4846d8960b160d0d2a13c",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-27-28.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:14",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "7728db5a529a9abcce0b718d75aa60a6692ac7e0d020ce332ac48a249ae75e64",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-28-29.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:19",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "cc9c29c2be0d80c5b8a0a1dab60abeb737773dcca931c2fc1f6d46039626918e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-29-30.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:22",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "079a732a9de3d8babd0b3c91cd9be39f76ec168c8aec5b1d5c259f488b58d572",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-30-31.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:24",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "e83fc56bcbab9bb5fbe2ab78feeb0e7260156eb86cc8a9de9579e185d03bee04",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-31-32.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:28",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "477cd807a66c64764eb8cbba7ddd5224296b5ce05eb06f64bfe72b5eaad3f810",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-32-33.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:31",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "b6f39f38f5386e50a3980a4f7fbebb28edb3405aae4c217f185b57ca077bea29",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-33-34.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:34",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "586db09fbfe37e5a819f09241eedc35e22c05eddb40bb5640ef6d3d4ff367dc8",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-34-35.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:37",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "17d695ccd103315735fb1b53f4f0d94f1ea0a8ce0008da4d4756641fa93411bd",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    },
+    {
+      "name": "A002382raphael-R1-35-36.TIF",
+      "shape": [
+        3649,
+        5456,
+        3
+      ],
+      "dtype": "uint8",
+      "page_count": 1,
+      "BitsPerSample": [
+        8,
+        8,
+        8
+      ],
+      "PhotometricInterpretation": 2,
+      "Software": "Adobe Photoshop 25.6 (Macintosh)",
+      "Make": "Fujifilm eSystems, Inc.",
+      "Model": "Digital Link",
+      "DateTime": "2024:03:26 17:06:39",
+      "icc": {
+        "tag_name": "InterColorProfile",
+        "byte_count": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": false
+      },
+      "xmp": {
+        "tag_name": "XMP",
+        "byte_count": 15081,
+        "sha256": "0c67fff069a396916a52d52360e3092d31a04542cf22ef2bc21f89b2bcabe68f",
+        "contains_sRGB_literal": true,
+        "contains_Photoshop_literal": true
+      }
+    }
+  ],
+  "public_repo_tree_snapshots": {
+    "flare7k_web": {
+      "ref": "main",
+      "commit": "d1fb66ecb3c75fb3f4bfa715c49ef9265892d56f",
+      "items": [
+        {
+          "path": "Generate_flare_on_light",
+          "type": "directory"
+        },
+        {
+          "path": "assets",
+          "type": "directory"
+        },
+        {
+          "path": "basicsr",
+          "type": "directory"
+        },
+        {
+          "path": "experiments",
+          "type": "directory"
+        },
+        {
+          "path": "options",
+          "type": "directory"
+        },
+        {
+          "path": "scripts",
+          "type": "directory"
+        },
+        {
+          "path": "test/test_images",
+          "type": "directory"
+        },
+        {
+          "path": "LICENSE",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "VERSION",
+          "type": "file"
+        },
+        {
+          "path": "data_loader.py",
+          "type": "file"
+        },
+        {
+          "path": "evaluate.py",
+          "type": "file"
+        },
+        {
+          "path": "generate_flare.ipynb",
+          "type": "file"
+        },
+        {
+          "path": "requirements.txt",
+          "type": "file"
+        },
+        {
+          "path": "setup.cfg",
+          "type": "file"
+        },
+        {
+          "path": "setup.py",
+          "type": "file"
+        },
+        {
+          "path": "test.py",
+          "type": "file"
+        },
+        {
+          "path": "test_large.py",
+          "type": "file"
+        },
+        {
+          "path": "version.py",
+          "type": "file"
+        }
+      ]
+    },
+    "agx_profiles": {
+      "ref": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": "src/spektrafilm/profiles/__init__.py",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/profiles/io.py",
+          "type": "file"
+        }
+      ]
+    },
+    "colour_hdr_unity": {
+      "ref": "80dd236bcc42ea7b356f77556b3eb4923cd3dbc2",
+      "commit": "80dd236bcc42ea7b356f77556b3eb4923cd3dbc2",
+      "items": [
+        {
+          "path": "unity_001/Unity_Treasure_Island_White_Balanced.exr",
+          "type": "file"
+        }
+      ]
+    },
+    "agx_src_tree": {
+      "ref": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": "src/spektrafilm",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm_gui",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm_lut_creator",
+          "type": "directory"
+        }
+      ]
+    },
+    "agx_web": {
+      "ref": "main",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": ".github",
+          "type": "directory"
+        },
+        {
+          "path": "examples",
+          "type": "directory"
+        },
+        {
+          "path": "img",
+          "type": "directory"
+        },
+        {
+          "path": "scripts",
+          "type": "directory"
+        },
+        {
+          "path": "src",
+          "type": "directory"
+        },
+        {
+          "path": "tests",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "CITATION.cff",
+          "type": "file"
+        },
+        {
+          "path": "LICENSE",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "SPEKTRAFILM_LICENSE.txt",
+          "type": "file"
+        },
+        {
+          "path": "pyproject.toml",
+          "type": "file"
+        },
+        {
+          "path": "pytest.ini",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_grain_branch": {
+      "ref": "grain-detection-pycuda-test",
+      "commit": "dad00771b0401f116fbb119084626f13742242f4",
+      "items": [
+        {
+          "path": "data",
+          "type": "directory"
+        },
+        {
+          "path": "grain_c",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "main_numba.py",
+          "type": "file"
+        },
+        {
+          "path": "performance_tester.ipynb",
+          "type": "file"
+        },
+        {
+          "path": "pycuda_test.py",
+          "type": "file"
+        }
+      ]
+    },
+    "redlamp_web": {
+      "ref": "main",
+      "commit": "c5e28259818552790b950bd815c4387d7e41dee6",
+      "items": [
+        {
+          "path": ".cursor",
+          "type": "directory"
+        },
+        {
+          "path": ".githooks",
+          "type": "directory"
+        },
+        {
+          "path": ".github",
+          "type": "directory"
+        },
+        {
+          "path": "Casks",
+          "type": "directory"
+        },
+        {
+          "path": "LICENSES",
+          "type": "directory"
+        },
+        {
+          "path": "Tuist",
+          "type": "directory"
+        },
+        {
+          "path": "apps",
+          "type": "directory"
+        },
+        {
+          "path": "bin",
+          "type": "directory"
+        },
+        {
+          "path": "config",
+          "type": "directory"
+        },
+        {
+          "path": "docs",
+          "type": "directory"
+        },
+        {
+          "path": "mise/tasks",
+          "type": "directory"
+        },
+        {
+          "path": "packages",
+          "type": "directory"
+        },
+        {
+          "path": "research",
+          "type": "directory"
+        },
+        {
+          "path": "scripts",
+          "type": "directory"
+        },
+        {
+          "path": "tests",
+          "type": "directory"
+        },
+        {
+          "path": "tools/rl",
+          "type": "directory"
+        },
+        {
+          "path": "vendor/shims",
+          "type": "directory"
+        },
+        {
+          "path": "video",
+          "type": "directory"
+        },
+        {
+          "path": "web",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": ".swiftformat",
+          "type": "file"
+        },
+        {
+          "path": ".swiftlint.yml",
+          "type": "file"
+        },
+        {
+          "path": "AGENTS.md",
+          "type": "file"
+        },
+        {
+          "path": "LICENSE",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "Tuist.swift",
+          "type": "file"
+        },
+        {
+          "path": "Version.xcconfig",
+          "type": "file"
+        },
+        {
+          "path": "Workspace.swift",
+          "type": "file"
+        },
+        {
+          "path": "mise.toml",
+          "type": "file"
+        }
+      ]
+    },
+    "historical_sensitometry_web": {
+      "ref": "master",
+      "commit": "bfc4ddf54bb770d3430120a12f0395cc00aa221e",
+      "items": [
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "Delta 100 DDX 1+4 Tray Continous AR 2017.Rmd",
+          "type": "file"
+        },
+        {
+          "path": "LICENSE",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "SampleCurvePlot.jpeg",
+          "type": "file"
+        },
+        {
+          "path": "SampleDevTimePlot.jpeg",
+          "type": "file"
+        },
+        {
+          "path": "delta100.ddx1.4.csv",
+          "type": "file"
+        },
+        {
+          "path": "delta100.ddx1.4.tray.2017.csv",
+          "type": "file"
+        },
+        {
+          "path": "mgwt.ds-14r.r-apo-n-150.vcce.k.csv",
+          "type": "file"
+        },
+        {
+          "path": "plots.R",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_dataset_film": {
+      "ref": "45248cf7e44892c5742e847536a855bc564ac397",
+      "commit": "45248cf7e44892c5742e847536a855bc564ac397",
+      "items": [
+        {
+          "path": "dataset/film/.gitignore",
+          "type": "file"
+        }
+      ]
+    },
+    "sillystill_web": {
+      "ref": "master",
+      "commit": "b1ebdb971207b403b7126b759c1d30d30954a722",
+      "items": [
+        {
+          "path": "configs",
+          "type": "directory"
+        },
+        {
+          "path": "imgs",
+          "type": "directory"
+        },
+        {
+          "path": "notebooks",
+          "type": "directory"
+        },
+        {
+          "path": "outputs",
+          "type": "directory"
+        },
+        {
+          "path": "report",
+          "type": "directory"
+        },
+        {
+          "path": "scripts",
+          "type": "directory"
+        },
+        {
+          "path": "src",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": ".pre-commit-config.yaml",
+          "type": "file"
+        },
+        {
+          "path": ".project-root",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "report.pdf",
+          "type": "file"
+        },
+        {
+          "path": "requirements.txt",
+          "type": "file"
+        },
+        {
+          "path": "run.sh",
+          "type": "file"
+        },
+        {
+          "path": "setup.sh",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_web": {
+      "ref": "main",
+      "commit": "45248cf7e44892c5742e847536a855bc564ac397",
+      "items": [
+        {
+          "path": "color_transfer_data",
+          "type": "directory"
+        },
+        {
+          "path": "dataset",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "color_transfer_calculator.ipynb",
+          "type": "file"
+        },
+        {
+          "path": "colorchecker.py",
+          "type": "file"
+        },
+        {
+          "path": "colortransfer.py",
+          "type": "file"
+        },
+        {
+          "path": "demo.ipynb",
+          "type": "file"
+        },
+        {
+          "path": "digitalimage.py",
+          "type": "file"
+        },
+        {
+          "path": "grain_rendering.py",
+          "type": "file"
+        },
+        {
+          "path": "halo.py",
+          "type": "file"
+        },
+        {
+          "path": "linearization.py",
+          "type": "file"
+        },
+        {
+          "path": "utils.py",
+          "type": "file"
+        }
+      ]
+    },
+    "agx_package": {
+      "ref": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": "src/spektrafilm/data",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/model",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/profiles",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/runtime",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/utils",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/README.md",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/__init__.py",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/config.py",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_grain_data_corrected": {
+      "ref": "dad00771b0401f116fbb119084626f13742242f4",
+      "commit": "dad00771b0401f116fbb119084626f13742242f4",
+      "items": [
+        {
+          "path": "data/digital",
+          "type": "directory"
+        },
+        {
+          "path": "data/notes.txt",
+          "type": "file"
+        }
+      ]
+    },
+    "agx_data": {
+      "ref": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": "src/spektrafilm/data/filters",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/data/icc",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/data/license",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/data/luts/spectral_upsampling",
+          "type": "directory"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles",
+          "type": "directory"
+        }
+      ]
+    },
+    "colour_hdr_web": {
+      "ref": "master",
+      "commit": "80dd236bcc42ea7b356f77556b3eb4923cd3dbc2",
+      "items": [
+        {
+          "path": "frobisher_001",
+          "type": "directory"
+        },
+        {
+          "path": "radiance",
+          "type": "directory"
+        },
+        {
+          "path": "unity_001",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        }
+      ]
+    },
+    "redlamp_film_data": {
+      "ref": "c5e28259818552790b950bd815c4387d7e41dee6",
+      "commit": "c5e28259818552790b950bd815c4387d7e41dee6",
+      "items": [
+        {
+          "path": "research/film-data/README.md",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/cinestill-50d.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/cinestill-800t.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/extract.py",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-eterna-vivid-250d.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-pro-400h.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-provia-100f.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-superia-xtra-400.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-velvia-100.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/fuji-velvia-50.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-delta-100.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-delta-3200.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-fp4-plus.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-hp5-plus.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-multigrade-rc.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/ilford-pan-f-plus.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-2383.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-ektachrome-e100.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-ektar-100.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-endura-premier.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-gold-200.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-kodachrome-64.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-portra-160.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-portra-400.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-portra-800.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-t-max-100.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-t-max-400.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-tri-x-400.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-ultramax-400.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-vision3-250d.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-vision3-500t.json",
+          "type": "file"
+        },
+        {
+          "path": "research/film-data/kodak-vision3-50d.json",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_colour_tree": {
+      "ref": "45248cf7e44892c5742e847536a855bc564ac397",
+      "commit": "45248cf7e44892c5742e847536a855bc564ac397",
+      "items": [
+        {
+          "path": "color_transfer_data/linearization_functions",
+          "type": "directory"
+        },
+        {
+          "path": "color_transfer_data/patches",
+          "type": "directory"
+        },
+        {
+          "path": "color_transfer_data/transfer_functions",
+          "type": "directory"
+        }
+      ]
+    },
+    "iphone_to_film_web": {
+      "ref": "main",
+      "commit": "32563a3a0d7f484f2dd12518fb79490dff3a1b05",
+      "items": [
+        {
+          "path": "core",
+          "type": "directory"
+        },
+        {
+          "path": "samples",
+          "type": "directory"
+        },
+        {
+          "path": "web",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "CLAUDE.md",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        },
+        {
+          "path": "film.spec",
+          "type": "file"
+        },
+        {
+          "path": "film_emulation_research.md",
+          "type": "file"
+        },
+        {
+          "path": "film_process.py",
+          "type": "file"
+        },
+        {
+          "path": "launcher.py",
+          "type": "file"
+        },
+        {
+          "path": "pyi_rthook_cv2.py",
+          "type": "file"
+        },
+        {
+          "path": "requirements.txt",
+          "type": "file"
+        }
+      ]
+    },
+    "epfl_dataset_tree": {
+      "ref": "45248cf7e44892c5742e847536a855bc564ac397",
+      "commit": "45248cf7e44892c5742e847536a855bc564ac397",
+      "items": [
+        {
+          "path": "dataset/digital",
+          "type": "directory"
+        },
+        {
+          "path": "dataset/film",
+          "type": "directory"
+        }
+      ]
+    },
+    "epfl_dataset_digital": {
+      "ref": "45248cf7e44892c5742e847536a855bc564ac397",
+      "commit": "45248cf7e44892c5742e847536a855bc564ac397",
+      "items": [
+        {
+          "path": "dataset/digital/.gitignore",
+          "type": "file"
+        }
+      ]
+    },
+    "lumiere_web": {
+      "ref": "master",
+      "commit": "5819ecdb67b6b524b26aa00e9f282973a99978b8",
+      "items": [
+        {
+          "path": ".cargo",
+          "type": "directory"
+        },
+        {
+          "path": ".github/workflows",
+          "type": "directory"
+        },
+        {
+          "path": "crates",
+          "type": "directory"
+        },
+        {
+          "path": "docs",
+          "type": "directory"
+        },
+        {
+          "path": "samples",
+          "type": "directory"
+        },
+        {
+          "path": "site-src",
+          "type": "directory"
+        },
+        {
+          "path": "third_party/rawler",
+          "type": "directory"
+        },
+        {
+          "path": "tools",
+          "type": "directory"
+        },
+        {
+          "path": "web",
+          "type": "directory"
+        },
+        {
+          "path": ".gitignore",
+          "type": "file"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "type": "file"
+        },
+        {
+          "path": "Cargo.lock",
+          "type": "file"
+        },
+        {
+          "path": "Cargo.toml",
+          "type": "file"
+        },
+        {
+          "path": "LICENSE",
+          "type": "file"
+        },
+        {
+          "path": "NOTICE.md",
+          "type": "file"
+        },
+        {
+          "path": "README.md",
+          "type": "file"
+        }
+      ]
+    },
+    "colour_hdr_frobisher": {
+      "ref": "80dd236bcc42ea7b356f77556b3eb4923cd3dbc2",
+      "commit": "80dd236bcc42ea7b356f77556b3eb4923cd3dbc2",
+      "items": [
+        {
+          "path": "frobisher_001/IMG_2598.CR2",
+          "type": "file"
+        },
+        {
+          "path": "frobisher_001/IMG_2599.CR2",
+          "type": "file"
+        },
+        {
+          "path": "frobisher_001/IMG_2600.CR2",
+          "type": "file"
+        },
+        {
+          "path": "frobisher_001/IMG_2601.CR2",
+          "type": "file"
+        },
+        {
+          "path": "frobisher_001/IMG_2602.CR2",
+          "type": "file"
+        }
+      ]
+    },
+    "agx_profile_files": {
+      "ref": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "commit": "3bb2c2d2801ff68b92019cf1dbcbb133d60832bc",
+      "items": [
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_c200.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_crystal_archive_typeii.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_pro_400h.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_provia_100f.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_velvia_100.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/fujifilm_xtra_400.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_2383.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_2393.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_ektachrome_100.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_ektacolor_edge.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_ektar_100.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_endura_premier.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_gold_200.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_kodachrome_64.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_160.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_400.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_800.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_800_push1.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_800_push2.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_portra_endura.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_supra_endura.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_ultra_endura.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_ultramax_400.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_verita_200d.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_vision3_200t.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_vision3_250d.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_vision3_500t.json",
+          "type": "file"
+        },
+        {
+          "path": "src/spektrafilm/data/profiles/kodak_vision3_50d.json",
+          "type": "file"
+        }
+      ]
+    }
+  },
+  "requests": [
+    {
+      "id": "epfl_repo",
+      "url": "https://api.github.com/repos/cs-413-cinestill/800t-emulation",
+      "checked_utc": "2026-10-20T17:17:54.617706+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_tree",
+      "url": "https://api.github.com/repos/cs-413-cinestill/800t-emulation/git/trees/main?recursive=1",
+      "checked_utc": "2026-10-20T17:17:54.621336+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_branches",
+      "url": "https://api.github.com/repos/cs-413-cinestill/800t-emulation/branches?per_page=100",
+      "checked_utc": "2026-10-20T17:17:54.623461+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_releases",
+      "url": "https://api.github.com/repos/cs-413-cinestill/800t-emulation/releases?per_page=100",
+      "checked_utc": "2026-10-20T17:17:54.648825+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_issues",
+      "url": "https://api.github.com/repos/cs-413-cinestill/800t-emulation/issues?state=all&per_page=100",
+      "checked_utc": "2026-10-20T17:17:55.130279+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_drive",
+      "url": "https://drive.google.com/drive/folders/1o8s59JwpYBfTTskVF3c7DCLGVQAuGsFa",
+      "checked_utc": "2026-10-20T17:17:55.131653+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "sillystill_repo",
+      "url": "https://api.github.com/repos/mikasenghaas/sillystill",
+      "checked_utc": "2026-10-20T17:17:55.132433+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "cinestill_faq",
+      "url": "https://cinestillfilm.com/pages/frequently-asked-questions",
+      "checked_utc": "2026-10-20T17:17:55.154362+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "cinestill_faq_alt",
+      "url": "https://cinestill.film/pages/frequently-asked-questions",
+      "checked_utc": "2026-10-20T17:17:55.158260+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "cinestill_product",
+      "url": "https://cinestillfilm.com/products/800tungsten-c41-36exp-35mm-high-speed-color-negative-film",
+      "checked_utc": "2026-10-20T17:17:55.164472+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "kodak_5219",
+      "url": "https://www.kodak.com/content/products-brochures/motion-picture/KODAK-VISION3-5219-7219-technical-information.pdf",
+      "checked_utc": "2026-10-20T17:17:55.171769+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "kodak_ahu",
+      "url": "https://www.kodak.com/content/pdfs/motion/AHU-talking-points.pdf",
+      "checked_utc": "2026-10-20T17:17:55.175704+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "github_material_search",
+      "url": "https://github.com/search?q=cinestill+sensitometry&type=repositories",
+      "checked_utc": "2026-10-20T17:17:55.180009+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+sensitometry&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 175592,
+      "truncated": false,
+      "sha256": "11292559f7538d0314e9dbb6d5b396e03e08945314e08e831aafc41bb1025d33",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/github_material_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "github_hdr_search",
+      "url": "https://github.com/search?q=HDR+RAW+flare&type=repositories",
+      "checked_utc": "2026-10-20T17:17:55.184618+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=HDR+RAW+flare&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 175437,
+      "truncated": false,
+      "sha256": "86dec1fa18246722d346b630ba63fc5d7b62435d403753caf5ae43f99044c787",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/github_hdr_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_web",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation",
+      "checked_utc": "2026-10-20T17:18:26.969434+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 263550,
+      "truncated": false,
+      "sha256": "8fe5f22bde87d8f2044e16888a93e9c751f1de68996f03014049652b90c1948e",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_branches_web",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/branches/all",
+      "checked_utc": "2026-10-20T17:18:26.971085+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/branches/all",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 193141,
+      "truncated": false,
+      "sha256": "b3ac6b7346e71eee29f016e04cb8c731c0601d0cba550d17b2e57db6b82beba1",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_branches_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_releases_web",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/releases",
+      "checked_utc": "2026-10-20T17:18:26.971722+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/releases",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 174636,
+      "truncated": false,
+      "sha256": "af8e3ad8c533b986e283f80ddd84b2eaad8e984320216ee4759be75fe748f2d1",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_releases_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_issues_web",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/issues?q=is%3Aissue",
+      "checked_utc": "2026-10-20T17:18:26.973081+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/issues?q=is%3Aissue",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 264644,
+      "truncated": false,
+      "sha256": "6c074e54d90f8e44ac6a0245f61de40943c4516669e1f3026d77f7a3baa6a93f",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_issues_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "sillystill_web",
+      "url": "https://github.com/mikasenghaas/sillystill",
+      "checked_utc": "2026-10-20T17:18:27.857602+00:00",
+      "status": 200,
+      "final_url": "https://github.com/mikasenghaas/sillystill",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 291442,
+      "truncated": false,
+      "sha256": "c08648efe2868be56e670c90b5a15b59c18be3110d418108faa06fb503af9823",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/sillystill_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "github_800t_material_search",
+      "url": "https://github.com/search?q=%22800T%22+%28density+OR+sensitometry+OR+spectral%29&type=repositories",
+      "checked_utc": "2026-10-20T17:18:27.861797+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=%22800T%22+%28density+OR+sensitometry+OR+spectral%29&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 259768,
+      "truncated": false,
+      "sha256": "5530b42f288fd49b7952ca9bb622adc6f97e5dcd7e0e73137d88e715b91a51c8",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/github_800t_material_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "github_film_sensitometry_search",
+      "url": "https://github.com/search?q=film+sensitometry&type=repositories",
+      "checked_utc": "2026-10-20T17:18:27.881277+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=film+sensitometry&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 209886,
+      "truncated": false,
+      "sha256": "d2919b62e8d14ef305427651903416bdda2879fe86d98b578d2323b8cdd83828",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/github_film_sensitometry_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "github_raw_hdr_search",
+      "url": "https://github.com/search?q=RAW+HDR+dataset&type=repositories",
+      "checked_utc": "2026-10-20T17:18:28.031198+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=RAW+HDR+dataset&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 206085,
+      "truncated": false,
+      "sha256": "b740723cafb59708b6532f3035e9cdb94c60c2fc969ee943f22fdba16f6639aa",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/github_raw_hdr_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "flare7k_web",
+      "url": "https://github.com/ykdai/Flare7K",
+      "checked_utc": "2026-10-20T17:18:28.964822+00:00",
+      "status": 200,
+      "final_url": "https://github.com/ykdai/Flare7K",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 343883,
+      "truncated": false,
+      "sha256": "cc9f67a8e0b22a3bca8c35708c756261045884ca90978287491a640f1efd8fb7",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/flare7k_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "agx_web",
+      "url": "https://github.com/andreavolpato/agx-emulsion",
+      "checked_utc": "2026-10-20T17:18:28.990184+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 381907,
+      "truncated": false,
+      "sha256": "a463fa9086d0fc0b6348f3bc74a94c44448584dcf1e19812344f7e58a1b74430",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_dataset_tree",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset",
+      "checked_utc": "2026-10-20T17:19:10.982467+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 209164,
+      "truncated": false,
+      "sha256": "14d59cb5cc9ca15f47819d5dca8182fa2280029639c2a647b69f6dd7460ea8f3",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_dataset_tree.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_colour_tree",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/color_transfer_data",
+      "checked_utc": "2026-10-20T17:19:10.983691+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/color_transfer_data",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 212199,
+      "truncated": false,
+      "sha256": "06ad8f6a3a1fa0c53aa00af95e7bc2b5b3e5d9428a79e1b27d2f1e459891355b",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_colour_tree.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_grain_branch",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/grain-detection-pycuda-test",
+      "checked_utc": "2026-10-20T17:19:10.984336+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/grain-detection-pycuda-test",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 247124,
+      "truncated": false,
+      "sha256": "497ee2494c4cfb45e545e74cfc34725a5d164c8b827930ec97189f5a0c2db11c",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_grain_branch.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_history",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/commits/main/",
+      "checked_utc": "2026-10-20T17:19:10.985065+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/commits/main/",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 464039,
+      "truncated": false,
+      "sha256": "9614d5fca490e4deac53c565d3d8633f6e58e42aa943a419671d11727d4eef2d",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_history.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "agx_src_tree",
+      "url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src",
+      "checked_utc": "2026-10-20T17:19:11.646378+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 211468,
+      "truncated": false,
+      "sha256": "c973148f386bdcf6e1a2cba7ea73df97ff2fd272c35a3366bd3489f456099efa",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_src_tree.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "colour_hdr_web",
+      "url": "https://github.com/colour-science/colour-hdri-examples-datasets",
+      "checked_utc": "2026-10-20T17:19:11.670396+00:00",
+      "status": 200,
+      "final_url": "https://github.com/colour-science/colour-hdri-examples-datasets",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 238096,
+      "truncated": false,
+      "sha256": "4b6c4e7765066977fbafc534d629744cf0f3382d9190d41490b773edfb6b5755",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/colour_hdr_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_cs_density",
+      "url": "https://github.com/search?q=cinestill+densitometry+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:19:11.822365+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+densitometry+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 224243,
+      "truncated": false,
+      "sha256": "f427675ab65a9d8369a53a0ea6e7fe1dc161936c2617a9701867f3606060a371",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/search_cs_density.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_cs_spectral",
+      "url": "https://github.com/search?q=cinestill+spectral+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:19:11.932657+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+spectral+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 259946,
+      "truncated": false,
+      "sha256": "ec1c5696a590538214b13e3c9c45c5108c2c36719c5e2e0440f4b4923ab6e0a3",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/search_cs_spectral.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_cs_non_neutral",
+      "url": "https://github.com/search?q=cinestill+non-neutral+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:19:12.183575+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+non-neutral+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 204998,
+      "truncated": false,
+      "sha256": "a33d02d8a505e0b65074b7938d2a0b156b5a36ecf6a9d81115f01c6c4c3721a1",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/search_cs_non_neutral.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_sensitometry800",
+      "url": "https://www.google.com/search?q=CineStill+800T+sensitometry+spectral+density+measurements",
+      "checked_utc": "2026-10-20T17:19:12.206718+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "search_sensitometry800_bing",
+      "url": "https://www.bing.com/search?q=CineStill+800T+sensitometry+spectral+density+measurements",
+      "checked_utc": "2026-10-20T17:19:12.216680+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "search_zenodo",
+      "url": "https://zenodo.org/api/records?q=CineStill&size=10",
+      "checked_utc": "2026-10-20T17:19:12.221973+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "search_datacite",
+      "url": "https://api.datacite.org/dois?query=CineStill&page%5Bsize%5D=10",
+      "checked_utc": "2026-10-20T17:19:12.228822+00:00",
+      "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+      "access_class": "blocked_at_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "id": "epfl_dataset_film",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset/film",
+      "checked_utc": "2026-10-20T17:20:02.611234+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset/film",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 208201,
+      "truncated": false,
+      "sha256": "9fb6087e62102ff3791ae20e42d6f937b54c4aa77836bc6ab0633529f51af596",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_dataset_film.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_dataset_digital",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset/digital",
+      "checked_utc": "2026-10-20T17:20:02.612140+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/45248cf7e44892c5742e847536a855bc564ac397/dataset/digital",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 208287,
+      "truncated": false,
+      "sha256": "f20b18922364c784647ea32d1cbff429c05f7fcacbd58e7409d72d4ef75436c6",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_dataset_digital.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_grain_data",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/dad00771b0401f116fbb119084626f13742242b3e/data",
+      "checked_utc": "2026-10-20T17:20:02.613039+00:00",
+      "error": "<HTTPError 404: 'Not Found'>",
+      "http_status": 404,
+      "access_class": "invalid_request_wrong_commit",
+      "superseded_by": "epfl_grain_data_corrected"
+    },
+    {
+      "id": "agx_package",
+      "url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm",
+      "checked_utc": "2026-10-20T17:20:02.613602+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 256985,
+      "truncated": false,
+      "sha256": "037e184e3871a4af236f32b5b3da37442bcea0e30da83fba363451713494b476",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_package.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "colour_hdr_frobisher",
+      "url": "https://github.com/colour-science/colour-hdri-examples-datasets/tree/80dd236bcc42ea7b356f77556b3eb4923cd3dbc2/frobisher_001",
+      "checked_utc": "2026-10-20T17:20:03.143501+00:00",
+      "status": 200,
+      "final_url": "https://github.com/colour-science/colour-hdri-examples-datasets/tree/80dd236bcc42ea7b356f77556b3eb4923cd3dbc2/frobisher_001",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 219614,
+      "truncated": false,
+      "sha256": "ca00ed3abc9a6f1ceaf9479c778578fd22de68bef6d40ef0e8771fdede4679dd",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/colour_hdr_frobisher.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "colour_hdr_unity",
+      "url": "https://github.com/colour-science/colour-hdri-examples-datasets/tree/80dd236bcc42ea7b356f77556b3eb4923cd3dbc2/unity_001",
+      "checked_utc": "2026-10-20T17:20:03.284645+00:00",
+      "status": 200,
+      "final_url": "https://github.com/colour-science/colour-hdri-examples-datasets/tree/80dd236bcc42ea7b356f77556b3eb4923cd3dbc2/unity_001",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 209201,
+      "truncated": false,
+      "sha256": "f7b25bcede3b37b7ad88abd2dbf65f4d9f5e23fe7cc06de5098a2068a1b54cc1",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/colour_hdr_unity.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_cs_measurements",
+      "url": "https://github.com/search?q=cinestill+measurements+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:20:03.318585+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+measurements+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 261710,
+      "truncated": false,
+      "sha256": "86b0f2bb7d4216c26c75d77cc5cf5d188f7aa939a7e70b6bda81a0b46241d872",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/search_cs_measurements.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "search_cs_density_data",
+      "url": "https://github.com/search?q=cinestill+%22density%22+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:20:03.342019+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+%22density%22+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 265204,
+      "truncated": false,
+      "sha256": "e6ab887895beca9c79e885569e6e0787beeee123179240c487165a64db0bf54f",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/search_cs_density_data.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_org",
+      "url": "https://github.com/orgs/cs-413-cinestill/repositories",
+      "checked_utc": "2026-10-20T17:20:03.776638+00:00",
+      "status": 200,
+      "final_url": "https://github.com/orgs/cs-413-cinestill/repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 200533,
+      "truncated": false,
+      "sha256": "be1b32afb0ac6aa410a8b412384ef771dc82853dc07878adcd3d94396f733028",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_org.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "cs_datasheet_search",
+      "url": "https://github.com/search?q=cinestill+%22datasheet%22+in%3Areadme&type=repositories",
+      "checked_utc": "2026-10-20T17:20:03.920081+00:00",
+      "status": 200,
+      "final_url": "https://github.com/search?q=cinestill+%22datasheet%22+in%3Areadme&type=repositories",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 257824,
+      "truncated": false,
+      "sha256": "2b58f94142790133c6937e9af9ad87ac5843ac65a3352a2856cef5dd2b29046b",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/cs_datasheet_search.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_grain_data_corrected",
+      "url": "https://github.com/cs-413-cinestill/800t-emulation/tree/dad00771b0401f116fbb119084626f13742242f4/data",
+      "checked_utc": "2026-10-20T17:20:29.134636+00:00",
+      "status": 200,
+      "final_url": "https://github.com/cs-413-cinestill/800t-emulation/tree/dad00771b0401f116fbb119084626f13742242f4/data",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 208975,
+      "truncated": false,
+      "sha256": "ea0ffc1e605b558a36853f5e53e05bf1ed702646faf86290441dbcc11f5457c4",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_grain_data_corrected.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "agx_data",
+      "url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/data",
+      "checked_utc": "2026-10-20T17:20:29.135502+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/data",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 218916,
+      "truncated": false,
+      "sha256": "9bdf25c0905811969e73646d7c441e49d369d88418ea8eb9438660725ee53749",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_data.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "agx_profiles",
+      "url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/profiles",
+      "checked_utc": "2026-10-20T17:20:29.136100+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/profiles",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 212326,
+      "truncated": false,
+      "sha256": "1b9a9d9e187c785233981cb493a7b4d177cb7847562636bcea791cae60362356",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_profiles.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "hdr_original_docs",
+      "url": "https://raw.githubusercontent.com/colour-science/colour-hdri/develop/README.rst",
+      "checked_utc": "2026-10-20T17:20:29.136679+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/colour-science/colour-hdri/develop/README.rst",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 6263,
+      "truncated": false,
+      "sha256": "0efbc07882a162c8f0ff532e7742e55c48bc91863956312d4329ca153aea937b",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/hdr_original_docs.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "redlamp_web",
+      "url": "https://github.com/pdcgomes/redlamp",
+      "checked_utc": "2026-10-20T17:20:29.519001+00:00",
+      "status": 200,
+      "final_url": "https://github.com/pdcgomes/redlamp",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 1070631,
+      "truncated": false,
+      "sha256": "7746e73edfd08a6f32122e75b9086bcee9c8b491c4d417677b597d638940f1f4",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/redlamp_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "iphone_to_film_web",
+      "url": "https://github.com/mossein/iphone-to-film",
+      "checked_utc": "2026-10-20T17:20:29.815401+00:00",
+      "status": 200,
+      "final_url": "https://github.com/mossein/iphone-to-film",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 371845,
+      "truncated": false,
+      "sha256": "82760c9062dfd7b6a317c310e86092c2799c54b344796b5fe9105062e78db19e",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/iphone_to_film_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "lumiere_web",
+      "url": "https://github.com/DatanoiseTV/lumiere",
+      "checked_utc": "2026-10-20T17:20:29.823218+00:00",
+      "status": 200,
+      "final_url": "https://github.com/DatanoiseTV/lumiere",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 318098,
+      "truncated": false,
+      "sha256": "62066a047b1bcce2e65152ef778c1a5f7eb2f9032b81eb4017c85cb9974ad43f",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/lumiere_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "historical_sensitometry_web",
+      "url": "https://github.com/RafalLukawiecki/film_tests",
+      "checked_utc": "2026-10-20T17:20:29.861721+00:00",
+      "status": 200,
+      "final_url": "https://github.com/RafalLukawiecki/film_tests",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 282188,
+      "truncated": false,
+      "sha256": "5b6298064c40132c8566fe20068d08073296c988a1f20d63672670f84a5f4020",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/historical_sensitometry_web.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "agx_profile_files",
+      "url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/data/profiles",
+      "checked_utc": "2026-10-20T17:21:07.620292+00:00",
+      "status": 200,
+      "final_url": "https://github.com/andreavolpato/spektrafilm/tree/3bb2c2d2801ff68b92019cf1dbcbb133d60832bc/src/spektrafilm/data/profiles",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 287104,
+      "truncated": false,
+      "sha256": "ff47adabdc30a0b33828b3b569c3288ac01146454e7a10bee9f3ff660631ef47",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/agx_profile_files.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "redlamp_film_data",
+      "url": "https://github.com/pdcgomes/redlamp/tree/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data",
+      "checked_utc": "2026-10-20T17:21:07.623029+00:00",
+      "status": 200,
+      "final_url": "https://github.com/pdcgomes/redlamp/tree/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 390902,
+      "truncated": false,
+      "sha256": "60dfe6336eebdb5b5b0ee675dfec21b70579a41c4d8e5a6e67d32df3edd1926a",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/redlamp_film_data.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "lumiere_product",
+      "url": "https://raw.githubusercontent.com/DatanoiseTV/lumiere/5819ecdb67b6b524b26aa00e9f282973a99978b8/docs/product.md",
+      "checked_utc": "2026-10-20T17:21:07.625707+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/DatanoiseTV/lumiere/5819ecdb67b6b524b26aa00e9f282973a99978b8/docs/product.md",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 9934,
+      "truncated": false,
+      "sha256": "529a373da6646f58bf42e427ac9f8b8045b0f5959f779ca43dfae1fb4779b673",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/lumiere_product.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_grain_notes",
+      "url": "https://raw.githubusercontent.com/cs-413-cinestill/800t-emulation/dad00771b0401f116fbb119084626f13742242f4/data/notes.txt",
+      "checked_utc": "2026-10-20T17:21:07.626667+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/cs-413-cinestill/800t-emulation/dad00771b0401f116fbb119084626f13742242f4/data/notes.txt",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 74,
+      "truncated": false,
+      "sha256": "2e38c1f9e818963a28283adfe1f0e6fa6cb733da8bc0663b36d01ea704932d12",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_grain_notes.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "epfl_main_readme",
+      "url": "https://raw.githubusercontent.com/cs-413-cinestill/800t-emulation/45248cf7e44892c5742e847536a855bc564ac397/README.md",
+      "checked_utc": "2026-10-20T17:21:07.993284+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/cs-413-cinestill/800t-emulation/45248cf7e44892c5742e847536a855bc564ac397/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 959,
+      "truncated": false,
+      "sha256": "02600bd6d1a131971406edad7977015aa2376c5eb060c520d88d8a294daa66c1",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/epfl_main_readme.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "historical_delta_csv",
+      "url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/delta100.ddx1.4.tray.2017.csv",
+      "checked_utc": "2026-10-20T17:21:08.023387+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/delta100.ddx1.4.tray.2017.csv",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 1449,
+      "truncated": false,
+      "sha256": "4001e56bd334f403ee3cedc556f041360b8089834843af2ec58807811db0d1e3",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/historical_delta_csv.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "historical_delta_documentation",
+      "url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/Delta%20100%20DDX%201%2B4%20Tray%20Continous%20AR%202017.Rmd",
+      "checked_utc": "2026-10-20T17:21:08.309191+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/Delta%20100%20DDX%201%2B4%20Tray%20Continous%20AR%202017.Rmd",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 6642,
+      "truncated": false,
+      "sha256": "fff0b1e2a1ec64d1c14c44bcc0f927b7b29fd67708556533aeabbb06b0e278b0",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/historical_delta_documentation.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "redlamp_800t_json",
+      "url": "https://raw.githubusercontent.com/pdcgomes/redlamp/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data/cinestill-800t.json",
+      "checked_utc": "2026-10-20T17:21:53.167513+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/pdcgomes/redlamp/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data/cinestill-800t.json",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 13385,
+      "truncated": false,
+      "sha256": "b7013bc54f9b26ff0c40c40f2f4a6da9997e2180c8cd83a9e4d22f2fcb581fd0",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/redlamp_800t_json.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "redlamp_5219_json",
+      "url": "https://raw.githubusercontent.com/pdcgomes/redlamp/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data/kodak-vision3-500t.json",
+      "checked_utc": "2026-10-20T17:21:53.168539+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/pdcgomes/redlamp/c5e28259818552790b950bd815c4387d7e41dee6/research/film-data/kodak-vision3-500t.json",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 12273,
+      "truncated": false,
+      "sha256": "4e1ab60dcf6772fcd2ae6370c506b576f7df72384088e379bc105baf0a26249a",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/redlamp_5219_json.body",
+      "access_class": "retrieved"
+    },
+    {
+      "id": "historical_license",
+      "url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/LICENSE",
+      "checked_utc": "2026-10-20T17:21:53.169122+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/RafalLukawiecki/film_tests/bfc4ddf54bb770d3430120a12f0395cc00aa221e/LICENSE",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 18046,
+      "truncated": false,
+      "sha256": "db296f2f7f35bca3a174efb0eb392b3b17bd94b341851429a3dff411b1c2fc73",
+      "snapshot": "/workspace/filmlab-audit/independent-evidence/historical_license.body",
+      "access_class": "retrieved"
+    }
+  ],
+  "caution": "Snapshots are outside the checkout and ephemeral. This versioned record preserves URLs, retrieval results, byte counts, hashes, selected public listings and local header metadata. Invalid first grain-branch URL is an audit request-construction mistake, corrected successfully; not evidence of a missing source."
+}

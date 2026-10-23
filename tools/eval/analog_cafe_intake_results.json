@@ -1,0 +1,190 @@
+{
+  "author": "Dmitri Tcherbadji / Analog.Cafe",
+  "acquisition": "User-uploaded TIFF plus LICENSE; no site login performed by agent",
+  "intake": {
+    "file_name": "SAMPLE-35mm-scan-primefilm-xa-cinestill800t-Analog.Cafe.tif",
+    "bytes": 21082840,
+    "sha256": "52d4045a89d4324b984ae8a92ab9405e99c57ce1c4e9e224a1f6e2835dd27129",
+    "linear_encoding_verified": false,
+    "negative_polarity_verified": false,
+    "density_analysis_ready": false,
+    "limits": [
+      "TIFF metadata cannot verify scanner linearity, disabled corrections, dark offset or film identity.",
+      "Counts at code endpoints are observations, not proof of physical scanner/sensor saturation.",
+      "DPI does not establish optical resolution or measured negative-plane spatial calibration."
+    ],
+    "page_count": 1,
+    "first_page_shape": [
+      1332,
+      2000,
+      3
+    ],
+    "dtype": "uint16",
+    "metadata": {
+      "BitsPerSample": [
+        16,
+        16,
+        16
+      ],
+      "SamplesPerPixel": 3,
+      "PhotometricInterpretation": 2,
+      "PlanarConfiguration": 1,
+      "Compression": 5,
+      "Make": "PIE",
+      "Model": "PrimeFilm XAs",
+      "Software": "Adobe Photoshop 22.3 (Macintosh)",
+      "XResolution": [
+        3000000,
+        10000
+      ],
+      "YResolution": [
+        3000000,
+        10000
+      ],
+      "ResolutionUnit": 2,
+      "Orientation": 1,
+      "DateTime": "2021:05:30 09:30:42",
+      "InterColorProfile": {
+        "present": true,
+        "bytes": 3144,
+        "sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "declared_profile": {
+          "description": "sRGB IEC61966-2.1",
+          "declared_transfer_curves": {
+            "rTRC": {
+              "type": "curv",
+              "entries": 1024,
+              "value_at_encoded_half": 0.21404592965590905
+            },
+            "gTRC": {
+              "type": "curv",
+              "entries": 1024,
+              "value_at_encoded_half": 0.21404592965590905
+            },
+            "bTRC": {
+              "type": "curv",
+              "entries": 1024,
+              "value_at_encoded_half": 0.21404592965590905
+            }
+          },
+          "actual_scan_encoding_verified": false
+        }
+      }
+    },
+    "single_page_RGB_uint16_container": true,
+    "raw_code_statistics": [
+      {
+        "channel": "R",
+        "min": 17242.0,
+        "max": 65535.0,
+        "percentile_0_1_50_99_100": [
+          17242.0,
+          25198.0,
+          43379.0,
+          65275.0,
+          65535.0
+        ],
+        "code_min_fraction": 0.0,
+        "code_max_fraction": 0.002733858858858859,
+        "distinct_codes": 22153
+      },
+      {
+        "channel": "G",
+        "min": 9804.0,
+        "max": 55525.0,
+        "percentile_0_1_50_99_100": [
+          9804.0,
+          15502.0,
+          29876.0,
+          50353.0,
+          55525.0
+        ],
+        "code_min_fraction": 0.0,
+        "code_max_fraction": 0.0,
+        "distinct_codes": 20688
+      },
+      {
+        "channel": "B",
+        "min": 5646.0,
+        "max": 35899.0,
+        "percentile_0_1_50_99_100": [
+          5646.0,
+          9282.0,
+          18474.0,
+          28964.0,
+          35899.0
+        ],
+        "code_min_fraction": 0.0,
+        "code_max_fraction": 0.0,
+        "distinct_codes": 12854
+      }
+    ]
+  },
+  "assessment": {
+    "file_sha256": "52d4045a89d4324b984ae8a92ab9405e99c57ce1c4e9e224a1f6e2835dd27129",
+    "license_sha256": "778cc0dc09ea509229ebe987d3ea6a3a3fbbaa0bedbf52bbbd5257d6c4e08ce9",
+    "profile_description": "sRGB IEC61966-2.1",
+    "profile_TRC": {
+      "rTRC": {
+        "type": "curv",
+        "entries": 1024,
+        "declared_value_at_encoded_half": 0.21404592965590905
+      },
+      "gTRC": {
+        "type": "curv",
+        "entries": 1024,
+        "declared_value_at_encoded_half": 0.21404592965590905
+      },
+      "bTRC": {
+        "type": "curv",
+        "entries": 1024,
+        "declared_value_at_encoded_half": 0.21404592965590905
+      }
+    },
+    "observed_red_code_ceiling_pixels": 7283,
+    "observed_red_code_ceiling_fraction": 0.002733858858858859,
+    "largest_red_code_ceiling_components": [
+      {
+        "pixels": 5,
+        "bbox_xyxy": [
+          1878,
+          1329,
+          1881,
+          1332
+        ]
+      },
+      {
+        "pixels": 5,
+        "bbox_xyxy": [
+          1836,
+          963,
+          1840,
+          965
+        ]
+      },
+      {
+        "pixels": 5,
+        "bbox_xyxy": [
+          313,
+          1323,
+          316,
+          1326
+        ]
+      }
+    ],
+    "scene_assessment": "Kitchen still life: food, plate, countertop and appliances. No suitable isolated high-brightness lamp core and surrounding transition identified. Small appliance indicator is not independently measured or validated as a point-source ROI.",
+    "negative_polarity": "Visually supported by original coloured negative and a private diagnostic inversion; no ground-truth same-negative positive supplied.",
+    "encoding_assessment": "Declared profile has nonlinear sRGB TRCs. Cannot assume stored code values are linear scanner transmission; profile assignment alone does not prove actual encoding or recover native sensor channels.",
+    "density_range_assessment": "Physical usable density range remains unmeasured without verified encoding, dark/flat and noise measurements. Code-value distributions only.",
+    "spatial_scale_assessment": "TIFF tags are 300 DPI (document resolution), not the reported about-1400 DPI negative-plane sampling. Full-frame/crop physical dimensions unknown; no exact micrometre calibration inferred.",
+    "decision": "Private negative-reading/metadata/scan-conversion fixture only. Not halation-kernel, C41 sensitometry, model-training or colour-calibration data. No redistributed original or derivative image."
+  },
+  "license_scope": "Local image-editing practice and inspection only; no image redistribution or ML training. No original or derivative pixels committed.",
+  "validation": {
+    "intake_tests_passed": 4,
+    "pip_check": "PASS",
+    "imagecodecs_installed": "2026.10.10; --no-deps",
+    "production_files_verified": 59,
+    "production_changed_files": []
+  }
+}

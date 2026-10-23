@@ -1,0 +1,188 @@
+{
+  "audit_date_utc": "2026-10-20T11:29:07.240792+00:00",
+  "scope": "Original-source acquisition and verification; no material coefficients imported, no RAW calculations",
+  "verified_external_documents_downloaded": 0,
+  "retrieval_attempts": [
+    {
+      "name": "doi_1968",
+      "requested_url": "https://doi.org/10.1364/JOSA.58.001245",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "doi_1965",
+      "requested_url": "https://doi.org/10.1364/JOSA.55.001261",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "crossref_1968",
+      "requested_url": "https://api.crossref.org/works/10.1364/JOSA.58.001245",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "crossref_1965",
+      "requested_url": "https://api.crossref.org/works/10.1364/JOSA.55.001261",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "optica_1968",
+      "requested_url": "https://opg.optica.org/josa/abstract.cfm?uri=josa-58-9-1245",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "optica_1965",
+      "requested_url": "https://opg.optica.org/josa/abstract.cfm?uri=josa-55-10-1261",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "openalex_1968",
+      "requested_url": "https://api.openalex.org/works/https://doi.org/10.1364/JOSA.58.001245",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "openalex_1965",
+      "requested_url": "https://api.openalex.org/works/https://doi.org/10.1364/JOSA.55.001261",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "semantic_1968",
+      "requested_url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1364/JOSA.58.001245?fields=title,authors,year,openAccessPdf",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "ads_1968",
+      "requested_url": "https://ui.adsabs.harvard.edu/abs/1968JOSA...58.1245W/abstract",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "ads_1965",
+      "requested_url": "https://ui.adsabs.harvard.edu/abs/1965JOSA...55.1261D/abstract",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    },
+    {
+      "name": "dlf_article",
+      "requested_url": "https://dielichtfaenger.com/blog/kodak-vision3-500t-im-test",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "outcome": "blocked_at_https_proxy_connect",
+      "origin_http_status": null
+    }
+  ],
+  "attachment": {
+    "path": "/workspace/attachments/9bde617f-0155-471d-902b-ad98cae36e73/FilmLab_800T_halation_research_and_execution_2026-10-20.md",
+    "sha256": "764f70ac981563a8c86dc964bd7144ec63d92ab12dc19b69eda27863707a24dd",
+    "evidence_level": "user-provided research lead; not independently retrieved journal text"
+  },
+  "papers": [
+    {
+      "doi": "10.1364/JOSA.58.001245",
+      "identity_claimed_by_attachment": {
+        "authors": [
+          "Wolfe",
+          "Marchand",
+          "DePalma"
+        ],
+        "year": 1968
+      },
+      "independently_verified_title": null,
+      "independently_verified_authors": null,
+      "full_text_obtained": false,
+      "table_I_obtained": false,
+      "claimed_table_fields_not_verified": [
+        "K (mm^-1)",
+        "S (mm^-1)",
+        "layer thickness, reportedly 3.0–33 micrometres"
+      ],
+      "paper_specific_coefficient_definitions_verified": false,
+      "numeric_material_data_imported": [],
+      "usable_now_for_historical_replication": false
+    },
+    {
+      "doi": "10.1364/JOSA.55.001261",
+      "identity_claimed_by_attachment": {
+        "authors": [
+          "De Belder et al."
+        ],
+        "year": 1965
+      },
+      "independently_verified_title": null,
+      "independently_verified_authors": null,
+      "full_text_obtained": false,
+      "table_I_obtained": false,
+      "paper_specific_coefficient_definitions_verified": false,
+      "numeric_material_data_imported": [],
+      "usable_now_for_historical_replication": false
+    }
+  ],
+  "DLF": {
+    "source_url_recorded_in_repository": "https://dielichtfaenger.com/blog/kodak-vision3-500t-im-test",
+    "repository_evidence": "tools/eval/chart_500t.py",
+    "repository_file_sha256": "c71f1e4c9e4117d5fa5d03cb612f1d4756d86ef5606b97a8fcf87f197b9a23a6",
+    "source_page_retrieved_this_audit": false,
+    "expected_files": [
+      {
+        "relative_path": "img/dlf_v3500T_500T_Noritsu_Bild_4_NULL.jpg",
+        "exists_in_configured_data_root": false,
+        "download_url_verified": null
+      },
+      {
+        "relative_path": "img/dlf_v3500T_500T_Noritsu_Bild_10_NULL.jpg",
+        "exists_in_configured_data_root": false,
+        "download_url_verified": null
+      },
+      {
+        "relative_path": "ref/dlf_x100v/X100V_02_01_Null.RAF",
+        "exists_in_configured_data_root": false,
+        "download_url_verified": null
+      },
+      {
+        "relative_path": "ref/dlf_x100v/X100V_04_01_Null.RAF",
+        "exists_in_configured_data_root": false,
+        "download_url_verified": null
+      }
+    ],
+    "claims_recorded_in_repository_not_reverified_against_source": [
+      "Vision3 500T, ECN-2, Noritsu HS-1800 flat scan",
+      "Fuji X100V paired RAW",
+      "ColorChecker Passport under ARRI T1 nominal 3200K or Aputure 300X nominal 5600K"
+    ],
+    "spectrum_evidence_from_repository_comments": {
+      "tungsten": "3200K blackbody approximation; measured SPD not provided",
+      "LED": "actual spectrum explicitly unknown; D55 and CIE LED-B4 alternatives"
+    },
+    "restored_this_audit": false,
+    "valid_as_current_800T_C41_Frontier_calibration": false
+  },
+  "coefficient_import_gate": [
+    "Retrieve complete equation definitions and original units for the cited paper",
+    "Retrieve actual table/figure values and uncertainty, wavelength, thickness, emulsion state and boundary/index conditions",
+    "Determine whether K/S denote a two-flux model or microscopic extinction; no automatic mapping to MCML mu_a/mu_s",
+    "Replicate only the paper-defined observable with its own assumptions; mark modern 800T transfer unsupported"
+  ],
+  "possible_next_acquisition_routes_not_executed": [
+    "Original publisher page/PDF from an environment with Optica access",
+    "Institutional library/interlibrary loan using the exact DOI",
+    "Author/institution accepted manuscript after bibliographic identity verified",
+    "User-supplied full PDF or Table I plus all defining equations and experimental conditions"
+  ]
+}

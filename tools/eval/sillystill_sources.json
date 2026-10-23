@@ -1,0 +1,56 @@
+{
+  "source": "https://github.com/mikasenghaas/sillystill",
+  "commit": "b1ebdb971207b403b7126b759c1d30d30954a722",
+  "report": "https://raw.githubusercontent.com/mikasenghaas/sillystill/b1ebdb971207b403b7126b759c1d30d30954a722/report.pdf",
+  "dataset_description": "https://raw.githubusercontent.com/mikasenghaas/sillystill/b1ebdb971207b403b7126b759c1d30d30954a722/report/sections/dataset.tex",
+  "readme": "https://raw.githubusercontent.com/mikasenghaas/sillystill/b1ebdb971207b403b7126b759c1d30d30954a722/README.md",
+  "recovered_sensor_RAW_pairs": 1,
+  "new_independent_holdout_pairs": 0,
+  "scene": "cafe",
+  "film_stock_claim": "CineStill 800T, author report",
+  "digital_metadata": {
+    "camera": "Sony ILCE-7",
+    "date_time_original": "2024:03:20 12:41:10",
+    "exposure_seconds": 0.016666666666666666,
+    "f_number": 8,
+    "iso": 125,
+    "focal_length_mm": 40
+  },
+  "scan_metadata": {
+    "dimensions": [
+      3637,
+      2433
+    ],
+    "profile": "sRGB IEC61966-2.1",
+    "software": "Adobe Photoshop 25.6 (Macintosh)",
+    "modify_time": "2024:04:09 16:24:35",
+    "history": "one Photoshop save with changed=/; edits not identifiable",
+    "scanner_model": "UNKNOWN",
+    "development_process": "UNKNOWN",
+    "film_exposure": "UNKNOWN"
+  },
+  "pairing_evidence": "author-published file names plus visual scene correspondence; independent ORB geometry has 365 inliers",
+  "eligibility": "conditional appearance comparison; not absolute sensitometry, scanner-response calibration, or lamp-halation ground truth",
+  "limitations": [
+    "Previously used in FilmLab research: restored data, not a new holdout",
+    "Sunlight/shadows differ between captures; depth parallax remains",
+    "Full project dataset claims 41 original and 38 processed pairs, but README download links are empty",
+    "Raw in report means preprocessed/unprocessed dataset state; sensor RAW availability must be checked per file",
+    "Author processed film targets use Lab luminance histogram matching and are unsuitable for tone-response validation",
+    "Cannot prove imgs/table_cafe_film.JPG is untouched scanner output"
+  ],
+  "files": [
+    {
+      "path": "pairs/sillystill/table_cafe_digital.ARW",
+      "url": "https://raw.githubusercontent.com/mikasenghaas/sillystill/b1ebdb971207b403b7126b759c1d30d30954a722/imgs/table_cafe_digital.ARW",
+      "sha256": "d1252bc9c2ccda6180e84f73257d1ba7bf40c3ab547e3840abe3d2c245e07b45",
+      "bytes": 24969216
+    },
+    {
+      "path": "pairs/sillystill/table_cafe_film.JPG",
+      "url": "https://raw.githubusercontent.com/mikasenghaas/sillystill/b1ebdb971207b403b7126b759c1d30d30954a722/imgs/table_cafe_film.JPG",
+      "sha256": "41c2b914c51dcad6f13dcbf45e11959bcfeba7dc623b279d88e76ca000e4d358",
+      "bytes": 7510840
+    }
+  ]
+}

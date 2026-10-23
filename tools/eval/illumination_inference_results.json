@@ -1,0 +1,877 @@
+{
+  "scope": "Aggregate bounded input-inference checks without selecting photo-fit parameters.",
+  "controlled": {
+    "scope": "Bounded illumination-inference checks; no target-photo colour fitting.\n\nCompare existing random/nearest member choices and removal of global class\npruning. The latter is a numerical locality candidate, NOT a recovered light\nmeasurement. Controlled CIE-camera spectra remain conditional on stock S.\n",
+    "predeclared_variants": [
+      "original",
+      "nearest_member",
+      "no_global_pruning"
+    ],
+    "charts": [
+      {
+        "light": "D65",
+        "variants": {
+          "original": {
+            "layer_abs_EV_median": [
+              0.41430137506106773,
+              0.046305621958801474,
+              0.12833068719737306
+            ],
+            "layer_abs_EV_max": [
+              1.4649886615608518,
+              0.16452756058862983,
+              1.5050939917173607
+            ],
+            "RG_BG_abs_EV_median": [
+              0.4812649934856995,
+              0.14865416281475397
+            ],
+            "RG_BG_abs_EV_max": [
+              1.5315534377067497,
+              1.5651579822519244
+            ]
+          },
+          "nearest_member": {
+            "layer_abs_EV_median": [
+              0.3100709076721204,
+              0.03549416625894056,
+              0.1524955318727212
+            ],
+            "layer_abs_EV_max": [
+              1.3373109071088238,
+              0.1414695769459811,
+              2.005240314095677
+            ],
+            "RG_BG_abs_EV_median": [
+              0.4055612119042986,
+              0.203387189468003
+            ],
+            "RG_BG_abs_EV_max": [
+              1.4143825519107625,
+              2.0305481837817214
+            ]
+          },
+          "no_global_pruning": {
+            "layer_abs_EV_median": [
+              0.41430137506106773,
+              0.046305621958801474,
+              0.12833068719737306
+            ],
+            "layer_abs_EV_max": [
+              1.4649886615608518,
+              0.16452756058862983,
+              1.5050939917173607
+            ],
+            "RG_BG_abs_EV_median": [
+              0.4812649934856995,
+              0.14865416281475397
+            ],
+            "RG_BG_abs_EV_max": [
+              1.5315534377067497,
+              1.5651579822519244
+            ]
+          }
+        },
+        "pruning": {
+          "baseline_equation_reproduction_max": 0.0,
+          "previously_pruned_classes": [
+            {
+              "class": "hps",
+              "mean_weight": 8.558415756309011e-21,
+              "max_local_weight": 4.815508898444934e-18
+            }
+          ]
+        }
+      },
+      {
+        "light": "BB3200",
+        "variants": {
+          "original": {
+            "layer_abs_EV_median": [
+              0.38326160969238293,
+              0.06541534667392332,
+              0.16482508125787
+            ],
+            "layer_abs_EV_max": [
+              1.3987590147309776,
+              0.14194062653255587,
+              2.246095329817373
+            ],
+            "RG_BG_abs_EV_median": [
+              0.46333380198625984,
+              0.16111540168625904
+            ],
+            "RG_BG_abs_EV_max": [
+              1.5053558772895337,
+              2.222054039556635
+            ]
+          },
+          "nearest_member": {
+            "layer_abs_EV_median": [
+              0.33502917079089817,
+              0.037141545688016156,
+              0.12286983242923122
+            ],
+            "layer_abs_EV_max": [
+              1.2805190413996963,
+              0.11586208074363158,
+              2.1767729764184653
+            ],
+            "RG_BG_abs_EV_median": [
+              0.3686497727427942,
+              0.12694953910960005
+            ],
+            "RG_BG_abs_EV_max": [
+              1.3626227993396323,
+              2.1504863032315833
+            ]
+          },
+          "no_global_pruning": {
+            "layer_abs_EV_median": [
+              0.38326160969238293,
+              0.06541534667392332,
+              0.16482508125787
+            ],
+            "layer_abs_EV_max": [
+              1.3987590147309776,
+              0.14194062653255587,
+              2.2460320559623805
+            ],
+            "RG_BG_abs_EV_median": [
+              0.46333380198625984,
+              0.16111540168625904
+            ],
+            "RG_BG_abs_EV_max": [
+              1.5053558772895337,
+              2.222150754617832
+            ]
+          }
+        },
+        "pruning": {
+          "baseline_equation_reproduction_max": 0.0,
+          "previously_pruned_classes": [
+            {
+              "class": "hps",
+              "mean_weight": 7.501695568702714e-06,
+              "max_local_weight": 0.003169920037529173
+            }
+          ]
+        }
+      },
+      {
+        "light": "LED-B3",
+        "variants": {
+          "original": {
+            "layer_abs_EV_median": [
+              0.11315300012743879,
+              0.06313112707983409,
+              0.4502974597313495
+            ],
+            "layer_abs_EV_max": [
+              0.6609203054567239,
+              0.18948182634729496,
+              1.2011399348707794
+            ],
+            "RG_BG_abs_EV_median": [
+              0.15616208335715942,
+              0.37753803349551596
+            ],
+            "RG_BG_abs_EV_max": [
+              0.7030088932956708,
+              1.203232201281688
+            ]
+          },
+          "nearest_member": {
+            "layer_abs_EV_median": [
+              0.10112408248486623,
+              0.03342166927514399,
+              0.35085913124138457
+            ],
+            "layer_abs_EV_max": [
+              0.4702162285311376,
+              0.15826836240354492,
+              1.1060936650819717
+            ],
+            "RG_BG_abs_EV_median": [
+              0.10841683072975578,
+              0.32433207681099774
+            ],
+            "RG_BG_abs_EV_max": [
+              0.5081643639729119,
+              1.1135804278484815
+            ]
+          },
+          "no_global_pruning": {
+            "layer_abs_EV_median": [
+              0.11315300012743909,
+              0.06313112707983409,
+              0.4502974597313495
+            ],
+            "layer_abs_EV_max": [
+              0.6609203054567239,
+              0.18948182634729496,
+              1.2011399348707774
+            ],
+            "RG_BG_abs_EV_median": [
+              0.15616208335715942,
+              0.37753803349551596
+            ],
+            "RG_BG_abs_EV_max": [
+              0.7030088932956708,
+              1.2032322012816874
+            ]
+          }
+        },
+        "pruning": {
+          "baseline_equation_reproduction_max": 0.0,
+          "previously_pruned_classes": [
+            {
+              "class": "hps",
+              "mean_weight": 1.4023450400318923e-14,
+              "max_local_weight": 4.675865071261386e-12
+            }
+          ]
+        }
+      },
+      {
+        "light": "FL11",
+        "variants": {
+          "original": {
+            "layer_abs_EV_median": [
+              0.20384921602559447,
+              0.09816811053180254,
+              0.21344251747919318
+            ],
+            "layer_abs_EV_max": [
+              0.5332985514280484,
+              0.20345865537807967,
+              1.7630815639101451
+            ],
+            "RG_BG_abs_EV_median": [
+              0.2549530166833752,
+              0.25603155013080237
+            ],
+            "RG_BG_abs_EV_max": [
+              0.5738164424798636,
+              1.5596229085320654
+            ]
+          },
+          "nearest_member": {
+            "layer_abs_EV_median": [
+              0.21206136129710984,
+              0.09627236592701982,
+              0.15002738317271772
+            ],
+            "layer_abs_EV_max": [
+              0.5299741154993003,
+              0.20179077091840283,
+              1.4899134512089038
+            ],
+            "RG_BG_abs_EV_median": [
+              0.250569355018443,
+              0.18185499264927676
+            ],
+            "RG_BG_abs_EV_max": [
+              0.5724434589576193,
+              1.4480090450758731
+            ]
+          },
+          "no_global_pruning": {
+            "layer_abs_EV_median": [
+              0.20384921602559491,
+              0.09816811053180254,
+              0.21344251747919318
+            ],
+            "layer_abs_EV_max": [
+              0.5332985514280484,
+              0.20345865537807856,
+              1.7630815639101445
+            ],
+            "RG_BG_abs_EV_median": [
+              0.2549530166833752,
+              0.25603155013080237
+            ],
+            "RG_BG_abs_EV_max": [
+              0.5738164424798636,
+              1.5596229085320659
+            ]
+          }
+        },
+        "pruning": {
+          "baseline_equation_reproduction_max": 0.0,
+          "previously_pruned_classes": [
+            {
+              "class": "hps",
+              "mean_weight": 5.890974333727992e-14,
+              "max_local_weight": 2.009262802298345e-11
+            }
+          ]
+        }
+      }
+    ],
+    "contexts": [
+      {
+        "light": "D65",
+        "backgrounds": [
+          "neutral_18",
+          "blue",
+          "green",
+          "orange"
+        ],
+        "variants": {
+          "original": {
+            "center_H": [
+              [
+                0.6408720738816972,
+                1.350816874491893,
+                2.452127738922673
+              ],
+              [
+                0.6918069170378502,
+                1.338230010733403,
+                2.6307159918390286
+              ],
+              [
+                0.5974580560791898,
+                1.402144477821859,
+                2.7037919054768804
+              ],
+              [
+                0.5440838800464646,
+                1.4204798633264313,
+                2.899569558052561
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.3465403532864,
+              0.08605227693390771,
+              0.24180461219954696
+            ]
+          },
+          "nearest_member": {
+            "center_H": [
+              [
+                0.657954903641358,
+                1.3296034210131997,
+                2.434463373416089
+              ],
+              [
+                0.6990880778208699,
+                1.330575487753503,
+                2.6295038493968215
+              ],
+              [
+                0.6300107633562148,
+                1.3424461828490943,
+                2.7898440468539825
+              ],
+              [
+                0.6062226478747567,
+                1.3683884962291033,
+                2.951722077809622
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.20562648082989587,
+              0.041481881599328696,
+              0.2779530940991326
+            ]
+          },
+          "no_global_pruning": {
+            "center_H": [
+              [
+                0.6408940845068358,
+                1.3508585168288643,
+                2.4522264402658154
+              ],
+              [
+                0.691813309402918,
+                1.338253868402625,
+                2.6307637842203366
+              ],
+              [
+                0.5977953244556271,
+                1.402782562532898,
+                2.70530430421815
+              ],
+              [
+                0.5521028057112093,
+                1.4349989081659915,
+                2.9305625029213243
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.32544583643940606,
+              0.10069781624888668,
+              0.25708540278144665
+            ]
+          }
+        }
+      },
+      {
+        "light": "BB3200",
+        "backgrounds": [
+          "neutral_18",
+          "blue",
+          "green",
+          "orange"
+        ],
+        "variants": {
+          "original": {
+            "center_H": [
+              [
+                0.9171761754158346,
+                1.2091673396099973,
+                0.9807674412484642
+              ],
+              [
+                0.8205395009954931,
+                1.016431164083473,
+                0.7912110436589481
+              ],
+              [
+                0.7830848836216331,
+                1.0025447307154571,
+                0.6354015819940675
+              ],
+              [
+                1.0997499836181086,
+                1.08460376110829,
+                0.9676701653654127
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.48993497563114974,
+              0.27034730938477297,
+              0.6262424043477998
+            ]
+          },
+          "nearest_member": {
+            "center_H": [
+              [
+                0.9542865107610372,
+                1.1824838037797307,
+                0.9701677964769592
+              ],
+              [
+                0.7916495336556877,
+                1.0009446482102249,
+                0.7448399626021146
+              ],
+              [
+                0.9439159884359671,
+                1.0047877684238207,
+                0.7723467627802427
+              ],
+              [
+                1.1375049426395913,
+                1.0846526147935058,
+                1.0405416546337445
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.522939024049903,
+              0.24045822743218864,
+              0.4823323353110953
+            ]
+          },
+          "no_global_pruning": {
+            "center_H": [
+              [
+                0.9190180122379785,
+                1.210986352939584,
+                0.9824016591771163
+              ],
+              [
+                0.9063394584268338,
+                1.212711249904529,
+                0.965832785021047
+              ],
+              [
+                0.90398032260248,
+                1.1684713882920554,
+                0.7790836934648687
+              ],
+              [
+                1.1535967331275823,
+                1.1571462346754888,
+                1.016550048614623
+              ]
+            ],
+            "center_layer_EV_span": [
+              0.3517757099055317,
+              0.0676648844868753,
+              0.3838310223016531
+            ]
+          }
+        }
+      }
+    ],
+    "limits": [
+      "Nearest is an existing estimator, not a measured scene SPD.",
+      "Global pruning counterexample is a constructed algorithm test, not an estimate of real photograph error.",
+      "No-pruning does not remove uncertainty in the inferred local light weights.",
+      "RGB error versus conditional spectral integration does not validate 800T C-41 material physics."
+    ],
+    "frozen_assignment_locality_counterexample": [
+      {
+        "frame_size": 32,
+        "local_class_weight": 1.0,
+        "global_class_weight": 0.015625,
+        "pruned_center_H": [
+          0.5385767240793028,
+          1.3550932721873314,
+          1.890392624412147
+        ],
+        "unpruned_center_H": [
+          0.5385767240793028,
+          1.3550932721873314,
+          1.890392624412147
+        ]
+      },
+      {
+        "frame_size": 128,
+        "local_class_weight": 1.0,
+        "global_class_weight": 0.0009765625,
+        "pruned_center_H": [
+          1e-09,
+          1e-09,
+          1e-09
+        ],
+        "unpruned_center_H": [
+          0.5385767240793028,
+          1.3550932721873314,
+          1.890392624412147
+        ]
+      }
+    ],
+    "no_pruning_locality_relative_error": 0.0,
+    "production": {
+      "verified_files": 59,
+      "changed": []
+    }
+  },
+  "real_replays": [
+    {
+      "scene": "cafe",
+      "input_variant": "no_global_pruning",
+      "candidate_checks": {
+        "baseline_equation_reproduction_max": 0.0,
+        "previously_pruned_classes": [
+          {
+            "class": "hps",
+            "mean_weight": 4.471759553256473e-16,
+            "max_local_weight": 1.808754236441986e-13
+          }
+        ]
+      },
+      "scope": "Only remove global illumination-class pruning, same local weights, member spectra, material, processing and frozen scan.",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.203426503814917e-16,
+          6.406853007629834e-16,
+          9.61027951144475e-16
+        ],
+        [
+          1.2397260569763199e-13,
+          2.274432817708412e-13,
+          8.386570586985017e-13
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen to isolate input ordering; not a complete recalibrated new pipeline.",
+        "Only two reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 0.0,
+      "cells": 498,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 24.68756006578858,
+          "median_ab_distance": 21.58537838504325,
+          "median_gap_Lab": [
+            -22.124209878795817,
+            -6.454377531487837,
+            -20.542801981078934
+          ]
+        },
+        "after": {
+          "median_deltaE00": 24.68756006578858,
+          "median_ab_distance": 21.585378385043256,
+          "median_gap_Lab": [
+            -22.124209878795817,
+            -6.454377531487837,
+            -20.542801981078934
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-07-8",
+      "input_variant": "no_global_pruning",
+      "candidate_checks": {
+        "baseline_equation_reproduction_max": 0.0,
+        "previously_pruned_classes": [
+          {
+            "class": "hps",
+            "mean_weight": 1.9969402063878055e-23,
+            "max_local_weight": 6.6669745635859564e-21
+          }
+        ]
+      },
+      "scope": "Only remove global illumination-class pruning, same local weights, member spectra, material, processing and frozen scan.",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen to isolate input ordering; not a complete recalibrated new pipeline.",
+        "Only two reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 5.916489076440712e-08,
+      "cells": 795,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 10.040028957717855,
+          "median_ab_distance": 24.142909164976903,
+          "median_gap_Lab": [
+            6.632855335572273,
+            -11.338772514948193,
+            20.214752616780096
+          ]
+        },
+        "after": {
+          "median_deltaE00": 10.040028957717855,
+          "median_ab_distance": 24.142909164976903,
+          "median_gap_Lab": [
+            6.632855335572273,
+            -11.338772514948193,
+            20.214752616780096
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-06-7",
+      "input_variant": "no_global_pruning",
+      "candidate_checks": {
+        "baseline_equation_reproduction_max": 0.0,
+        "previously_pruned_classes": [
+          {
+            "class": "daylight",
+            "mean_weight": 0.0001768272684888626,
+            "max_local_weight": 0.003698971144827749
+          }
+        ]
+      },
+      "scope": "Only remove global illumination-class pruning, same local weights, member spectra, material, processing and frozen scan.",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          4.9798290212503434e-06,
+          5.111955035472874e-06,
+          8.960020873576929e-06
+        ],
+        [
+          0.001876599935759736,
+          0.0018048776365898224,
+          0.00287977347585084
+        ],
+        [
+          13.538312198895632,
+          18.97356085458846,
+          17.81803702862115
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen; this is an isolated eval candidate.",
+        "Reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 2.9802319723160053e-08,
+      "cells": 23,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 19.94004614897413,
+          "median_ab_distance": 22.457287348914406,
+          "median_gap_Lab": [
+            -5.924192817453871,
+            15.053416515548923,
+            13.124978849607073
+          ]
+        },
+        "after": {
+          "median_deltaE00": 19.940047467178083,
+          "median_ab_distance": 22.457287400392822,
+          "median_gap_Lab": [
+            -5.924191801255532,
+            15.053416734181813,
+            13.12497891166552
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-02-3",
+      "input_variant": "no_global_pruning",
+      "candidate_checks": {
+        "baseline_equation_reproduction_max": 0.0,
+        "previously_pruned_classes": [
+          {
+            "class": "hps",
+            "mean_weight": 2.5498608496562916e-15,
+            "max_local_weight": 9.14919636822548e-13
+          }
+        ]
+      },
+      "scope": "Only remove global illumination-class pruning, same local weights, member spectra, material, processing and frozen scan.",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.137765181308077e-13,
+          1.1843067784598889e-12,
+          2.692159633803545e-12
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen; this is an isolated eval candidate.",
+        "Reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 2.9802318390892424e-08,
+      "cells": 696,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 4.728573837464891,
+          "median_ab_distance": 5.343877536233849,
+          "median_gap_Lab": [
+            -1.5182360684716087,
+            3.729521074204669,
+            3.150007039752789
+          ]
+        },
+        "after": {
+          "median_deltaE00": 4.728573837464899,
+          "median_ab_distance": 5.343877536233855,
+          "median_gap_Lab": [
+            -1.5182360684716087,
+            3.72952107420467,
+            3.1500070397527837
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-00-1",
+      "input_variant": "no_global_pruning",
+      "candidate_checks": {
+        "baseline_equation_reproduction_max": 0.0,
+        "previously_pruned_classes": [
+          {
+            "class": "hps",
+            "mean_weight": 1.733515089769095e-10,
+            "max_local_weight": 5.210451304269268e-08
+          }
+        ]
+      },
+      "scope": "Only remove global illumination-class pruning, same local weights, member spectra, material, processing and frozen scan.",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.3482557814870803e-12,
+          4.201934545047908e-12,
+          5.125306217637039e-12
+        ],
+        [
+          3.9583138731026255e-08,
+          7.236916436947128e-08,
+          1.067140719472362e-07
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen; this is an isolated eval candidate.",
+        "Reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 2.980228264171103e-08,
+      "cells": 137,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 17.560286688339165,
+          "median_ab_distance": 15.141438647966021,
+          "median_gap_Lab": [
+            10.803352596965382,
+            14.795356419707252,
+            2.1767797397425284
+          ]
+        },
+        "after": {
+          "median_deltaE00": 17.560286688339165,
+          "median_ab_distance": 15.141438647966021,
+          "median_gap_Lab": [
+            10.803352596965382,
+            14.795356419707252,
+            2.1767797397425497
+          ]
+        }
+      }
+    }
+  ],
+  "nearest_member_control_lights_with_worse_layer_ratio_median": [
+    "D65"
+  ],
+  "max_real_median_deltaE00_change": 1.3182039531045575e-06,
+  "related_tests_passed": 12,
+  "decision": "Retain eval-only no-global-pruning locality correction. It does not repair real-scene colour. Nearest member policy fails controlled nonregression and is not advanced using photo scores.",
+  "limits": [
+    "Assigned-weight counterexample is not the measured failure magnitude in real scenes.",
+    "Full-array EV maxima include old numerical-floor pixels; do not interpret as typical scene radiance error.",
+    "Geometric-far stable cells are not an independently observed unscattered negative.",
+    "Both synthetic CIE-camera and stock sensitivity are model proxies; no real 800T nonneutral material validation follows."
+  ],
+  "production": {
+    "verified_files": 59,
+    "changed": []
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "coordinates": "native half-size RAW pixels; selected from original scene images before candidate rendering",
+  "regions": [
+    {"scene":"R1-00-1","name":"facade_lamp","center":[1462,586],"radius":28,"kind":"visible_luminaire"},
+    {"scene":"R1-00-1","name":"distant_lamp","center":[2268,690],"radius":12,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"walkway_1","center":[220,1124],"radius":25,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"walkway_2","center":[405,1080],"radius":22,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"walkway_3","center":[548,1046],"radius":18,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"walkway_4","center":[650,1022],"radius":16,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"walkway_5","center":[735,1000],"radius":14,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"red_beacon","center":[1901,458],"radius":10,"kind":"visible_signal_light"},
+    {"scene":"R1-05-6","name":"red_beacon","center":[586,490],"radius":10,"kind":"visible_signal_light"},
+    {"scene":"R1-05-6","name":"far_warm_lamp","center":[1703,862],"radius":12,"kind":"visible_luminaire"},
+    {"scene":"R1-05-6","name":"roof_opening_1","center":[1044,1008],"radius":18,"kind":"transmitted_light_aperture_control"},
+    {"scene":"R1-05-6","name":"roof_opening_2","center":[1141,1024],"radius":18,"kind":"transmitted_light_aperture_control"},
+    {"scene":"R1-05-6","name":"roof_opening_3","center":[1278,1010],"radius":16,"kind":"transmitted_light_aperture_control"},
+    {"scene":"R1-06-7","name":"linear_canopy_light","center":[1050,940],"radius":24,"kind":"visible_luminaire"},
+    {"scene":"R1-06-7","name":"illuminated_bollard","center":[2100,946],"radius":22,"kind":"visible_luminaire"},
+    {"scene":"R1-04-5","name":"bright_wall_control","center":[1320,1155],"radius":24,"kind":"reflecting_or_transmitting_surface_control"}
+  ]
+}

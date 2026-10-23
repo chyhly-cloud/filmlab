@@ -61,7 +61,7 @@ def recipe(name: str) -> dict:
     if name == "cinestill_800t":
         # CineStill 800T 的实际生产与冲洗:
         #   1. 乳剂 = Kodak Vision3 500T (3200K 灯光平衡, 设计在 ECN-2 中冲洗)
-        #   2. 出厂前去掉 remjet 背涂 → 片基背面全反射 → 红色光环
+        #   2. 无 remjet 吸光背涂 → 片基界面反射 (仅超过临界角才全反射) → 二次曝光
         #   3. 标称 EI 800, 乳剂本身 500 → 按 800 测光等于欠曝 log2(800/500) ≈ 0.68 档
         #   4. 用 C-41 而非 ECN-2 冲洗 → 显影程度升高 (τ 由公开资料不可辨识, 冻结在 [1.0, 1.3], 见 chemistry.py)
         return dict(film=without_remjet(emulsion("kodak_vision3_500t"), "CineStill 800T"),

@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-23",
+  "recovered_base_HEAD": "1fbac0d78c08cad0e7d389651bb5d6271cfde3cd",
+  "handoff_parent_HEAD": "a53e6d4fca3b12eb0bfafb694ffa72a51189bc99",
+  "branch": "handoff/recovered-research-2026-10-23",
+  "pytest": {
+    "passed": 327,
+    "warnings": 3,
+    "duration_seconds": 30.99,
+    "note": "Full suite on recovered research tree; before carrying in a53e6d4 (regress.py only)."
+  },
+  "strict_regress_missing_input_check": {
+    "expected_exit": 1,
+    "actual_exit": 1
+  },
+  "EPFL_primary_files_SHA256_rechecked": 72,
+  "late_freeze_production_SHA256_rechecked": 59,
+  "production_files_changed_against_late_freeze_snapshot": [],
+  "attachments_SHA256_rechecked": [
+    "Analog.Cafe kitchen TIFF",
+    "LICENSE.txt",
+    "2026 secondary research brief PDF"
+  ],
+  "external_file_inventory_count": 1507,
+  "external_data_migrated_by_git": false,
+  "archives": [
+    {
+      "name": "recovered-tracked-changes.patch",
+      "bytes": 137682,
+      "sha256": "79faf014d68c76d60d8f0521ccec3b658809c2a648bb33b4ed4905ea543dd969"
+    },
+    {
+      "name": "recovered-untracked-source.tar.gz",
+      "bytes": 705845,
+      "sha256": "f6eb7c0be8d6592c01103e946fa6be891a4d9029490b2d0fe595c0778bec1f70"
+    },
+    {
+      "name": "research-records-without-images.tar.gz",
+      "bytes": 5803378,
+      "sha256": "4ab55920bafe186f3738b0a79a37fc980b69909ca869ac4c097a72da03ff10d5"
+    },
+    {
+      "name": "workspace-data-inventory.json",
+      "bytes": 190074,
+      "sha256": "833df84e9dfd17f82fbe1a9d98ff3f9433b222ddfae473f11b7302f85bdd1ddf"
+    }
+  ]
+}

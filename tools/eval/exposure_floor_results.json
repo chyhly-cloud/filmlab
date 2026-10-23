@@ -1,0 +1,170 @@
+{
+  "status": "DIAGNOSTIC_ONLY; NO_PRODUCTION_CHANGE; NO_HALO_SEARCH",
+  "reference": "Measured Ohta reflectances times known light, integrated with STORED model sensitivities and ideal CIE camera; not independent measured 800T per-layer exposures.",
+  "summary": {
+    "controlled_cases": 48,
+    "cases_old_has_nonpositive_layer": 7,
+    "all_reference_H_inside_both_bounds": true,
+    "max_LP_RGB_closure": 2.9976021664879227e-15,
+    "old_nonpositive": {
+      "cases": 7,
+      "smooth_successes": 7,
+      "smooth_abs_EV_p50_p95_max": [
+        0.18361108425889242,
+        0.4613540096766738,
+        0.6131110543292944
+      ],
+      "known_source_smooth_successes": 7,
+      "known_source_smooth_abs_EV_p50_p95_max": [
+        0.06162857578738264,
+        0.3063046384760857,
+        0.3610054763469914
+      ]
+    },
+    "old_positive_controls": {
+      "cases": 41,
+      "smooth_successes": 41,
+      "smooth_abs_EV_p50_p95_max": [
+        0.18173055197786028,
+        0.8681901378995724,
+        1.1500544298605806
+      ],
+      "known_source_smooth_successes": 41,
+      "known_source_smooth_abs_EV_p50_p95_max": [
+        0.034440329106478686,
+        0.39366989408646563,
+        1.0852108321960474
+      ],
+      "old_abs_EV_p50_p95_max": [
+        0.05287639453584785,
+        0.8087734127580372,
+        4.8281434877663205
+      ]
+    },
+    "unknown_source_nonnegative_radiance_layer_width_EV_p50_p95_max": [
+      7.374598888603346,
+      8.919547716546301,
+      9.59458519346372
+    ],
+    "known_source_reflectance_0_to_1_layer_width_EV_p50_p95_max": [
+      1.7318150604616727,
+      5.462402772084308,
+      6.71205811075181
+    ],
+    "cafe": {
+      "samples": 16,
+      "layer_width_EV_p50_p95_max": [
+        7.275372985405312,
+        8.10557470313844,
+        8.13266568004675
+      ]
+    },
+    "R1-07-8": {
+      "samples": 2,
+      "layer_width_EV_p50_p95_max": [
+        7.976144362891693,
+        8.485607288139226,
+        8.551483196183568
+      ]
+    },
+    "R1-06-7": {
+      "samples": 16,
+      "layer_width_EV_p50_p95_max": [
+        8.269681421967878,
+        8.882831538446494,
+        9.64330681308877
+      ]
+    }
+  },
+  "normal_patch_regressions_by_max_layer_abs_EV": 7,
+  "normal_patch_largest_regressions": [
+    {
+      "light": "BB3200",
+      "patch": "bluish green",
+      "old_max_abs_layer_EV": 0.18005070986103822,
+      "candidate_max_abs_layer_EV": 0.4401926370518149,
+      "increase": 0.26014192719077667
+    },
+    {
+      "light": "FL11",
+      "patch": "moderate red",
+      "old_max_abs_layer_EV": 0.0977385965072146,
+      "candidate_max_abs_layer_EV": 0.20071105753658058,
+      "increase": 0.10297246102936598
+    }
+  ],
+  "real_fixed_far_region_coverage": {
+    "cafe": {
+      "pixels": 537233,
+      "negative_RGB_pixel_fraction": 0.036853655676401115,
+      "floor_limited_branch_weight_per_layer_mean": [
+        0.0,
+        0.0,
+        0.02184543704038862
+      ],
+      "floor_limited_branch_weight_per_layer_p95": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "floor_limited_branch_weight_over_half_per_layer_fraction": [
+        0.0,
+        0.0,
+        0.0245759288800204
+      ],
+      "any_layer_floor_branch_weight_over_half_fraction": 0.0245759288800204
+    },
+    "R1-07-8": {
+      "pixels": 564664,
+      "negative_RGB_pixel_fraction": 1.7709646798804244e-06,
+      "floor_limited_branch_weight_per_layer_mean": [
+        2.980645279727915e-08,
+        0.0,
+        1.0431638205994238e-05
+      ],
+      "floor_limited_branch_weight_per_layer_p95": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "floor_limited_branch_weight_over_half_per_layer_fraction": [
+        0.0,
+        0.0,
+        3.541929359760849e-06
+      ],
+      "any_layer_floor_branch_weight_over_half_fraction": 3.541929359760849e-06
+    },
+    "R1-06-7": {
+      "pixels": 308918,
+      "negative_RGB_pixel_fraction": 0.49854977696346603,
+      "floor_limited_branch_weight_per_layer_mean": [
+        9.25991961124114e-06,
+        8.541014091346659e-08,
+        0.13715837490888544
+      ],
+      "floor_limited_branch_weight_per_layer_p95": [
+        0.0,
+        0.0,
+        0.804220611300975
+      ],
+      "floor_limited_branch_weight_over_half_per_layer_fraction": [
+        6.474209984526638e-06,
+        0.0,
+        0.11398170388258373
+      ],
+      "any_layer_floor_branch_weight_over_half_fraction": 0.11398817809256825
+    }
+  },
+  "previous_spectral_lookup_RGB_error_range": [
+    0.09275963205612055,
+    0.19062643589813758
+  ],
+  "limits": [
+    "LP intervals permit arbitrary spectral spikes, are outer per-layer bounds, not probable errors, and extrema are not jointly attainable in general.",
+    "Real samples selected by input floor weights; not representative pixels and no measured source or per-layer truth.",
+    "Smoothness prior is unmeasured; positive exact RGB closure does not recover true spectrum.",
+    "No before/after real-photo output or claim of repaired grass/night colours."
+  ],
+  "production_verified_files": 59,
+  "production_changed_files": []
+}

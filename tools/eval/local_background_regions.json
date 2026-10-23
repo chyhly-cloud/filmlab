@@ -1,0 +1,33 @@
+{
+  "scope": "Fixed native 512px crop coordinates chosen from visible ceiling structure, before local contrast calculation; apparent similar finish, not measured reflectance or equal illumination.",
+  "coordinates": "x0,y0,x1,y1 half-open rectangles; no new geometry fit",
+  "ceiling_lamp": {
+    "surface_strip": [208, 204, 331, 220],
+    "target": [220, 204, 299, 220],
+    "backgrounds": {
+      "same_panel_right": [312, 204, 330, 220],
+      "similar_finish_above": [240, 152, 290, 172],
+      "similar_finish_below": [267, 351, 297, 369]
+    },
+    "policy": "Target is ceiling above housing/core; no orange-pixel selection. Primary background is on same visible panel row. Other similar-finish panels test sensitivity, not known unlit controls.",
+    "seams": [
+      {"axis": "x", "rect": [151, 109, 180, 122]},
+      {"axis": "x", "rect": [327, 158, 357, 174]},
+      {"axis": "y", "rect": [273, 127, 302, 148]}
+    ]
+  },
+  "middle_ceiling": {
+    "surface_strip": [230, 207, 308, 217],
+    "target": [230, 207, 285, 217],
+    "backgrounds": {
+      "same_panel_right": [297, 207, 307, 217],
+      "similar_finish_above": [242, 156, 282, 166]
+    },
+    "policy": "Only ceiling above fixture is compared. Small/narrow same-panel control, sparse absolute orange area; do not infer complete orange annulus. Lower control rejected because the next lamp is visible below the crop.",
+    "seams": [
+      {"axis": "x", "rect": [180, 138, 203, 149]},
+      {"axis": "x", "rect": [312, 169, 337, 184]},
+      {"axis": "y", "rect": [266, 136, 293, 157]}
+    ]
+  }
+}

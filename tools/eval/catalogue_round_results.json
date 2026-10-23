@@ -1,0 +1,913 @@
+{
+  "scope": "Post-fit numerical/identifiability audit; never refits or selects a spectrum.\n\nReads the fixed 112-spectrum and explicitly nonphysical six-moment experiments.\nLP ranges and finite-difference singular values describe this frozen model only.\n",
+  "regions": [
+    {
+      "name": "ceiling_lamp",
+      "physical_fit": {
+        "inner_train": {
+          "samples": 160,
+          "Lab_RMSE": 5.614327756118032,
+          "median_deltaE00": 8.39935553440662,
+          "mean_model_minus_real_Lab": [
+            2.6879005122931074,
+            -0.8137715911533843,
+            -1.969422695157089
+          ]
+        },
+        "inner_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 5.09096431663649,
+          "median_deltaE00": 6.660513018393905,
+          "mean_model_minus_real_Lab": [
+            3.3671438382231615,
+            -2.502564785807314,
+            -1.7616826523569955
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 4.488275985657888,
+          "median_deltaE00": 4.30367904061991,
+          "mean_model_minus_real_Lab": [
+            -0.5810758956635922,
+            3.6182371347120097,
+            -0.014392960769820884
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 5.310888807071842,
+          "median_deltaE00": 5.347900103604582,
+          "mean_model_minus_real_Lab": [
+            -0.06847123405500692,
+            6.17762001795385,
+            0.6439858010924147
+          ]
+        }
+      },
+      "inherited_corrected_fit": {
+        "inner_train": {
+          "samples": 160,
+          "Lab_RMSE": 5.538173689916807,
+          "median_deltaE00": 6.057099725795216,
+          "mean_model_minus_real_Lab": [
+            2.4035073730601404,
+            2.130408952207481,
+            -1.962437484984059
+          ]
+        },
+        "inner_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 4.891189768575346,
+          "median_deltaE00": 4.80463266992586,
+          "mean_model_minus_real_Lab": [
+            2.7172827789504406,
+            0.5702220178116066,
+            -2.1738991062113753
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 5.139027617417895,
+          "median_deltaE00": 5.112492301421258,
+          "mean_model_minus_real_Lab": [
+            -0.44855767011550585,
+            5.485187793907363,
+            0.36408986985224184
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 6.4582899923280985,
+          "median_deltaE00": 6.538910486163658,
+          "mean_model_minus_real_Lab": [
+            0.024369086825797394,
+            8.654569158917957,
+            1.0348599154131528
+          ]
+        }
+      },
+      "ten_spectrum_joint_fit": {
+        "inner_train": {
+          "samples": 160,
+          "real_mean_Lab": [
+            83.71208076723391,
+            0.9442105283548475,
+            -0.9215535140361162
+          ],
+          "model_mean_Lab": [
+            85.38565682897875,
+            1.5925282045305171,
+            -4.076141774913602
+          ],
+          "model_minus_real_mean_Lab": [
+            1.6735760617447812,
+            0.6483176761756708,
+            -3.154588260877486
+          ],
+          "Lab_RMSE": 5.701610469843228,
+          "median_deltaE00": 7.828546628400929
+        },
+        "inner_heldout": {
+          "samples": 160,
+          "real_mean_Lab": [
+            84.05334531472225,
+            5.664139471974213,
+            2.629320939599606
+          ],
+          "model_mean_Lab": [
+            86.00454542801718,
+            5.473282887679533,
+            -0.7676776565985776
+          ],
+          "model_minus_real_mean_Lab": [
+            1.9512001132948573,
+            -0.1908565842946816,
+            -3.396998596198182
+          ],
+          "Lab_RMSE": 4.845964850988053,
+          "median_deltaE00": 5.576117937753416
+        },
+        "outer_train": {
+          "samples": 160,
+          "real_mean_Lab": [
+            72.89272862111719,
+            -19.50453713808213,
+            -16.368239387028936
+          ],
+          "model_mean_Lab": [
+            71.95361818189562,
+            -15.466691531666498,
+            -16.807559427418383
+          ],
+          "model_minus_real_mean_Lab": [
+            -0.939110439221559,
+            4.037845606415624,
+            -0.43932004038945005
+          ],
+          "Lab_RMSE": 4.622957838887108,
+          "median_deltaE00": 4.5530773953197725
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "real_mean_Lab": [
+            74.42589948626025,
+            -19.061409618084056,
+            -15.155018438753455
+          ],
+          "model_mean_Lab": [
+            73.80663082362028,
+            -12.202254143688908,
+            -15.165695959535332
+          ],
+          "model_minus_real_mean_Lab": [
+            -0.6192686626400744,
+            6.8591554743951475,
+            -0.010677520781865069
+          ],
+          "Lab_RMSE": 5.532309800808792,
+          "median_deltaE00": 5.686285133182364
+        }
+      },
+      "catalogue_train_loss": 25.832648738275306,
+      "nonphysical_six_moment_train_loss": 25.821658705111872,
+      "relative_loss_drop_by_relaxation": 0.00042543191272332594,
+      "nonphysical_fit": {
+        "inner_train": {
+          "samples": 160,
+          "Lab_RMSE": 5.612424570191977,
+          "median_deltaE00": 8.39925478981279,
+          "mean_model_minus_real_Lab": [
+            2.687290314710456,
+            -0.8142830037291908,
+            -1.9671167852814597
+          ]
+        },
+        "inner_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 5.090521289191603,
+          "median_deltaE00": 6.6592695815274645,
+          "mean_model_minus_real_Lab": [
+            3.365837220614279,
+            -2.5014041271545637,
+            -1.7628802290251435
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 4.488207643829455,
+          "median_deltaE00": 4.303704975995467,
+          "mean_model_minus_real_Lab": [
+            -0.5815531006280572,
+            3.618027672971799,
+            -0.014974719261543035
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 5.310699743535287,
+          "median_deltaE00": 5.347593004702949,
+          "mean_model_minus_real_Lab": [
+            -0.06915852667606118,
+            6.177464303324676,
+            0.6431668656179823
+          ]
+        }
+      },
+      "nonphysical_all_same_spectrum_LPs_failed": true,
+      "source_input_Y_fixed_moment_min_max": [
+        696.79964008,
+        696.79964008
+      ],
+      "numerical_response_audit": {
+        "residual_J_coordinate": "moments divided by inherited six-moment scale; residual is equal-zone normalized Lab components",
+        "residual_J_singular_values": [
+          8.214024241573277,
+          2.289848424310844,
+          0.00021492493679319195,
+          0.0001272362815345964,
+          3.62970709390709e-05,
+          1.6175703090458023e-05
+        ],
+        "residual_J_column_norms_directRGB_returnRGB": [
+          8.885117694842226e-05,
+          3.312453024206191e-05,
+          9.538417365425874e-05,
+          8.131906550402913,
+          2.5662610614283965,
+          0.0003368292452571186
+        ],
+        "finite_difference_rule": "forward step max(abs(z)*1e-3,1e-5); no claim of exact rank or global uniqueness"
+      },
+      "physical_multistart_train_loss_range": [
+        25.832648738275306,
+        25.8326489200847
+      ],
+      "forward_evaluations_physical_and_relaxed": 2842
+    },
+    {
+      "name": "middle_ceiling",
+      "physical_fit": {
+        "inner_train": {
+          "samples": 143,
+          "Lab_RMSE": 4.1916491944539285,
+          "median_deltaE00": 3.606406434932005,
+          "mean_model_minus_real_Lab": [
+            2.750460005362645,
+            -0.9940415570939335,
+            -2.500077919465407
+          ]
+        },
+        "inner_heldout": {
+          "samples": 140,
+          "Lab_RMSE": 3.2061719828417323,
+          "median_deltaE00": 3.6951953486722773,
+          "mean_model_minus_real_Lab": [
+            4.4294353198088565,
+            0.018921557700941338,
+            -0.04272428860168834
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 3.0707572911775523,
+          "median_deltaE00": 3.345055409532055,
+          "mean_model_minus_real_Lab": [
+            0.6164384017432758,
+            2.4460141911836244,
+            -1.5248026924562854
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 3.310457920203987,
+          "median_deltaE00": 3.7571215149834707,
+          "mean_model_minus_real_Lab": [
+            -0.467089120418955,
+            3.042603147321688,
+            -1.7817668225704602
+          ]
+        }
+      },
+      "inherited_corrected_fit": {
+        "inner_train": {
+          "samples": 143,
+          "Lab_RMSE": 4.180146511266053,
+          "median_deltaE00": 3.9918028064537787,
+          "mean_model_minus_real_Lab": [
+            2.2823174495089997,
+            0.738837594756743,
+            -2.9076462603914512
+          ]
+        },
+        "inner_heldout": {
+          "samples": 140,
+          "Lab_RMSE": 3.227940346850749,
+          "median_deltaE00": 4.171798117694222,
+          "mean_model_minus_real_Lab": [
+            3.776432110633463,
+            2.3798144458925092,
+            -0.6385711255257616
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 3.3444242498700407,
+          "median_deltaE00": 3.752840264489296,
+          "mean_model_minus_real_Lab": [
+            0.43381391594674124,
+            3.287182913296275,
+            -1.6647292776554352
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 3.622673949051488,
+          "median_deltaE00": 4.2314770325321405,
+          "mean_model_minus_real_Lab": [
+            -0.6216780952508569,
+            3.815177855809563,
+            -1.8950058637922005
+          ]
+        }
+      },
+      "ten_spectrum_joint_fit": {
+        "inner_train": {
+          "samples": 143,
+          "real_mean_Lab": [
+            79.72829464392166,
+            -7.778462509948368,
+            -4.824497150385932
+          ],
+          "model_mean_Lab": [
+            81.68462773672285,
+            -8.007676192567464,
+            -8.280137341387134
+          ],
+          "model_minus_real_mean_Lab": [
+            1.9563330928012015,
+            -0.22921368261909686,
+            -3.4556401910012045
+          ],
+          "Lab_RMSE": 4.237360674778132,
+          "median_deltaE00": 3.5712694366029947
+        },
+        "inner_heldout": {
+          "samples": 140,
+          "real_mean_Lab": [
+            76.49263841047764,
+            -8.669935266325265,
+            -6.536737491985826
+          ],
+          "model_mean_Lab": [
+            79.82862958422038,
+            -7.52193827413608,
+            -7.903775123571362
+          ],
+          "model_minus_real_mean_Lab": [
+            3.335991173742736,
+            1.1479969921891773,
+            -1.3670376315855368
+          ],
+          "Lab_RMSE": 2.8676786254296553,
+          "median_deltaE00": 3.453754341335713
+        },
+        "outer_train": {
+          "samples": 160,
+          "real_mean_Lab": [
+            68.40185529279964,
+            -21.310707777435603,
+            -12.80614727918552
+          ],
+          "model_mean_Lab": [
+            68.66249078374061,
+            -18.542828720133855,
+            -14.76046815457504
+          ],
+          "model_minus_real_mean_Lab": [
+            0.2606354909409746,
+            2.7678790573017364,
+            -1.9543208753895094
+          ],
+          "Lab_RMSE": 3.1768756358386407,
+          "median_deltaE00": 3.520692310477658
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "real_mean_Lab": [
+            69.20118668475784,
+            -23.006360416032315,
+            -13.38451363478193
+          ],
+          "model_mean_Lab": [
+            68.4135086276258,
+            -19.689241859131858,
+            -15.554103815102257
+          ],
+          "model_minus_real_mean_Lab": [
+            -0.7876780571320687,
+            3.317118556900443,
+            -2.1695901803203346
+          ],
+          "Lab_RMSE": 3.4628410531593787,
+          "median_deltaE00": 4.029863030999433
+        }
+      },
+      "catalogue_train_loss": 13.499736655343181,
+      "nonphysical_six_moment_train_loss": 13.315538014405696,
+      "relative_loss_drop_by_relaxation": 0.01364460993871159,
+      "nonphysical_fit": {
+        "inner_train": {
+          "samples": 143,
+          "Lab_RMSE": 4.148013627589745,
+          "median_deltaE00": 3.597569390874979,
+          "mean_model_minus_real_Lab": [
+            2.741997342846978,
+            -1.001431090202121,
+            -2.4597690612890895
+          ]
+        },
+        "inner_heldout": {
+          "samples": 140,
+          "Lab_RMSE": 3.1999282183698656,
+          "median_deltaE00": 3.6796158686197096,
+          "mean_model_minus_real_Lab": [
+            4.417235414439825,
+            0.0164441108480747,
+            -0.0590262020330305
+          ]
+        },
+        "outer_train": {
+          "samples": 160,
+          "Lab_RMSE": 3.070025891444754,
+          "median_deltaE00": 3.342169693036702,
+          "mean_model_minus_real_Lab": [
+            0.6120222075283743,
+            2.444088801414971,
+            -1.5307659916502794
+          ]
+        },
+        "outer_heldout": {
+          "samples": 160,
+          "Lab_RMSE": 3.310216975606394,
+          "median_deltaE00": 3.7568819880818825,
+          "mean_model_minus_real_Lab": [
+            -0.4711570314548636,
+            3.0404936903586464,
+            -1.787272013444855
+          ]
+        }
+      },
+      "nonphysical_all_same_spectrum_LPs_failed": true,
+      "source_input_Y_fixed_moment_min_max": [
+        476.98252047,
+        476.98252047
+      ],
+      "numerical_response_audit": {
+        "residual_J_coordinate": "moments divided by inherited six-moment scale; residual is equal-zone normalized Lab components",
+        "residual_J_singular_values": [
+          5.595816657730291,
+          1.0057296169418155,
+          0.0007911164375618242,
+          0.0003731447959710987,
+          9.05661978358609e-05,
+          6.393467472965019e-05
+        ],
+        "residual_J_column_norms_directRGB_returnRGB": [
+          0.0006096608897893974,
+          0.0004013241828318135,
+          0.0004958465589775759,
+          5.578750224704814,
+          1.096449741436146,
+          0.00015154914998785401
+        ],
+        "finite_difference_rule": "forward step max(abs(z)*1e-3,1e-5); no claim of exact rank or global uniqueness"
+      },
+      "physical_multistart_train_loss_range": [
+        13.499736655343181,
+        13.499763232293445
+      ],
+      "forward_evaluations_physical_and_relaxed": 2227
+    }
+  ],
+  "decision": "No candidate passes simultaneous orange-near and outer spatial acceptance; no production promotion.",
+  "interpretation": "Under the fixed source support/profile and frozen backend, this finite experiment finds little additional leverage from relaxing spectral coupling alone. It does not identify transport, development, or scanner as the physical root cause.",
+  "limits": [
+    "Same final-RGB scene repeatedly inspected; spatial sectors are not external validation.",
+    "Finite optimizers, finite catalogue and fixed profile do not prove global physical impossibility.",
+    "Six independent nonnegative direct/return coordinates are a diagnostic, never a physical correction.",
+    "Min/max input Y is conditional on fitted moments and can be narrow despite much larger unmodeled uncertainty."
+  ],
+  "production_snapshot": {
+    "checked_files": 59,
+    "changed_files": []
+  },
+  "new_targeted_tests_passed": 11,
+  "joint_full_frame": {
+    "refit": false,
+    "shape": [
+      1732,
+      2304,
+      3
+    ],
+    "old_full_exposure_replay_max": {
+      "ceiling_lamp": 0.0,
+      "middle_ceiling": 0.0
+    },
+    "witness_checks": {
+      "ceiling_lamp": {
+        "negative_coefficient_before_roundoff_cleanup": -1.9720513625623933e-11,
+        "source_input_Y": 696.7996400765417,
+        "actual_spectrum_replayed_moment_relative_max": 1.3171718737465006e-13,
+        "active_members": [
+          {
+            "name": "LPS",
+            "coefficient": 434.58882857979387
+          },
+          {
+            "name": "H38HT-100 (Mercury)",
+            "coefficient": 262.2108114967375
+          }
+        ],
+        "strict_cells": 88,
+        "partial_edge_cells": 57,
+        "fully_measured_HDR_body_cells": 68
+      },
+      "middle_ceiling": {
+        "negative_coefficient_before_roundoff_cleanup": 0.0,
+        "source_input_Y": 476.98252046987443,
+        "actual_spectrum_replayed_moment_relative_max": 2.1179735607600633e-15,
+        "active_members": [
+          {
+            "name": "LPS",
+            "coefficient": 258.7268919726382
+          },
+          {
+            "name": "H38HT-100 (Mercury)",
+            "coefficient": 218.25562849723622
+          }
+        ],
+        "strict_cells": 34,
+        "partial_edge_cells": 44,
+        "fully_measured_HDR_body_cells": 47
+      }
+    },
+    "regions": [
+      {
+        "name": "ceiling_lamp",
+        "joint_vs_local_catalogue_RGB_max": 0.000900186036823715,
+        "joint_vs_local_catalogue_sample_Lab_max": 0.03711872725570231,
+        "joint_vs_local_catalogue_q_safe_max": 0.00515535859067362,
+        "joint_baseline_vs_local_HDR_RGB_max": 0.0009912823067380373,
+        "joint_baseline_vs_local_HDR_q_safe_max": 0.005601609152249498,
+        "metrics": {
+          "validated_inputs_old_core": {
+            "inner_train": {
+              "samples": 160,
+              "Lab_RMSE": 5.538102727702584,
+              "median_deltaE00": 6.054162462891324,
+              "real_mean_Lab": [
+                83.71208076723391,
+                0.9442105283548475,
+                -0.9215535140361162
+              ],
+              "model_mean_Lab": [
+                86.11578717192022,
+                3.076399722847812,
+                -2.8834720188915446
+              ],
+              "mean_model_minus_real_Lab": [
+                2.4037064046862935,
+                2.132189194492965,
+                -1.9619185048554293
+              ]
+            },
+            "inner_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 4.891359663726062,
+              "median_deltaE00": 4.804112486460127,
+              "real_mean_Lab": [
+                84.05334531472225,
+                5.664139471974213,
+                2.629320939599606
+              ],
+              "model_mean_Lab": [
+                86.77067074147291,
+                6.235172521324003,
+                0.45561453635788024
+              ],
+              "mean_model_minus_real_Lab": [
+                2.717325426750675,
+                0.5710330493497864,
+                -2.173706403241723
+              ]
+            },
+            "outer_train": {
+              "samples": 160,
+              "Lab_RMSE": 5.141882301591757,
+              "median_deltaE00": 5.110229209142605,
+              "real_mean_Lab": [
+                72.89272862111719,
+                -19.50453713808213,
+                -16.368239387028936
+              ],
+              "model_mean_Lab": [
+                72.44629976996708,
+                -14.00860324640577,
+                -16.000061638462473
+              ],
+              "mean_model_minus_real_Lab": [
+                -0.44642885115012493,
+                5.495933891676358,
+                0.3681777485664633
+              ]
+            },
+            "outer_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 6.460909622199669,
+              "median_deltaE00": 6.5454833132234995,
+              "real_mean_Lab": [
+                74.42589948626025,
+                -19.061409618084056,
+                -15.155018438753455
+              ],
+              "model_mean_Lab": [
+                74.45148504856569,
+                -10.400933346693948,
+                -14.117963091729475
+              ],
+              "mean_model_minus_real_Lab": [
+                0.02558556230537192,
+                8.660476271390106,
+                1.0370553470239916
+              ]
+            }
+          },
+          "catalogue112": {
+            "inner_train": {
+              "samples": 160,
+              "Lab_RMSE": 5.613797833413171,
+              "median_deltaE00": 8.39727514164726,
+              "real_mean_Lab": [
+                83.71208076723391,
+                0.9442105283548475,
+                -0.9215535140361162
+              ],
+              "model_mean_Lab": [
+                86.40025307898995,
+                0.13234705678728675,
+                -2.8903623623323944
+              ],
+              "mean_model_minus_real_Lab": [
+                2.6881723117559626,
+                -0.8118634715675588,
+                -1.968808848296278
+              ]
+            },
+            "inner_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 5.090963279478102,
+              "median_deltaE00": 6.659704330694151,
+              "real_mean_Lab": [
+                84.05334531472225,
+                5.664139471974213,
+                2.629320939599606
+              ],
+              "model_mean_Lab": [
+                87.42058537158508,
+                3.1624643328226973,
+                0.867905174060174
+              ],
+              "mean_model_minus_real_Lab": [
+                3.367240056862772,
+                -2.5016751391515184,
+                -1.761415765539431
+              ]
+            },
+            "outer_train": {
+              "samples": 160,
+              "Lab_RMSE": 4.489764007196697,
+              "median_deltaE00": 4.306026096166812,
+              "real_mean_Lab": [
+                72.89272862111719,
+                -19.50453713808213,
+                -16.368239387028936
+              ],
+              "model_mean_Lab": [
+                72.31365797584024,
+                -15.876416642827678,
+                -16.378817280410978
+              ],
+              "mean_model_minus_real_Lab": [
+                -0.5790706452769384,
+                3.6281204952544535,
+                -0.01057789338203643
+              ]
+            },
+            "outer_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 5.313155823505761,
+              "median_deltaE00": 5.350476865597187,
+              "real_mean_Lab": [
+                74.42589948626025,
+                -19.061409618084056,
+                -15.155018438753455
+              ],
+              "model_mean_Lab": [
+                74.35863238541161,
+                -12.878098180915291,
+                -14.508891485782069
+              ],
+              "mean_model_minus_real_Lab": [
+                -0.06726710084869829,
+                6.18331143716876,
+                0.6461269529713944
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "middle_ceiling",
+        "joint_vs_local_catalogue_RGB_max": 0.004611646613621248,
+        "joint_vs_local_catalogue_sample_Lab_max": 0.12152682258032144,
+        "joint_vs_local_catalogue_q_safe_max": 0.016365296401886553,
+        "joint_baseline_vs_local_HDR_RGB_max": 0.005728790483355187,
+        "joint_baseline_vs_local_HDR_q_safe_max": 0.020136218674543738,
+        "metrics": {
+          "validated_inputs_old_core": {
+            "inner_train": {
+              "samples": 143,
+              "Lab_RMSE": 4.18065202677955,
+              "median_deltaE00": 4.001218834435044,
+              "real_mean_Lab": [
+                79.72829464392166,
+                -7.778462509948368,
+                -4.824497150385932
+              ],
+              "model_mean_Lab": [
+                82.01313979194208,
+                -7.025744302731697,
+                -7.727169443972367
+              ],
+              "mean_model_minus_real_Lab": [
+                2.2848451480204397,
+                0.7527182072166753,
+                -2.902672293586435
+              ]
+            },
+            "inner_heldout": {
+              "samples": 140,
+              "Lab_RMSE": 3.232980101236415,
+              "median_deltaE00": 4.179096546355877,
+              "real_mean_Lab": [
+                76.49263841047764,
+                -8.669935266325265,
+                -6.536737491985826
+              ],
+              "model_mean_Lab": [
+                80.27199389101051,
+                -6.273369399645815,
+                -7.169467815137375
+              ],
+              "mean_model_minus_real_Lab": [
+                3.7793554805328564,
+                2.396565866679442,
+                -0.6327303231515534
+              ]
+            },
+            "outer_train": {
+              "samples": 160,
+              "Lab_RMSE": 3.3552388695139435,
+              "median_deltaE00": 3.7671125137168593,
+              "real_mean_Lab": [
+                68.40185529279964,
+                -21.310707777435603,
+                -12.80614727918552
+              ],
+              "model_mean_Lab": [
+                68.84360347856135,
+                -17.984309646603457,
+                -14.455790319153536
+              ],
+              "mean_model_minus_real_Lab": [
+                0.44174818576168196,
+                3.326398130832149,
+                -1.6496430399679993
+              ]
+            },
+            "outer_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 3.629869557715857,
+              "median_deltaE00": 4.240541614300003,
+              "real_mean_Lab": [
+                69.20118668475784,
+                -23.006360416032315,
+                -13.38451363478193
+              ],
+              "model_mean_Lab": [
+                68.58727218501618,
+                -19.153031594713216,
+                -15.264541007863059
+              ],
+              "mean_model_minus_real_Lab": [
+                -0.6139144997416662,
+                3.853328821319095,
+                -1.8800273730811305
+              ]
+            }
+          },
+          "catalogue112": {
+            "inner_train": {
+              "samples": 143,
+              "Lab_RMSE": 4.190694193386893,
+              "median_deltaE00": 3.6114355983984336,
+              "real_mean_Lab": [
+                79.72829464392166,
+                -7.778462509948368,
+                -4.824497150385932
+              ],
+              "model_mean_Lab": [
+                82.48095677476041,
+                -8.761035020197168,
+                -7.320328673377514
+              ],
+              "mean_model_minus_real_Lab": [
+                2.752662130838797,
+                -0.9825725102487973,
+                -2.4958315229915793
+              ]
+            },
+            "inner_heldout": {
+              "samples": 140,
+              "Lab_RMSE": 3.2074542760849902,
+              "median_deltaE00": 3.6999641771970415,
+              "real_mean_Lab": [
+                76.49263841047764,
+                -8.669935266325265,
+                -6.536737491985826
+              ],
+              "model_mean_Lab": [
+                80.9246533742226,
+                -8.637248371314678,
+                -6.5744324596876655
+              ],
+              "mean_model_minus_real_Lab": [
+                4.432014963744965,
+                0.03268689501058094,
+                -0.03769496770184275
+              ]
+            },
+            "outer_train": {
+              "samples": 160,
+              "Lab_RMSE": 3.0782108489798476,
+              "median_deltaE00": 3.3547298196315696,
+              "real_mean_Lab": [
+                68.40185529279964,
+                -21.310707777435603,
+                -12.80614727918552
+              ],
+              "model_mean_Lab": [
+                69.02480788590208,
+                -18.832900919681162,
+                -14.318626975647447
+              ],
+              "mean_model_minus_real_Lab": [
+                0.6229525931024388,
+                2.4778068577544525,
+                -1.512479696461916
+              ]
+            },
+            "outer_heldout": {
+              "samples": 160,
+              "Lab_RMSE": 3.3147402102748034,
+              "median_deltaE00": 3.7666538609638547,
+              "real_mean_Lab": [
+                69.20118668475784,
+                -23.006360416032315,
+                -13.38451363478193
+              ],
+              "model_mean_Lab": [
+                68.74040226775392,
+                -19.933035691964182,
+                -15.154132998369363
+              ],
+              "mean_model_minus_real_Lab": [
+                -0.4607844170039307,
+                3.0733247240681205,
+                -1.769619363587429
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "artifacts": {
+    "report": "docs/CATALOGUE_SOURCE_INVERSE.md",
+    "joint_report": "docs/CATALOGUE_JOINT_RENDER.md",
+    "full_comparison": "/workspace/filmlab-audit/catalogue-joint-render/full_comparison.jpg",
+    "local_comparison": "/workspace/filmlab-audit/catalogue-joint-render/two_lamp_comparison.jpg"
+  },
+  "goal_complete": false
+}

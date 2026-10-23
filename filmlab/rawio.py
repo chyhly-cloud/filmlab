@@ -47,10 +47,108 @@ def _exif(path):
     return {}
 
 
-def exif_exposure(path):
+_EXPOSURE_TAGS = {
+    "time_s": ("EXIF ExposureTime",),
+    "f_number": ("EXIF FNumber",),
+    "iso": ("EXIF ISOSpeedRatings", "EXIF PhotographicSensitivity"),
+}
+
+
+def _exposure_fields(tags):
+    """Valid recorded exposure tags, retaining their original rational objects."""
+    fields = {}
+    for name, keys in _EXPOSURE_TAGS.items():
+        for key in keys:
+            if key not in tags:
+                continue
+            try:
+                value = Fraction(str(tags[key].values[0]))
+                if value > 0 and np.isfinite(float(value)):
+                    fields[name] = (key, value)
+                    break
+            except (AttributeError, ValueError, TypeError, IndexError, ZeroDivisionError, OverflowError):
+                continue
+    return fields
+
+
+def _exif_complete(path, *, trace=None):
+    """Opt-in recorded-metadata completion, never inferred ISO or radiance.
+
+    A partial RAW record is supplemented only by the same file's embedded JPEG.
+    Common shutter/aperture values must agree to relative 1e-4 (JPEG rounding),
+    recorded ISO must agree exactly, and common camera identity/time strings
+    must agree. Existing valid RAW
+    fields always win. Original tag objects/rationals are copied without fitting.
+    ``trace`` optionally records provenance and rejected conflicts; the legacy
+    ``_exif`` reader remains untouched for historical/default reproduction.
+    """
+    import io
+    import exifread
+    tags = {}
+    try:
+        with open(path, "rb") as fh:
+            tags = exifread.process_file(fh, details=False)
+    except Exception:
+        pass
+    fields = _exposure_fields(tags)
+    info = {
+        "mode": "complete_exif_candidate",
+        "field_sources": {name: "RAW EXIF" for name in fields},
+        "recorded_values": {name: str(tags[key].values[0]) for name, (key, _) in fields.items()},
+        "conflicts": [],
+        "status": "RAW complete" if len(fields) == 3 else "RAW incomplete",
+    }
+
+    def finish(result):
+        if trace is not None:
+            trace.update(info)
+        return result
+
+    if len(fields) == 3:
+        return finish(tags)
+    try:
+        with rawpy.imread(str(path)) as raw:
+            thumb = raw.extract_thumb()
+        if thumb.format != rawpy.ThumbFormat.JPEG:
+            info["status"] = "no JPEG exposure record"
+            return finish(tags)
+        other = exifread.process_file(io.BytesIO(thumb.data), details=False)
+    except Exception as exc:
+        info["status"] = "embedded exposure record unavailable"
+        info["thumbnail_error"] = type(exc).__name__
+        return finish(tags)
+    other_fields = _exposure_fields(other)
+    for name in _EXPOSURE_TAGS:
+        if name not in fields or name not in other_fields:
+            continue
+        a, b = float(fields[name][1]), float(other_fields[name][1])
+        same = fields[name][1] == other_fields[name][1] if name == "iso" else np.isclose(a, b, rtol=1e-4, atol=0)
+        if not same:
+            info["conflicts"].append(name)
+    for key in ("Image Make", "Image Model", "EXIF DateTimeOriginal"):
+        if key in tags and key in other:
+            if " ".join(str(tags[key]).split()).casefold() != " ".join(str(other[key]).split()).casefold():
+                info["conflicts"].append(key)
+    if info["conflicts"]:
+        info["status"] = "conflicting embedded record; RAW retained"
+        return finish(tags)
+    merged = tags.copy()
+    for name, (key, _) in other_fields.items():
+        if name not in fields:
+            merged[key] = other[key]
+            info["field_sources"][name] = "embedded JPEG EXIF"
+            info["recorded_values"][name] = str(other[key].values[0])
+    info["status"] = "completed from embedded JPEG" if len(_exposure_fields(merged)) == 3 else "still incomplete"
+    return finish(merged)
+
+
+def exif_exposure(path, *, complete_exif=False):
     """(曝光时间 s, 光圈 N, ISO); 读不到返回 None。"""
     try:
-        tags = _exif(path)
+        tags = _exif_complete(path) if complete_exif else _exif(path)
+        if complete_exif:
+            fields = _exposure_fields(tags)
+            return tuple(float(fields[name][1]) for name in ("time_s", "f_number", "iso"))
         val = lambda k: float(Fraction(str(tags[k].values[0])))
         k = "EXIF ISOSpeedRatings" if "EXIF ISOSpeedRatings" in tags else "EXIF PhotographicSensitivity"
         return val("EXIF ExposureTime"), val("EXIF FNumber"), val(k)
@@ -58,12 +156,17 @@ def exif_exposure(path):
         return None
 
 
-def clip_luminance(path):
-    """由 EXIF 曝光参数估计传感器截断点对应的场景亮度 (cd/m²)。
+def clip_luminance(path, *, complete_exif=False):
+    """由 EXIF 曝光参数计算截断亮度的名义代理 (cd/m²)。
     ISO 12232 饱和感光度: S_sat = 78 / H_sat; 焦平面照度 H = q·L·t / N² (q ≈ 0.65, 镜头透过率等)
-    → L_clip = 78·N² / (q·t·S) ≈ 120·N² / (t·S)。读不到 EXIF 时返回 None。"""
+    → L_clip = 78·N² / (q·t·S) ≈ 120·N² / (t·S)。读不到 EXIF 时返回 None。
+    EXIF ISO 未必为实测 S_sat；补齐记录不会标定传感器、镜头或后续亮度先验。"""
     try:
-        tags = _exif(path)
+        tags = _exif_complete(path) if complete_exif else _exif(path)
+        if complete_exif:
+            fields = _exposure_fields(tags)
+            t, n, s = (float(fields[name][1]) for name in ("time_s", "f_number", "iso"))
+            return 120.0 * n * n / (t * s)
         val = lambda k: float(Fraction(str(tags[k].values[0])))
         t, n = val("EXIF ExposureTime"), val("EXIF FNumber")
         iso_key = "EXIF ISOSpeedRatings" if "EXIF ISOSpeedRatings" in tags else "EXIF PhotographicSensitivity"
@@ -213,7 +316,7 @@ def sensor_saturation(raw, per_channel=False):
 
 
 def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True,
-             clip_detect=None):
+             clip_detect=None, complete_exif=False):
     """white_balance:
       daylight  固定日光白平衡 (默认): 保留场景真实的光色, 由胶片自己决定钨丝灯 / 日光下的表现,
                 就像胶片相机没有自动白平衡一样
@@ -221,7 +324,9 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
       auto      自动白平衡
     highlights: reconstruct = 重建截断高光 (默认); clip = 保留传感器截断
     denoise_raw: 去除数码传感器噪声 (默认开)
-    clip_detect: 截断判定方法, None = 模块默认 CLIP_DETECT"""
+    clip_detect: 截断判定方法, None = 模块默认 CLIP_DETECT
+    complete_exif: 显式实验候选; 从匹配的内嵌JPEG补齐缺失曝光元数据。默认关闭。
+                   只校正记录，不保证既有随机亮度先验准确。"""
     with rawpy.imread(str(path)) as raw:
         kw = dict(use_camera_wb=(white_balance == "camera"), use_auto_wb=(white_balance == "auto"))
         if white_balance == "daylight":
@@ -268,14 +373,15 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         xyz = denoise(xyz.astype(np.float64), estimate_noise(xyz), out_matrix=XYZ_TO_SRGB, clipped=cl)
     if per_channel:
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
+        l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
         cam_d = reconstruct_highlights_cam(xyz @ np.linalg.inv(A), f3, clip_lv, np.random.default_rng(frame_seed),
-                                           clip_luminance(path))
+                                           l_clip)
         return (cam_d @ A) @ XYZ_TO_SRGB.T
     rgb = xyz @ XYZ_TO_SRGB.T
     if highlights == "reconstruct" and clip is not None and clip.any():
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
-        rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed),
-                                     clip_luminance(path))
+        l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
+        rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed), l_clip)
     return rgb
 
 
@@ -430,9 +536,11 @@ def reconstruct_highlights_cam(cam, sat_frac, clip_lv, rng, l_clip=None):
     return out
 
 
-def exif_iso(path):
+def exif_iso(path, *, complete_exif=False):
     try:
-        tags = _exif(path)
+        tags = _exif_complete(path) if complete_exif else _exif(path)
+        if complete_exif:
+            return float(_exposure_fields(tags)["iso"][1])
         k = "EXIF ISOSpeedRatings" if "EXIF ISOSpeedRatings" in tags else "EXIF PhotographicSensitivity"
         return float(Fraction(str(tags[k].values[0])))
     except Exception:

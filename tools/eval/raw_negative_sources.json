@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-21",
+  "sources": [
+    {
+      "id": "analog_sample",
+      "url": "https://www.analog.cafe/r/sample-35mm-film-scan-tiff-file-sfqt",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "evidence_status": "USER_UPLOADED_FILE_AND_LICENSE; DECODED_AND_INSPECTED; LINEARITY_NOT_VERIFIED",
+      "claim_basis": "User-provided description; not independently verified from webpage in this round",
+      "sha256": "52d4045a89d4324b984ae8a92ab9405e99c57ce1c4e9e224a1f6e2835dd27129",
+      "user_external_verification": {
+        "public_entry_exists": true,
+        "film": "CineStill 800T",
+        "bits_per_channel_claim": 16,
+        "size_MB_claim": 21,
+        "free_account_login_required": true,
+        "sample_intentionally_downsampled": true,
+        "nominal_dpi": 1408,
+        "priority_use": "Accepted as private negative-reading/scan-conversion fixture only; not suitable for halation calibration in this round"
+      },
+      "access_gates": {
+        "network_reachable": false,
+        "authenticated_session_obtained": false,
+        "file_acquired": true
+      },
+      "latest_network_check": {
+        "date": "2026-10-21",
+        "result": "Proxy CONNECT 403 before origin; page and file not received"
+      },
+      "acquisition_method": "User file upload; origin page still not retrieved",
+      "container_verified": "2000x1332 RGB uint16, LZW; sRGB ICC and Photoshop saved metadata"
+    },
+    {
+      "id": "analog_800_compare",
+      "url": "https://www.analog.cafe/r/comparing-all-8-iso-800-colour-negative-films-bgr6",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "evidence_status": "SECONDARY_BRIEF_FULLY_READ; ORIGINAL_PAGE_IMAGES_AND_EXPERIMENT_TIFF_NOT_RECEIVED",
+      "claim_basis": "User reports and supplied four-page secondary brief, not agent-verified original article",
+      "sha256": null,
+      "user_external_verification": {
+        "scanner_autoexposure_retained": true,
+        "final_images_grayscale_matched": true,
+        "unqualified_cross_frame_absolute_transmission_comparison_allowed": false,
+        "primary_use": "processed appearance comparison; raw data and calibration would require separate verification"
+      },
+      "secondary_brief": {
+        "file_name": "CineStill_800T_ISO800_2026_Codex_Research_Brief.pdf",
+        "sha256": "0b69365c3f1606ea8a40ca2e795a31a79d99656073fed5df36dd28e46d300ac9",
+        "bytes": 175712,
+        "pages_read": 4,
+        "type": "User-supplied secondary Chinese research brief, explicitly not original article reproduction",
+        "original_article_retrieved": false,
+        "experiment_images_received": false,
+        "experiment_TIFFs_received": false,
+        "reported_method": {
+          "light": "Amaran F21x LED; 3200K/5500K settings, not measured SPD",
+          "camera_settings": {
+            "minus2EV": "f/8, 1/500s",
+            "zeroEV": "f/5.6, 1/250s",
+            "plus2EV": "f/4, 1/125s"
+          },
+          "process": "Flic Film C-41 Pro; shared freshly mixed chemistry",
+          "scanner": "Nikon SUPER COOLSCAN 5000 ED; VueScan slide-mode RGB16; autofocus and autoexposure enabled",
+          "positive_conversion": "film Q; gray-reference mask and brightness matching; 800T underexposed exception",
+          "missing_frame": "800T no-filter daylight +2EV"
+        },
+        "agent_inferences": [
+          "Aperture changes can alter lens spatial response, so exposure-series visible halo differences are not pure film response. Magnitude unmeasured.",
+          "Per-frame gain can algebraically cancel in local ratios ONLY with verified linear code domain, known offset, spatially constant gain and no clipping; not verified here.",
+          "PrimeFilm kitchen sample is separate from this Nikon experiment; no transferred encoding/PSF assumptions."
+        ],
+        "review": "docs/ANALOG_CAFE_2026_BRIEF_REVIEW.md"
+      }
+    },
+    {
+      "id": "walker",
+      "url": "https://www.twalker.dev/lessons-in-home-scanning-with-cinestill-800t/",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "evidence_status": "ACCESS_BLOCKED_BEFORE_ORIGIN; NO_PAGE_OR_FILE_RETRIEVED",
+      "claim_basis": "User-provided description; not independently verified from webpage in this round",
+      "sha256": null
+    },
+    {
+      "id": "vuescan",
+      "url": "https://www.hamrick.com/vuescan/html/vuesc29.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "evidence_status": "ACCESS_BLOCKED_BEFORE_ORIGIN; NO_PAGE_OR_FILE_RETRIEVED",
+      "claim_basis": "User-provided description; not independently verified from webpage in this round",
+      "sha256": null
+    },
+    {
+      "id": "analog_scanning_workflow",
+      "url": "https://www.analog.cafe/r/scanning-35mm-film-negatives-with-primefilm-xa-cmyy",
+      "claim_basis": "User externally verified article; not retrieved by agent",
+      "user_external_verification": "Sample deliberately reduced to about 1400 DPI to control file size",
+      "evidence_status": "USER_REPORTED_PAGE_VERIFICATION; NO_AGENT_PAGE_OR_FILE_RETRIEVAL",
+      "sha256": null
+    }
+  ],
+  "acquired_negative_files": 1,
+  "source_claims": "One separately sourced PrimeFilm kitchen TIFF and license received and inspected. For 2026 Nikon experiment, only user reports and a four-page secondary brief have been received; original article/images/TIFFs have not been obtained.",
+  "network_draft": {
+    "status": "saved",
+    "requires_publish": true,
+    "draft_id": "f01f7e93-4d97-4bb4-9843-7b0dd5231ce7~cecfgdraft_6ad894fb2f3881a294e8bb717c2a6d2b",
+    "added_domains": [
+      "analog.cafe",
+      "www.analog.cafe",
+      "twalker.dev",
+      "www.twalker.dev",
+      "www.hamrick.com",
+      "www.vuescan.com"
+    ],
+    "running_network_changed": false
+  },
+  "intake_validation": {
+    "synthetic_tests_passed": 4,
+    "real_EPFL_control": {
+      "file_name": "A002382raphael-R1-02-3.TIF",
+      "sha256": "20e1319a5b4d4debee824d9b415c9bf4b49457ef19bf9ce1c17d2fcb11cfd1ec",
+      "dtype": "uint8",
+      "single_page_RGB_uint16_container": false,
+      "linear_encoding_verified": false,
+      "density_analysis_ready": false
+    }
+  },
+  "research_decision": "Actual TIFF received and inspected; local metadata/negative-reading fixture accepted. No suitable isolated lamp core, verified linear scanner channels, calibrated spatial scale or scanner PSF; do not derive density or halation kernel. Backup film experiment remains unexecuted.",
+  "production_verified_files": 59,
+  "production_changed_files": [],
+  "controlled_experiment": {
+    "frames": 14,
+    "status": "ARCHIVED_BACKUP; DO_NOT_EXECUTE_NOW",
+    "scanner_spatial_controls": [
+      "fixed exposure/gain and disabled automatic enhancement",
+      "repeat scans",
+      "same-plane known high-contrast edge or aperture",
+      "direction and field-position checks",
+      "rotation control with explicit isotropic-PSF limitation"
+    ],
+    "additional_film_frames": 0
+  },
+  "actual_sample_report": "analog_cafe_intake_results.json"
+}

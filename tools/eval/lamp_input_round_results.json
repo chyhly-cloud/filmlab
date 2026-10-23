@@ -1,0 +1,127 @@
+{
+  "round": "Measured lamp edges and reversible HDR RAW numerical decoding",
+  "goal_complete": false,
+  "production_files_modified_this_round": [],
+  "formal_generations_changed": [],
+  "new_tests_passed": 26,
+  "reports": [
+    "docs/LAMP_EDGE_INPUT_AUDIT.md",
+    "docs/CAMERA_SOURCE_CONSTRAINTS.md",
+    "docs/LAMP_EDGE_SPECTRAL_CANDIDATE.md",
+    "docs/MEASURED_BODY_DECODE_CANDIDATE.md",
+    "docs/RAW_HDR_DECODE_AUDIT.md"
+  ],
+  "edge_constraints": {
+    "partially_saturated_cells": [
+      77,
+      59
+    ],
+    "exact_proxy_feasible_replaced_cells": [
+      57,
+      44
+    ],
+    "available_channels_constrained": [
+      96,
+      69
+    ],
+    "missing_channels_still_estimated": [
+      75,
+      63
+    ],
+    "infeasible_partial_cells_retained": [
+      20,
+      15
+    ],
+    "full_RGB_flagged_non_strict_cells_retained": [
+      4,
+      2
+    ],
+    "selection": "No scan-based choice; input-Y and return-R LP objectives only. Inherited strict core remains old same-scan inverse."
+  },
+  "final_HDR_decoder": {
+    "implementation": "tools/eval/raw_hdr_decode_audit.py:decode_hdr_float",
+    "settings": "neutral camera16, unity WB, Ignore, bright=1, adjust_maximum_thr=0; fixed digital calibration then float colour conversion",
+    "validated_camera_models": [
+      "Panasonic G81",
+      "Sony ILCE-7C"
+    ],
+    "digital_camera_reconstruction_max_absolute_error": [
+      1.03e-05,
+      2.56e-05
+    ],
+    "actual_measured_body_cells": [
+      68,
+      47
+    ],
+    "actual_measured_body_XYZ_error_max": [
+      2.94e-05,
+      2.34e-05
+    ],
+    "actual_old_XYZ_error_max": [
+      1.0524,
+      1.0531
+    ],
+    "unknown_core_values_newly_recovered": 0,
+    "formal_default_adoption": false
+  },
+  "film_replay": {
+    "scope": "Replay the independently validated HDR decoder through fixed film/scan stages.\n\nOnly previously declared, fully measured body cells change. Camera-calibrated\nnumeric range preservation is not a lamp-spectrum or radiance measurement.\nInherited core/partial-edge estimates and all physical/output parameters remain.\n",
+    "coefficient_or_timing_fit": false,
+    "regions": [
+      {
+        "name": "ceiling_lamp",
+        "fully_measured_body_cells": 68,
+        "metrics": {
+          "train_diagnostic": {
+            "Lab_RMSE": 5.377252226751222,
+            "median_deltaE00": 5.888835405294875
+          },
+          "heldout": {
+            "Lab_RMSE": 4.79390601209408,
+            "median_deltaE00": 4.844989498870676
+          },
+          "outer": {
+            "Lab_RMSE": 5.706944819319024,
+            "median_deltaE00": 5.915459881791306
+          }
+        },
+        "final_HDR_vs_Bayer_float_body_RGB_max": 0.00012336907745291725,
+        "final_HDR_vs_Bayer_float_body_sample_Lab_max": 0.000438154299398974,
+        "HDR_vs_Bayer_float_body_input_RGB_max": 0.0017423641688054659,
+        "unknown_core_or_partial_source_values_newly_recovered": 0,
+        "scope_limit": "Only these full-measurement body cells were changed, not whole-frame HDR adoption or source radiance calibration."
+      },
+      {
+        "name": "middle_ceiling",
+        "fully_measured_body_cells": 47,
+        "metrics": {
+          "train_diagnostic": {
+            "Lab_RMSE": 4.333717551430427,
+            "median_deltaE00": 4.0255660452854425
+          },
+          "heldout": {
+            "Lab_RMSE": 3.179182734724752,
+            "median_deltaE00": 4.087866197721555
+          },
+          "outer": {
+            "Lab_RMSE": 3.5014950634196222,
+            "median_deltaE00": 4.0218717718531805
+          }
+        },
+        "final_HDR_vs_Bayer_float_body_RGB_max": 0.00030187583096730197,
+        "final_HDR_vs_Bayer_float_body_sample_Lab_max": 0.006687263339744121,
+        "HDR_vs_Bayer_float_body_input_RGB_max": 0.0016874746066743995,
+        "unknown_core_or_partial_source_values_newly_recovered": 0,
+        "scope_limit": "Only these full-measurement body cells were changed, not whole-frame HDR adoption or source radiance calibration."
+      }
+    ]
+  },
+  "decision": "Keep measurement constraints and an independently validated eval-only HDR decoder. Edge and measured-body corrections do not reproduce the full real orange halo transition. No material/scanner root-cause attribution or formal promotion.",
+  "artifacts_outside_repo": [
+    "/workspace/filmlab-audit/lamp-edge-input-audit/",
+    "/workspace/filmlab-audit/camera-source-constraints/",
+    "/workspace/filmlab-audit/lamp-edge-spectral-candidate/",
+    "/workspace/filmlab-audit/raw-hdr-decode-fixed-white/",
+    "/workspace/filmlab-audit/raw-hdr-film-replay/"
+  ]
+}

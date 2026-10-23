@@ -1,0 +1,1253 @@
+{
+  "date_utc": "2026-10-21",
+  "scope": "Aggregate the predeclared field/sector experiments without fitting/selecting.",
+  "goal_complete": false,
+  "production": {
+    "checked_files": 59,
+    "changed_files": []
+  },
+  "reports": [
+    "docs/CENSORED_SOURCE_FIELD.md",
+    "docs/CENSORED_SOURCE_FIELD_REVIEW.md",
+    "docs/SOURCE_PROFILE_HOLDOUT.md"
+  ],
+  "new_targeted_tests_passed": 7,
+  "regions": [
+    {
+      "name": "ceiling_lamp",
+      "same_initialization_and_data_verified": true,
+      "source_field_role_reversal_comparison": {
+        "common_cells": 88,
+        "unit_sum_total_variation": 0.7122871828293269,
+        "centroid_estimate_yx_pixels": [
+          103.944156036487,
+          104.56423062329894
+        ],
+        "centroid_reference_yx_pixels": [
+          105.3971275754616,
+          105.63373767319302
+        ],
+        "centroid_distance_pixels": 1.8041539908897328,
+        "centroid_estimate_minus_reference_yx_pixels": [
+          -1.4529715389745945,
+          -1.069507049894085
+        ],
+        "peak_to_mean_estimate": 19.01397502002511,
+        "peak_to_mean_reference": 18.033743591756178,
+        "peak_to_mean_ratio_estimate_over_reference": 1.0543554045382473,
+        "rms_radius_estimate_pixels": 2.9811567844744027,
+        "rms_radius_reference_pixels": 7.568043843557456
+      },
+      "forward": {
+        "name": "ceiling_lamp",
+        "scope": "Fixed-total censored source-field inverse, not a material/radiance measurement.\n\nOnly fully censored core amplitudes vary, at one previously selected common SPD.\nEvery amplitude obeys its camera-proxy floor; direct/return use the same field.\nFinite trust-region linear proposals require full nonlinear training acceptance.\n",
+        "source_cells": 88,
+        "fixed_total_amplitude": [
+          88.00000000000003,
+          88.00000000000018
+        ],
+        "camera_proxy_max_deficit": 3.3306690738754696e-16,
+        "relative_source_field_L1_change": 1.757573829149946,
+        "same_SPD_linear_replay_max": 1.3642420526593924e-12,
+        "initial_nonlinear_Lab_replay_max": 5.684341886080802e-14,
+        "synthetic_known_field_check": {
+          "known_field_max_change": 0.17926381602695485,
+          "initial_component_MSE": 7.410859924296238e-05,
+          "linear_prediction_MSE": 2.5271082124257055e-07,
+          "complete_nonlinear_MSE": 2.4910667464667047e-07,
+          "recovered_field_relative_L1_error": 0.03141797857873618,
+          "scope": "Algorithm-only known-source check; not a measured 800T fixture or true inverse uniqueness.",
+          "initial_field_relative_L1_error": 0.03348206004248317
+        },
+        "iteration_history": [
+          {
+            "iteration": 0,
+            "solver_success": false,
+            "solver_message": "Iteration limit reached",
+            "initial_train_MSE": 25.83264873827531,
+            "trust_box_radius": 22.000000000000007,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 18.649915861550344,
+                "full_nonlinear_component_MSE": 18.868093067257412,
+                "actual_over_predicted_decrease": 0.9696247640763513
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 1,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 18.868093067257412,
+            "trust_box_radius": 33.000000000000014,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 18.40637680458095,
+                "full_nonlinear_component_MSE": 18.85570872223257,
+                "actual_over_predicted_decrease": 0.026822414599504008
+              },
+              {
+                "alpha": 0.5,
+                "predicted_component_MSE": 18.601900507086587,
+                "full_nonlinear_component_MSE": 18.710670280901603,
+                "actual_over_predicted_decrease": 0.5913868751808291
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 2,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 18.710670280901603,
+            "trust_box_radius": 33.000000000000014,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 18.641834388917115,
+                "full_nonlinear_component_MSE": 18.72236183464758,
+                "actual_over_predicted_decrease": -0.1698467675643796
+              },
+              {
+                "alpha": 0.5,
+                "predicted_component_MSE": 18.673508753384816,
+                "full_nonlinear_component_MSE": 18.693708798166952,
+                "actual_over_predicted_decrease": 0.4564258755776042
+              }
+            ],
+            "accepted": true
+          }
+        ],
+        "initial_catalogue": {
+          "inner_train": {
+            "samples": 160,
+            "Lab_RMSE": 5.614327756118032,
+            "median_deltaE00": 8.399355534406627,
+            "mean_model_minus_real_Lab": [
+              2.6879005122931092,
+              -0.8137715911533869,
+              -1.9694226951570883
+            ]
+          },
+          "inner_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.09096431663649,
+            "median_deltaE00": 6.66051301839388,
+            "mean_model_minus_real_Lab": [
+              3.3671438382231615,
+              -2.502564785807316,
+              -1.7616826523569942
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 4.488275985657889,
+            "median_deltaE00": 4.303679040619889,
+            "mean_model_minus_real_Lab": [
+              -0.5810758956635919,
+              3.618237134712009,
+              -0.014392960769821305
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.310888807071841,
+            "median_deltaE00": 5.347900103604573,
+            "mean_model_minus_real_Lab": [
+              -0.06847123405500621,
+              6.177620017953847,
+              0.6439858010924159
+            ]
+          }
+        },
+        "fitted_field": {
+          "inner_train": {
+            "samples": 160,
+            "Lab_RMSE": 4.279112770723262,
+            "median_deltaE00": 5.362381537132426,
+            "mean_model_minus_real_Lab": [
+              2.942912303193766,
+              -1.0408432757594115,
+              -1.5874689515907012
+            ]
+          },
+          "inner_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 4.888168627288837,
+            "median_deltaE00": 6.125038160048005,
+            "mean_model_minus_real_Lab": [
+              3.0733582061990328,
+              -2.8505741580014146,
+              -2.2155782736529988
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 4.367678043510876,
+            "median_deltaE00": 4.376018912476075,
+            "mean_model_minus_real_Lab": [
+              -0.47053833278027907,
+              3.78862413799951,
+              0.17080002296846836
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.3728336435188275,
+            "median_deltaE00": 5.23360508252895,
+            "mean_model_minus_real_Lab": [
+              0.004802025361841178,
+              6.260540212184649,
+              0.762501331968563
+            ]
+          }
+        },
+        "total_forward_evaluations": 280,
+        "elapsed_seconds": 28.4709529876709,
+        "source_spectrum": "Fixed preselected 112-spectrum common witness; not measured lamp SPD.",
+        "limits": [
+          "Finite three-step trust-region experiment, not a global optimum or physical impossibility proof.",
+          "Target final RGB repeatedly used. Native-isolated 19px sectors are conditional same-frame tests, not external measurements.",
+          "Hard constraints are qualified camera proxies, not calibrated sensor spectral sensitivity.",
+          "Only fully censored core support may change. Unknown external source support/angle/SPD cannot be excluded.",
+          "No spatial smoothness/material constants fitted. Extreme source patterns can be algebraically feasible but unphysical.",
+          "Known synthetic recovery checks the implementation, not actual material or radiance truth."
+        ],
+        "training_groups": [
+          0,
+          2
+        ],
+        "sector_scope": "Original groups0/2 train; original1/3 evaluation. Repeated real target is not external validation.",
+        "initial_field_shape": {
+          "peak_to_mean": 1.8036091221580293,
+          "maximum_single_cell_fraction": 0.02049555820634124,
+          "effective_cells": 77.89624792262505,
+          "centroid_yx_native_pixels": [
+            101.68234063472845,
+            101.22604776721315
+          ],
+          "rms_radius_native_pixels": 5.949705899023233,
+          "camera_floor_active_cells": 0,
+          "camera_floor_fraction_of_total": 0.01916715362793664
+        },
+        "fitted_field_shape": {
+          "peak_to_mean": 19.01397502002511,
+          "maximum_single_cell_fraction": 0.2160678979548308,
+          "effective_cells": 9.415588076117723,
+          "centroid_yx_native_pixels": [
+            103.944156036487,
+            104.56423062329894
+          ],
+          "rms_radius_native_pixels": 2.9811567844744027,
+          "camera_floor_active_cells": 75,
+          "camera_floor_fraction_of_total": 0.019167153627936605
+        }
+      },
+      "reverse": {
+        "name": "ceiling_lamp",
+        "scope": "Fixed-total censored source-field inverse, not a material/radiance measurement.\n\nOnly fully censored core amplitudes vary, at one previously selected common SPD.\nEvery amplitude obeys its camera-proxy floor; direct/return use the same field.\nFinite trust-region linear proposals require full nonlinear training acceptance.\n",
+        "source_cells": 88,
+        "training_groups": [
+          1,
+          3
+        ],
+        "sector_scope": "Role reversal reuses the original heldout targets for a separate cross-fit stability diagnostic; never new blind evidence.",
+        "fixed_total_amplitude": [
+          88.00000000000003,
+          88.00000000000009
+        ],
+        "camera_proxy_max_deficit": 7.771561172376096e-16,
+        "relative_source_field_L1_change": 1.8561706663946371,
+        "initial_field_shape": {
+          "peak_to_mean": 1.8036091221580293,
+          "maximum_single_cell_fraction": 0.02049555820634124,
+          "effective_cells": 77.89624792262505,
+          "centroid_yx_native_pixels": [
+            101.68234063472845,
+            101.22604776721315
+          ],
+          "rms_radius_native_pixels": 5.949705899023233,
+          "camera_floor_active_cells": 0,
+          "camera_floor_fraction_of_total": 0.01916715362793664
+        },
+        "fitted_field_shape": {
+          "peak_to_mean": 18.033743591756178,
+          "maximum_single_cell_fraction": 0.20492890445177475,
+          "effective_cells": 6.749917102152412,
+          "centroid_yx_native_pixels": [
+            105.3971275754616,
+            105.63373767319302
+          ],
+          "rms_radius_native_pixels": 7.568043843557456,
+          "camera_floor_active_cells": 80,
+          "camera_floor_fraction_of_total": 0.019167153627936626
+        },
+        "same_SPD_linear_replay_max": 1.3642420526593924e-12,
+        "initial_nonlinear_Lab_replay_max": 5.684341886080802e-14,
+        "synthetic_known_field_check": {
+          "known_field_max_change": 0.17926381602695485,
+          "initial_component_MSE": 4.5813489451794954e-05,
+          "linear_prediction_MSE": 3.8849221107667044e-07,
+          "complete_nonlinear_MSE": 3.930931051913934e-07,
+          "recovered_field_relative_L1_error": 0.02853675547286712,
+          "scope": "Algorithm-only known-source check; not a measured 800T fixture or true inverse uniqueness."
+        },
+        "iteration_history": [
+          {
+            "iteration": 0,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 27.061728797173497,
+            "trust_box_radius": 22.000000000000007,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 24.62980668530539,
+                "full_nonlinear_component_MSE": 25.020599780943186,
+                "actual_over_predicted_decrease": 0.8393069030744555
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 1,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 25.020599780943186,
+            "trust_box_radius": 33.000000000000014,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 24.749709406264245,
+                "full_nonlinear_component_MSE": 25.047028521464668,
+                "actual_over_predicted_decrease": -0.09756249387895319
+              },
+              {
+                "alpha": 0.5,
+                "predicted_component_MSE": 24.827453751827314,
+                "full_nonlinear_component_MSE": 24.8819943863522,
+                "actual_over_predicted_decrease": 0.7176196954472882
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 2,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 24.8819943863522,
+            "trust_box_radius": 33.000000000000014,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 24.859783296790436,
+                "full_nonlinear_component_MSE": 24.918555980248016,
+                "actual_over_predicted_decrease": -1.6460963697500957
+              },
+              {
+                "alpha": 0.5,
+                "predicted_component_MSE": 24.867169153203484,
+                "full_nonlinear_component_MSE": 24.88309990563973,
+                "actual_over_predicted_decrease": -0.07457011140676907
+              },
+              {
+                "alpha": 0.25,
+                "predicted_component_MSE": 24.873651847685885,
+                "full_nonlinear_component_MSE": 24.87763413760507,
+                "actual_over_predicted_decrease": 0.5226525068124419
+              }
+            ],
+            "accepted": true
+          }
+        ],
+        "initial_catalogue": {
+          "inner_train": {
+            "samples": 160,
+            "Lab_RMSE": 5.614327756118032,
+            "median_deltaE00": 8.399355534406627,
+            "mean_model_minus_real_Lab": [
+              2.6879005122931092,
+              -0.8137715911533869,
+              -1.9694226951570883
+            ]
+          },
+          "inner_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.09096431663649,
+            "median_deltaE00": 6.66051301839388,
+            "mean_model_minus_real_Lab": [
+              3.3671438382231615,
+              -2.502564785807316,
+              -1.7616826523569942
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 4.488275985657889,
+            "median_deltaE00": 4.303679040619889,
+            "mean_model_minus_real_Lab": [
+              -0.5810758956635919,
+              3.618237134712009,
+              -0.014392960769821305
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.310888807071841,
+            "median_deltaE00": 5.347900103604573,
+            "mean_model_minus_real_Lab": [
+              -0.06847123405500621,
+              6.177620017953847,
+              0.6439858010924159
+            ]
+          }
+        },
+        "fitted_field": {
+          "inner_train": {
+            "samples": 160,
+            "Lab_RMSE": 5.620440491326613,
+            "median_deltaE00": 5.53169771000537,
+            "mean_model_minus_real_Lab": [
+              2.696125702689219,
+              -1.5236371704092815,
+              -1.99619570806072
+            ]
+          },
+          "inner_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 4.818124047781176,
+            "median_deltaE00": 6.638250493327526,
+            "mean_model_minus_real_Lab": [
+              2.7408272990976763,
+              -3.284700559523915,
+              -2.7225230300401506
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 5.129945659916964,
+            "median_deltaE00": 5.052430531958493,
+            "mean_model_minus_real_Lab": [
+              0.18814215687321506,
+              5.098560887961702,
+              1.1993642253582366
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 5.151790847404703,
+            "median_deltaE00": 4.989310979698709,
+            "mean_model_minus_real_Lab": [
+              -0.1972386222217115,
+              5.8430785563199015,
+              0.45006889844460607
+            ]
+          }
+        },
+        "total_forward_evaluations": 281,
+        "elapsed_seconds": 19.108648538589478,
+        "source_spectrum": "Fixed preselected 112-spectrum common witness; not measured lamp SPD.",
+        "limits": [
+          "Finite three-step trust-region experiment, not a global optimum or physical impossibility proof.",
+          "Target final RGB repeatedly used. Native-isolated 19px sectors are conditional same-frame tests, not external measurements.",
+          "Hard constraints are qualified camera proxies, not calibrated sensor spectral sensitivity.",
+          "Only fully censored core support may change. Unknown external source support/angle/SPD cannot be excluded.",
+          "No spatial smoothness/material constants fitted. Extreme source patterns can be algebraically feasible but unphysical.",
+          "Known synthetic recovery checks the implementation, not actual material or radiance truth."
+        ]
+      },
+      "reverse_prediction_on_original_train_component_MSE": 28.952846895122313
+    },
+    {
+      "name": "middle_ceiling",
+      "same_initialization_and_data_verified": true,
+      "source_field_role_reversal_comparison": {
+        "common_cells": 34,
+        "unit_sum_total_variation": 0.9543240898049425,
+        "centroid_estimate_yx_pixels": [
+          103.25367603598465,
+          102.80386381776032
+        ],
+        "centroid_reference_yx_pixels": [
+          105.34831803163675,
+          104.91113796087939
+        ],
+        "centroid_distance_pixels": 2.971216822146713,
+        "centroid_estimate_minus_reference_yx_pixels": [
+          -2.094641995652097,
+          -2.1072741431190707
+        ],
+        "peak_to_mean_estimate": 19.63496765618577,
+        "peak_to_mean_reference": 15.56282064704277,
+        "peak_to_mean_ratio_estimate_over_reference": 1.2616586736747355,
+        "rms_radius_estimate_pixels": 1.6246313720284153,
+        "rms_radius_reference_pixels": 6.55120782181632
+      },
+      "forward": {
+        "name": "middle_ceiling",
+        "scope": "Fixed-total censored source-field inverse, not a material/radiance measurement.\n\nOnly fully censored core amplitudes vary, at one previously selected common SPD.\nEvery amplitude obeys its camera-proxy floor; direct/return use the same field.\nFinite trust-region linear proposals require full nonlinear training acceptance.\n",
+        "source_cells": 34,
+        "fixed_total_amplitude": [
+          33.99999999999999,
+          34.00000000000005
+        ],
+        "camera_proxy_max_deficit": 0.0,
+        "relative_source_field_L1_change": 1.7390888408654483,
+        "same_SPD_linear_replay_max": 9.094947017729282e-13,
+        "initial_nonlinear_Lab_replay_max": 5.684341886080802e-14,
+        "synthetic_known_field_check": {
+          "known_field_max_change": 0.1311239288189121,
+          "initial_component_MSE": 8.297944659506336e-05,
+          "linear_prediction_MSE": 1.449834904915753e-07,
+          "complete_nonlinear_MSE": 1.4515033458178113e-07,
+          "recovered_field_relative_L1_error": 0.022705248566487694,
+          "scope": "Algorithm-only known-source check; not a measured 800T fixture or true inverse uniqueness.",
+          "initial_field_relative_L1_error": 0.02993824559641681
+        },
+        "iteration_history": [
+          {
+            "iteration": 0,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 13.499736655343181,
+            "trust_box_radius": 8.499999999999998,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 11.267707459401642,
+                "full_nonlinear_component_MSE": 11.352018607876138,
+                "actual_over_predicted_decrease": 0.9622266820578342
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 1,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 11.352018607876138,
+            "trust_box_radius": 12.749999999999996,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 11.33131728378171,
+                "full_nonlinear_component_MSE": 11.324222343524706,
+                "actual_over_predicted_decrease": 1.3427288140913083
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 2,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 11.324222343524706,
+            "trust_box_radius": 19.124999999999993,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 11.323443995078897,
+                "full_nonlinear_component_MSE": 11.324280335036494,
+                "actual_over_predicted_decrease": -0.07450584901970356
+              },
+              {
+                "alpha": 0.5,
+                "predicted_component_MSE": 11.323759558281983,
+                "full_nonlinear_component_MSE": 11.324175014532589,
+                "actual_over_predicted_decrease": 0.10226988189807651
+              }
+            ],
+            "accepted": true
+          }
+        ],
+        "initial_catalogue": {
+          "inner_train": {
+            "samples": 143,
+            "Lab_RMSE": 4.191649194453928,
+            "median_deltaE00": 3.606406434932005,
+            "mean_model_minus_real_Lab": [
+              2.750460005362645,
+              -0.9940415570939343,
+              -2.500077919465408
+            ]
+          },
+          "inner_heldout": {
+            "samples": 140,
+            "Lab_RMSE": 3.206171982841732,
+            "median_deltaE00": 3.6951953486722773,
+            "mean_model_minus_real_Lab": [
+              4.429435319808856,
+              0.01892155770094291,
+              -0.04272428860168933
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 3.0707572911775527,
+            "median_deltaE00": 3.345055409532055,
+            "mean_model_minus_real_Lab": [
+              0.6164384017432756,
+              2.4460141911836253,
+              -1.5248026924562854
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 3.3104579202039868,
+            "median_deltaE00": 3.7571215149834885,
+            "mean_model_minus_real_Lab": [
+              -0.46708912041895534,
+              3.0426031473216857,
+              -1.781766822570459
+            ]
+          }
+        },
+        "fitted_field": {
+          "inner_train": {
+            "samples": 143,
+            "Lab_RMSE": 3.585764127860668,
+            "median_deltaE00": 3.590228376678679,
+            "mean_model_minus_real_Lab": [
+              3.041499586862984,
+              -0.39796182974232375,
+              -2.0492592370651685
+            ]
+          },
+          "inner_heldout": {
+            "samples": 140,
+            "Lab_RMSE": 3.208360749985073,
+            "median_deltaE00": 3.651121179292065,
+            "mean_model_minus_real_Lab": [
+              4.3636222567404515,
+              -0.10210544658553547,
+              -0.15024496157541448
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 3.1290007427951823,
+            "median_deltaE00": 3.3231433008067865,
+            "mean_model_minus_real_Lab": [
+              0.4429639051234625,
+              2.126130310286346,
+              -1.79602634898573
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 3.332847380568155,
+            "median_deltaE00": 3.796401027050445,
+            "mean_model_minus_real_Lab": [
+              -0.46556420102583357,
+              3.0598439231039483,
+              -1.780214424079142
+            ]
+          }
+        },
+        "total_forward_evaluations": 117,
+        "elapsed_seconds": 10.42510461807251,
+        "source_spectrum": "Fixed preselected 112-spectrum common witness; not measured lamp SPD.",
+        "limits": [
+          "Finite three-step trust-region experiment, not a global optimum or physical impossibility proof.",
+          "Target final RGB repeatedly used. Native-isolated 19px sectors are conditional same-frame tests, not external measurements.",
+          "Hard constraints are qualified camera proxies, not calibrated sensor spectral sensitivity.",
+          "Only fully censored core support may change. Unknown external source support/angle/SPD cannot be excluded.",
+          "No spatial smoothness/material constants fitted. Extreme source patterns can be algebraically feasible but unphysical.",
+          "Known synthetic recovery checks the implementation, not actual material or radiance truth."
+        ],
+        "training_groups": [
+          0,
+          2
+        ],
+        "sector_scope": "Original groups0/2 train; original1/3 evaluation. Repeated real target is not external validation.",
+        "initial_field_shape": {
+          "peak_to_mean": 1.59447514191604,
+          "maximum_single_cell_fraction": 0.046896327703412934,
+          "effective_cells": 32.38334334915481,
+          "centroid_yx_native_pixels": [
+            104.72316587899905,
+            104.86667067052127
+          ],
+          "rms_radius_native_pixels": 4.071824778777262,
+          "camera_floor_active_cells": 0,
+          "camera_floor_fraction_of_total": 0.02385376849268377
+        },
+        "fitted_field_shape": {
+          "peak_to_mean": 19.63496765618577,
+          "maximum_single_cell_fraction": 0.5774990487113463,
+          "effective_cells": 2.174831387422264,
+          "centroid_yx_native_pixels": [
+            103.25367603598465,
+            102.80386381776032
+          ],
+          "rms_radius_native_pixels": 1.6246313720284153,
+          "camera_floor_active_cells": 30,
+          "camera_floor_fraction_of_total": 0.023853768492683728
+        }
+      },
+      "reverse": {
+        "name": "middle_ceiling",
+        "scope": "Fixed-total censored source-field inverse, not a material/radiance measurement.\n\nOnly fully censored core amplitudes vary, at one previously selected common SPD.\nEvery amplitude obeys its camera-proxy floor; direct/return use the same field.\nFinite trust-region linear proposals require full nonlinear training acceptance.\n",
+        "source_cells": 34,
+        "training_groups": [
+          1,
+          3
+        ],
+        "sector_scope": "Role reversal reuses the original heldout targets for a separate cross-fit stability diagnostic; never new blind evidence.",
+        "fixed_total_amplitude": [
+          33.99999999999999,
+          34.0
+        ],
+        "camera_proxy_max_deficit": 0.0,
+        "relative_source_field_L1_change": 1.768597525369499,
+        "initial_field_shape": {
+          "peak_to_mean": 1.59447514191604,
+          "maximum_single_cell_fraction": 0.046896327703412934,
+          "effective_cells": 32.38334334915481,
+          "centroid_yx_native_pixels": [
+            104.72316587899905,
+            104.86667067052127
+          ],
+          "rms_radius_native_pixels": 4.071824778777262,
+          "camera_floor_active_cells": 0,
+          "camera_floor_fraction_of_total": 0.02385376849268377
+        },
+        "fitted_field_shape": {
+          "peak_to_mean": 15.56282064704277,
+          "maximum_single_cell_fraction": 0.4577300190306697,
+          "effective_cells": 3.166442968370522,
+          "centroid_yx_native_pixels": [
+            105.34831803163675,
+            104.91113796087939
+          ],
+          "rms_radius_native_pixels": 6.55120782181632,
+          "camera_floor_active_cells": 30,
+          "camera_floor_fraction_of_total": 0.023853768492683763
+        },
+        "same_SPD_linear_replay_max": 9.094947017729282e-13,
+        "initial_nonlinear_Lab_replay_max": 5.684341886080802e-14,
+        "synthetic_known_field_check": {
+          "known_field_max_change": 0.1311239288189121,
+          "initial_component_MSE": 3.301293215562864e-05,
+          "linear_prediction_MSE": 3.194628315432044e-07,
+          "complete_nonlinear_MSE": 3.1806087541459767e-07,
+          "recovered_field_relative_L1_error": 0.02746296367505691,
+          "scope": "Algorithm-only known-source check; not a measured 800T fixture or true inverse uniqueness."
+        },
+        "iteration_history": [
+          {
+            "iteration": 0,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 10.619335212500294,
+            "trust_box_radius": 8.499999999999998,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 10.167745069463443,
+                "full_nonlinear_component_MSE": 10.157941711204446,
+                "actual_over_predicted_decrease": 1.0217085302019033
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 1,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 10.157941711204446,
+            "trust_box_radius": 12.749999999999996,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 10.148327778919759,
+                "full_nonlinear_component_MSE": 10.146954544019668,
+                "actual_over_predicted_decrease": 1.1428380042034179
+              }
+            ],
+            "accepted": true
+          },
+          {
+            "iteration": 2,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "initial_train_MSE": 10.146954544019668,
+            "trust_box_radius": 19.124999999999993,
+            "attempts": [
+              {
+                "alpha": 1.0,
+                "predicted_component_MSE": 10.146896798071232,
+                "full_nonlinear_component_MSE": 10.14689716040421,
+                "actual_over_predicted_decrease": 0.9937253956743202
+              }
+            ],
+            "accepted": true
+          }
+        ],
+        "initial_catalogue": {
+          "inner_train": {
+            "samples": 143,
+            "Lab_RMSE": 4.191649194453928,
+            "median_deltaE00": 3.606406434932005,
+            "mean_model_minus_real_Lab": [
+              2.750460005362645,
+              -0.9940415570939343,
+              -2.500077919465408
+            ]
+          },
+          "inner_heldout": {
+            "samples": 140,
+            "Lab_RMSE": 3.206171982841732,
+            "median_deltaE00": 3.6951953486722773,
+            "mean_model_minus_real_Lab": [
+              4.429435319808856,
+              0.01892155770094291,
+              -0.04272428860168933
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 3.0707572911775527,
+            "median_deltaE00": 3.345055409532055,
+            "mean_model_minus_real_Lab": [
+              0.6164384017432756,
+              2.4460141911836253,
+              -1.5248026924562854
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 3.3104579202039868,
+            "median_deltaE00": 3.7571215149834885,
+            "mean_model_minus_real_Lab": [
+              -0.46708912041895534,
+              3.0426031473216857,
+              -1.781766822570459
+            ]
+          }
+        },
+        "fitted_field": {
+          "inner_train": {
+            "samples": 143,
+            "Lab_RMSE": 4.713800990702719,
+            "median_deltaE00": 3.866488784406208,
+            "mean_model_minus_real_Lab": [
+              1.5913089241397704,
+              -3.4585523369504494,
+              -4.283275974588614
+            ]
+          },
+          "inner_heldout": {
+            "samples": 140,
+            "Lab_RMSE": 3.07403560281519,
+            "median_deltaE00": 3.4769016272962405,
+            "mean_model_minus_real_Lab": [
+              4.313168512241008,
+              -0.15431153214661714,
+              -0.2282204104135273
+            ]
+          },
+          "outer_train": {
+            "samples": 160,
+            "Lab_RMSE": 3.1941092199813355,
+            "median_deltaE00": 3.549159908182596,
+            "mean_model_minus_real_Lab": [
+              0.797244603646278,
+              2.8054757697098855,
+              -1.2442739382047447
+            ]
+          },
+          "outer_heldout": {
+            "samples": 160,
+            "Lab_RMSE": 3.2930380248993583,
+            "median_deltaE00": 3.753045625649275,
+            "mean_model_minus_real_Lab": [
+              -0.5039014036127857,
+              2.964818529478403,
+              -1.839670716549969
+            ]
+          }
+        },
+        "total_forward_evaluations": 116,
+        "elapsed_seconds": 6.884133815765381,
+        "source_spectrum": "Fixed preselected 112-spectrum common witness; not measured lamp SPD.",
+        "limits": [
+          "Finite three-step trust-region experiment, not a global optimum or physical impossibility proof.",
+          "Target final RGB repeatedly used. Native-isolated 19px sectors are conditional same-frame tests, not external measurements.",
+          "Hard constraints are qualified camera proxies, not calibrated sensor spectral sensitivity.",
+          "Only fully censored core support may change. Unknown external source support/angle/SPD cannot be excluded.",
+          "No spatial smoothness/material constants fitted. Extreme source patterns can be algebraically feasible but unphysical.",
+          "Known synthetic recovery checks the implementation, not actual material or radiance truth."
+        ]
+      },
+      "reverse_prediction_on_original_train_component_MSE": 16.211126744559856
+    }
+  ],
+  "independent_profile_controls": [
+    {
+      "name": "R1-05-6_roof_opening_1",
+      "coverage": {
+        "actual_saturated_supported_cells": 379,
+        "all_RGB_flagged_supported_cells": 327,
+        "primary_missing_channels_with_reference": 1069,
+        "primary_missing_channels_without_reference": 62
+      },
+      "Y_proxy_shape": {
+        "legacy_actual_seed0": {
+          "common_cells": 379,
+          "unit_sum_total_variation": 0.1871490835701646,
+          "centroid_estimate_yx_pixels": [
+            87.35928793372766,
+            89.11333195695148
+          ],
+          "centroid_reference_yx_pixels": [
+            87.26213254896233,
+            90.2647996558314
+          ],
+          "centroid_distance_pixels": 1.1555591851362266,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.0971553847653297,
+            -1.1514676988799124
+          ],
+          "peak_to_mean_estimate": 2.7786948115039336,
+          "peak_to_mean_reference": 1.2989132722986234,
+          "peak_to_mean_ratio_estimate_over_reference": 2.139245837858453,
+          "rms_radius_estimate_pixels": 9.02133333416199,
+          "rms_radius_reference_pixels": 9.484279227546244
+        },
+        "before_prior": {
+          "common_cells": 379,
+          "unit_sum_total_variation": 0.10412247784931965,
+          "centroid_estimate_yx_pixels": [
+            87.36247375220927,
+            89.5007211393433
+          ],
+          "centroid_reference_yx_pixels": [
+            87.26213254896233,
+            90.2647996558314
+          ],
+          "centroid_distance_pixels": 0.7706389144260084,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.10034120324694129,
+            -0.7640785164880981
+          ],
+          "peak_to_mean_estimate": 1.01864986553839,
+          "peak_to_mean_reference": 1.2989132722986234,
+          "peak_to_mean_ratio_estimate_over_reference": 0.7842323943120044,
+          "rms_radius_estimate_pixels": 10.119212369282367,
+          "rms_radius_reference_pixels": 9.484279227546244
+        },
+        "accepted_reference_pair_difference": {
+          "common_cells": 379,
+          "unit_sum_total_variation": 0.005891546946893733,
+          "centroid_estimate_yx_pixels": [
+            87.24473628408947,
+            90.25224273572924
+          ],
+          "centroid_reference_yx_pixels": [
+            87.26213254896233,
+            90.2647996558314
+          ],
+          "centroid_distance_pixels": 0.02145474945037941,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            -0.017396264872857614,
+            -0.012556920102156255
+          ],
+          "peak_to_mean_estimate": 1.2864574431653457,
+          "peak_to_mean_reference": 1.2989132722986234,
+          "peak_to_mean_ratio_estimate_over_reference": 0.990410576749874,
+          "rms_radius_estimate_pixels": 9.485005479942561,
+          "rms_radius_reference_pixels": 9.484279227546244
+        }
+      },
+      "strict_four_CFA_seed0_control": {
+        "cells": 326,
+        "scope": "Smaller genuinely four-CFA-saturated subset of the aperture control; still not a corridor source.",
+        "legacy_actual_seed0": {
+          "common_cells": 326,
+          "unit_sum_total_variation": 0.18725445778990135,
+          "centroid_estimate_yx_pixels": [
+            87.27781297915669,
+            89.75859492787436
+          ],
+          "centroid_reference_yx_pixels": [
+            87.27654769188766,
+            90.86415192672818
+          ],
+          "centroid_distance_pixels": 1.1055577229012317,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.0012652872690352979,
+            -1.105556998853828
+          ],
+          "peak_to_mean_estimate": 2.5800894533829415,
+          "peak_to_mean_reference": 1.2170681301185637,
+          "peak_to_mean_ratio_estimate_over_reference": 2.119921957969268,
+          "rms_radius_estimate_pixels": 8.492519601445315,
+          "rms_radius_reference_pixels": 8.97444823397495
+        },
+        "before_prior": {
+          "common_cells": 326,
+          "unit_sum_total_variation": 0.07441472465718077,
+          "centroid_estimate_yx_pixels": [
+            87.3146361907115,
+            90.65256522732254
+          ],
+          "centroid_reference_yx_pixels": [
+            87.27654769188766,
+            90.86415192672818
+          ],
+          "centroid_distance_pixels": 0.2149875929164928,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.038088498823839245,
+            -0.21158669940564323
+          ],
+          "peak_to_mean_estimate": 1.0143501141930318,
+          "peak_to_mean_reference": 1.2170681301185637,
+          "peak_to_mean_ratio_estimate_over_reference": 0.8334374133140897,
+          "rms_radius_estimate_pixels": 9.387757046322623,
+          "rms_radius_reference_pixels": 8.97444823397495
+        },
+        "accepted_reference_pair_difference": {
+          "common_cells": 326,
+          "unit_sum_total_variation": 0.004700025063363389,
+          "centroid_estimate_yx_pixels": [
+            87.2711684134275,
+            90.85006254370546
+          ],
+          "centroid_reference_yx_pixels": [
+            87.27654769188766,
+            90.86415192672818
+          ],
+          "centroid_distance_pixels": 0.015081357721134584,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            -0.005379278460154069,
+            -0.014089383022721336
+          ],
+          "peak_to_mean_estimate": 1.2070554924072874,
+          "peak_to_mean_reference": 1.2170681301185637,
+          "peak_to_mean_ratio_estimate_over_reference": 0.9917731493714317,
+          "rms_radius_estimate_pixels": 8.978904750315678,
+          "rms_radius_reference_pixels": 8.97444823397495
+        }
+      },
+      "seed_quantiles": {
+        "unit_sum_total_variation": {
+          "min": 0.08458236679973215,
+          "p05": 0.0878244329360384,
+          "median": 0.1380875048375031,
+          "p95": 0.18983814242793776,
+          "max": 0.19893860072070105
+        },
+        "centroid_distance_pixels": {
+          "min": 0.9184574164709561,
+          "p05": 0.9292654078500754,
+          "median": 1.0509813946542657,
+          "p95": 1.1611989078258365,
+          "max": 1.1801641033204742
+        },
+        "peak_to_mean_ratio_estimate_over_reference": {
+          "min": 1.242395027439741,
+          "p05": 1.2776775431395575,
+          "median": 1.709430883619913,
+          "p95": 2.164242956406963,
+          "max": 2.2497371251169453
+        },
+        "rms_radius_estimate_pixels": {
+          "min": 8.948168702712609,
+          "p05": 9.004641667727205,
+          "median": 9.32337966567693,
+          "p95": 9.662745998984217,
+          "max": 9.69254115715968
+        }
+      }
+    },
+    {
+      "name": "R1-05-6_roof_opening_2",
+      "coverage": {
+        "actual_saturated_supported_cells": 292,
+        "all_RGB_flagged_supported_cells": 38,
+        "primary_missing_channels_with_reference": 454,
+        "primary_missing_channels_without_reference": 4
+      },
+      "Y_proxy_shape": {
+        "legacy_actual_seed0": {
+          "common_cells": 292,
+          "unit_sum_total_variation": 0.13394349576753317,
+          "centroid_estimate_yx_pixels": [
+            87.23607260270987,
+            94.77918306821647
+          ],
+          "centroid_reference_yx_pixels": [
+            87.13642472203138,
+            94.91565053516622
+          ],
+          "centroid_distance_pixels": 0.1689765358249376,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.09964788067848929,
+            -0.1364674669497532
+          ],
+          "peak_to_mean_estimate": 2.333643712645637,
+          "peak_to_mean_reference": 1.3354907673206384,
+          "peak_to_mean_ratio_estimate_over_reference": 1.7474053507143055,
+          "rms_radius_estimate_pixels": 6.463960871998999,
+          "rms_radius_reference_pixels": 7.15773164377586
+        },
+        "before_prior": {
+          "common_cells": 292,
+          "unit_sum_total_variation": 0.079559541927807,
+          "centroid_estimate_yx_pixels": [
+            87.17975010079904,
+            94.6860236080999
+          ],
+          "centroid_reference_yx_pixels": [
+            87.13642472203138,
+            94.91565053516622
+          ],
+          "centroid_distance_pixels": 0.23367844162284748,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.04332537876766196,
+            -0.22962692706632026
+          ],
+          "peak_to_mean_estimate": 1.1463489643589744,
+          "peak_to_mean_reference": 1.3354907673206384,
+          "peak_to_mean_ratio_estimate_over_reference": 0.8583728112616349,
+          "rms_radius_estimate_pixels": 7.503007255285435,
+          "rms_radius_reference_pixels": 7.15773164377586
+        },
+        "accepted_reference_pair_difference": {
+          "common_cells": 292,
+          "unit_sum_total_variation": 0.005974917957475271,
+          "centroid_estimate_yx_pixels": [
+            87.117535318314,
+            94.92500190029506
+          ],
+          "centroid_reference_yx_pixels": [
+            87.13642472203138,
+            94.91565053516622
+          ],
+          "centroid_distance_pixels": 0.021077419257846078,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            -0.018889403717381015,
+            0.009351365128836164
+          ],
+          "peak_to_mean_estimate": 1.3298698767293324,
+          "peak_to_mean_reference": 1.3354907673206384,
+          "peak_to_mean_ratio_estimate_over_reference": 0.9957911423059981,
+          "rms_radius_estimate_pixels": 7.1508455447355095,
+          "rms_radius_reference_pixels": 7.15773164377586
+        }
+      },
+      "strict_four_CFA_seed0_control": {
+        "cells": 37,
+        "scope": "Smaller genuinely four-CFA-saturated subset of the aperture control; still not a corridor source.",
+        "legacy_actual_seed0": {
+          "common_cells": 37,
+          "unit_sum_total_variation": 0.06568898098158496,
+          "centroid_estimate_yx_pixels": [
+            87.44453687023682,
+            92.87726234711769
+          ],
+          "centroid_reference_yx_pixels": [
+            87.44358378289293,
+            92.66290019095516
+          ],
+          "centroid_distance_pixels": 0.2143642749390318,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            0.0009530873438876597,
+            0.21436215616253662
+          ],
+          "peak_to_mean_estimate": 1.2001404752578617,
+          "peak_to_mean_reference": 1.0560486475704915,
+          "peak_to_mean_ratio_estimate_over_reference": 1.136444308715193,
+          "rms_radius_estimate_pixels": 2.5963921800481127,
+          "rms_radius_reference_pixels": 2.6392136490067872
+        },
+        "before_prior": {
+          "common_cells": 37,
+          "unit_sum_total_variation": 0.012023009382736405,
+          "centroid_estimate_yx_pixels": [
+            87.42658837974757,
+            92.66298732666854
+          ],
+          "centroid_reference_yx_pixels": [
+            87.44358378289293,
+            92.66290019095516
+          ],
+          "centroid_distance_pixels": 0.016995626517013418,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            -0.016995403145358523,
+            8.713571338603288e-05
+          ],
+          "peak_to_mean_estimate": 1.016158059621754,
+          "peak_to_mean_reference": 1.0560486475704915,
+          "peak_to_mean_ratio_estimate_over_reference": 0.9622265621564798,
+          "rms_radius_estimate_pixels": 2.658835341112294,
+          "rms_radius_reference_pixels": 2.6392136490067872
+        },
+        "accepted_reference_pair_difference": {
+          "common_cells": 37,
+          "unit_sum_total_variation": 0.0042738302327016645,
+          "centroid_estimate_yx_pixels": [
+            87.43854863879345,
+            92.66387889590273
+          ],
+          "centroid_reference_yx_pixels": [
+            87.44358378289293,
+            92.66290019095516
+          ],
+          "centroid_distance_pixels": 0.00512938002851511,
+          "centroid_estimate_minus_reference_yx_pixels": [
+            -0.005035144099480249,
+            0.0009787049475704634
+          ],
+          "peak_to_mean_estimate": 1.0491874925075837,
+          "peak_to_mean_reference": 1.0560486475704915,
+          "peak_to_mean_ratio_estimate_over_reference": 0.9935029933718561,
+          "rms_radius_estimate_pixels": 2.641196102337732,
+          "rms_radius_reference_pixels": 2.6392136490067872
+        }
+      },
+      "seed_quantiles": {
+        "unit_sum_total_variation": {
+          "min": 0.05162129639901057,
+          "p05": 0.054339928839048174,
+          "median": 0.12819954106689302,
+          "p95": 0.21422985337972617,
+          "max": 0.215134416944625
+        },
+        "centroid_distance_pixels": {
+          "min": 0.15031635617698688,
+          "p05": 0.15038874736510538,
+          "median": 0.16675254310227267,
+          "p95": 0.21232713051461327,
+          "max": 0.2129408976423245
+        },
+        "peak_to_mean_ratio_estimate_over_reference": {
+          "min": 1.2518147006712157,
+          "p05": 1.2711652460521616,
+          "median": 1.7111423156474066,
+          "p95": 2.3127177801577377,
+          "max": 2.3197803875853293
+        },
+        "rms_radius_estimate_pixels": {
+          "min": 6.020498476363226,
+          "p05": 6.025585336266694,
+          "median": 6.494511799273598,
+          "p95": 6.8962181357958015,
+          "max": 6.915429167749905
+        }
+      }
+    }
+  ],
+  "decision": "Retain independently established aperture-profile failure and diagnostic field mechanism; no field/spatial/material/scanner candidate promoted.",
+  "interpretation": "Free fields expose previously untested shape leverage but do not recover the orange transition and are highly unstable under a sector role reversal. Shape concentration alone is not proof of physical impossibility.",
+  "limits": [
+    "Known synthetic output recovery does not certify recovered source shape.",
+    "Opposite-sector fitting reuses targets and a previously selected SPD; not external cross-validation.",
+    "Independent short-exposure shape controls are apertures, not the unresolved corridor lamps."
+  ],
+  "comparison_image": "/workspace/filmlab-audit/censored-source-field/both_directions_comparison.jpg"
+}

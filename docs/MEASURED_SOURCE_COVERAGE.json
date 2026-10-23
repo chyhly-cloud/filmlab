@@ -1,0 +1,2923 @@
+{
+  "record_date": "2026-10-20",
+  "scope": "Fixed per-region acceptance snapshot; no generalization from apertures to lamps",
+  "units": "native half-size Bayer cells; not individual full-resolution sensor pixels",
+  "evidence_levels": {
+    "cross_exposure_rgb": "All accepted pixels agree between independent alternate RAW exposures; not full spectra",
+    "partial_channel_collar": "Weaker evidence from a single alternate plus primary measured channels and source collar",
+    "not_recovered": "No new samples accepted; baseline estimates remain unverified",
+    "no_missing_camera_samples": "No missing primary camera channels in this ROI; source spectrum still unknown"
+  },
+  "study_status": "freeze halation strength, scanner curves and empirical-colour tuning pending independent source/material measurements",
+  "controlled_spectral_tests": "Known-spectrum background invariance is a separate controlled test, not real-scene spectral measurement",
+  "summary": {
+    "regions": 16,
+    "new_measured_units": 677,
+    "new_measured_originally_all_saturated": 365,
+    "real_regions_with_measured_spectrum": 0
+  },
+  "regions": [
+    {
+      "name": "R1-00-1_facade_lamp",
+      "region": {
+        "scene": "R1-00-1",
+        "name": "facade_lamp",
+        "center": [
+          1462,
+          586
+        ],
+        "radius": 28,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "partial_channel_collar",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 6
+      },
+      "camera_coverage": {
+        "roi_units": 2453,
+        "primary_unsaturated_units": 2176,
+        "primary_any_saturated": 277,
+        "primary_all_saturated": 177,
+        "new_measured_units": 6,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 271,
+        "unresolved_all_saturated": 177,
+        "new_measurement_fraction_of_roi": 0.0024459845087647777,
+        "recovery_fraction_of_missing": 0.021660649819494584,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [
+        {
+          "file": "P1480515.RW2",
+          "pixels": 6,
+          "cross_alternate_pixels": 0
+        }
+      ],
+      "source_files": [
+        {
+          "file": "P1480514.RW2",
+          "sha256": "6c31063064a4b50b44a1a9a796dadd1d93009a6353f448a95c78bc5d9579a9ff",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 21:23:58"
+        },
+        {
+          "file": "P1480515.RW2",
+          "sha256": "d74633fe91b93e72a88435df7e24d7f09484c0d4ca4f4700728964378cadf2cb",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 21:24:07"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480515.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2841,
+            "inliers": 2788,
+            "median_error_px": 0.0960776524834801
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.09721580814929788,
+              -0.09101979842552235
+            ],
+            "train_points": 2235,
+            "holdout_median_abs_stops": 0.03398689916024855,
+            "holdout_p90_abs_stops": 0.07278157618060271,
+            "pass": true
+          },
+          "recoverable_any": 6,
+          "recoverable_all": 0,
+          "remaining_any": 206,
+          "remaining_all": 134
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480515.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 1557,
+              "median_stops": -0.02753514580597278,
+              "p10_p90_stops": [
+                -0.13731073892281623,
+                0.06732653794096861
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 1812,
+              "median_stops": -0.0219529811118629,
+              "p10_p90_stops": [
+                -0.08930262184560615,
+                0.037458199037226705
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 1204,
+              "median_stops": -0.035431809327908244,
+              "p10_p90_stops": [
+                -0.141472263560967,
+                0.0632371209269695
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-00-1_distant_lamp",
+      "region": {
+        "scene": "R1-00-1",
+        "name": "distant_lamp",
+        "center": [
+          2268,
+          690
+        ],
+        "radius": 12,
+        "kind": "visible_luminaire",
+        "half": 36
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 441,
+        "primary_unsaturated_units": 333,
+        "primary_any_saturated": 108,
+        "primary_all_saturated": 63,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 108,
+        "unresolved_all_saturated": 63,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480514.RW2",
+          "sha256": "6c31063064a4b50b44a1a9a796dadd1d93009a6353f448a95c78bc5d9579a9ff",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 21:23:58"
+        },
+        {
+          "file": "P1480515.RW2",
+          "sha256": "d74633fe91b93e72a88435df7e24d7f09484c0d4ca4f4700728964378cadf2cb",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 21:24:07"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480515.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2841,
+            "inliers": 2788,
+            "median_error_px": 0.0960776524834801
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.31087796912317867,
+              -0.13479082308448675
+            ],
+            "train_points": 546,
+            "holdout_median_abs_stops": 0.10355317791666874,
+            "holdout_p90_abs_stops": 0.18769552523165514,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 79,
+          "remaining_all": 42
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480515.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 103,
+              "median_stops": -0.12478063400852163,
+              "p10_p90_stops": [
+                -0.3089336953749878,
+                0.057223030960984446
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 115,
+              "median_stops": -0.13902081044586995,
+              "p10_p90_stops": [
+                -0.26038976216126514,
+                -0.01878333528610487
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 96,
+              "median_stops": -0.1259298729519646,
+              "p10_p90_stops": [
+                -0.33727475940547136,
+                0.03029894216362884
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_walkway_1",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "walkway_1",
+        "center": [
+          220,
+          1124
+        ],
+        "radius": 25,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1961,
+        "primary_unsaturated_units": 1058,
+        "primary_any_saturated": 903,
+        "primary_all_saturated": 691,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 903,
+        "unresolved_all_saturated": 691,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              1.6375606185129634,
+              1.7208158350900002
+            ],
+            "train_points": 2776,
+            "holdout_median_abs_stops": 0.11657027230827488,
+            "holdout_p90_abs_stops": 0.2803556613578553,
+            "pass": true
+          },
+          "recoverable_any": 74,
+          "recoverable_all": 9,
+          "remaining_any": 722,
+          "remaining_all": 514
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 900,
+              "median_stops": -0.08961766055707102,
+              "p10_p90_stops": [
+                -0.20466620299477487,
+                0.032959638613151765
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 950,
+              "median_stops": -0.0795115751114219,
+              "p10_p90_stops": [
+                -0.20700346806338135,
+                0.0627552923281503
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 894,
+              "median_stops": -0.06454961678559239,
+              "p10_p90_stops": [
+                -0.20820806280664167,
+                0.11192596098900663
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_walkway_2",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "walkway_2",
+        "center": [
+          405,
+          1080
+        ],
+        "radius": 22,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1517,
+        "primary_unsaturated_units": 890,
+        "primary_any_saturated": 627,
+        "primary_all_saturated": 470,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 627,
+        "unresolved_all_saturated": 470,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              1.1055215079076735,
+              0.5865834153016033
+            ],
+            "train_points": 2879,
+            "holdout_median_abs_stops": 0.0795258590823269,
+            "holdout_p90_abs_stops": 0.21158796769221308,
+            "pass": true
+          },
+          "recoverable_any": 42,
+          "recoverable_all": 7,
+          "remaining_any": 473,
+          "remaining_all": 336
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 730,
+              "median_stops": -0.12236000596172898,
+              "p10_p90_stops": [
+                -0.2029386545449088,
+                -0.038682676600088256
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 804,
+              "median_stops": -0.13075154003354045,
+              "p10_p90_stops": [
+                -0.19622653226225176,
+                -0.02101680979600885
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 716,
+              "median_stops": -0.11679527181683146,
+              "p10_p90_stops": [
+                -0.220274077972405,
+                0.03967714528284334
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_walkway_3",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "walkway_3",
+        "center": [
+          548,
+          1046
+        ],
+        "radius": 18,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1009,
+        "primary_unsaturated_units": 552,
+        "primary_any_saturated": 457,
+        "primary_all_saturated": 354,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 457,
+        "unresolved_all_saturated": 354,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.5362115077566098,
+              -0.2576825575262371
+            ],
+            "train_points": 2989,
+            "holdout_median_abs_stops": 0.07422500833832535,
+            "holdout_p90_abs_stops": 0.24987878202311153,
+            "pass": true
+          },
+          "recoverable_any": 35,
+          "recoverable_all": 13,
+          "remaining_any": 357,
+          "remaining_all": 245
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 390,
+              "median_stops": 0.08439187104752978,
+              "p10_p90_stops": [
+                -0.11623814935364796,
+                0.2182460644435286
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 463,
+              "median_stops": 0.06979702740098152,
+              "p10_p90_stops": [
+                -0.09328751471795994,
+                0.18195031844710605
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 410,
+              "median_stops": 0.0678483134986986,
+              "p10_p90_stops": [
+                -0.06370203479008325,
+                0.1807937353247426
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_walkway_4",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "walkway_4",
+        "center": [
+          650,
+          1022
+        ],
+        "radius": 16,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 797,
+        "primary_unsaturated_units": 419,
+        "primary_any_saturated": 378,
+        "primary_all_saturated": 281,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 378,
+        "unresolved_all_saturated": 281,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.28631101188137736,
+              -0.37440278805811
+            ],
+            "train_points": 3001,
+            "holdout_median_abs_stops": 0.11846782125236555,
+            "holdout_p90_abs_stops": 0.4092202779144915,
+            "pass": true
+          },
+          "recoverable_any": 22,
+          "recoverable_all": 11,
+          "remaining_any": 296,
+          "remaining_all": 203
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 295,
+              "median_stops": -0.04059800441154206,
+              "p10_p90_stops": [
+                -0.17869869745996964,
+                0.08028059441887161
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 343,
+              "median_stops": -0.04251889536994373,
+              "p10_p90_stops": [
+                -0.20588973100694985,
+                0.05315995473021025
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 300,
+              "median_stops": -0.050762237766829914,
+              "p10_p90_stops": [
+                -0.18200561254278116,
+                0.04330028931416952
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_walkway_5",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "walkway_5",
+        "center": [
+          735,
+          1000
+        ],
+        "radius": 14,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 613,
+        "primary_unsaturated_units": 314,
+        "primary_any_saturated": 299,
+        "primary_all_saturated": 237,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 299,
+        "unresolved_all_saturated": 237,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.10518886606506597,
+              -0.4582345057289959
+            ],
+            "train_points": 3005,
+            "holdout_median_abs_stops": 0.1108038054817817,
+            "holdout_p90_abs_stops": 0.39124265472603326,
+            "pass": true
+          },
+          "recoverable_any": 14,
+          "recoverable_all": 6,
+          "remaining_any": 233,
+          "remaining_all": 161
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 191,
+              "median_stops": -0.13405684400788698,
+              "p10_p90_stops": [
+                -0.26867484546134635,
+                0.00016200995224531492
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 195,
+              "median_stops": -0.07366621992578261,
+              "p10_p90_stops": [
+                -0.17751671905759198,
+                0.018129108148813855
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 190,
+              "median_stops": -0.09773642853923745,
+              "p10_p90_stops": [
+                -0.21324811005091365,
+                0.0013205641137722926
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_red_beacon",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "red_beacon",
+        "center": [
+          1901,
+          458
+        ],
+        "radius": 10,
+        "kind": "visible_signal_light",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 317,
+        "primary_unsaturated_units": 267,
+        "primary_any_saturated": 50,
+        "primary_all_saturated": 2,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 50,
+        "unresolved_all_saturated": 2,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.0,
+              0.0
+            ],
+            "train_points": 0,
+            "holdout_median_abs_stops": null,
+            "holdout_p90_abs_stops": null,
+            "pass": false
+          },
+          "recoverable_any": 26,
+          "recoverable_all": 0,
+          "remaining_any": 15,
+          "remaining_all": 5
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 1,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-04-5_bright_wall_control",
+      "region": {
+        "scene": "R1-04-5",
+        "name": "bright_wall_control",
+        "center": [
+          1320,
+          1155
+        ],
+        "radius": 24,
+        "kind": "reflecting_or_transmitting_surface_control",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1793,
+        "primary_unsaturated_units": 123,
+        "primary_any_saturated": 1670,
+        "primary_all_saturated": 918,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 1670,
+        "unresolved_all_saturated": 918,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480509.RW2",
+          "sha256": "62999d313bf0b59a6f7a155853599cdd3ac163e29000276af75b3c037b9c79b6",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:51"
+        },
+        {
+          "file": "P1480510.RW2",
+          "sha256": "09bed17278d46b97929edae68b88eacfd24758bbd2a977a0b5ab7e07510683e5",
+          "time_s": 3.2,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:56:28"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480510.RW2",
+          "scale": 1.25,
+          "global_geometry": {
+            "matches": 747,
+            "inliers": 629,
+            "median_error_px": 1.5917742669380517
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.2233840236620042,
+              1.0066460560472972
+            ],
+            "train_points": 1013,
+            "holdout_median_abs_stops": 0.3662586168721128,
+            "holdout_p90_abs_stops": 1.4162031830927921,
+            "pass": false
+          },
+          "recoverable_any": 3,
+          "recoverable_all": 0,
+          "remaining_any": 1412,
+          "remaining_all": 551
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480510.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 211,
+              "median_stops": -0.39526830212219904,
+              "p10_p90_stops": [
+                -2.125704029451244,
+                0.44313128721734857
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 32,
+              "median_stops": -1.3724373807206942,
+              "p10_p90_stops": [
+                -2.1987056927171524,
+                0.02383962682986913
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 230,
+              "median_stops": -0.2744813063119053,
+              "p10_p90_stops": [
+                -2.138240532982024,
+                0.5206706050416673
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-05-6_red_beacon",
+      "region": {
+        "scene": "R1-05-6",
+        "name": "red_beacon",
+        "center": [
+          586,
+          490
+        ],
+        "radius": 10,
+        "kind": "visible_signal_light",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 317,
+        "primary_unsaturated_units": 303,
+        "primary_any_saturated": 14,
+        "primary_all_saturated": 4,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 14,
+        "unresolved_all_saturated": 4,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480506.RW2",
+          "sha256": "16bef3b3645ca79d02d87375100c49e6a76ab6c4e5ac9a4df95cad12c1b59400",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:30"
+        },
+        {
+          "file": "P1480505.RW2",
+          "sha256": "8b7799b5b2ddc07502ba25293dacd5b9ec6b9677492b87b0a9bf882f245e4383",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:22"
+        },
+        {
+          "file": "P1480507.RW2",
+          "sha256": "5218ca7765acdeae00c2c3fcedaeb2852969f0484491e49fdbf134f27ae4ed85",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:54"
+        },
+        {
+          "file": "P1480508.RW2",
+          "sha256": "04fec504f0ff8b3611b5efa7e41e784cfbe33fbe603ea74e786732005bbe466a",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:03"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480505.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2413,
+            "inliers": 2344,
+            "median_error_px": 0.5911118886221082
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.0,
+              0.0
+            ],
+            "train_points": 0,
+            "holdout_median_abs_stops": null,
+            "holdout_p90_abs_stops": null,
+            "pass": false
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 15,
+          "remaining_all": 4
+        },
+        {
+          "file": "P1480507.RW2",
+          "scale": 8.0,
+          "global_geometry": {
+            "matches": 1373,
+            "inliers": 1192,
+            "median_error_px": 1.2168881614886486
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.0,
+              0.0
+            ],
+            "train_points": 0,
+            "holdout_median_abs_stops": null,
+            "holdout_p90_abs_stops": null,
+            "pass": false
+          },
+          "recoverable_any": 4,
+          "recoverable_all": 1,
+          "remaining_any": 3,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480508.RW2",
+          "scale": 4.0,
+          "global_geometry": {
+            "matches": 1361,
+            "inliers": 1195,
+            "median_error_px": 1.3001713733759859
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.0,
+              0.0
+            ],
+            "train_points": 0,
+            "holdout_median_abs_stops": null,
+            "holdout_p90_abs_stops": null,
+            "pass": false
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 10,
+          "remaining_all": 4
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480505.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480507.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-05-6_far_warm_lamp",
+      "region": {
+        "scene": "R1-05-6",
+        "name": "far_warm_lamp",
+        "center": [
+          1703,
+          862
+        ],
+        "radius": 12,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 441,
+        "primary_unsaturated_units": 424,
+        "primary_any_saturated": 17,
+        "primary_all_saturated": 6,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 17,
+        "unresolved_all_saturated": 6,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480506.RW2",
+          "sha256": "16bef3b3645ca79d02d87375100c49e6a76ab6c4e5ac9a4df95cad12c1b59400",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:30"
+        },
+        {
+          "file": "P1480505.RW2",
+          "sha256": "8b7799b5b2ddc07502ba25293dacd5b9ec6b9677492b87b0a9bf882f245e4383",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:22"
+        },
+        {
+          "file": "P1480507.RW2",
+          "sha256": "5218ca7765acdeae00c2c3fcedaeb2852969f0484491e49fdbf134f27ae4ed85",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:54"
+        },
+        {
+          "file": "P1480508.RW2",
+          "sha256": "04fec504f0ff8b3611b5efa7e41e784cfbe33fbe603ea74e786732005bbe466a",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:03"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480505.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2413,
+            "inliers": 2344,
+            "median_error_px": 0.5911118886221082
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.23803081780297258,
+              0.10979230105246107
+            ],
+            "train_points": 412,
+            "holdout_median_abs_stops": 0.02597707454390963,
+            "holdout_p90_abs_stops": 0.08987713464645886,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 13,
+          "remaining_all": 7
+        },
+        {
+          "file": "P1480507.RW2",
+          "scale": 8.0,
+          "global_geometry": {
+            "matches": 1373,
+            "inliers": 1192,
+            "median_error_px": 1.2168881614886486
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.08423056810041867,
+              0.7909940326402877
+            ],
+            "train_points": 400,
+            "holdout_median_abs_stops": 0.06442354262526107,
+            "holdout_p90_abs_stops": 0.14834536285801114,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 9,
+          "remaining_all": 2
+        },
+        {
+          "file": "P1480508.RW2",
+          "scale": 4.0,
+          "global_geometry": {
+            "matches": 1361,
+            "inliers": 1195,
+            "median_error_px": 1.3001713733759859
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.1298607371543861,
+              1.3491610301034995
+            ],
+            "train_points": 383,
+            "holdout_median_abs_stops": 0.0437307208325004,
+            "holdout_p90_abs_stops": 0.15542752235432153,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 10,
+          "remaining_all": 3
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480505.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 4,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 10,
+              "median_stops": -0.25337042749724314,
+              "p10_p90_stops": [
+                -0.5622325856953626,
+                0.3357446199929461
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 4,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 11,
+              "median_stops": -0.060623576190821614,
+              "p10_p90_stops": [
+                -0.37099055126085945,
+                0.5796149625311902
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 5,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 7,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 3,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 13,
+              "median_stops": 0.1806100142057931,
+              "p10_p90_stops": [
+                -0.4450173706335449,
+                0.34368962123293617
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 3,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 11,
+              "median_stops": -0.05236371781190561,
+              "p10_p90_stops": [
+                -0.5429591126359985,
+                0.40441667851982627
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        },
+        {
+          "first": "P1480507.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 4,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 10,
+              "median_stops": -0.024978998492707134,
+              "p10_p90_stops": [
+                -0.6434930723898038,
+                0.41502696819235335
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 0,
+              "median_stops": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-05-6_roof_opening_1",
+      "region": {
+        "scene": "R1-05-6",
+        "name": "roof_opening_1",
+        "center": [
+          1044,
+          1008
+        ],
+        "radius": 18,
+        "kind": "transmitted_light_aperture_control",
+        "half": 90
+      },
+      "evidence_level": "cross_exposure_rgb",
+      "evidence_counts": {
+        "independent_alternate_agreement": 379,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1009,
+        "primary_unsaturated_units": 595,
+        "primary_any_saturated": 414,
+        "primary_all_saturated": 334,
+        "new_measured_units": 379,
+        "new_measured_originally_all_saturated": 327,
+        "unresolved_any_saturated": 35,
+        "unresolved_all_saturated": 7,
+        "new_measurement_fraction_of_roi": 0.37561942517343905,
+        "recovery_fraction_of_missing": 0.9154589371980676,
+        "recovery_fraction_of_all_saturated": 0.9790419161676647
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [
+        {
+          "file": "P1480505.RW2",
+          "pixels": 21,
+          "cross_alternate_pixels": 21
+        },
+        {
+          "file": "P1480508.RW2",
+          "pixels": 358,
+          "cross_alternate_pixels": 358
+        }
+      ],
+      "source_files": [
+        {
+          "file": "P1480506.RW2",
+          "sha256": "16bef3b3645ca79d02d87375100c49e6a76ab6c4e5ac9a4df95cad12c1b59400",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:30"
+        },
+        {
+          "file": "P1480505.RW2",
+          "sha256": "8b7799b5b2ddc07502ba25293dacd5b9ec6b9677492b87b0a9bf882f245e4383",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:22"
+        },
+        {
+          "file": "P1480507.RW2",
+          "sha256": "5218ca7765acdeae00c2c3fcedaeb2852969f0484491e49fdbf134f27ae4ed85",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:54"
+        },
+        {
+          "file": "P1480508.RW2",
+          "sha256": "04fec504f0ff8b3611b5efa7e41e784cfbe33fbe603ea74e786732005bbe466a",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:03"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480505.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2413,
+            "inliers": 2344,
+            "median_error_px": 0.5911118886221082
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.19295733511338475,
+              0.1753441560356186
+            ],
+            "train_points": 552,
+            "holdout_median_abs_stops": 0.04314941723377519,
+            "holdout_p90_abs_stops": 0.12480772505522501,
+            "pass": true
+          },
+          "recoverable_any": 24,
+          "recoverable_all": 0,
+          "remaining_any": 354,
+          "remaining_all": 91
+        },
+        {
+          "file": "P1480507.RW2",
+          "scale": 8.0,
+          "global_geometry": {
+            "matches": 1373,
+            "inliers": 1192,
+            "median_error_px": 1.2168881614886486
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.054484261208618996,
+              -0.2738670658555912
+            ],
+            "train_points": 475,
+            "holdout_median_abs_stops": 0.10474835522637105,
+            "holdout_p90_abs_stops": 0.25740104931187957,
+            "pass": true
+          },
+          "recoverable_any": 414,
+          "recoverable_all": 334,
+          "remaining_any": 0,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480508.RW2",
+          "scale": 4.0,
+          "global_geometry": {
+            "matches": 1361,
+            "inliers": 1195,
+            "median_error_px": 1.3001713733759859
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.0961908106341005,
+              -0.11978373072293173
+            ],
+            "train_points": 534,
+            "holdout_median_abs_stops": 0.0643984075585804,
+            "holdout_p90_abs_stops": 0.20773782031942112,
+            "pass": true
+          },
+          "recoverable_any": 414,
+          "recoverable_all": 334,
+          "remaining_any": 0,
+          "remaining_all": 0
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480505.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 1,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 15,
+              "median_stops": -0.18926607952371113,
+              "p10_p90_stops": [
+                -0.22897859951476796,
+                -0.17724042564650053
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 1,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 15,
+              "median_stops": -0.19709320909543857,
+              "p10_p90_stops": [
+                -0.20700028483166627,
+                -0.17090344777066224
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 0,
+              "median_stops": null
+            },
+            {
+              "channel": "G",
+              "pixels": 1,
+              "median_stops": null
+            },
+            {
+              "channel": "B",
+              "pixels": 15,
+              "median_stops": -0.19587204856662588,
+              "p10_p90_stops": [
+                -0.21462791897301348,
+                -0.14731402251874398
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 76,
+              "median_stops": -0.0515713396239697,
+              "p10_p90_stops": [
+                -0.07978443573338873,
+                0.01110299385028522
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 20,
+              "median_stops": 0.0008840151900647117,
+              "p10_p90_stops": [
+                -0.014412769431449758,
+                0.01724324836897594
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 146,
+              "median_stops": -0.11703821373960342,
+              "p10_p90_stops": [
+                -0.16511522792761435,
+                0.009812552279489347
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 74,
+              "median_stops": -0.031061833796693687,
+              "p10_p90_stops": [
+                -0.07488591150196824,
+                0.021818222655238972
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 19,
+              "median_stops": 0.011962959663497835,
+              "p10_p90_stops": [
+                -0.010664119149980028,
+                0.02460459244718469
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 146,
+              "median_stops": -0.11013200121315751,
+              "p10_p90_stops": [
+                -0.15082607557713262,
+                0.0065018797032762015
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480507.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 240,
+              "median_stops": 0.017951317224971397,
+              "p10_p90_stops": [
+                -0.006052316987310841,
+                0.040610880502144564
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 238,
+              "median_stops": 0.009199089160123467,
+              "p10_p90_stops": [
+                -0.0030705323080434236,
+                0.025247924041723352
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 232,
+              "median_stops": 0.012934817456133067,
+              "p10_p90_stops": [
+                -0.018529772316920823,
+                0.03839316782497784
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-05-6_roof_opening_2",
+      "region": {
+        "scene": "R1-05-6",
+        "name": "roof_opening_2",
+        "center": [
+          1141,
+          1024
+        ],
+        "radius": 18,
+        "kind": "transmitted_light_aperture_control",
+        "half": 90
+      },
+      "evidence_level": "cross_exposure_rgb",
+      "evidence_counts": {
+        "independent_alternate_agreement": 292,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1009,
+        "primary_unsaturated_units": 714,
+        "primary_any_saturated": 295,
+        "primary_all_saturated": 38,
+        "new_measured_units": 292,
+        "new_measured_originally_all_saturated": 38,
+        "unresolved_any_saturated": 3,
+        "unresolved_all_saturated": 0,
+        "new_measurement_fraction_of_roi": 0.2893954410307235,
+        "recovery_fraction_of_missing": 0.9898305084745763,
+        "recovery_fraction_of_all_saturated": 1.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [
+        {
+          "file": "P1480505.RW2",
+          "pixels": 292,
+          "cross_alternate_pixels": 292
+        }
+      ],
+      "source_files": [
+        {
+          "file": "P1480506.RW2",
+          "sha256": "16bef3b3645ca79d02d87375100c49e6a76ab6c4e5ac9a4df95cad12c1b59400",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:30"
+        },
+        {
+          "file": "P1480505.RW2",
+          "sha256": "8b7799b5b2ddc07502ba25293dacd5b9ec6b9677492b87b0a9bf882f245e4383",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:22"
+        },
+        {
+          "file": "P1480507.RW2",
+          "sha256": "5218ca7765acdeae00c2c3fcedaeb2852969f0484491e49fdbf134f27ae4ed85",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:54"
+        },
+        {
+          "file": "P1480508.RW2",
+          "sha256": "04fec504f0ff8b3611b5efa7e41e784cfbe33fbe603ea74e786732005bbe466a",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:03"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480505.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2413,
+            "inliers": 2344,
+            "median_error_px": 0.5911118886221082
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.39492896019332274,
+              0.1448350177036478
+            ],
+            "train_points": 1166,
+            "holdout_median_abs_stops": 0.029745085342975486,
+            "holdout_p90_abs_stops": 0.09211285871061077,
+            "pass": true
+          },
+          "recoverable_any": 295,
+          "recoverable_all": 38,
+          "remaining_any": 0,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480507.RW2",
+          "scale": 8.0,
+          "global_geometry": {
+            "matches": 1373,
+            "inliers": 1192,
+            "median_error_px": 1.2168881614886486
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.05970232918431965,
+              -0.2908397888215308
+            ],
+            "train_points": 1077,
+            "holdout_median_abs_stops": 0.07070365056917094,
+            "holdout_p90_abs_stops": 0.19198370943441567,
+            "pass": true
+          },
+          "recoverable_any": 295,
+          "recoverable_all": 38,
+          "remaining_any": 0,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480508.RW2",
+          "scale": 4.0,
+          "global_geometry": {
+            "matches": 1361,
+            "inliers": 1195,
+            "median_error_px": 1.3001713733759859
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.17236714286736884,
+              -0.08270954932272566
+            ],
+            "train_points": 1145,
+            "holdout_median_abs_stops": 0.06288398290651642,
+            "holdout_p90_abs_stops": 0.161427449658074,
+            "pass": true
+          },
+          "recoverable_any": 295,
+          "recoverable_all": 38,
+          "remaining_any": 0,
+          "remaining_all": 0
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480505.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 251,
+              "median_stops": -0.06262011711997924,
+              "p10_p90_stops": [
+                -0.1939393435284087,
+                0.016348074584587487
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 90,
+              "median_stops": 0.0015205505869414107,
+              "p10_p90_stops": [
+                -0.01903596330757314,
+                0.02059402449845217
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 172,
+              "median_stops": -0.01775857221895525,
+              "p10_p90_stops": [
+                -0.09760506714453936,
+                0.02932743688150933
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 249,
+              "median_stops": -0.07807910743831581,
+              "p10_p90_stops": [
+                -0.1902921485483428,
+                0.016557778668195397
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 89,
+              "median_stops": 0.0055159383991081066,
+              "p10_p90_stops": [
+                -0.021603238257739837,
+                0.0278622276323207
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 169,
+              "median_stops": -0.023419669034532523,
+              "p10_p90_stops": [
+                -0.10602219308092956,
+                0.03156771854408353
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 250,
+              "median_stops": -0.06752790380390657,
+              "p10_p90_stops": [
+                -0.17915172526861337,
+                0.03616125277421888
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 89,
+              "median_stops": 0.01181597215332836,
+              "p10_p90_stops": [
+                -0.009700423665010649,
+                0.0319753938668451
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 169,
+              "median_stops": -0.012307146776803697,
+              "p10_p90_stops": [
+                -0.08006166898966952,
+                0.03920599146008526
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 289,
+              "median_stops": 0.004004817111751588,
+              "p10_p90_stops": [
+                -0.04086819676358069,
+                0.04771900398567583
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 289,
+              "median_stops": 0.0114159000855957,
+              "p10_p90_stops": [
+                -0.014769306913064429,
+                0.03348465773642994
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 291,
+              "median_stops": 0.00010165757244234548,
+              "p10_p90_stops": [
+                -0.040832260064436285,
+                0.04402235665514748
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 290,
+              "median_stops": 0.01854524833117846,
+              "p10_p90_stops": [
+                -0.020648397494585052,
+                0.05768267859206587
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 289,
+              "median_stops": 0.021019577744782397,
+              "p10_p90_stops": [
+                -0.003984471096126764,
+                0.03857299290040091
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 292,
+              "median_stops": 0.014591680646928956,
+              "p10_p90_stops": [
+                -0.019033661880437366,
+                0.04264917442235007
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480507.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 292,
+              "median_stops": 0.013843901985628917,
+              "p10_p90_stops": [
+                -0.03226150101764556,
+                0.06540538154668844
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 290,
+              "median_stops": 0.00848162309957299,
+              "p10_p90_stops": [
+                -0.013513713892485001,
+                0.03234083963181985
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 294,
+              "median_stops": 0.013037538648408427,
+              "p10_p90_stops": [
+                -0.027264303271772417,
+                0.049906514609471674
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-05-6_roof_opening_3",
+      "region": {
+        "scene": "R1-05-6",
+        "name": "roof_opening_3",
+        "center": [
+          1278,
+          1010
+        ],
+        "radius": 16,
+        "kind": "transmitted_light_aperture_control",
+        "half": 90
+      },
+      "evidence_level": "no_missing_camera_samples",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 797,
+        "primary_unsaturated_units": 797,
+        "primary_any_saturated": 0,
+        "primary_all_saturated": 0,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 0,
+        "unresolved_all_saturated": 0,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": null,
+        "recovery_fraction_of_all_saturated": null
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480506.RW2",
+          "sha256": "16bef3b3645ca79d02d87375100c49e6a76ab6c4e5ac9a4df95cad12c1b59400",
+          "time_s": 4.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:30"
+        },
+        {
+          "file": "P1480505.RW2",
+          "sha256": "8b7799b5b2ddc07502ba25293dacd5b9ec6b9677492b87b0a9bf882f245e4383",
+          "time_s": 2.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:22"
+        },
+        {
+          "file": "P1480507.RW2",
+          "sha256": "5218ca7765acdeae00c2c3fcedaeb2852969f0484491e49fdbf134f27ae4ed85",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:54:54"
+        },
+        {
+          "file": "P1480508.RW2",
+          "sha256": "04fec504f0ff8b3611b5efa7e41e784cfbe33fbe603ea74e786732005bbe466a",
+          "time_s": 1.0,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:55:03"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480505.RW2",
+          "scale": 2.0,
+          "global_geometry": {
+            "matches": 2413,
+            "inliers": 2344,
+            "median_error_px": 0.5911118886221082
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.28299363164997576,
+              0.1445864782698122
+            ],
+            "train_points": 979,
+            "holdout_median_abs_stops": 0.031247125637944073,
+            "holdout_p90_abs_stops": 0.08458583600710617,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 0,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480507.RW2",
+          "scale": 8.0,
+          "global_geometry": {
+            "matches": 1373,
+            "inliers": 1192,
+            "median_error_px": 1.2168881614886486
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.003282941197931498,
+              -0.16799196931730323
+            ],
+            "train_points": 903,
+            "holdout_median_abs_stops": 0.07620049629496073,
+            "holdout_p90_abs_stops": 0.20699579483416836,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 0,
+          "remaining_all": 0
+        },
+        {
+          "file": "P1480508.RW2",
+          "scale": 4.0,
+          "global_geometry": {
+            "matches": 1361,
+            "inliers": 1195,
+            "median_error_px": 1.3001713733759859
+          },
+          "local_geometry": {
+            "translation_xy": [
+              0.04073183997117725,
+              0.09194303885204584
+            ],
+            "train_points": 974,
+            "holdout_median_abs_stops": 0.05682438975145909,
+            "holdout_p90_abs_stops": 0.1614530713311348,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 0,
+          "remaining_all": 0
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480505.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 46,
+              "median_stops": -0.019717679212238437,
+              "p10_p90_stops": [
+                -0.23707478558954231,
+                0.04303344990150956
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 50,
+              "median_stops": -0.014157742019881764,
+              "p10_p90_stops": [
+                -0.2145786828146278,
+                0.02556590512116579
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 35,
+              "median_stops": -0.01900032438194666,
+              "p10_p90_stops": [
+                -0.06127284849860727,
+                0.06173550064175846
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 46,
+              "median_stops": -0.07119528001934586,
+              "p10_p90_stops": [
+                -0.6550430820278295,
+                0.01972694581894839
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 49,
+              "median_stops": -0.04581453858810896,
+              "p10_p90_stops": [
+                -0.33041896646466734,
+                0.07095417338151185
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 34,
+              "median_stops": -0.09675923037303231,
+              "p10_p90_stops": [
+                -0.18314919114543945,
+                0.019318387947885415
+              ]
+            }
+          ]
+        },
+        {
+          "first": "primary",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 46,
+              "median_stops": -0.03760881817366568,
+              "p10_p90_stops": [
+                -0.4748502670467559,
+                0.03182160723069069
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 51,
+              "median_stops": -0.009185173477694536,
+              "p10_p90_stops": [
+                -0.3189614208928248,
+                0.039839388896091434
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 34,
+              "median_stops": -0.06484364848613511,
+              "p10_p90_stops": [
+                -0.136812098291228,
+                -0.0018743599029848418
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480507.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 46,
+              "median_stops": -0.0759140238198009,
+              "p10_p90_stops": [
+                -0.35469415103148805,
+                0.016115050734225665
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 50,
+              "median_stops": -0.02886738397827293,
+              "p10_p90_stops": [
+                -0.138402412095188,
+                0.01512233631044551
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 37,
+              "median_stops": -0.09752818532348391,
+              "p10_p90_stops": [
+                -0.18818516523027543,
+                0.027316087750531733
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480505.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 46,
+              "median_stops": -0.03026148768846757,
+              "p10_p90_stops": [
+                -0.20543518313449324,
+                0.0370919074195532
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 51,
+              "median_stops": -0.0018155360047206466,
+              "p10_p90_stops": [
+                -0.10833278258093999,
+                0.04199360038658676
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 36,
+              "median_stops": -0.04884151552188025,
+              "p10_p90_stops": [
+                -0.1354559086829614,
+                0.025721904073666736
+              ]
+            }
+          ]
+        },
+        {
+          "first": "P1480507.RW2",
+          "second": "P1480508.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 47,
+              "median_stops": 0.06467023736222545,
+              "p10_p90_stops": [
+                -0.03205141328755669,
+                0.18813291452776731
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 51,
+              "median_stops": 0.0262362124042797,
+              "p10_p90_stops": [
+                -0.06644276512022362,
+                0.11136805271838637
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 36,
+              "median_stops": 0.022373176805623868,
+              "p10_p90_stops": [
+                -0.035556943376316895,
+                0.11174484170394097
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-06-7_linear_canopy_light",
+      "region": {
+        "scene": "R1-06-7",
+        "name": "linear_canopy_light",
+        "center": [
+          1050,
+          940
+        ],
+        "radius": 24,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1793,
+        "primary_unsaturated_units": 1126,
+        "primary_any_saturated": 667,
+        "primary_all_saturated": 551,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 667,
+        "unresolved_all_saturated": 551,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": 0.0
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480504.RW2",
+          "sha256": "baa96e2c03c4fb5f02cf737cd9b7fe4f60f28a8a773ce5c702b304f48882aaf5",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:43:08"
+        },
+        {
+          "file": "P1480503.RW2",
+          "sha256": "04db0aa060cbb8777aa32f15617d436b88a77752edf5df03dbc757a7347bc9d8",
+          "time_s": 1.3,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:43:01"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480503.RW2",
+          "scale": 0.3846153846153847,
+          "global_geometry": {
+            "matches": 3626,
+            "inliers": 3483,
+            "median_error_px": 0.3261943224845701
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.1224140233247466,
+              -0.27472503476983107
+            ],
+            "train_points": 1198,
+            "holdout_median_abs_stops": 0.015859087060390298,
+            "holdout_p90_abs_stops": 0.03980053763131197,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 872,
+          "remaining_all": 668
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480503.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 299,
+              "median_stops": -0.006213651696226926,
+              "p10_p90_stops": [
+                -0.08191271540466487,
+                0.0837752054385583
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 524,
+              "median_stops": -0.013054921105643057,
+              "p10_p90_stops": [
+                -0.07372275041936632,
+                0.04390136573450681
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 194,
+              "median_stops": 0.010763804111853757,
+              "p10_p90_stops": [
+                -0.09427820724811282,
+                0.26765811362363007
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "R1-06-7_illuminated_bollard",
+      "region": {
+        "scene": "R1-06-7",
+        "name": "illuminated_bollard",
+        "center": [
+          2100,
+          946
+        ],
+        "radius": 22,
+        "kind": "visible_luminaire",
+        "half": 90
+      },
+      "evidence_level": "not_recovered",
+      "evidence_counts": {
+        "independent_alternate_agreement": 0,
+        "primary_channel_and_collar_agreement": 0
+      },
+      "camera_coverage": {
+        "roi_units": 1517,
+        "primary_unsaturated_units": 1183,
+        "primary_any_saturated": 334,
+        "primary_all_saturated": 0,
+        "new_measured_units": 0,
+        "new_measured_originally_all_saturated": 0,
+        "unresolved_any_saturated": 334,
+        "unresolved_all_saturated": 0,
+        "new_measurement_fraction_of_roi": 0.0,
+        "recovery_fraction_of_missing": 0.0,
+        "recovery_fraction_of_all_saturated": null
+      },
+      "spectrum_status": "not_measured",
+      "radiometry": "relative camera RGB; no absolute spectral radiance calibration",
+      "unresolved_policy": "retain baseline estimates and label unresolved; estimates are not measurements",
+      "halation_calibration_eligible": false,
+      "calibration_blockers": [
+        "actual source spectrum unavailable",
+        "complete incident source and lens-glare separation unavailable"
+      ],
+      "selected_measurements": [],
+      "source_files": [
+        {
+          "file": "P1480504.RW2",
+          "sha256": "baa96e2c03c4fb5f02cf737cd9b7fe4f60f28a8a773ce5c702b304f48882aaf5",
+          "time_s": 0.5,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:43:08"
+        },
+        {
+          "file": "P1480503.RW2",
+          "sha256": "04db0aa060cbb8777aa32f15617d436b88a77752edf5df03dbc757a7347bc9d8",
+          "time_s": 1.3,
+          "f_number": 5.6,
+          "iso": 200.0,
+          "timestamp": "2024:03:13 20:43:01"
+        }
+      ],
+      "registration_and_saturation_checks": [
+        {
+          "file": "P1480503.RW2",
+          "scale": 0.3846153846153847,
+          "global_geometry": {
+            "matches": 3626,
+            "inliers": 3483,
+            "median_error_px": 0.3261943224845701
+          },
+          "local_geometry": {
+            "translation_xy": [
+              -0.2049044562483508,
+              -0.3933564663712945
+            ],
+            "train_points": 193,
+            "holdout_median_abs_stops": 0.01628261013511345,
+            "holdout_p90_abs_stops": 0.04429561905877932,
+            "pass": true
+          },
+          "recoverable_any": 0,
+          "recoverable_all": 0,
+          "remaining_any": 550,
+          "remaining_all": 282
+        }
+      ],
+      "temporal_comparisons": [
+        {
+          "first": "primary",
+          "second": "P1480503.RW2",
+          "channels": [
+            {
+              "channel": "R",
+              "pixels": 519,
+              "median_stops": -0.002431655734624477,
+              "p10_p90_stops": [
+                -0.04949658277913953,
+                0.051363415715818414
+              ]
+            },
+            {
+              "channel": "G",
+              "pixels": 489,
+              "median_stops": -0.004825253974193583,
+              "p10_p90_stops": [
+                -0.03624812626561985,
+                0.023831907836054676
+              ]
+            },
+            {
+              "channel": "B",
+              "pixels": 180,
+              "median_stops": 0.0027424776086475812,
+              "p10_p90_stops": [
+                -0.07074145899910919,
+                0.08583282722962535
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

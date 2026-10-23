@@ -1,0 +1,398 @@
+{
+  "date_utc": "2026-10-20",
+  "goal": "Resolve real CineStill 800T halo transition discrepancy",
+  "outcome": "local_ceiling_geometry_control_completed_halo_not_validated",
+  "completed_checks": [
+    "Independent public-source audit",
+    "Three-state/local-background and registration sensitivity results preserved",
+    "Numerical halation contract checks; no actual-scene root-cause claim",
+    "Full inventory reconciliation of previously listed 47 EPFL RAWs against 42 recovered files"
+  ],
+  "cached_inventory_snapshot_sha256": "a2478718dc0d46687c8b71e0f96d3ec254c304b2a6a92982469101c49f2cccf5",
+  "cached_inventory_folder": "https://drive.google.com/drive/folders/1nyceFgowuAh01kiYYRVJzwWlYrl-Pj60",
+  "listing_count": 47,
+  "locally_recovered_count": 42,
+  "remaining_known_alternates": [
+    {
+      "raw": "P1480470.RW2",
+      "scene": "R1-23-24",
+      "description": "灯箱色块 (黄/橙) · 偏品红灯管",
+      "category": "lightbox_magenta",
+      "is_corridor_scene": false
+    },
+    {
+      "raw": "P1480473.RW2",
+      "scene": "R1-23-24",
+      "description": "灯箱色块 (黄/橙) · 偏品红灯管",
+      "category": "lightbox_magenta",
+      "is_corridor_scene": false
+    },
+    {
+      "raw": "P1480475.RW2",
+      "scene": "R1-21-22",
+      "description": "灯箱色块 (蓝) · 偏品红灯管",
+      "category": "lightbox_magenta",
+      "is_corridor_scene": false
+    },
+    {
+      "raw": "P1480488.RW2",
+      "scene": "R1-20-21",
+      "description": "TE226 背光色卡 (光源未知)",
+      "category": "colorchecker",
+      "is_corridor_scene": false
+    },
+    {
+      "raw": "P1480489.RW2",
+      "scene": "R1-20-21",
+      "description": "TE226 背光色卡 (光源未知)",
+      "category": "colorchecker",
+      "is_corridor_scene": false
+    }
+  ],
+  "corridor_recorded_alternates": "",
+  "meaning": "Remaining five recorded RAWs belong to chart/lightbox scenes, not the two corridor ceiling lamps. Cached inventory is not a current remote listing; this does not exclude private or unlisted exposures.",
+  "blockers": [
+    "No accepted unsaturated corridor lamp-core radiance/SPD input",
+    "No independently measured same-negative spatial density/transmission and scanner response",
+    "No verified actual 800T/C-41 nonneutral/material transport measurements acquired"
+  ],
+  "constraints_preserved": [
+    "No inverse material fit; final-RGB source-input fitting only within the later explicit authorization",
+    "No default/current/next changes",
+    "No transport integration or empirical colours",
+    "Grain scale finding not claimed to solve halation"
+  ],
+  "unfreeze": "Further source-input inverse research remains authorized. Resume this fixed-profile family only with a discriminating new test or evidence; no arbitrary material/scanner fit or claim that fitted radiance is measured.",
+  "latest_review": {
+    "trigger": "Automatic continuation after DSC03906 candidates and real-pair regression checks",
+    "outcome": "blocked_pending_independent_measurement",
+    "goal_complete": false,
+    "reports": [
+      "docs/USER_RAW_HALATION_FAILURE.md",
+      "docs/SENSOR_CONSTRAINED_INPUT_CANDIDATE.md"
+    ],
+    "candidate_modes": [
+      "observed_floor",
+      "local_ratio",
+      "partial_only"
+    ],
+    "real_pair_ids": [
+      "R1-02-3",
+      "R1-07-8"
+    ],
+    "region_metric": "median deltaE00 in fixed registered 0-300um measured-input surroundings; not pure measured halation",
+    "real_pair_median_dE00": {
+      "corridor_ceiling": {
+        "prior": 20.5604,
+        "observed_floor": 22.7583,
+        "local_ratio": 22.9083,
+        "partial_only": 21.2339
+      },
+      "twilight_left": {
+        "prior": 11.0998,
+        "observed_floor": 11.4823,
+        "local_ratio": 11.5091,
+        "partial_only": 11.1025
+      },
+      "twilight_right": {
+        "prior": 13.6644,
+        "observed_floor": 14.4645,
+        "local_ratio": 14.4926,
+        "partial_only": 13.7038
+      }
+    },
+    "retain": "Measurement-preserving research tool and explicit uncertainty masks; no candidate promoted",
+    "user_photo_limit": "No matching real800T capture; reduced red-circle artifact is not validation of 800T halation",
+    "production_changes": false,
+    "fresh_inventory_check": {
+      "epfl_digital_RW2_count": 42,
+      "previous_five_known_chart_alternates_present_in_digital_directory": false
+    },
+    "next_evidence_gate": "Independently measured relevant source radiance/SPD or same-negative transmission and scanner response or actual800T undeveloped/material/nonneutral measurement; identify which ambiguity it resolves before a new candidate"
+  },
+  "latest_authorization": {
+    "status": "independent_ceiling_geometry_control_and_fixed_input_replay_completed",
+    "supersedes_previous_no_endpoint_input_inverse_constraint": true,
+    "source": "User explicitly requests mathematical guesses/many experiments/fitting of unknown radiance followed by rigorous physical verification",
+    "production_changes_authorized": false,
+    "scope": [
+      "Nonnegative source-input inverse fitting with fixed backend",
+      "Independent RAW censor holdout",
+      "Finite-energy PSF wing extrapolation tested on short-exposure truth",
+      "Fixed-total fully-censored source-field inversion, independent aperture shape controls and one sector-role-reversal diagnostic"
+    ],
+    "report": "docs/INVERSE_RADIANCE_RESEARCH.md",
+    "production_note": "Formal/default/current/next behavior is frozen; independent opt-in rawio complete_exif API implemented and six actual default decodes bitwise verified."
+  },
+  "historical_outcome_before_inverse_authorization": "blocked_pending_independent_measurement",
+  "inverse_round": {
+    "goal_complete": false,
+    "report": "docs/INVERSE_RADIANCE_RESEARCH.md",
+    "forward_evaluations": 8080,
+    "spatial_psf_fits": 888,
+    "raw_holdout_cases": 66,
+    "prior_samples": 2112,
+    "strict_spatial_heldout_median_dE00": {
+      "near": [
+        23.1355,
+        4.7643
+      ],
+      "middle": [
+        8.8172,
+        4.3068
+      ]
+    },
+    "remaining_issue": "300-800um outside fitted surroundings can worsen; actual lamp SPD/power and undeveloped-material/scanner calibration not independently known",
+    "metadata_bug": "Raw exposure-time early return skips ISO available in embedded JPEG; independent no-fit candidate changes mean sourceY by about8-9x",
+    "pipeline_status": "all59 production-file digests unchanged; current/next unchanged",
+    "next_policy": "Source-input inverse studies now authorized. Do not adopt fitted inputs as measured radiance or tune default material/scan parameters."
+  },
+  "source_radius_round": {
+    "goal_complete": false,
+    "source_spatial_forward_evaluations": 2386,
+    "reports": [
+      "docs/SOURCE_SPATIAL_INVERSE.md",
+      "docs/SOURCE_GEOMETRY_BOUNDS.md",
+      "docs/INVERSE_REGISTRATION_AUDIT.md",
+      "docs/RAW_EXIF_CANDIDATE.md",
+      "docs/INVERSE_GEOMETRY_SCALE_AUDIT.md",
+      "docs/EXIF_PRIOR_HOLDOUT.md"
+    ],
+    "inner_outer_best_input_Y": {
+      "near": [
+        488.036,
+        237.311
+      ],
+      "middle": [
+        280.291,
+        148.822
+      ]
+    },
+    "maximum_red_far_near_ratio_reduction_fixed_support_total_camera_proxy_floor": [
+      0.0844,
+      0.0988
+    ],
+    "outer_joint_inverse_worse_in_predeclared_translations": [
+      17,
+      17
+    ],
+    "predeclared_translations": 17,
+    "interpretation": "Source intensity estimates depend on fitted radius. Further profile expansion in the same strict support has limited conditional leverage; neither material nor scanner is identified as root cause.",
+    "default_output_bitwise_actual_raw_cases": 6,
+    "production_files_changed": [
+      "filmlab/rawio.py"
+    ],
+    "other_existing_production_file_digests_unchanged": 58,
+    "opt_in_only": "complete_exif=True; recorded missing exposure data from matching same-file embedded JPEG; no ISO inference or prior retuning",
+    "related_tests_passed": 52,
+    "geometry_scale_audit": {
+      "nominal_coordinate_area_equivalent_scale": 1.07597,
+      "is_physical_calibration": false,
+      "meaning": "Registration H mixes field of view, viewpoint and possibly cropped scan width; scale not covered by translation-only sensitivity, not grounds to rescale material kernel."
+    },
+    "independent_prior_validation": {
+      "actual_missing_supported_cells": 671,
+      "actual_missing_supported_channels": 1523,
+      "missing_channels_without_reference": 66,
+      "paired_seeds": 32,
+      "actual_api_seed0_replay_bitwise": true,
+      "legacy_full_frame_camera_proxy_median_absolute_error_EV": [
+        0.374,
+        1.029
+      ],
+      "complete_exif_camera_proxy_median_absolute_error_EV": [
+        2.837,
+        4.035
+      ],
+      "complete_exif_linear_RGB_Y_proxy_signed_error_EV": [
+        3.043,
+        4.008
+      ],
+      "complete_exif_random_interval_coverage": [
+        0.0,
+        0.0
+      ],
+      "cause_of_interval_collapse": "All samples hit existing MAX_STOPS=8 with the engineering lamp prior; zero random interval is not physical certainty.",
+      "earlier_prior_baseline_domain_correction": "0.923/0.161EV was local crop replay, with different area-based prior branch, preprocessing and RNG. Historical report/code now explicitly label crop control.",
+      "decision": "Retain opt-in metadata completion capability only; existing completed-ISO brightness prior fails these independent transmitted-light controls, not promoted. No source radiance or material constants certified."
+    }
+  },
+  "measured_input_round": {
+    "goal_complete": false,
+    "production_files_modified_this_round": [],
+    "new_tests_passed": 26,
+    "reports": [
+      "docs/LAMP_EDGE_INPUT_AUDIT.md",
+      "docs/CAMERA_SOURCE_CONSTRAINTS.md",
+      "docs/LAMP_EDGE_SPECTRAL_CANDIDATE.md",
+      "docs/MEASURED_BODY_DECODE_CANDIDATE.md",
+      "docs/RAW_HDR_DECODE_AUDIT.md"
+    ],
+    "edge_constraints": {
+      "partially_saturated_cells": [
+        77,
+        59
+      ],
+      "exact_proxy_feasible_replaced_cells": [
+        57,
+        44
+      ],
+      "available_channels_constrained": [
+        96,
+        69
+      ],
+      "missing_channels_still_estimated": [
+        75,
+        63
+      ],
+      "infeasible_partial_cells_retained": [
+        20,
+        15
+      ],
+      "full_RGB_flagged_non_strict_cells_retained": [
+        4,
+        2
+      ],
+      "selection": "No scan-based choice; input-Y and return-R LP objectives only. Inherited strict core remains old same-scan inverse."
+    },
+    "final_HDR_decoder": {
+      "implementation": "tools/eval/raw_hdr_decode_audit.py:decode_hdr_float",
+      "settings": "neutral camera16, unity WB, Ignore, bright=1, adjust_maximum_thr=0; fixed digital calibration then float colour conversion",
+      "validated_camera_models": [
+        "Panasonic G81",
+        "Sony ILCE-7C"
+      ],
+      "digital_camera_reconstruction_max_absolute_error": [
+        1.03e-05,
+        2.56e-05
+      ],
+      "actual_measured_body_cells": [
+        68,
+        47
+      ],
+      "actual_measured_body_XYZ_error_max": [
+        2.94e-05,
+        2.34e-05
+      ],
+      "actual_old_XYZ_error_max": [
+        1.0524,
+        1.0531
+      ],
+      "unknown_core_values_newly_recovered": 0,
+      "formal_default_adoption": false
+    },
+    "decision": "Keep measurement constraints and an independently validated eval-only HDR decoder. Edge and measured-body corrections do not reproduce the full real orange halo transition. No material/scanner root-cause attribution or formal promotion.",
+    "record": "tools/eval/lamp_input_round_results.json"
+  },
+  "joint_catalogue_round": {
+    "goal_complete": false,
+    "source_input_estimation_still_authorized": true,
+    "new_tests_passed": 11,
+    "production_files_checked": 59,
+    "production_files_modified_this_round": [],
+    "original10_joint_forward_evaluations": 2397,
+    "expanded112_and_nonphysical_diagnostic_forward_evaluations": 5069,
+    "record": "tools/eval/catalogue_round_results.json",
+    "reports": [
+      "docs/JOINT_RADIUS_SOURCE_INVERSE.md",
+      "docs/SPECTRAL_LIBRARY_COVERAGE.md",
+      "docs/MEASUREMENT_APERTURE_AUDIT.md",
+      "docs/CATALOGUE_SOURCE_INVERSE.md",
+      "docs/CATALOGUE_JOINT_RENDER.md"
+    ],
+    "nonphysical_relaxation_training_component_MSE_relative_improvement": [
+      0.00042543191272332594,
+      0.01364460993871159
+    ],
+    "decision": "Near lamp inner heldout worsens while outer improves; expanded spectrum freedom does not validate the real orange spatial transition. No candidate promoted.",
+    "remaining_limit": "No accepted measured lamp radiance/SPD or independent same-negative/scanner response to validate competing physical causes. A finite fit on the reused final RGB cannot certify accurate radiance, transport or backend."
+  },
+  "automatic_continuation_review": {
+    "date_utc": "2026-10-21",
+    "goal_complete": false,
+    "new_render_or_parameter_search": false,
+    "checks": [
+      "Aggregate, local and full-frame acceptance records consistent",
+      "59 production-file digests match the pre-round snapshot",
+      "Free-six-response diagnostics remain nonphysical and unpromotable"
+    ],
+    "block_reason": "The completed fixed-source-profile inverse family still trades near-lamp orange-transition accuracy against outer accuracy. No new independent measurement or discriminating validation case was identified to justify a material/scanner correction or certify fitted radiance.",
+    "authorization_preserved": "Mathematical source-input estimation remains authorized; this stop is not based on historical restrictions against fitting. No formal pipeline changes.",
+    "resume_conditions": [
+      "A specific new test with a declared observable that separates source spatial input, negative response, or scan mapping",
+      "Relevant independently validated HDR/SPD/lens measurement or same-negative transmission/scanner measurement"
+    ],
+    "reports": [
+      "docs/CATALOGUE_SOURCE_INVERSE.md",
+      "docs/CATALOGUE_JOINT_RENDER.md",
+      "docs/INDEPENDENT_EVIDENCE_SOURCE_AUDIT.md"
+    ]
+  },
+  "source_shape_round": {
+    "date_utc": "2026-10-21",
+    "goal_complete": false,
+    "trigger": "User explicitly asks to continue research/experiments after the blocked review",
+    "record": "tools/eval/source_field_round_results.json",
+    "reports": [
+      "docs/CENSORED_SOURCE_FIELD.md",
+      "docs/CENSORED_SOURCE_FIELD_REVIEW.md",
+      "docs/SOURCE_PROFILE_HOLDOUT.md"
+    ],
+    "independent_new_evidence": "Actual full-frame reconstruction yields overly peaked normalized input profiles on the two short-exposure-controlled apertures; not an actual corridor-lamp measurement.",
+    "new_inverse_space": "All88/34 strict-core amplitudes, fixed total input and same preselected SPD, hard camera-proxy lower bounds; three finite nonlinear-verified steps per direction.",
+    "same_frame_field_TV_after_sector_role_reversal": [
+      0.7122871828293269,
+      0.9543240898049425
+    ],
+    "source_field_forward_evaluations_recorded": 794,
+    "additional_picture_replays": 4,
+    "new_targeted_tests_passed": 7,
+    "related_tests_total_passed": 18,
+    "production_files_verified_unchanged": 59,
+    "decision": "Retain the independent input-profile failure and constrained inverse diagnostics. No orange-transition acceptance, no source field or formal pipeline promoted.",
+    "limits": [
+      "Shape concentration alone does not prove an unrealizable lamp; source support/location lacks independent verification.",
+      "Sector-role reversal reuses selected SPD and targets; not external cross-validation.",
+      "Synthetic forward-output recovery does not demonstrate exact source-field recovery.",
+      "Finite source-family failure does not prove physical impossibility or attribute a specific material/scanner cause."
+    ]
+  },
+  "ceiling_geometry_round": {
+    "date_utc": "2026-10-21",
+    "goal_complete": false,
+    "record": "tools/eval/ceiling_geometry_round_results.json",
+    "report": "docs/LOCAL_CEILING_REGISTRATION.md",
+    "geometry_selected_from": "Remote RAW/real-scan grid only; no model or lamp-region colour criterion",
+    "near_line_constraints": 74,
+    "near_withheld_corners": 8,
+    "near_corner_median_error_before_after_scan_pixels": [
+      7.930992178549615,
+      0.6298644843170149
+    ],
+    "middle_corner_count": 4,
+    "middle_transform_accepted": false,
+    "fixture_parallax_verified": false,
+    "fixed112_inner_heldout_deltaE00_before_after": [
+      6.660513018393905,
+      5.979728063897849
+    ],
+    "fixed112_outer_heldout_deltaE00_before_after": [
+      5.34790010360456,
+      4.953598034878173
+    ],
+    "field_TV_before_after_this_finite_refit": [
+      0.7122871828293269,
+      0.9735923265296997
+    ],
+    "historical_same_ceiling_region_outward_a_star": {
+      "real": 6.8440196084724745,
+      "legacy_before": -9.961507674635966,
+      "legacy_ceiling_geometry": -7.27339229,
+      "source_inverse112_ceiling_geometry": 2.2672645
+    },
+    "decision": "Retain qualified near-ceiling evaluation geometry and version-specific constraints; no accepted orange-halo correction or formal pipeline promotion.",
+    "new_tests_passed": 7,
+    "related_tests_total_passed": 25,
+    "production_files_verified_unchanged": 59
+  }
+}

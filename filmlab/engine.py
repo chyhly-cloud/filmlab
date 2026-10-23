@@ -30,7 +30,7 @@ PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行�
 GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
-HALATION_MEASURED = 0.1     # 实验候选: EPFL 配对支持的光晕强度倍数 (halo_edge.py; 不可辨识区间 0.1–0.3, 非实测物理量)
+HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14
@@ -59,7 +59,7 @@ class Params:
     #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算                               [默认]
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
-    #   "halation_measured" 光晕强度按 EPFL 配对实测 ×HALATION_MEASURED (实验; 机理未定, 见 CRITERIA.md "光晕强度")
+    #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -89,6 +89,9 @@ class Params:
     scan_neutral: str = "profile"
     scan_color_strength: float | None = None
     scan_gray_balance: str | None = None
+    # 实验扫描影调: paper_only 只移除额外指数肩部, 保留同一定光和数字相纸。
+    # 非实测扫描响应, 不改变默认或 next; 不保证高光/颜色改善。
+    scan_shoulder: str = "exponential"
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
@@ -182,7 +185,7 @@ class Engine:
             self.scanner = Scanner(self, p.scanner, p.scan_profile,
                                    self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
                                    self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance,
-                                   paper_white="paper_white" in p.corrections)
+                                   paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder)
             if p.scan_neutral == "film" and not self.scanner.mono:
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 self.scanner.conversion.gray0 = g - g[1]
@@ -295,7 +298,7 @@ class Engine:
 
     @property
     def _back_reflect(self):
-        """片基背面的反射能力 (材料决定); halation_measured 时按实测强度缩放。"""
+        """片基背面的反射代理; halation_measured 使用未标定的历史实验倍数。"""
         k = HALATION_MEASURED if "halation_measured" in self.p.corrections else 1.0
         return self.e.halation * k
 
@@ -347,8 +350,12 @@ class Engine:
         """S0–S3: 拍摄并冲洗, 得到底片状态 (FilmState)。"""
         return self.develop_negative(rgb_lin).state
 
-    def develop_negative(self, rgb_lin):
-        """S0–S3: 拍摄并冲洗 → Negative (物理核心终点: 三层曝光、染料量、光谱透射率)。"""
+    def develop_negative(self, rgb_lin, *, incident_sources=(), trace=None):
+        """S0–S3 → Negative. incident_sources: explicit opt-in spectral-ray replacements.
+
+        Empty sources preserve the historical path. trace optionally exposes S1
+        arrays before/after optical transport; these are engine units, not watts.
+        """
         p, e = self.p, self.e
         self.light_W = None
         h, w = rgb_lin.shape[:2]
@@ -358,11 +365,23 @@ class Engine:
         else:
             H = self._expose_lin(rgb_lin, self.M)
             halo_src = self.halo(rgb_lin * 2.0 ** p.exposure_ev) if self.halo is not None else None
+        if incident_sources:
+            if p.exposure_hook is not None:
+                raise ValueError('Explicit incident spectra cannot be combined with exposure_hook')
+            from .incident import apply_incident
+            H, halo_src = apply_incident(self, H, halo_src, incident_sources)
+        if trace is not None:
+            trace['direct_exposure'] = H.copy()
+            trace['halo_source'] = None if halo_src is None else halo_src.copy()
         H = film.emulsion_scatter(H, self.px_um)
+        if trace is not None:
+            trace['scattered_exposure'] = H.copy()
         if halo_src is not None:
             H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v))
             H = np.clip(H, 1e-9, None)                   # 曝光量物理上非负
         logH = self._log_exposure(H)
+        if trace is not None:
+            trace['total_exposure'] = H
         st = self._develop(logH, blur_px=12.0 / self.px_um)
         self._agitation(st)
         self._grain(st)

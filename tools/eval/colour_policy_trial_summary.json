@@ -1,0 +1,331 @@
+{
+  "policies_predeclared": [
+    "saved_two_point",
+    "no_M_diagnostic",
+    "us6160634",
+    "us6160634_axis",
+    "fixed_film_design_gray"
+  ],
+  "scenes": [
+    {
+      "scene": "cafe",
+      "cells": 498,
+      "baseline_linear_reproduction_max": 0.0,
+      "baseline_M_reproduction_max": 0.0,
+      "metrics": {
+        "saved_two_point": {
+          "median_deltaE00": 24.68756006578858,
+          "median_ab_distance": 21.58537838504325,
+          "median_gap_Lab": [
+            -22.124209878795817,
+            -6.454377531487837,
+            -20.542801981078934
+          ]
+        },
+        "no_M_diagnostic": {
+          "median_deltaE00": 23.684655994481858,
+          "median_ab_distance": 15.087684754866586,
+          "median_gap_Lab": [
+            -23.65804759682059,
+            -12.138446877634712,
+            -7.184838669268528
+          ]
+        },
+        "us6160634": {
+          "median_deltaE00": 23.735767392876387,
+          "median_ab_distance": 18.905582576032586,
+          "median_gap_Lab": [
+            -22.189278157579334,
+            -7.34699129800312,
+            -17.010673788752545
+          ]
+        },
+        "us6160634_axis": {
+          "median_deltaE00": 23.8188897076992,
+          "median_ab_distance": 19.022868626465428,
+          "median_gap_Lab": [
+            -22.23143208028356,
+            -7.488189516606708,
+            -17.072855391295533
+          ]
+        },
+        "fixed_film_design_gray": {
+          "median_deltaE00": 23.16691764201014,
+          "median_ab_distance": 17.31082222398776,
+          "median_gap_Lab": [
+            -22.110604165995944,
+            -7.211674094670592,
+            -15.199654349734342
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-07-8",
+      "cells": 795,
+      "baseline_linear_reproduction_max": 5.916489076440712e-08,
+      "baseline_M_reproduction_max": 0.0,
+      "metrics": {
+        "saved_two_point": {
+          "median_deltaE00": 10.040028957717855,
+          "median_ab_distance": 24.142909164976903,
+          "median_gap_Lab": [
+            6.632855335572273,
+            -11.338772514948193,
+            20.214752616780096
+          ]
+        },
+        "no_M_diagnostic": {
+          "median_deltaE00": 7.716842431084223,
+          "median_ab_distance": 14.086910427202643,
+          "median_gap_Lab": [
+            2.549123085137964,
+            -12.73897757973691,
+            5.873245185648138
+          ]
+        },
+        "us6160634": {
+          "median_deltaE00": 9.448702837695137,
+          "median_ab_distance": 22.056018699608558,
+          "median_gap_Lab": [
+            6.449422566402987,
+            -11.160936829602786,
+            18.238929771609477
+          ]
+        },
+        "us6160634_axis": {
+          "median_deltaE00": 8.85480055450249,
+          "median_ab_distance": 19.894037303035603,
+          "median_gap_Lab": [
+            6.242525394373757,
+            -10.894828985052062,
+            16.253912692562423
+          ]
+        },
+        "fixed_film_design_gray": {
+          "median_deltaE00": 6.706334658917671,
+          "median_ab_distance": 10.374625743651182,
+          "median_gap_Lab": [
+            3.421170301589953,
+            -9.667140874780987,
+            2.864846692200551
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-06-7",
+      "cells": 23,
+      "baseline_linear_reproduction_max": 2.9802319723160053e-08,
+      "baseline_M_reproduction_max": 0.0,
+      "metrics": {
+        "saved_two_point": {
+          "median_deltaE00": 19.94004614897413,
+          "median_ab_distance": 22.457287348914406,
+          "median_gap_Lab": [
+            -5.924192817453871,
+            15.053416515548923,
+            13.124978849607073
+          ]
+        },
+        "no_M_diagnostic": {
+          "median_deltaE00": 17.352845017028315,
+          "median_ab_distance": 25.874520225755873,
+          "median_gap_Lab": [
+            -10.774384371737838,
+            -5.390817252682005,
+            23.064684758678258
+          ]
+        },
+        "us6160634": {
+          "median_deltaE00": 23.91711327435985,
+          "median_ab_distance": 32.00120635426171,
+          "median_gap_Lab": [
+            -5.224508333508041,
+            22.15265134799604,
+            -6.887819190244446
+          ]
+        },
+        "us6160634_axis": {
+          "median_deltaE00": 21.822898966785772,
+          "median_ab_distance": 32.098020411385896,
+          "median_gap_Lab": [
+            -6.016557747420464,
+            17.96221224604913,
+            -1.9519036192810475
+          ]
+        },
+        "fixed_film_design_gray": {
+          "median_deltaE00": 14.895064153849772,
+          "median_ab_distance": 25.495311299826973,
+          "median_gap_Lab": [
+            -9.69794034702354,
+            -1.5019626301033533,
+            17.644264097408225
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-02-3",
+      "cells": 696,
+      "baseline_linear_reproduction_max": 2.9802318390892424e-08,
+      "baseline_M_reproduction_max": 0.0,
+      "metrics": {
+        "saved_two_point": {
+          "median_deltaE00": 4.728573837464891,
+          "median_ab_distance": 5.343877536233849,
+          "median_gap_Lab": [
+            -1.5182360684716087,
+            3.729521074204669,
+            3.150007039752789
+          ]
+        },
+        "no_M_diagnostic": {
+          "median_deltaE00": 9.75901722272474,
+          "median_ab_distance": 13.051318573239005,
+          "median_gap_Lab": [
+            -6.684764067579284,
+            -9.236219679146494,
+            7.697833542853012
+          ]
+        },
+        "us6160634": {
+          "median_deltaE00": 4.769291963062885,
+          "median_ab_distance": 5.280442593998854,
+          "median_gap_Lab": [
+            -1.9595891324527663,
+            2.554409050717882,
+            4.127437758982483
+          ]
+        },
+        "us6160634_axis": {
+          "median_deltaE00": 3.9353544263361657,
+          "median_ab_distance": 3.9636647167246,
+          "median_gap_Lab": [
+            -2.4281087698706045,
+            1.225076788345615,
+            3.1010528737466068
+          ]
+        },
+        "fixed_film_design_gray": {
+          "median_deltaE00": 6.473837773801849,
+          "median_ab_distance": 6.637899423394026,
+          "median_gap_Lab": [
+            -5.299565559703652,
+            -5.537093763497592,
+            -0.3028416978613606
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-00-1",
+      "cells": 137,
+      "baseline_linear_reproduction_max": 2.980228264171103e-08,
+      "baseline_M_reproduction_max": 0.0,
+      "metrics": {
+        "saved_two_point": {
+          "median_deltaE00": 17.560286688339165,
+          "median_ab_distance": 15.141438647966021,
+          "median_gap_Lab": [
+            10.803352596965382,
+            14.795356419707252,
+            2.1767797397425284
+          ]
+        },
+        "no_M_diagnostic": {
+          "median_deltaE00": 9.546885229455143,
+          "median_ab_distance": 13.680061485596791,
+          "median_gap_Lab": [
+            5.998407632193249,
+            0.6942103472440948,
+            13.531995230824457
+          ]
+        },
+        "us6160634": {
+          "median_deltaE00": 13.700483295231226,
+          "median_ab_distance": 12.149112636248395,
+          "median_gap_Lab": [
+            9.6203684654715,
+            11.257375029537942,
+            3.963114515675702
+          ]
+        },
+        "us6160634_axis": {
+          "median_deltaE00": 13.618472684493243,
+          "median_ab_distance": 12.344375670260497,
+          "median_gap_Lab": [
+            9.492832827634729,
+            10.830005508402296,
+            5.529895538513729
+          ]
+        },
+        "fixed_film_design_gray": {
+          "median_deltaE00": 8.136838876005307,
+          "median_ab_distance": 7.34487814993861,
+          "median_gap_Lab": [
+            7.313300464625669,
+            4.396893170801608,
+            5.264600533817076
+          ]
+        }
+      }
+    }
+  ],
+  "decision": "No tested policy improves both colour-distance and full DeltaE consistently across all five scenes. Keep experimental only; no default change.",
+  "production": {
+    "verified_files": 59,
+    "changed": []
+  },
+  "cross_scene_checks": {
+    "no_M_diagnostic": {
+      "worsened_scenes": {
+        "median_deltaE00": [
+          "R1-02-3"
+        ],
+        "median_ab_distance": [
+          "R1-06-7",
+          "R1-02-3"
+        ]
+      },
+      "passes_both_metrics_all_scenes": false
+    },
+    "us6160634": {
+      "worsened_scenes": {
+        "median_deltaE00": [
+          "R1-06-7",
+          "R1-02-3"
+        ],
+        "median_ab_distance": [
+          "R1-06-7"
+        ]
+      },
+      "passes_both_metrics_all_scenes": false
+    },
+    "us6160634_axis": {
+      "worsened_scenes": {
+        "median_deltaE00": [
+          "R1-06-7"
+        ],
+        "median_ab_distance": [
+          "R1-06-7"
+        ]
+      },
+      "passes_both_metrics_all_scenes": false
+    },
+    "fixed_film_design_gray": {
+      "worsened_scenes": {
+        "median_deltaE00": [
+          "R1-02-3"
+        ],
+        "median_ab_distance": [
+          "R1-06-7",
+          "R1-02-3"
+        ]
+      },
+      "passes_both_metrics_all_scenes": false
+    }
+  },
+  "related_tests_passed": 13
+}

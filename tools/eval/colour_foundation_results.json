@@ -1,0 +1,1093 @@
+{
+  "scope": "Controlled colour-chain contracts, independent of final photograph fitting.\n\nMeasured ColorChecker reflectances and known illuminants define radiance.\nThe ideal CIE camera is a qualified algorithm proxy, not a measured RAW SSF.\nModel sensitivity supplies conditional layer-exposure truth, NOT measured 800T\nC-41 development. Fixed scanner timing never balances individual test images.\n",
+  "reflectance_source": "colour-science ColorChecker N Ohta, 24 measured spectra",
+  "known_light_checks": [
+    {
+      "light": "D65",
+      "known_mapping_method": "spectral",
+      "known_input_rgb_min": -0.033384846686285,
+      "known_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.14335071203721733,
+          0.010416140056697137,
+          0.21440805856528866
+        ],
+        "layer_abs_EV_max": [
+          0.7095513483779519,
+          0.12800050866992715,
+          0.7215189671839519
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09153835791407484,
+          0.19987559702479066
+        ],
+        "RG_BG_abs_EV_max": [
+          0.7481195827585159,
+          0.6454900637675932
+        ]
+      },
+      "automatic_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.41430137506106773,
+          0.046305621958801474,
+          0.12833068719737306
+        ],
+        "layer_abs_EV_max": [
+          1.4649886615608518,
+          0.16452756058862983,
+          1.5050939917173607
+        ],
+        "RG_BG_abs_EV_median": [
+          0.4812649934856995,
+          0.14865416281475397
+        ],
+        "RG_BG_abs_EV_max": [
+          1.5315534377067497,
+          1.5651579822519244
+        ]
+      },
+      "inferred_global_class_shares": {
+        "日光 / 天光": [
+          "D75",
+          0.372027827583416
+        ],
+        "白炽灯 / 卤素灯 / 暖光": [
+          "3300K 白炽 / 卤素",
+          0.059250690334167334
+        ],
+        "高压钠灯": [
+          "C100S54 (HPS)",
+          8.558415756309011e-21
+        ],
+        "荧光灯": [
+          "F32T8/TL830 (Triphosphor)",
+          0.12768450970913195
+        ],
+        "白光 LED": [
+          "LED-B3",
+          0.373204186622739
+        ],
+        "汞灯 / 金卤灯": [
+          "Mercury",
+          0.06783278575054569
+        ]
+      },
+      "fixed_scan_output_difference_from_spectral_reference": {
+        "known_spectrum": {
+          "median_deltaE00": 0.0,
+          "max_deltaE00": 0.0
+        },
+        "known_illuminant_RGB": {
+          "median_deltaE00": 2.4809988018657494,
+          "max_deltaE00": 9.515308092972738
+        },
+        "automatic_illumination_RGB": {
+          "median_deltaE00": 4.1385056870610795,
+          "max_deltaE00": 12.482546670345874
+        }
+      }
+    },
+    {
+      "light": "BB3200",
+      "known_mapping_method": "linear_wp",
+      "known_input_rgb_min": -0.041088179872814753,
+      "known_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.08426410022543468,
+          0.029315686721490306,
+          0.3296662884715942
+        ],
+        "layer_abs_EV_max": [
+          1.1972576532739077,
+          0.1759870648809563,
+          29.041424511632865
+        ],
+        "RG_BG_abs_EV_median": [
+          0.11598307047311694,
+          0.338584063209512
+        ],
+        "RG_BG_abs_EV_max": [
+          1.2425431715715514,
+          28.99782301346278
+        ]
+      },
+      "automatic_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.38326160969238293,
+          0.06541534667392332,
+          0.16482508125787
+        ],
+        "layer_abs_EV_max": [
+          1.3987590147309776,
+          0.14194062653255587,
+          2.246095329817373
+        ],
+        "RG_BG_abs_EV_median": [
+          0.46333380198625984,
+          0.16111540168625904
+        ],
+        "RG_BG_abs_EV_max": [
+          1.5053558772895337,
+          2.222054039556635
+        ]
+      },
+      "inferred_global_class_shares": {
+        "日光 / 天光": [
+          "D75",
+          0.02295551288273214
+        ],
+        "白炽灯 / 卤素灯 / 暖光": [
+          "3300K 白炽 / 卤素",
+          0.2858801659116238
+        ],
+        "高压钠灯": [
+          "C100S54 (HPS)",
+          7.501695568702714e-06
+        ],
+        "荧光灯": [
+          "F32T8/TL830 (Triphosphor)",
+          0.15042044345950248
+        ],
+        "白光 LED": [
+          "LED-B3",
+          0.4596206649806019
+        ],
+        "汞灯 / 金卤灯": [
+          "Mercury",
+          0.08111571106997092
+        ]
+      },
+      "fixed_scan_output_difference_from_spectral_reference": {
+        "known_spectrum": {
+          "median_deltaE00": 0.0,
+          "max_deltaE00": 0.0
+        },
+        "known_illuminant_RGB": {
+          "median_deltaE00": 3.5314239073166873,
+          "max_deltaE00": 8.514048230522446
+        },
+        "automatic_illumination_RGB": {
+          "median_deltaE00": 5.122860607337994,
+          "max_deltaE00": 19.27326343910154
+        }
+      }
+    },
+    {
+      "light": "LED-B3",
+      "known_mapping_method": "linear_wp",
+      "known_input_rgb_min": -0.03176092999076577,
+      "known_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.09119810627622141,
+          0.02548450171302912,
+          0.06270342680575278
+        ],
+        "layer_abs_EV_max": [
+          1.4222591232480517,
+          0.14589927581510295,
+          0.96965809707603
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09986053054753272,
+          0.045603307340119165
+        ],
+        "RG_BG_abs_EV_max": [
+          1.477492018232117,
+          0.9485019284311175
+        ]
+      },
+      "automatic_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.11315300012743879,
+          0.06313112707983409,
+          0.4502974597313495
+        ],
+        "layer_abs_EV_max": [
+          0.6609203054567239,
+          0.18948182634729496,
+          1.2011399348707794
+        ],
+        "RG_BG_abs_EV_median": [
+          0.15616208335715942,
+          0.37753803349551596
+        ],
+        "RG_BG_abs_EV_max": [
+          0.7030088932956708,
+          1.203232201281688
+        ]
+      },
+      "inferred_global_class_shares": {
+        "日光 / 天光": [
+          "D75",
+          0.1574935704822682
+        ],
+        "白炽灯 / 卤素灯 / 暖光": [
+          "3300K 白炽 / 卤素",
+          0.12951559531787257
+        ],
+        "高压钠灯": [
+          "C100S54 (HPS)",
+          1.4023450400318923e-14
+        ],
+        "荧光灯": [
+          "F32T8/TL830 (Triphosphor)",
+          0.16162130680399822
+        ],
+        "白光 LED": [
+          "LED-B3",
+          0.467144929860421
+        ],
+        "汞灯 / 金卤灯": [
+          "Mercury",
+          0.08422459753542601
+        ]
+      },
+      "fixed_scan_output_difference_from_spectral_reference": {
+        "known_spectrum": {
+          "median_deltaE00": 0.0,
+          "max_deltaE00": 0.0
+        },
+        "known_illuminant_RGB": {
+          "median_deltaE00": 2.2196949300500464,
+          "max_deltaE00": 6.583409220101409
+        },
+        "automatic_illumination_RGB": {
+          "median_deltaE00": 4.396486857849165,
+          "max_deltaE00": 11.082795951289642
+        }
+      }
+    },
+    {
+      "light": "FL11",
+      "known_mapping_method": "linear_wp",
+      "known_input_rgb_min": -0.038522448123911784,
+      "known_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.05417367810418744,
+          0.02075861938002195,
+          0.17439129592188957
+        ],
+        "layer_abs_EV_max": [
+          0.8630910439716537,
+          0.10058411694629489,
+          29.293248412030124
+        ],
+        "RG_BG_abs_EV_median": [
+          0.06908212689238447,
+          0.16411532275459798
+        ],
+        "RG_BG_abs_EV_max": [
+          0.9025535890140823,
+          29.255456703968406
+        ]
+      },
+      "automatic_light_RGB_mapping": {
+        "layer_abs_EV_median": [
+          0.20384921602559447,
+          0.09816811053180254,
+          0.21344251747919318
+        ],
+        "layer_abs_EV_max": [
+          0.5332985514280484,
+          0.20345865537807967,
+          1.7630815639101451
+        ],
+        "RG_BG_abs_EV_median": [
+          0.2549530166833752,
+          0.25603155013080237
+        ],
+        "RG_BG_abs_EV_max": [
+          0.5738164424798636,
+          1.5596229085320654
+        ]
+      },
+      "inferred_global_class_shares": {
+        "日光 / 天光": [
+          "D75",
+          0.15160735579857895
+        ],
+        "白炽灯 / 卤素灯 / 暖光": [
+          "3300K 白炽 / 卤素",
+          0.18667931594450823
+        ],
+        "高压钠灯": [
+          "C100S54 (HPS)",
+          5.890974333727992e-14
+        ],
+        "荧光灯": [
+          "F32T8/TL830 (Triphosphor)",
+          0.15291803362732606
+        ],
+        "白光 LED": [
+          "LED-B3",
+          0.4288769057203041
+        ],
+        "汞灯 / 金卤灯": [
+          "Mercury",
+          0.0799183889092237
+        ]
+      },
+      "fixed_scan_output_difference_from_spectral_reference": {
+        "known_spectrum": {
+          "median_deltaE00": 0.0,
+          "max_deltaE00": 0.0
+        },
+        "known_illuminant_RGB": {
+          "median_deltaE00": 1.8440112687729662,
+          "max_deltaE00": 10.034625803553938
+        },
+        "automatic_illumination_RGB": {
+          "median_deltaE00": 4.186152386235113,
+          "max_deltaE00": 17.85331899664838
+        }
+      }
+    }
+  ],
+  "same_patch_context_checks": [
+    {
+      "light": "D65",
+      "fixed_actual_H": [
+        0.7364198424180953,
+        1.3323054321279142,
+        2.8323851775966986
+      ],
+      "center_layer_EV_span_across_backgrounds": [
+        0.3465403532864,
+        0.08605227693390771,
+        0.24180461219954696
+      ],
+      "contexts": [
+        {
+          "background_reflectance": "neutral_18",
+          "center_H": [
+            0.6408720738816972,
+            1.350816874491893,
+            2.452127738922673
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.2004920942920179,
+            0.01990724744693066,
+            -0.20798333620773857
+          ]
+        },
+        {
+          "background_reflectance": "blue",
+          "center_H": [
+            0.6918069170378502,
+            1.338230010733403,
+            2.6307159918390286
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.09015906123461079,
+            0.006401243779781692,
+            -0.1065619659302327
+          ]
+        },
+        {
+          "background_reflectance": "green",
+          "center_H": [
+            0.5974580560791898,
+            1.402144477821859,
+            2.7037919054768804
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.30169106607215584,
+            0.07371015382091034,
+            -0.06703335126939661
+          ]
+        },
+        {
+          "background_reflectance": "orange",
+          "center_H": [
+            0.5440838800464646,
+            1.4204798633264313,
+            2.899569558052561
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.4366994145210109,
+            0.09245352071368944,
+            0.03382127599180867
+          ]
+        }
+      ]
+    },
+    {
+      "light": "BB3200",
+      "fixed_actual_H": [
+        1.1734359147638438,
+        1.155810651956919,
+        1.0429548815744778
+      ],
+      "center_layer_EV_span_across_backgrounds": [
+        0.48993497563114974,
+        0.27034730938477297,
+        0.6262424043477998
+      ],
+      "contexts": [
+        {
+          "background_reflectance": "neutral_18",
+          "center_H": [
+            0.9171761754158346,
+            1.2091673396099973,
+            0.9807674412484642
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.3554682685935946,
+            0.06510884550829267,
+            -0.08869375647409333
+          ]
+        },
+        {
+          "background_reflectance": "blue",
+          "center_H": [
+            0.8205395009954931,
+            1.016431164083473,
+            0.7912110436589481
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.5160943613840211,
+            -0.18539255632890297,
+            -0.3985422795777254
+          ]
+        },
+        {
+          "background_reflectance": "green",
+          "center_H": [
+            0.7830848836216331,
+            1.0025447307154571,
+            0.6354015819940675
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.5834984495138938,
+            -0.20523846387648015,
+            -0.714936160821893
+          ]
+        },
+        {
+          "background_reflectance": "orange",
+          "center_H": [
+            1.0997499836181086,
+            1.08460376110829,
+            0.9676701653654127
+          ],
+          "center_layer_EV_error_vs_spectral_integral": [
+            -0.09356347388274414,
+            -0.09173699262730337,
+            -0.10808946050028026
+          ]
+        }
+      ]
+    }
+  ],
+  "exposure_operation_checks": [
+    {
+      "light": "D65",
+      "gain_EV": -2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.5325111783322167,
+        0.14717421178937623,
+        0.495725569162244
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.4052799803003538,
+        0.552336778834818
+      ],
+      "largest_layer_shift_patch": "red",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        0.5325111783322167,
+        0.14717421178937623,
+        0.495725569162244
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.14335071203721733,
+          0.010416140056697137,
+          0.21440805856528866
+        ],
+        "layer_abs_EV_max": [
+          0.7095513483779519,
+          0.12800050866992715,
+          0.7215189671839519
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09153835791407484,
+          0.19987559702479066
+        ],
+        "RG_BG_abs_EV_max": [
+          0.7481195827585159,
+          0.6454900637675932
+        ]
+      }
+    },
+    {
+      "light": "D65",
+      "gain_EV": -0.6780719051126377,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.23643579784749127,
+        0.07102866463598721,
+        0.22020331057010348
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.20611232504155955,
+        0.2912319752060907
+      ],
+      "largest_layer_shift_patch": "red",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        0.23643579784749127,
+        0.07102866463598721,
+        0.22020331057010348
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.14335071203721722,
+          0.010416140056697137,
+          0.21440805856528866
+        ],
+        "layer_abs_EV_max": [
+          0.7095513483779519,
+          0.12800050866992715,
+          0.7215189671839519
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09153835791407476,
+          0.19987559702479074
+        ],
+        "RG_BG_abs_EV_max": [
+          0.7481195827585159,
+          0.6454900637675928
+        ]
+      }
+    },
+    {
+      "light": "D65",
+      "gain_EV": 2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.9497708192650787,
+        0.31485313230544526,
+        0.7993845175817946
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        1.0402785384866495,
+        1.11423764988724
+      ],
+      "largest_layer_shift_patch": "blue",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        0.9497708192650787,
+        0.31485313230544526,
+        0.7993845175817946
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.14335071203721733,
+          0.010416140056697137,
+          0.21440805856528866
+        ],
+        "layer_abs_EV_max": [
+          0.7095513483779519,
+          0.12800050866992715,
+          0.7215189671839519
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09153835791407484,
+          0.19987559702479066
+        ],
+        "RG_BG_abs_EV_max": [
+          0.7481195827585159,
+          0.6454900637675932
+        ]
+      }
+    },
+    {
+      "light": "BB3200",
+      "gain_EV": -2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        2.0
+      ],
+      "largest_layer_shift_patch": "orange",
+      "tiny_or_floored_layer_samples": 4,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.08426410022543468,
+          0.029315686721490306,
+          0.3296662884715942
+        ],
+        "layer_abs_EV_max": [
+          1.1972576532739077,
+          0.1759870648809563,
+          29.041424511632865
+        ],
+        "RG_BG_abs_EV_median": [
+          0.11598307047311694,
+          0.338584063209512
+        ],
+        "RG_BG_abs_EV_max": [
+          1.2425431715715514,
+          28.99782301346278
+        ]
+      }
+    },
+    {
+      "light": "BB3200",
+      "gain_EV": -0.6780719051126377,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814918e-16,
+        0.6780719051126377
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        6.406853007629835e-16,
+        0.6780719051126378
+      ],
+      "largest_layer_shift_patch": "orange",
+      "tiny_or_floored_layer_samples": 4,
+      "unfloored_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814918e-16,
+        3.203426503814918e-16
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.08426410022543468,
+          0.029315686721490306,
+          0.32966628847159435
+        ],
+        "layer_abs_EV_max": [
+          1.1972576532739077,
+          0.1759870648809563,
+          29.041424511632865
+        ],
+        "RG_BG_abs_EV_median": [
+          0.11598307047311694,
+          0.338584063209512
+        ],
+        "RG_BG_abs_EV_max": [
+          1.2425431715715514,
+          28.99782301346278
+        ]
+      }
+    },
+    {
+      "light": "BB3200",
+      "gain_EV": 2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        2.0
+      ],
+      "largest_layer_shift_patch": "orange",
+      "tiny_or_floored_layer_samples": 4,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.08426410022543468,
+          0.029315686721490306,
+          0.3296662884715942
+        ],
+        "layer_abs_EV_max": [
+          1.1972576532739077,
+          0.1759870648809563,
+          29.041424511632865
+        ],
+        "RG_BG_abs_EV_median": [
+          0.11598307047311694,
+          0.338584063209512
+        ],
+        "RG_BG_abs_EV_max": [
+          1.2425431715715514,
+          28.99782301346278
+        ]
+      }
+    },
+    {
+      "light": "LED-B3",
+      "gain_EV": -2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        0.0
+      ],
+      "largest_layer_shift_patch": "dark skin",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.09119810627622141,
+          0.02548450171302912,
+          0.06270342680575278
+        ],
+        "layer_abs_EV_max": [
+          1.4222591232480517,
+          0.14589927581510295,
+          0.96965809707603
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09986053054753272,
+          0.045603307340119165
+        ],
+        "RG_BG_abs_EV_max": [
+          1.477492018232117,
+          0.9485019284311175
+        ]
+      }
+    },
+    {
+      "light": "LED-B3",
+      "gain_EV": -0.6780719051126377,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814918e-16,
+        4.805139755722377e-16
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        6.406853007629835e-16,
+        4.805139755722377e-16
+      ],
+      "largest_layer_shift_patch": "bluish green",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814918e-16,
+        4.805139755722377e-16
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.09119810627622141,
+          0.025484501713028882,
+          0.06270342680575278
+        ],
+        "layer_abs_EV_max": [
+          1.422259123248052,
+          0.14589927581510326,
+          0.96965809707603
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09986053054753254,
+          0.04560330734011901
+        ],
+        "RG_BG_abs_EV_max": [
+          1.4774920182321172,
+          0.9485019284311175
+        ]
+      }
+    },
+    {
+      "light": "LED-B3",
+      "gain_EV": 2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        0.0
+      ],
+      "largest_layer_shift_patch": "dark skin",
+      "tiny_or_floored_layer_samples": 0,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.09119810627622141,
+          0.02548450171302912,
+          0.06270342680575278
+        ],
+        "layer_abs_EV_max": [
+          1.4222591232480517,
+          0.14589927581510295,
+          0.96965809707603
+        ],
+        "RG_BG_abs_EV_median": [
+          0.09986053054753272,
+          0.045603307340119165
+        ],
+        "RG_BG_abs_EV_max": [
+          1.477492018232117,
+          0.9485019284311175
+        ]
+      }
+    },
+    {
+      "light": "FL11",
+      "gain_EV": -2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        2.0
+      ],
+      "largest_layer_shift_patch": "yellow green",
+      "tiny_or_floored_layer_samples": 3,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.05417367810418744,
+          0.02075861938002195,
+          0.17439129592188957
+        ],
+        "layer_abs_EV_max": [
+          0.8630910439716537,
+          0.10058411694629489,
+          29.293248412030124
+        ],
+        "RG_BG_abs_EV_median": [
+          0.06908212689238447,
+          0.16411532275459798
+        ],
+        "RG_BG_abs_EV_max": [
+          0.9025535890140823,
+          29.255456703968406
+        ]
+      }
+    },
+    {
+      "light": "FL11",
+      "gain_EV": -0.6780719051126377,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814917e-16,
+        0.6780719051126377
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        4.805139755722376e-16,
+        0.6780719051126377
+      ],
+      "largest_layer_shift_patch": "yellow green",
+      "tiny_or_floored_layer_samples": 3,
+      "unfloored_layer_abs_EV_max": [
+        3.203426503814918e-16,
+        3.203426503814917e-16,
+        8.008566259537297e-16
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.05417367810418744,
+          0.020758619380022117,
+          0.17439129592188973
+        ],
+        "layer_abs_EV_max": [
+          0.8630910439716537,
+          0.10058411694629489,
+          29.293248412030124
+        ],
+        "RG_BG_abs_EV_median": [
+          0.06908212689238455,
+          0.1641153227545979
+        ],
+        "RG_BG_abs_EV_max": [
+          0.9025535890140827,
+          29.255456703968406
+        ]
+      }
+    },
+    {
+      "light": "FL11",
+      "gain_EV": 2.0,
+      "gain_before_vs_after_recovery_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "gain_before_vs_after_RG_BG_abs_EV_max": [
+        0.0,
+        2.0
+      ],
+      "largest_layer_shift_patch": "yellow green",
+      "tiny_or_floored_layer_samples": 3,
+      "unfloored_layer_abs_EV_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "separate_gain_physical_target_error": {
+        "layer_abs_EV_median": [
+          0.05417367810418744,
+          0.02075861938002195,
+          0.17439129592188957
+        ],
+        "layer_abs_EV_max": [
+          0.8630910439716537,
+          0.10058411694629489,
+          29.293248412030124
+        ],
+        "RG_BG_abs_EV_median": [
+          0.06908212689238447,
+          0.16411532275459798
+        ],
+        "RG_BG_abs_EV_max": [
+          0.9025535890140823,
+          29.255456703968406
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "This tests spectral inference using the stored material sensitivity, not its accuracy for real CineStill 800T.",
+    "Known reflectance/light controls cannot certify the true illuminants in the previously shown photographs.",
+    "RGB metamerism precludes exact recovery of every coloured reflectance; nonzero exposure error alone is not an implementation bug.",
+    "Exposure-gain contract holds an inferred spectrum fixed; changing surface reflectance brightness is a different operation.",
+    "Native-process characteristic reproduction tests are calibration closure, not independent nonneutral C-41 validation."
+  ],
+  "development_internal_checks": {
+    "minimum_own_dye_change_for_plus1EV_per_layer": [
+      0.1272014589531786,
+      0.18619975420316895,
+      0.18724291135532187
+    ],
+    "minimum_dye": 0.10683246604015206,
+    "silver_after_full_bleach_max": 0.0,
+    "halide_after_fix_max": 0.0,
+    "transmittance_min_max": [
+      0.0031157915751088105,
+      0.7293763459707945
+    ],
+    "spectral_density_reconstruction_max": 5.551115123125783e-17
+  },
+  "production": {
+    "verified_files": 59,
+    "changed": []
+  },
+  "real_RAW_gain_order_replays": [
+    {
+      "scene": "cafe",
+      "scope": "Eval-only exposure-gain order candidate on two fixed native RAW scenes.\n\nFreeze inferred light weights, selected spectra, negative calibration and scan.\nMove ONLY the known recipe exposure multiplier after RGB spectral recovery for\nboth direct and return-source responses. No new material or output fitting.\nThis is not a calibrated replacement for unknown scene illumination.\n",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          -3.4625024825517727e-07,
+          -8.187306248780555e-10,
+          1.730848040896161e-08
+        ],
+        [
+          3.426792088639799e-05,
+          9.842997491985148e-06,
+          0.00020616823431498452
+        ],
+        [
+          0.07067084803584464,
+          0.007688456995693752,
+          0.06483111133541213
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen to isolate input ordering; not a complete recalibrated new pipeline.",
+        "Only two reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 0.0,
+      "cells": 498,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 24.68756006578858,
+          "median_ab_distance": 21.58537838504325,
+          "median_gap_Lab": [
+            -22.124209878795817,
+            -6.454377531487837,
+            -20.542801981078934
+          ]
+        },
+        "after": {
+          "median_deltaE00": 24.687642235303713,
+          "median_ab_distance": 21.58539428055155,
+          "median_gap_Lab": [
+            -22.12421331307738,
+            -6.454710466878344,
+            -20.542862304455426
+          ]
+        }
+      }
+    },
+    {
+      "scene": "R1-07-8",
+      "scope": "Eval-only exposure-gain order candidate on two fixed native RAW scenes.\n\nFreeze inferred light weights, selected spectra, negative calibration and scan.\nMove ONLY the known recipe exposure multiplier after RGB spectral recovery for\nboth direct and return-source responses. No new material or output fitting.\nThis is not a calibrated replacement for unknown scene illumination.\n",
+      "gain": 0.625,
+      "gain_EV": -0.6780719051126377,
+      "illumination_weights_exactly_frozen": true,
+      "direct_log2_ratio_after_over_before_p50_p95_absmax": [
+        [
+          7.160238349807524e-05,
+          -1.1598604216788524e-05,
+          -0.0001281426732206182
+        ],
+        [
+          0.09205457603298166,
+          8.665266221227622e-06,
+          2.5853703550523807e-05
+        ],
+        [
+          0.41865004352133744,
+          0.07021438290858684,
+          0.9663131181798599
+        ]
+      ],
+      "limits": [
+        "The original engine layer/gray calibration is intentionally frozen to isolate input ordering; not a complete recalibrated new pipeline.",
+        "Only two reused scenes; no independent material or scan-response validation."
+      ],
+      "baseline_linear_reproduction_max": 5.916489076440712e-08,
+      "cells": 795,
+      "metrics": {
+        "before": {
+          "median_deltaE00": 10.040028957717855,
+          "median_ab_distance": 24.142909164976903,
+          "median_gap_Lab": [
+            6.632855335572273,
+            -11.338772514948193,
+            20.214752616780096
+          ]
+        },
+        "after": {
+          "median_deltaE00": 10.71302419803951,
+          "median_ab_distance": 25.051676822313283,
+          "median_gap_Lab": [
+            6.73562306799699,
+            -9.939808676967283,
+            21.186488688218624
+          ]
+        }
+      }
+    }
+  ],
+  "related_tests_passed": 29
+}

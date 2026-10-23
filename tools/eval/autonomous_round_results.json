@@ -1,0 +1,1298 @@
+{
+  "date_utc": "2026-10-20",
+  "scope": "Four parallel bounded investigations with independent standards, no new real-final-RGB ablation or coefficient fit.",
+  "baseline": {
+    "utc": "2026-10-20T17:48:50.691101+00:00",
+    "head": "1fbac0d78c08cad0e7d389651bb5d6271cfde3cd",
+    "production_files_sha256": {
+      "filmlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "filmlab/__main__.py": "bb45f6cc601da5455b65b28fd736bc16826f39b5ff44184c2f1fd2eba2ab58bc",
+      "filmlab/brackets.py": "2b83f7aa1f47c0a1de5e55bc48c37dbfe28c9d0390e3e478ba5e469a2852ec33",
+      "filmlab/chemistry.py": "43899b67c13a59d8b14f3554bc2c4a7032759da019f8baa4db1a2440e90eda7b",
+      "filmlab/densitometry.py": "1226d8c24e056cc5a6eb00ecd9eb148785b11815a1a09b3659e5dbf77a1516dd",
+      "filmlab/engine.py": "96366577f2753e08afa00ee952e2df8bfce68cd8fc8a314ce445ee3d2565d2da",
+      "filmlab/film.py": "f4dcabc2fe73e5a43763fb3d1577fe707dc8d47e0aad9c8233d7f97c998d74b7",
+      "filmlab/generation.py": "cfe5c3906628920f119093757247a5dbf654926d2b3d636064a0efd59c0e4764",
+      "filmlab/incident.py": "3832d3b1bc761a98c7dfc2bdd27734624ae55a0537e529d448c2496a69de58cb",
+      "filmlab/io.py": "fc36510a7ea2c9e61f73f110bd25e37e99eca144c744fa429bf54b8df26e49ab",
+      "filmlab/lights.py": "b2c2f33973a33adb819370e033fd09db87e3ba5b66b643408ef22af55ecd6df1",
+      "filmlab/materials.py": "d5ccd8bde76b257503487111c6c9563d53ba28a2c84ac0333f0f46fc4c863128",
+      "filmlab/negative.py": "01c0b38136d3a26e89509244e6eabba56bd5337842ffbec34fb2f43221fcaeb3",
+      "filmlab/rawio.py": "3a7705ba9cac7c88e48d45aa00a5eecbef17f4dc7a26e59d67f4bb457c8f7a01",
+      "filmlab/recipes.py": "a500049a7740b0c3a750b312be5c41ba5c7899c31f9cca006cae70b7730c11a5",
+      "filmlab/scanner.py": "9c26d5ba38cc8c90e419de3d656e6e5c99a035a92f9a2fb3f05e7ba36fd6325f",
+      "filmlab/spectral.py": "7cafc4f9d80b885219231f8dd9e1ee49a1ddb152c238bbbbac5c6abb450b0cbb",
+      "filmlab/stocks.py": "1977598e27664fd1696f60ad6e1335c99587334e25628c9d046237b3dfb29caa",
+      "filmlab/variation.py": "b4e791a724ba215739c179c8d456e31fc0b0e7c1db75d2d35498bdd01fd32b44",
+      "filmlab/data/upsampling_xyY.npz": "e03c4caa4aa7f5cf8b30505e63266aa8924a97e9fa2fb5790c7d899ad98782fc",
+      "filmlab/scanning/__init__.py": "e6a51fef9443dfa8fb430e7e187824b403c492047ff2dbc80edd396da3e23ca8",
+      "filmlab/scanning/conditioning.py": "61a8d96ecfb6de40a48429331d3c6d3c5305cfd3749b4931dbaa95fb791265af",
+      "filmlab/scanning/conversion.py": "cc47688d6b8552410bd71f68d86bfe6e1a6d5713923e7f3e51cdab570858c2fa",
+      "filmlab/scanning/optics.py": "5ef2ab7bae53e04ec552b34a8d6845737a631ae1b82c61aec0a3871614d6703e",
+      "filmlab/scanning/paper.py": "394ba3a4f51d2357aea8d40ea7910be95f1e2fc01b6353f38176847b5bea1be0",
+      "filmlab/scanning/timing.py": "553d3846f3334d274576def366318632d517e4c97f4b84a53800787e3dc1d83e",
+      "filmlab/data/filters/durst_c.csv": "d462d257d1345248f6d134cb00254a713b54cc9125d822f191942c577f15f070",
+      "filmlab/data/filters/durst_m.csv": "891f2fcad2df32a1d7b3ddc222cae1c61f005126ef6656d01463f3022b9c2b66",
+      "filmlab/data/filters/durst_y.csv": "f8631b4868630db366d1b7d52473d371419d250101d8ffab94878cc8862c593f",
+      "filmlab/data/filters/schott_kg3.csv": "7654aa57fa8e42ae280e8d679ae9ebf8cef48ed5cbe6c2ab43eba1c6608f3d1f",
+      "filmlab/data/profiles/fujifilm_c200.json": "30db07d88090aadc62e03d18c2c51f67a20a1673390c69f99933b7ed5406d2c8",
+      "filmlab/data/profiles/fujifilm_crystal_archive_typeii.json": "0db98e5b8e2ed5248696e62bc39b7f21459a8812d64049b1275d7be995af873b",
+      "filmlab/data/profiles/fujifilm_pro_400h.json": "da1be731ab79fb5535c43042494fa7298c942179abb68270b928aa012c629b31",
+      "filmlab/data/profiles/fujifilm_provia_100f.json": "f061f7aa55e3fefe1c89ee2edb8555a2d44fe8167d02f663c787067d131137b6",
+      "filmlab/data/profiles/fujifilm_velvia_100.json": "af696fa9662e0483cb9428d2939675044f2016fc3fad760b50a20a0a586fc04b",
+      "filmlab/data/profiles/fujifilm_xtra_400.json": "5f2a3642c7c8db5e750d7366c34b47d24b89ad78d2abe41da4b5282fd4286e58",
+      "filmlab/data/profiles/kodak_2383.json": "eb7fdfa3b75a909bf5c400802f7401160c8017ed1ac3e8e0d1c8448d56fbe184",
+      "filmlab/data/profiles/kodak_2393.json": "b564aece5e9fe43a5c7878d661a8c260c9f73a647a55899596c78487c79678dc",
+      "filmlab/data/profiles/kodak_ektachrome_100.json": "ef194fd80c60a1ac42bbbf1df458b4d047fc07bc17eebce674bb3bcba2ccf62a",
+      "filmlab/data/profiles/kodak_ektacolor_edge.json": "5db23694d478c35cc0f96d42f94da79e552b2f8eb0853767449a24ac0f0f890e",
+      "filmlab/data/profiles/kodak_ektar_100.json": "60acbd46c75005771569eafb97f534a4495e9d4e1e9c1e419b90cea2676ec7cf",
+      "filmlab/data/profiles/kodak_endura_premier.json": "fd37807d61eb730cda54e85d36640e35a0f8da58666bfc6aa83db888b2e364c2",
+      "filmlab/data/profiles/kodak_gold_200.json": "aa8a0c1c7851fface3752f968cdf6c6d74a26fc9756a4460d3155d2382506b7c",
+      "filmlab/data/profiles/kodak_kodachrome_64.json": "f88ede487219cf75090ed6663af6923c595707b3c48819f2ccf27122130e921d",
+      "filmlab/data/profiles/kodak_portra_160.json": "1bc9b65a6940f3a4381e8d14d0ac43594aff9495051992ce4d7408e761549992",
+      "filmlab/data/profiles/kodak_portra_400.json": "b5cdc73dbec8f462f488bca70bedf23fd13ce79969c0457e8ac2a2565d92bf5d",
+      "filmlab/data/profiles/kodak_portra_800.json": "5b0c6e861c6273a2ecdf552525e80738037918e650a0dc206e095acfd02f8b43",
+      "filmlab/data/profiles/kodak_portra_800_push1.json": "dac9cbcd2442442d9dee90bd2d6a28dcc4b996635dcac0b44ac8ecd32c4b3a4f",
+      "filmlab/data/profiles/kodak_portra_800_push2.json": "5ee01e4a00c157721738314313a43b46fcd5dae62ed3a7e4730f9054b66f6282",
+      "filmlab/data/profiles/kodak_portra_endura.json": "e3bb6069e02d088d8080d38ce28035816038f62786e2aff9176bf4aeeb4820a0",
+      "filmlab/data/profiles/kodak_supra_endura.json": "3a0928013effbb33e81acd01db426937faa3a12021a267c54b4d96e916286bd6",
+      "filmlab/data/profiles/kodak_ultra_endura.json": "319fa2514e9a6809fd09ce587c4f714effc035e7f9ebaeb3b55d9bc1b52c2a72",
+      "filmlab/data/profiles/kodak_ultramax_400.json": "248b78bdcc4fdbe864e30f193f900059ecd98cbdb276c88ad8f6f5b520137901",
+      "filmlab/data/profiles/kodak_verita_200d.json": "5d71a3f544721a71cfa0b0671ce1b5eda6dc1e6a09273810793d4bc821b272fc",
+      "filmlab/data/profiles/kodak_vision3_200t.json": "4a28f049fd6bad67be98efdb058b413c6b3c022e2932b357b346d902c4c393c8",
+      "filmlab/data/profiles/kodak_vision3_250d.json": "9ab85c8627c0533beb925b747e441e93beabe9e98c2429695b0a53866b56fcc7",
+      "filmlab/data/profiles/kodak_vision3_500t.json": "d7beca68bf16db88dbb7373fd13a6a1150a57a911a54bb0309a760a6f9883329",
+      "filmlab/data/profiles/kodak_vision3_500t_kodak_raw.npz": "19bcf94fa24f41d82d0ca724fa768bca77e231a615e437ea5be32611cf6eecb4",
+      "filmlab/data/profiles/kodak_vision3_50d.json": "fd426abc9de911682080db222020978dee4e8df7ca939bfcd5c9d0f6df249fa1"
+    },
+    "constraints": [
+      "no new real final-RGB ablations",
+      "no inverse material fitting",
+      "no current/next changes",
+      "no empirical tuning",
+      "no transport integration"
+    ],
+    "purpose": "Find independently checkable implementation contracts or genuinely independent evidence; keep material attribution frozen."
+  },
+  "production_files_unchanged": true,
+  "decision": {
+    "priority": "Evaluate isolated grain aperture-scale implementation after defining measurement domain; retain uniform-field covariance reference only at this stage.",
+    "transport": "Numerical reference retained; clarify finite source footprint before any candidate. No real-800T attribution or integration.",
+    "spectral": "Controlled input nonuniqueness established; stop synthetic search, require independent spectral information.",
+    "sources": "No newly verified independently identifying measurement; stop this bounded source chain.",
+    "formal_pipeline": "current/next/next_sensor/paper_only unchanged"
+  },
+  "cross_review": {
+    "transport": "Independent reviewer verified Jacobian, Fresnel and open-boundary ledger; pixel-source footprint limitation retained.",
+    "grain": "Independent reviewer accepted covariance result, identified weak overlap due raster rounding; documentation/metadata corrected and CI explicitly approximate.",
+    "spectral": "Root recomputed nonnegative mixtures, equal observations and frozen exposure arrays from saved NPZ.",
+    "sources": "Root verified all nine successful new response digests."
+  },
+  "checks": {
+    "transport_standard_tests": "4 passed",
+    "grain": "Independent variance identities, uniform aperture weights, actual-operator/prediction/no-clipping checks passed; approximate CI only.",
+    "spectral": "Nonnegative/rank/equality and source-mixture reconstruction checks passed.",
+    "production": "All 59 production files match pre-round SHA256."
+  },
+  "experiments": {
+    "grain": {
+      "scope": "Known-input grain aperture covariance audit, not a fit to film/scan texture.\n\nMeasures the existing grain operator on a fixed uniform dye-equivalent channel.\nThe 48um target is the engine's stipulated estimate, not measured 800T density.\nNo production code or presets are changed. References use discrete convolution\nvariance of independent standard normals, rather than final-RGB comparisons.\n",
+      "configuration": {
+        "recipe": "cinestill_800t",
+        "generation_setting": "unchanged/default",
+        "grain": 1,
+        "roll": null,
+        "flat_red_dye_amount": 1.0,
+        "other_dye_channels": 0,
+        "grain_factor": 1,
+        "iso_from_current_name_parser": 800.0,
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "physical_patch_um": 3000.0,
+        "aperture_diameter_um": 48,
+        "aperture_centres_spacing_um": 128
+      },
+      "analytic_reference": "For IID zero-mean unit-variance x, Var(q*x)=sum(q**2). Pixel-normalised smoothing induces covariance; aperture variance uses convolution of the averaging and smoothing kernels.",
+      "acceptance": {
+        "square_average_variance": "pass: 1/16",
+        "two_tap_correlated_average_variance": "pass: 3/4, not 1/2",
+        "analytic_predictions_within_observed_approx_ci95": true,
+        "audit_normalisation_targets_within_observed_approx_ci95": true,
+        "no_clipped_pixels": true,
+        "scope": "Acceptance of this fixed synthetic experiment, not a production-ready grain correction or measured film validation."
+      },
+      "units": "dye-equivalent channel coefficient; not Status M or measured 800T density. A fixed monochromatic dye coefficient multiplies all these RMS values by the same factor but does not change their resolution ratios.",
+      "limitations": [
+        "Uniform synthetic state, no scanner/noise/sharpening or real texture used.",
+        "48um is a circular tile-average measurement; unresolved subpixel grain unknown.",
+        "Engine rms48 and grain blur are stipulated estimates, not actual 800T granularity measurements.",
+        "Nominal 128um aperture-centre spacing can round to 125um while composed pixel/filter support reaches +/-62.5um, so neighbouring apertures may weakly share edge inputs. Global per-realisation n.std() also induces common dependence; Gaussian confidence intervals are approximate, not a strict coverage guarantee.",
+        "No identical realisation is expected across resolutions; compare ensemble statistics.",
+        "Audit-only covariance correction targets this stipulated aperture; its PSD/material realism is not validated."
+      ],
+      "results": [
+        {
+          "px_um": 15.625,
+          "image_width_at_36mm": 2304,
+          "patch_pixels": 192,
+          "blur_um": 9.0,
+          "blur_pixels": 0.576,
+          "fixed_dye_amount": 1.0,
+          "fixed_saturation_factor": 0.6101139209165185,
+          "stipulated_aperture_rms_dye_units": 0.008395258194020969,
+          "production_pixel_sigma_formula": 0.022835102287737035,
+          "observed_pixel_sigma_mean": 0.022744071738437375,
+          "gaussian_kernel_l2": 0.523808122286235,
+          "aperture_on_unit_pixel_noise_l2": 0.5407475074415966,
+          "analytic_aperture_rms_dye_units": 0.012348024644267703,
+          "analytic_ratio_to_stipulated": 1.470833220241143,
+          "production": {
+            "n_apertures": 3872,
+            "mean": 0.00016102108280713044,
+            "rms_about_mean": 0.012372996824153455,
+            "approx_gaussian_independent_sigma_ci95": [
+              0.012103442751751197,
+              0.012654918829261688
+            ],
+            "ratio_to_analytic_prediction": 1.0020223623296172
+          },
+          "audit_only_covariance_normalisation": {
+            "factor": 0.6798867378288139,
+            "formula": "stipulated48 / (production_pixel_sigma * || aperture * (g / ||g||2) ||2)",
+            "observed": {
+              "n_apertures": 3872,
+              "mean": 0.00010947609871140326,
+              "rms_about_mean": 0.008412236447939968,
+              "approx_gaussian_independent_sigma_ci95": [
+                0.008228970208985924,
+                0.008603911480315161
+              ],
+              "ratio_to_analytic_prediction": 1.0020223623296174
+            }
+          },
+          "per_seed": [
+            {
+              "seed": 0,
+              "n": 484,
+              "sigma": 0.012205163696484613
+            },
+            {
+              "seed": 1,
+              "n": 484,
+              "sigma": 0.012979358214631316
+            },
+            {
+              "seed": 2,
+              "n": 484,
+              "sigma": 0.012232271152912944
+            },
+            {
+              "seed": 3,
+              "n": 484,
+              "sigma": 0.01220388762941952
+            },
+            {
+              "seed": 4,
+              "n": 484,
+              "sigma": 0.011840746691502287
+            },
+            {
+              "seed": 5,
+              "n": 484,
+              "sigma": 0.01221191840611058
+            },
+            {
+              "seed": 6,
+              "n": 484,
+              "sigma": 0.012374793759719734
+            },
+            {
+              "seed": 7,
+              "n": 484,
+              "sigma": 0.012910757247526024
+            }
+          ],
+          "clipped_pixels": 0
+        },
+        {
+          "px_um": 7.8125,
+          "image_width_at_36mm": 4608,
+          "patch_pixels": 384,
+          "blur_um": 9.0,
+          "blur_pixels": 1.152,
+          "fixed_dye_amount": 1.0,
+          "fixed_saturation_factor": 0.6101139209165185,
+          "stipulated_aperture_rms_dye_units": 0.008395258194020969,
+          "production_pixel_sigma_formula": 0.04567020457547407,
+          "observed_pixel_sigma_mean": 0.04537176062945389,
+          "gaussian_kernel_l2": 0.24487539460029387,
+          "aperture_on_unit_pixel_noise_l2": 0.569671778962614,
+          "analytic_aperture_rms_dye_units": 0.026017026686096827,
+          "analytic_ratio_to_stipulated": 3.0990144775566204,
+          "production": {
+            "n_apertures": 3872,
+            "mean": -0.0003405775654346848,
+            "rms_about_mean": 0.02585661378269085,
+            "approx_gaussian_independent_sigma_ci95": [
+              0.025293310029953203,
+              0.026445763566411425
+            ],
+            "ratio_to_analytic_prediction": 0.993834310686559
+          },
+          "audit_only_covariance_normalisation": {
+            "factor": 0.3226832295370358,
+            "formula": "stipulated48 / (production_pixel_sigma * || aperture * (g / ||g||2) ||2)",
+            "observed": {
+              "n_apertures": 3872,
+              "mean": -0.00010989866872232527,
+              "rms_about_mean": 0.008343495640290516,
+              "approx_gaussian_independent_sigma_ci95": [
+                0.008161726966146799,
+                0.008533604395182517
+              ],
+              "ratio_to_analytic_prediction": 0.993834310686559
+            }
+          },
+          "per_seed": [
+            {
+              "seed": 0,
+              "n": 484,
+              "sigma": 0.02600231165504209
+            },
+            {
+              "seed": 1,
+              "n": 484,
+              "sigma": 0.024811134823635828
+            },
+            {
+              "seed": 2,
+              "n": 484,
+              "sigma": 0.025110329149583426
+            },
+            {
+              "seed": 3,
+              "n": 484,
+              "sigma": 0.02677737160162682
+            },
+            {
+              "seed": 4,
+              "n": 484,
+              "sigma": 0.02646878627422119
+            },
+            {
+              "seed": 5,
+              "n": 484,
+              "sigma": 0.02601329185246453
+            },
+            {
+              "seed": 6,
+              "n": 484,
+              "sigma": 0.025855825413469584
+            },
+            {
+              "seed": 7,
+              "n": 484,
+              "sigma": 0.02572878582643004
+            }
+          ],
+          "clipped_pixels": 0
+        },
+        {
+          "px_um": 3.90625,
+          "image_width_at_36mm": 9216,
+          "patch_pixels": 768,
+          "blur_um": 9.0,
+          "blur_pixels": 2.304,
+          "fixed_dye_amount": 1.0,
+          "fixed_saturation_factor": 0.6101139209165185,
+          "stipulated_aperture_rms_dye_units": 0.008395258194020969,
+          "production_pixel_sigma_formula": 0.09134040915094814,
+          "observed_pixel_sigma_mean": 0.09088482858806332,
+          "gaussian_kernel_l2": 0.1224449311749986,
+          "aperture_on_unit_pixel_noise_l2": 0.5755967080392637,
+          "analytic_aperture_rms_dye_units": 0.05257523881824518,
+          "analytic_ratio_to_stipulated": 6.262492183467189,
+          "production": {
+            "n_apertures": 3872,
+            "mean": 0.0014897903537613468,
+            "rms_about_mean": 0.05242457076353273,
+            "approx_gaussian_independent_sigma_ci95": [
+              0.051282466167202036,
+              0.053619078473883225
+            ],
+            "ratio_to_analytic_prediction": 0.9971342392712029
+          },
+          "audit_only_covariance_normalisation": {
+            "factor": 0.15968083802802552,
+            "formula": "stipulated48 / (production_pixel_sigma * || aperture * (g / ||g||2) ||2)",
+            "observed": {
+              "n_apertures": 3872,
+              "mean": 0.00023789097217468043,
+              "rms_about_mean": 0.00837119939278043,
+              "approx_gaussian_independent_sigma_ci95": [
+                0.008188827173722686,
+                0.008561939385000137
+              ],
+              "ratio_to_analytic_prediction": 0.9971342392712028
+            }
+          },
+          "per_seed": [
+            {
+              "seed": 0,
+              "n": 484,
+              "sigma": 0.05193175304909143
+            },
+            {
+              "seed": 1,
+              "n": 484,
+              "sigma": 0.052601103096595596
+            },
+            {
+              "seed": 2,
+              "n": 484,
+              "sigma": 0.05382222053391546
+            },
+            {
+              "seed": 3,
+              "n": 484,
+              "sigma": 0.05422294104271289
+            },
+            {
+              "seed": 4,
+              "n": 484,
+              "sigma": 0.051606831725422506
+            },
+            {
+              "seed": 5,
+              "n": 484,
+              "sigma": 0.05056328707371616
+            },
+            {
+              "seed": 6,
+              "n": 484,
+              "sigma": 0.05196506338523626
+            },
+            {
+              "seed": 7,
+              "n": 484,
+              "sigma": 0.05274395798389606
+            }
+          ],
+          "clipped_pixels": 0
+        }
+      ],
+      "production_sha256": {
+        "/workspace/filmlab/filmlab/engine.py": "96366577f2753e08afa00ee952e2df8bfce68cd8fc8a314ce445ee3d2565d2da"
+      }
+    },
+    "transport": {
+      "scope": "Independent numerical audit of the existing conditional halation kernel.\n\nNo real images, inferred material coefficients, development, or scanner outputs.\nThe reference integrates the *same declared angular model*, with no 800T claim.\nAll powers are dimensionless conditional input-energy fractions, not layer H.\n",
+      "pixel_semantics": "Reference: point source at pixel centre to receiver pixel area. Finite-area source pixels require a further source-footprint integral; no universal replacement-kernel claim.",
+      "independent_jacobian_integral_difference": 2.1649348980190553e-14,
+      "conditional_energy_ledger": {
+        "reflected_inside_1500um": 0.5137875692996602,
+        "reflected_beyond_1500um": 0.012047085246479683,
+        "back_surface_escaped": 0.47416534545386013
+      },
+      "production_sha256": "f4dcabc2fe73e5a43763fb3d1577fe707dc8d47e0aad9c8233d7f97c998d74b7",
+      "cases": [
+        {
+          "px_um": 15.625,
+          "shape": [
+            193,
+            193
+          ],
+          "old_mass": 0.5137645000861824,
+          "angular_disk_reference_mass": 0.5137875692996602,
+          "old_outside_center_mask_fraction": 0.005218352962390771,
+          "old_wholly_outside_disk_fraction": 0.00477641125454885,
+          "old_L1_difference_from_integrated_reference_over_exact_mass": 0.01885986265308985,
+          "old_cdf": {
+            "100.0": {
+              "pixel_area_measured_mass": 0.006352897779933671,
+              "center_mask_mass": 0.006370644352482335,
+              "independent_continuous_mass": 0.00643786100606044
+            },
+            "300.0": {
+              "pixel_area_measured_mass": 0.17815428318932414,
+              "center_mask_mass": 0.1772007893119969,
+              "independent_continuous_mass": 0.17871252767682277
+            },
+            "800.0": {
+              "pixel_area_measured_mass": 0.470359661576747,
+              "center_mask_mass": 0.47043653235475374,
+              "independent_continuous_mass": 0.4727286642415747
+            },
+            "1500.0": {
+              "pixel_area_measured_mass": 0.5111009547773795,
+              "center_mask_mass": 0.5110834955851864,
+              "independent_continuous_mass": 0.5137875692996602
+            }
+          },
+          "reference_convergence": [
+            {
+              "order": 8,
+              "mass": 0.5138095881366673,
+              "mass_minus_angular_reference": 2.20188370071428e-05,
+              "L1_change_from_previous_over_exact_mass": null,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006443432080532326,
+                "300.0": 0.17887020604919757,
+                "800.0": 0.4727520931010899,
+                "1500.0": 0.5138095881366673
+              }
+            },
+            {
+              "order": 16,
+              "mass": 0.5137791933059757,
+              "mass_minus_angular_reference": -8.37599368452846e-06,
+              "L1_change_from_previous_over_exact_mass": 0.00013360521496420935,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006440010183734706,
+                "300.0": 0.1786992652169631,
+                "800.0": 0.472719313159155,
+                "1500.0": 0.5137791933059757
+              }
+            },
+            {
+              "order": 32,
+              "mass": 0.5137907159269657,
+              "mass_minus_angular_reference": 3.1466273054947536e-06,
+              "L1_change_from_previous_over_exact_mass": 4.1382712907547494e-05,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.0064361611890832275,
+                "300.0": 0.17869454054574152,
+                "800.0": 0.47273216054487033,
+                "1500.0": 0.5137907159269657
+              }
+            }
+          ]
+        },
+        {
+          "px_um": 31.25,
+          "shape": [
+            97,
+            97
+          ],
+          "old_mass": 0.5137645000861825,
+          "angular_disk_reference_mass": 0.5137875692996602,
+          "old_outside_center_mask_fraction": 0.005564805579950374,
+          "old_wholly_outside_disk_fraction": 0.0046899718294915495,
+          "old_L1_difference_from_integrated_reference_over_exact_mass": 0.024257601923592772,
+          "old_cdf": {
+            "100.0": {
+              "pixel_area_measured_mass": 0.0062879397528500264,
+              "center_mask_mass": 0.007161853084386609,
+              "independent_continuous_mass": 0.00643786100606044
+            },
+            "300.0": {
+              "pixel_area_measured_mass": 0.17444783164201816,
+              "center_mask_mass": 0.17808214645391218,
+              "independent_continuous_mass": 0.17871252767682277
+            },
+            "800.0": {
+              "pixel_area_measured_mass": 0.4697929823810787,
+              "center_mask_mass": 0.4698854818312403,
+              "independent_continuous_mass": 0.4727286642415747
+            },
+            "1500.0": {
+              "pixel_area_measured_mass": 0.5109545283590811,
+              "center_mask_mass": 0.5109055005293225,
+              "independent_continuous_mass": 0.5137875692996602
+            }
+          },
+          "reference_convergence": [
+            {
+              "order": 8,
+              "mass": 0.5137757197882649,
+              "mass_minus_angular_reference": -1.1849511395323198e-05,
+              "L1_change_from_previous_over_exact_mass": null,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006436590818856109,
+                "300.0": 0.17848014184140615,
+                "800.0": 0.47270005557057204,
+                "1500.0": 0.5137757197882649
+              }
+            },
+            {
+              "order": 16,
+              "mass": 0.5137757727703584,
+              "mass_minus_angular_reference": -1.1796529301832948e-05,
+              "L1_change_from_previous_over_exact_mass": 0.00043628929072714453,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.0064443360800878376,
+                "300.0": 0.17869628523695763,
+                "800.0": 0.4727142538397237,
+                "1500.0": 0.5137757727703584
+              }
+            },
+            {
+              "order": 32,
+              "mass": 0.5137802620524401,
+              "mass_minus_angular_reference": -7.307247220089685e-06,
+              "L1_change_from_previous_over_exact_mass": 8.6603750806018e-05,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006437700507040513,
+                "300.0": 0.17868131019066869,
+                "800.0": 0.4727194601446178,
+                "1500.0": 0.5137802620524401
+              }
+            }
+          ]
+        },
+        {
+          "px_um": 62.5,
+          "shape": [
+            49,
+            49
+          ],
+          "old_mass": 0.5137645000861825,
+          "angular_disk_reference_mass": 0.5137875692996602,
+          "old_outside_center_mask_fraction": 0.006226800137997262,
+          "old_wholly_outside_disk_fraction": 0.004360829599766528,
+          "old_L1_difference_from_integrated_reference_over_exact_mass": 0.04073465627629863,
+          "old_cdf": {
+            "100.0": {
+              "pixel_area_measured_mass": 0.005870644482261032,
+              "center_mask_mass": 0.0066167061189370225,
+              "independent_continuous_mass": 0.00643786100606044
+            },
+            "300.0": {
+              "pixel_area_measured_mass": 0.1701267238414016,
+              "center_mask_mass": 0.16133560383154316,
+              "independent_continuous_mass": 0.17871252767682277
+            },
+            "800.0": {
+              "pixel_area_measured_mass": 0.46915681734078185,
+              "center_mask_mass": 0.46859887723805915,
+              "independent_continuous_mass": 0.4727286642415747
+            },
+            "1500.0": {
+              "pixel_area_measured_mass": 0.5106921021811119,
+              "center_mask_mass": 0.5105653912261477,
+              "independent_continuous_mass": 0.5137875692996602
+            }
+          },
+          "reference_convergence": [
+            {
+              "order": 8,
+              "mass": 0.5140320423620863,
+              "mass_minus_angular_reference": 0.00024447306242614264,
+              "L1_change_from_previous_over_exact_mass": null,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006433110558753028,
+                "300.0": 0.17982785636879844,
+                "800.0": 0.47298172431132596,
+                "1500.0": 0.5140320423620863
+              }
+            },
+            {
+              "order": 16,
+              "mass": 0.5137478328255395,
+              "mass_minus_angular_reference": -3.973647412069958e-05,
+              "L1_change_from_previous_over_exact_mass": 0.0013467877922130876,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006431983214486242,
+                "300.0": 0.17880046818652479,
+                "800.0": 0.4727241331053943,
+                "1500.0": 0.5137478328255395
+              }
+            },
+            {
+              "order": 32,
+              "mass": 0.5137665351946306,
+              "mass_minus_angular_reference": -2.1034105029626993e-05,
+              "L1_change_from_previous_over_exact_mass": 0.00028823034457762674,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006432395171700654,
+                "300.0": 0.17873184018001015,
+                "800.0": 0.4727217752763063,
+                "1500.0": 0.5137665351946306
+              }
+            }
+          ]
+        },
+        {
+          "px_um": 70.3125,
+          "shape": [
+            45,
+            45
+          ],
+          "old_mass": 0.5137645000861825,
+          "angular_disk_reference_mass": 0.5137875692996602,
+          "old_outside_center_mask_fraction": 0.007357349537014748,
+          "old_wholly_outside_disk_fraction": 0.005478711125856708,
+          "old_L1_difference_from_integrated_reference_over_exact_mass": 0.0703583930725737,
+          "old_cdf": {
+            "100.0": {
+              "pixel_area_measured_mass": 0.005739552382163254,
+              "center_mask_mass": 0.008225852109723219,
+              "independent_continuous_mass": 0.00643786100606044
+            },
+            "300.0": {
+              "pixel_area_measured_mass": 0.16255184513064874,
+              "center_mask_mass": 0.1827411541383054,
+              "independent_continuous_mass": 0.17871252767682277
+            },
+            "800.0": {
+              "pixel_area_measured_mass": 0.46776030180664435,
+              "center_mask_mass": 0.46764748308815157,
+              "independent_continuous_mass": 0.4727286642415747
+            },
+            "1500.0": {
+              "pixel_area_measured_mass": 0.5099390229361351,
+              "center_mask_mass": 0.5099845550793387,
+              "independent_continuous_mass": 0.5137875692996602
+            }
+          },
+          "reference_convergence": [
+            {
+              "order": 8,
+              "mass": 0.5135741671004286,
+              "mass_minus_angular_reference": -0.00021340219923160486,
+              "L1_change_from_previous_over_exact_mass": null,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006516393145445626,
+                "300.0": 0.17802078262663198,
+                "800.0": 0.47251359122636544,
+                "1500.0": 0.5135741671004286
+              }
+            },
+            {
+              "order": 16,
+              "mass": 0.5139567360851685,
+              "mass_minus_angular_reference": 0.00016916678550826791,
+              "L1_change_from_previous_over_exact_mass": 0.0017039758874323107,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006428330825352317,
+                "300.0": 0.17901877446075642,
+                "800.0": 0.47288839649792846,
+                "1500.0": 0.5139567360851685
+              }
+            },
+            {
+              "order": 32,
+              "mass": 0.5137481110735578,
+              "mass_minus_angular_reference": -3.945822610240679e-05,
+              "L1_change_from_previous_over_exact_mass": 0.00042125616956665017,
+              "cdf_absolute_input_energy": {
+                "100.0": 0.006429217450628194,
+                "300.0": 0.17854351549226244,
+                "800.0": 0.4726918270312508,
+                "1500.0": 0.5137481110735578
+              }
+            }
+          ]
+        }
+      ],
+      "finite_frame_ledger": {
+        "kernel_sum": 0.5137645000861824,
+        "full_convolution_sum": 0.5137645000861824,
+        "retained_frame_sum": 0.2576628175438019,
+        "outside_frame_sum": 0.25610168254238047,
+        "closure_error": 0.0
+      },
+      "nominal_5219_proxy_rho": [
+        0.09361224283801377,
+        0.007387124398407857,
+        7.585066010872299e-06
+      ],
+      "active_red_multibounce_apertures": [
+        {
+          "px_um": 15.625,
+          "rho": 0.09361224283801377,
+          "old_mass": 0.5794578197443723,
+          "apertures": [
+            {
+              "radius_um": 100.0,
+              "old_pixel_area_aperture_mass": 0.006558623100230294,
+              "analytic_weighted_mass": 0.006611643809623535,
+              "relative_difference": -0.008019293071424571
+            },
+            {
+              "radius_um": 300.0,
+              "old_pixel_area_aperture_mass": 0.18037702639829042,
+              "analytic_weighted_mass": 0.1800054531681608,
+              "relative_difference": 0.002064233186216402
+            },
+            {
+              "radius_um": 800.0,
+              "old_pixel_area_aperture_mass": 0.5025569621589674,
+              "analytic_weighted_mass": 0.5024876792718275,
+              "relative_difference": 0.00013787977297341492
+            }
+          ]
+        },
+        {
+          "px_um": 70.3125,
+          "rho": 0.09361224283801377,
+          "old_mass": 0.5794578197443723,
+          "apertures": [
+            {
+              "radius_um": 100.0,
+              "old_pixel_area_aperture_mass": 0.005932970945945882,
+              "analytic_weighted_mass": 0.006611643809623535,
+              "relative_difference": -0.10264812854706662
+            },
+            {
+              "radius_um": 300.0,
+              "old_pixel_area_aperture_mass": 0.16492270985705001,
+              "analytic_weighted_mass": 0.1800054531681608,
+              "relative_difference": -0.0837904799307414
+            },
+            {
+              "radius_um": 800.0,
+              "old_pixel_area_aperture_mass": 0.5005249130474184,
+              "analytic_weighted_mass": 0.5024876792718275,
+              "relative_difference": -0.0039060982097179897
+            }
+          ]
+        }
+      ],
+      "decision": "Numerical reference only. No production change or 800T attribution. Existing square support and circular normalization mismatch is a small identified implementation inconsistency; material and real-scene attribution remain frozen."
+    },
+    "spectral": {
+      "scope": "One controlled metamer construction, without fitting film or a target image.\n\nFour fixed nonnegative source SPDs provide one null direction for each of three\nspecified, linear, three-channel observers. Splitting that direction into its\npositive and negative parts gives additive mixtures with identical observations.\nOne COMMON gain scales both mixtures; neither is independently white-balanced,\nnormalised or exposed. The film response is the frozen 5219-derived model and\nthe return response is its uncalibrated optical proxy, not measured 800T.\n\nThis is an input identifiability diagnostic, not a correction or real-scene fit.\n",
+      "fixed_sources": [
+        "2700 K theoretical blackbody",
+        "CIE LED-B3",
+        "CIE FL2",
+        "HPS library source"
+      ],
+      "wavelength_nm": [
+        380.0,
+        385.0,
+        390.0,
+        395.0,
+        400.0,
+        405.0,
+        410.0,
+        415.0,
+        420.0,
+        425.0,
+        430.0,
+        435.0,
+        440.0,
+        445.0,
+        450.0,
+        455.0,
+        460.0,
+        465.0,
+        470.0,
+        475.0,
+        480.0,
+        485.0,
+        490.0,
+        495.0,
+        500.0,
+        505.0,
+        510.0,
+        515.0,
+        520.0,
+        525.0,
+        530.0,
+        535.0,
+        540.0,
+        545.0,
+        550.0,
+        555.0,
+        560.0,
+        565.0,
+        570.0,
+        575.0,
+        580.0,
+        585.0,
+        590.0,
+        595.0,
+        600.0,
+        605.0,
+        610.0,
+        615.0,
+        620.0,
+        625.0,
+        630.0,
+        635.0,
+        640.0,
+        645.0,
+        650.0,
+        655.0,
+        660.0,
+        665.0,
+        670.0,
+        675.0,
+        680.0,
+        685.0,
+        690.0,
+        695.0,
+        700.0,
+        705.0,
+        710.0,
+        715.0,
+        720.0,
+        725.0,
+        730.0,
+        735.0,
+        740.0,
+        745.0,
+        750.0,
+        755.0,
+        760.0,
+        765.0,
+        770.0,
+        775.0,
+        780.0
+      ],
+      "signal_convention": "81 samples, 380..780nm at5nm; existing common engine summation convention, not SI radiance. One common gain per pair, no independent exposure or colour normalisation.",
+      "observer_scope": "CIE observer is the current ideal camera approximation. Nikon/Sigma are library measurements of other cameras; none is Panasonic G81. Actual sensor filters, lenses and calibration can differ.",
+      "film_scope": "Frozen next_sensor 5219-derived sensitivity and fixed-reference return proxy. No development, scanner, final RGB, actual photo, fitted material coefficient or candidate change.",
+      "profile_sha256": "d7beca68bf16db88dbb7373fd13a6a1150a57a911a54bb0309a760a6f9883329",
+      "stock": "kodak_vision3_500t",
+      "cases": [
+        {
+          "observation_matrix_singular_values": [
+            31.33617712076597,
+            3.9495335244295875,
+            0.19020405804103707
+          ],
+          "observation_matrix_condition_number": 164.75030787200714,
+          "unscaled_observations": [
+            [
+              8.839600598884772,
+              8.489314060932095,
+              4.854561138266062
+            ],
+            [
+              8.839600598884774,
+              8.489314060932095,
+              4.854561138266063
+            ]
+          ],
+          "common_gain_applied_to_both": 0.1177951472666101,
+          "scaled_observations": [
+            [
+              1.0412620543236466,
+              0.9999999999999999,
+              0.5718437441968132
+            ],
+            [
+              1.0412620543236466,
+              1.0,
+              0.5718437441968132
+            ]
+          ],
+          "max_absolute_equality_residual": 1.1102230246251565e-16,
+          "relative_l2_equality_residual": 7.14974802552475e-17,
+          "null_weights_before_common_gain": [
+            0.3173523203619506,
+            0.3877817370974847,
+            -0.8185670011199975,
+            -0.2808218186180644
+          ],
+          "observer": "CIE 1931 2 degree XYZ",
+          "common_signal_unit": "Y=1 for both mixtures",
+          "mixture_coefficients": [
+            [
+              0.0373825633124364,
+              0.04567880682870009,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0964232204445175,
+              0.03307944747979216
+            ]
+          ],
+          "direct_layer_H": [
+            [
+              0.21428127945006872,
+              0.27534163244730625,
+              0.2336256227054957
+            ],
+            [
+              0.13333239777747502,
+              0.27926360433648406,
+              0.31215023486704774
+            ]
+          ],
+          "direct_mixture_B_minus_A_stops": [
+            -0.6844784390402586,
+            0.020404797291773802,
+            0.41804204196920147
+          ],
+          "proxy_return_layer_H": [
+            [
+              0.0480884106491329,
+              0.007265443976263247,
+              2.5889084500310804e-06
+            ],
+            [
+              0.02615630281318267,
+              0.008164116386554648,
+              1.6416179631833197e-06
+            ]
+          ],
+          "proxy_return_mixture_B_minus_A_stops": [
+            -0.8785306143974007,
+            0.16824578872170254,
+            -0.6572255263672377
+          ],
+          "spectrum_l1_relative_difference": 0.6722885261557001,
+          "ideal_linear_camera_rgb": [
+            [
+              0.06430202082394497,
+              0.036901446585844995,
+              0.01899392794388908
+            ],
+            [
+              0.06430202082394496,
+              0.036901446585845,
+              0.018993927943889075
+            ]
+          ],
+          "ideal_linear_camera_rgb_equality_residual": 1.3877787807814457e-17
+        },
+        {
+          "observation_matrix_singular_values": [
+            23.11469095887907,
+            3.280147383214747,
+            0.1807486866961911
+          ],
+          "observation_matrix_condition_number": 127.8830368362846,
+          "unscaled_observations": [
+            [
+              5.380505321489134,
+              5.258950623257281,
+              2.52447214214277
+            ],
+            [
+              5.380505321489135,
+              5.258950623257279,
+              2.52447214214277
+            ]
+          ],
+          "common_gain_applied_to_both": 0.19015200400961774,
+          "scaled_observations": [
+            [
+              1.0231138694655715,
+              1.0000000000000002,
+              0.48003343689490025
+            ],
+            [
+              1.0231138694655717,
+              1.0,
+              0.4800334368949002
+            ]
+          ],
+          "max_absolute_equality_residual": 2.220446049250313e-16,
+          "relative_l2_equality_residual": 2.1131833493154465e-16,
+          "null_weights_before_common_gain": [
+            0.655361928588606,
+            0.11565152627704464,
+            -0.49749255543932214,
+            -0.5564410339909037
+          ],
+          "observer": "Nikon 5100 (NPL) raw spectral sensitivity",
+          "common_signal_unit": "G=1 for both mixtures",
+          "mixture_coefficients": [
+            [
+              0.12461838407273142,
+              0.021991369488351002,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.09459920639665295,
+              0.10580837772655416
+            ]
+          ],
+          "direct_layer_H": [
+            [
+              0.3647678627119697,
+              0.3405128513229173,
+              0.24497457794103403
+            ],
+            [
+              0.20606166605980814,
+              0.35776388928525577,
+              0.3372900527955811
+            ]
+          ],
+          "direct_mixture_B_minus_A_stops": [
+            -0.8239024855065814,
+            0.07129852891948789,
+            0.46135772931405306
+          ],
+          "proxy_return_layer_H": [
+            [
+              0.08653889622983872,
+              0.009097976274278934,
+              3.1157626906343513e-06
+            ],
+            [
+              0.04042206445640576,
+              0.011044695381502143,
+              1.7927834396789615e-06
+            ]
+          ],
+          "proxy_return_mixture_B_minus_A_stops": [
+            -1.0982057141994526,
+            0.27973605147110964,
+            -0.7973841284238582
+          ],
+          "spectrum_l1_relative_difference": 0.9447323174492563
+        },
+        {
+          "observation_matrix_singular_values": [
+            46.62123871357822,
+            2.2338880791392364,
+            0.22614766343685264
+          ],
+          "observation_matrix_condition_number": 206.15397039729444,
+          "unscaled_observations": [
+            [
+              7.963066889528594,
+              12.890270395573415,
+              12.628318345539697
+            ],
+            [
+              7.963066889528594,
+              12.890270395573417,
+              12.628318345539697
+            ]
+          ],
+          "common_gain_applied_to_both": 0.07757789164325095,
+          "scaled_observations": [
+            [
+              0.6177579403038087,
+              1.0,
+              0.9796783122467568
+            ],
+            [
+              0.6177579403038086,
+              1.0,
+              0.9796783122467567
+            ]
+          ],
+          "max_absolute_equality_residual": 1.1102230246251565e-16,
+          "relative_l2_equality_residual": 1.0260958559729362e-16,
+          "null_weights_before_common_gain": [
+            0.2505424338651622,
+            -0.5227552796385841,
+            0.8123119321579984,
+            -0.06406817709788856
+          ],
+          "observer": "Sigma SDMerill (NPL) raw spectral sensitivity",
+          "common_signal_unit": "G=1 for both mixtures",
+          "mixture_coefficients": [
+            [
+              0.019436553786427918,
+              0.0,
+              0.06301744705347301,
+              0.0
+            ],
+            [
+              0.0,
+              0.04055425243973943,
+              0.0,
+              0.004970274100680611
+            ]
+          ],
+          "direct_layer_H": [
+            [
+              0.11265084006421416,
+              0.1957293902892701,
+              0.21901045127509852
+            ],
+            [
+              0.11390873695781174,
+              0.1853975266362269,
+              0.16827546746449043
+            ]
+          ],
+          "direct_mixture_B_minus_A_stops": [
+            0.01602033586192736,
+            -0.0782384068157,
+            -0.3801748530664393
+          ],
+          "proxy_return_layer_H": [
+            [
+              0.024299486839251767,
+              0.005462062585977139,
+              1.3599547201383132e-06
+            ],
+            [
+              0.02396257800799737,
+              0.004912804546164478,
+              1.7289208451319425e-06
+            ]
+          ],
+          "proxy_return_mixture_B_minus_A_stops": [
+            -0.020142718606596378,
+            -0.15289900181401683,
+            0.3463132022836386
+          ],
+          "spectrum_l1_relative_difference": 0.4289975889336645
+        }
+      ],
+      "decision": "Identical three-channel measurements do not uniquely determine model layer/return exposure even within a small nonnegative source-mixture family. Additional unsaturated bracket exposures at the same channel sensitivities scale the same three observations and do not remove this ambiguity. This does not quantify the real corridor error or identify its cause; no physical correction justified."
+    }
+  },
+  "source_followup": {
+    "date_utc": "2026-10-20",
+    "request_limit": 10,
+    "requests_used": 10,
+    "prior_urls_repeated": 0,
+    "previously_proxy_blocked_domains_retried": false,
+    "external_code_executed": false,
+    "model_or_default_changes": false,
+    "requests": [
+      {
+        "id": "veilgen_documentation",
+        "url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler/c3a7c239e179f8c3447bc491263730f380db4f24/VeilGen/README.md",
+        "date_utc": "2026-10-20T17:48:25.295844+00:00",
+        "status": 200,
+        "final_url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler/c3a7c239e179f8c3447bc491263730f380db4f24/VeilGen/README.md",
+        "content_type": "text/plain; charset=utf-8",
+        "bytes": 3478,
+        "sha256": "c46c767ef2a8175a1e2aa5d29ec5d1f068a6edac79a06ccf70a3849717a4ba2f",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "deveiler_documentation",
+        "url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler/c3a7c239e179f8c3447bc491263730f380db4f24/Deveiler/README.md",
+        "date_utc": "2026-10-20T17:48:25.296723+00:00",
+        "status": 200,
+        "final_url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler/c3a7c239e179f8c3447bc491263730f380db4f24/Deveiler/README.md",
+        "content_type": "text/plain; charset=utf-8",
+        "bytes": 3533,
+        "sha256": "01489f9b209935262c0c8fe95b7d71f6efba0b558b86ee98074c61b8fda73afc",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "deveiler_project",
+        "url": "https://xiaolongqian.github.io/DeVeiler-page/",
+        "date_utc": "2026-10-20T17:48:25.297400+00:00",
+        "error": "URLError(OSError('Tunnel connection failed: 403 Forbidden'))",
+        "access_class": "blocked_at_proxy_connect",
+        "origin_http_status": null
+      },
+      {
+        "id": "deveiler_repo",
+        "url": "https://github.com/XiaolongQian/DeVeiler",
+        "date_utc": "2026-10-20T17:48:01.427481+00:00",
+        "status": 200,
+        "final_url": "https://github.com/XiaolongQian/DeVeiler",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 282432,
+        "sha256": "0f336a9234b0dc65bddb8d97b467da4f1cc58bb1731d45b3de4040cb7db46215",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "ghostlight_repo",
+        "url": "https://github.com/JaydenB/ghostlight",
+        "date_utc": "2026-10-20T17:48:01.428358+00:00",
+        "status": 200,
+        "final_url": "https://github.com/JaydenB/ghostlight",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 388382,
+        "sha256": "682cd064f79a07ee0276f9eca3fb82e0a0e318a430020523320b6bd2e0841e7a",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "deveiler_project_source",
+        "url": "https://github.com/XiaolongQian/DeVeiler-page",
+        "date_utc": "2026-10-20T17:48:36.968855+00:00",
+        "status": 200,
+        "final_url": "https://github.com/XiaolongQian/DeVeiler-page",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 241863,
+        "sha256": "b9bbbeacb433e148f9a7bff552cfb193fe28d75cb306e5a50a5c7987fcd01446",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "deveiler_project_html",
+        "url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler-page/1549e904dee30ddb2aa2cd075814edd1e0f34541/index.html",
+        "date_utc": "2026-10-20T17:48:44.530954+00:00",
+        "status": 200,
+        "final_url": "https://raw.githubusercontent.com/XiaolongQian/DeVeiler-page/1549e904dee30ddb2aa2cd075814edd1e0f34541/index.html",
+        "content_type": "text/plain; charset=utf-8",
+        "bytes": 16114,
+        "sha256": "3b24832e4b44236df9b74dc81bad5ff9f8af414414835b59fac0efeec3e3a6bd",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "search_point_flare",
+        "url": "https://github.com/search?q=%22veiling+glare%22&type=repositories",
+        "date_utc": "2026-10-20T17:47:48.140689+00:00",
+        "status": 200,
+        "final_url": "https://github.com/search?q=%22veiling+glare%22&type=repositories",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 206455,
+        "sha256": "6974681fe644969ca75e7e7cb3f301bcc85efca3d90e7ea803ba88465685a40a",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "search_hdr_psf",
+        "url": "https://github.com/search?q=HDR+PSF+calibration&type=repositories",
+        "date_utc": "2026-10-20T17:47:48.141723+00:00",
+        "status": 200,
+        "final_url": "https://github.com/search?q=HDR+PSF+calibration&type=repositories",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 175455,
+        "sha256": "58d8f3782b1784e78adbedb26f99c5fc2a4bcd3e3d83ad674942d7b3752e01b1",
+        "truncated": false,
+        "access_class": "retrieved"
+      },
+      {
+        "id": "search_800t_instrument",
+        "url": "https://github.com/search?q=cinestill+spectrophotometer+in%3Areadme&type=repositories",
+        "date_utc": "2026-10-20T17:47:48.142289+00:00",
+        "status": 200,
+        "final_url": "https://github.com/search?q=cinestill+spectrophotometer+in%3Areadme&type=repositories",
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 175809,
+        "sha256": "4c30e17bee8ab36648cace0cf7a8e72bfed54c2c5f3f21e8c3dfec8d279390b3",
+        "truncated": false,
+        "access_class": "retrieved"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "deveiler",
+        "grade": "learned_generic_optics_algorithm_not_independent_measurement",
+        "repo_commit": "c3a7c239e179f8c3447bc491263730f380db4f24",
+        "project_commit": "1549e904dee30ddb2aa2cd075814edd1e0f34541",
+        "finding": "Original project text explicitly describes maps learned unsupervised from target images, regularized by Stable Diffusion priors. Compact single-lens and metasurface systems; not a calibrated lamp/HDR/PSF measurement or 800T dataset. README data link points at Hugging Face but files were not inspected; do not conclude RAW absence. No physical constants inferred.",
+        "license_claim": "Repository README states Apache License 2.0 for code/models and links LICENSE. Root tree inspected did not list LICENSE; actual license text and dataset license not inspected. No code/model/data imported."
+      },
+      {
+        "id": "ghostlight",
+        "grade": "optical_simulator_and_internal_validation_not_measurement",
+        "repo_commit": "bd49c234896cef07f7ba3ab777e5291bb5c2bb37",
+        "finding": "Lens prescriptions, ray tracing, spectral simulation and numerical/golden validation. Inspected README offers no verified same-system measured source or negative data. Synthetic rendering not accepted as independent camera-lens PSF.",
+        "license_claim": "README states MIT License; license text not inspected. No code or data imported."
+      }
+    ],
+    "decision": "No newly obtained measurement unfreezes source/material/scanner attribution or transport integration. Stop this bounded lead rather than train latent maps or build another simulator."
+  },
+  "artifact_note": "Versioned tools reproduce numeric experiments; original web snapshots/NPZ/logs under /workspace/filmlab-audit/autonomous-round are ephemeral."
+}

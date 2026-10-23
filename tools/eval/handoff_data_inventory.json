@@ -1,0 +1,7544 @@
+{
+  "note": "Size/path inventory only; image files not redistributed. Recovered local workspace, 2026-10-23.",
+  "files": [
+    {
+      "root": "filmlab-audit",
+      "path": "R1-18-19_texture_preview.jpg",
+      "bytes": 46890
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "R1-19-20_texture_preview.jpg",
+      "bytes": 31023
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "after.npz",
+      "bytes": 11486
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/grass_offices_comparison.png",
+      "bytes": 1637732
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/grass_offices_comparison_full.png",
+      "bytes": 6186363
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/grass_offices_exp_plain.png",
+      "bytes": 1903133
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/grass_offices_paper_plain.png",
+      "bytes": 1904789
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/grass_offices_real.png",
+      "bytes": 3691288
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/render.py",
+      "bytes": 3661
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "alternate-scene-preview/settings.json",
+      "bytes": 660
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "analog-2026-brief/extracted.txt",
+      "bytes": 10602
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/450_False.npz",
+      "bytes": 7493
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/450_True.npz",
+      "bytes": 7493
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/550_False.npz",
+      "bytes": 7496
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/550_True.npz",
+      "bytes": 7503
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/650_False.npz",
+      "bytes": 7478
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/650_True.npz",
+      "bytes": 7494
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/layer_radius.png",
+      "bytes": 390870
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/mc_check_0.3.npz",
+      "bytes": 1230
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/mc_check_0.6.npz",
+      "bytes": 1068
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/mc_check_0.9.npz",
+      "bytes": 1004
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour/results.json",
+      "bytes": 23904
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "angular-colour.log",
+      "bytes": 23905
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/baseline.json",
+      "bytes": 6932
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/grain/results.json",
+      "bytes": 9857
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/FINDINGS.md",
+      "bytes": 3114
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler-results.json",
+      "bytes": 1336
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler.json",
+      "bytes": 396
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_documentation.body",
+      "bytes": 3533
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_project_html.body",
+      "bytes": 16114
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_project_html.txt",
+      "bytes": 6010
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_project_source.body",
+      "bytes": 241863
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_project_source.embedded.json",
+      "bytes": 12079
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_repo.body",
+      "bytes": 282432
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_repo.embedded.json",
+      "bytes": 29918
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/deveiler_repo.txt",
+      "bytes": 3948
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/fetch.py",
+      "bytes": 914
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/ghostlight_repo.body",
+      "bytes": 388382
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/ghostlight_repo.embedded.json",
+      "bytes": 73449
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/ghostlight_repo.txt",
+      "bytes": 16169
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/primary-results.json",
+      "bytes": 792
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/primary.json",
+      "bytes": 148
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/project_source-results.json",
+      "bytes": 419
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/project_source.json",
+      "bytes": 91
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/project_text-results.json",
+      "bytes": 551
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/project_text.json",
+      "bytes": 156
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/search_800t_instrument.body",
+      "bytes": 175809
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/search_hdr_psf.body",
+      "bytes": 175455
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/search_point_flare.body",
+      "bytes": 206455
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/searches-results.json",
+      "bytes": 1398
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/searches.json",
+      "bytes": 332
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/source-followup.json",
+      "bytes": 6967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/sources/veilgen_documentation.body",
+      "bytes": 3478
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/spectral/README.md",
+      "bytes": 3424
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/spectral/controlled_spectra.npz",
+      "bytes": 18910
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/spectral/results.json",
+      "bytes": 10109
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/kernels_15.625um.npz",
+      "bytes": 264415
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/kernels_31.25um.npz",
+      "bytes": 49252
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/kernels_62.5um.npz",
+      "bytes": 10982
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/kernels_70.3125um.npz",
+      "bytes": 9118
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/results.json",
+      "bytes": 13498
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "autonomous-round/transport/run.log",
+      "bytes": 1874
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-00-1.json",
+      "bytes": 181149
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-00-1.npz",
+      "bytes": 435873130
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-01-2.json",
+      "bytes": 21015
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-01-2.npz",
+      "bytes": 435731531
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-02-3.json",
+      "bytes": 872843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-02-3.npz",
+      "bytes": 435182545
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-03-4.json",
+      "bytes": 650052
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-03-4.npz",
+      "bytes": 343856793
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-04-5.json",
+      "bytes": 12187
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-04-5.npz",
+      "bytes": 370801258
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-05-6.json",
+      "bytes": 8531
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-05-6.npz",
+      "bytes": 404370863
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-06-7.json",
+      "bytes": 35869
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-06-7.npz",
+      "bytes": 437993397
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-07-8.json",
+      "bytes": 992135
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/R1-07-8.npz",
+      "bytes": 410353890
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/cafe.json",
+      "bytes": 640286
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/cafe.npz",
+      "bytes": 438222517
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/normal_regions.png",
+      "bytes": 160926
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/summary.json",
+      "bytes": 1257910
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit/summary.tsv",
+      "bytes": 2206
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-audit-run.log",
+      "bytes": 345
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "base-colour-summary-run.log",
+      "bytes": 4893
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "before.npz",
+      "bytes": 11486
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-00-1.json",
+      "bytes": 19336
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-00-1_facade_lamp.npz",
+      "bytes": 85254544
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-00-1_facade_lamp_comparison.png",
+      "bytes": 1171056
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3.json",
+      "bytes": 43695
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_ceiling_lamp.npz",
+      "bytes": 81902933
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_ceiling_lamp_comparison.png",
+      "bytes": 1055237
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_glass_reflection.npz",
+      "bytes": 82378044
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_glass_reflection_comparison.png",
+      "bytes": 1134986
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_middle_ceiling.npz",
+      "bytes": 82141963
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-02-3_middle_ceiling_comparison.png",
+      "bytes": 1088013
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-04-5.json",
+      "bytes": 14935
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-04-5_warm_walkway.npz",
+      "bytes": 82466934
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-04-5_warm_walkway_comparison.png",
+      "bytes": 1213766
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-07-8.json",
+      "bytes": 27148
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-07-8_twilight_lamp_left.npz",
+      "bytes": 92303620
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-07-8_twilight_lamp_left_comparison.png",
+      "bytes": 968038
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-07-8_twilight_lamp_right.npz",
+      "bytes": 92295695
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/R1-07-8_twilight_lamp_right_comparison.png",
+      "bytes": 982737
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/brightness_response.png",
+      "bytes": 190013
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/local_brightness.tsv",
+      "bytes": 22940
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/probe_brightness.json",
+      "bytes": 28443
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/run.log",
+      "bytes": 200
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "brightness-local/summary.json",
+      "bytes": 347
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "camera-source-constraints/R1-05-6_roof_opening_1.npz",
+      "bytes": 539772
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "camera-source-constraints/R1-05-6_roof_opening_2.npz",
+      "bytes": 574046
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "camera-source-constraints/results.json",
+      "bytes": 256792
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "camera-source-constraints/run.log",
+      "bytes": 6111
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/catalogue112_full_native.png",
+      "bytes": 5983713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/ceiling_lamp.npz",
+      "bytes": 13690058
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/ceiling_lamp_comparison.jpg",
+      "bytes": 359320
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/full_comparison.jpg",
+      "bytes": 604767
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/middle_ceiling.npz",
+      "bytes": 13881987
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/middle_ceiling_comparison.jpg",
+      "bytes": 368856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/results.json",
+      "bytes": 14109
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/two_lamp_comparison.jpg",
+      "bytes": 716560
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-joint-render/validated_inputs_old_core_full_native.png",
+      "bytes": 5983758
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/ceiling_lamp_catalogue.json",
+      "bytes": 26206
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/ceiling_lamp_catalogue.npz",
+      "bytes": 6328399
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/ceiling_lamp_catalogue_comparison.jpg",
+      "bytes": 357917
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/ceiling_lamp_catalogue_partial.json",
+      "bytes": 18713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/ceiling_lamp_scene_specific_library.npz",
+      "bytes": 79967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/real_previous_refit.jpg",
+      "bytes": 346460
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling-geometry/round_results.json",
+      "bytes": 57346
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_catalogue.json",
+      "bytes": 25885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_catalogue.npz",
+      "bytes": 6347684
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_catalogue_comparison.jpg",
+      "bytes": 357670
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_catalogue_partial.json",
+      "bytes": 18448
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_relaxed_nonphysical_diagnostic.json",
+      "bytes": 7772
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_relaxed_nonphysical_diagnostic.npz",
+      "bytes": 6346447
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_relaxed_nonphysical_diagnostic_partial.json",
+      "bytes": 3231
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/ceiling_lamp_scene_specific_library.npz",
+      "bytes": 79967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_catalogue.json",
+      "bytes": 25783
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_catalogue.npz",
+      "bytes": 6439076
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_catalogue_comparison.jpg",
+      "bytes": 367790
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_catalogue_partial.json",
+      "bytes": 18393
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_relaxed_nonphysical_diagnostic.json",
+      "bytes": 7774
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_relaxed_nonphysical_diagnostic.npz",
+      "bytes": 6437646
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_relaxed_nonphysical_diagnostic_partial.json",
+      "bytes": 3234
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/middle_ceiling_scene_specific_library.npz",
+      "bytes": 79967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/report_stdout.json",
+      "bytes": 10862
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/round_results.json",
+      "bytes": 15914
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue-source-inverse/scene_specific_library.npz",
+      "bytes": 79967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "catalogue_joint_render.log",
+      "bytes": 9311
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_comparison.jpg",
+      "bytes": 423894
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_corrected_inputs_old_core.npz",
+      "bytes": 11579263
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_field_original_sectors.npz",
+      "bytes": 11549875
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_field_reverse_sectors.npz",
+      "bytes": 11566164
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_fixed112.npz",
+      "bytes": 11530965
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/ceiling_lamp_legacy_full.npz",
+      "bytes": 11214798
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/real_legacy_candidate_geometry_control.jpg",
+      "bytes": 347827
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/results.json",
+      "bytes": 46431
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-geometry-replay/round_results.json",
+      "bytes": 185794
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-line-registration/ceiling_lamp.npz",
+      "bytes": 7288
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-line-registration/middle_ceiling.npz",
+      "bytes": 11943
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling-line-registration/results.json",
+      "bytes": 87476
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "ceiling_geometry_replay.log",
+      "bytes": 8144
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/both_directions_comparison.jpg",
+      "bytes": 879026
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/ceiling_lamp.json",
+      "bytes": 7983
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/ceiling_lamp.npz",
+      "bytes": 6337504
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/ceiling_lamp_comparison.jpg",
+      "bytes": 360635
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/ceiling_lamp_partial.json",
+      "bytes": 1817
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/reverse-sectors/ceiling_lamp.json",
+      "bytes": 8089
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/reverse-sectors/ceiling_lamp.npz",
+      "bytes": 6344522
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/reverse-sectors/ceiling_lamp_comparison.jpg",
+      "bytes": 360780
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling-geometry/reverse-sectors/ceiling_lamp_partial.json",
+      "bytes": 1810
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling_lamp.json",
+      "bytes": 7125
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling_lamp.npz",
+      "bytes": 6349550
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling_lamp_comparison.jpg",
+      "bytes": 360123
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/ceiling_lamp_partial.json",
+      "bytes": 1824
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/middle_ceiling.json",
+      "bytes": 6904
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/middle_ceiling.npz",
+      "bytes": 6423356
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/middle_ceiling_comparison.jpg",
+      "bytes": 370190
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/middle_ceiling_partial.json",
+      "bytes": 1623
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/ceiling_lamp.json",
+      "bytes": 7329
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/ceiling_lamp.npz",
+      "bytes": 6357330
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/ceiling_lamp_comparison.jpg",
+      "bytes": 360383
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/ceiling_lamp_partial.json",
+      "bytes": 2051
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/middle_ceiling.json",
+      "bytes": 6618
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/middle_ceiling.npz",
+      "bytes": 6431305
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/middle_ceiling_comparison.jpg",
+      "bytes": 370238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/reverse-sectors/middle_ceiling_partial.json",
+      "bytes": 1405
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "censored-source-field/round_results.json",
+      "bytes": 49717
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/bounded_comparison.png",
+      "bytes": 72406
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/comparison-run.log",
+      "bytes": 2742
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/comparison.json",
+      "bytes": 2742
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/frozen_model_neutral_response.csv",
+      "bytes": 45385
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/frozen_model_neutral_response.npz",
+      "bytes": 181535
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/preparation.json",
+      "bytes": 2530
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "cinestill-2020-sensitometry/prepare_reference.py",
+      "bytes": 4102
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-00-1_distant_lamp_0.2.npz",
+      "bytes": 163177
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-00-1_distant_lamp_0.4.npz",
+      "bytes": 165951
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-00-1_facade_lamp_0.2.npz",
+      "bytes": 893383
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-00-1_facade_lamp_0.4.npz",
+      "bytes": 895461
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-04-5_walkway_1_0.2.npz",
+      "bytes": 982771
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-04-5_walkway_1_0.4.npz",
+      "bytes": 1014232
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_1_actual.npz",
+      "bytes": 854142
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_1_disk.npz",
+      "bytes": 509323
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_1_hard.npz",
+      "bytes": 923940
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_2_actual.npz",
+      "bytes": 899635
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_2_disk.npz",
+      "bytes": 538713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/R1-05-6_roof_opening_2_hard.npz",
+      "bytes": 963962
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/README.md",
+      "bytes": 4304
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/actual_core_profiles.png",
+      "bytes": 287240
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/disk-results.json",
+      "bytes": 27244
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/disk-results.partial.json",
+      "bytes": 27244
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/hard-results.json",
+      "bytes": 113864
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/hard-results.partial.json",
+      "bytes": 113864
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/hard-summary.json",
+      "bytes": 463
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/hard_core_errors.png",
+      "bytes": 59383
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/project_existing.py",
+      "bytes": 2151
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/results.json",
+      "bytes": 790845
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/results.partial.json",
+      "bytes": 790845
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/summarize.py",
+      "bytes": 4497
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/summarize_hard.py",
+      "bytes": 3595
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/summary.json",
+      "bytes": 4563
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse/summary.tsv",
+      "bytes": 1901
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse-disk-run.log",
+      "bytes": 450
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse-hard-run.log",
+      "bytes": 1920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "clipped-psf-inverse-run.log",
+      "bytes": 7662
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-balance-audit/R1-07-8.jpg",
+      "bytes": 427335
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-balance-audit/cafe.jpg",
+      "bytes": 419977
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-balance-audit/results.json",
+      "bytes": 1623878
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-balance-audit/run.log",
+      "bytes": 6025
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/controlled_chart.jpg",
+      "bytes": 345221
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/gain-order-replay/R1-07-8.jpg",
+      "bytes": 425929
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/gain-order-replay/R1-07-8.json",
+      "bytes": 1678
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/gain-order-replay/cafe.jpg",
+      "bytes": 418390
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/gain-order-replay/cafe.json",
+      "bytes": 1664
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/results.json",
+      "bytes": 26535
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation-audit/trace.npz",
+      "bytes": 226453
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-foundation.log",
+      "bytes": 18043
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/01.jpg",
+      "bytes": 737868
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/02.jpg",
+      "bytes": 865357
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/03.jpg",
+      "bytes": 787143
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/04.jpg",
+      "bytes": 558949
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/05.jpg",
+      "bytes": 665938
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/06.jpg",
+      "bytes": 763798
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/07.jpg",
+      "bytes": 681600
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/08.jpg",
+      "bytes": 484553
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/09.jpg",
+      "bytes": 534210
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/10.jpg",
+      "bytes": 572946
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/11.jpg",
+      "bytes": 510406
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/12.jpg",
+      "bytes": 803950
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/13.jpg",
+      "bytes": 592624
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/14.jpg",
+      "bytes": 731150
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/15.jpg",
+      "bytes": 677812
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/16.jpg",
+      "bytes": 618052
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/17.jpg",
+      "bytes": 586885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/INDEX.md",
+      "bytes": 4742
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/assemble.py",
+      "bytes": 3250
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-history/manifest.json",
+      "bytes": 6414
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-00-1.json",
+      "bytes": 137077
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-00-1_fixed_film_design_gray.jpg",
+      "bytes": 500929
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-00-1_native.npz",
+      "bytes": 22527155
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-00-1_us6160634.jpg",
+      "bytes": 500632
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-00-1_us6160634_axis.jpg",
+      "bytes": 501620
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-02-3.json",
+      "bytes": 686660
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-02-3_fixed_film_design_gray.jpg",
+      "bytes": 441099
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-02-3_native.npz",
+      "bytes": 22466658
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-02-3_us6160634.jpg",
+      "bytes": 439577
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-02-3_us6160634_axis.jpg",
+      "bytes": 440622
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-06-7.json",
+      "bytes": 25862
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-06-7_fixed_film_design_gray.jpg",
+      "bytes": 485507
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-06-7_native.npz",
+      "bytes": 22552811
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-06-7_us6160634.jpg",
+      "bytes": 498016
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-06-7_us6160634_axis.jpg",
+      "bytes": 496367
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-07-8.json",
+      "bytes": 781215
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-07-8_fixed_film_design_gray.jpg",
+      "bytes": 425562
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-07-8_native.npz",
+      "bytes": 22314788
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-07-8_us6160634.jpg",
+      "bytes": 422365
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/R1-07-8_us6160634_axis.jpg",
+      "bytes": 423415
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/cafe.json",
+      "bytes": 491363
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/cafe_fixed_film_design_gray.jpg",
+      "bytes": 415976
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/cafe_native.npz",
+      "bytes": 34131954
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/cafe_us6160634.jpg",
+      "bytes": 414114
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/cafe_us6160634_axis.jpg",
+      "bytes": 415097
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/summary.json",
+      "bytes": 9314
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "colour-policy-trial/summary.log",
+      "bytes": 6242
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/actual_dye_contributions.png",
+      "bytes": 136072
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/actual_scan_strata.json",
+      "bytes": 10773
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/README.md",
+      "bytes": 2710
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/ceiling_lamp.json",
+      "bytes": 8241
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/ceiling_lamp.npz",
+      "bytes": 12258797
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/finalize_cache.py",
+      "bytes": 2298
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/glass_reflection.json",
+      "bytes": 8255
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/glass_reflection.npz",
+      "bytes": 11947189
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/middle_ceiling.json",
+      "bytes": 8234
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/middle_ceiling.npz",
+      "bytes": 12278465
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/recovery.log",
+      "bytes": 2362
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/results.json",
+      "bytes": 28539
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/cache/validate_alloff_rgb.py",
+      "bytes": 1863
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/ceiling_lamp-run.log",
+      "bytes": 215
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/ceiling_lamp.npz",
+      "bytes": 261749885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/ceiling_lamp_results.json",
+      "bytes": 60948
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/decision.json",
+      "bytes": 564
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/glass_reflection-run.log",
+      "bytes": 229
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/glass_reflection.npz",
+      "bytes": 269252655
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/glass_reflection_results.json",
+      "bytes": 40898
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/local_maps.png",
+      "bytes": 2576428
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/middle_ceiling-run.log",
+      "bytes": 223
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/middle_ceiling.npz",
+      "bytes": 263069556
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/middle_ceiling_results.json",
+      "bytes": 61019
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/provenance.json",
+      "bytes": 1681
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/results.json",
+      "bytes": 172843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/strata-run.log",
+      "bytes": 10774
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/summary.tsv",
+      "bytes": 5130
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-dye-response/units.json",
+      "bytes": 17234
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection.npz",
+      "bytes": 30916133
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection_comparison.png",
+      "bytes": 1130247
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection_exp.png",
+      "bytes": 273974
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection_none.png",
+      "bytes": 278201
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection_paper.png",
+      "bytes": 274692
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/glass_reflection_real.png",
+      "bytes": 477782
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling.npz",
+      "bytes": 28775859
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling_comparison.png",
+      "bytes": 1085510
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling_exp.png",
+      "bytes": 242393
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling_none.png",
+      "bytes": 238920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling_paper.png",
+      "bytes": 244443
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/middle_ceiling_real.png",
+      "bytes": 483131
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling.npz",
+      "bytes": 28257519
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling_comparison.png",
+      "bytes": 1053941
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling_exp.png",
+      "bytes": 226053
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling_none.png",
+      "bytes": 220816
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling_paper.png",
+      "bytes": 228042
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/near_ceiling_real.png",
+      "bytes": 481448
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights/results.json",
+      "bytes": 6627
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-lights.log",
+      "bytes": 6646
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency/ceiling_lamp.npz",
+      "bytes": 30642597
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency/glass_reflection.npz",
+      "bytes": 30664150
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency/middle_ceiling.npz",
+      "bytes": 30675335
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency/results.json",
+      "bytes": 27802
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency/source_dependency.png",
+      "bytes": 123095
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor-source-dependency.log",
+      "bytes": 27922
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "corridor_marked.png",
+      "bytes": 3175573
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/blue_hour.png",
+      "bytes": 7067429
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/blue_hour_legacy.png",
+      "bytes": 7196292
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/compare_scans.py",
+      "bytes": 2835
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/compare_three_versions.py",
+      "bytes": 3067
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/blue_hour_compare.png",
+      "bytes": 6015899
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/blue_hour_three_versions.png",
+      "bytes": 8723952
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/covered_walkway_compare.png",
+      "bytes": 6212001
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/covered_walkway_three_versions.png",
+      "bytes": 9069736
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/night_building_compare.png",
+      "bytes": 6488324
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/night_building_three_versions.png",
+      "bytes": 9341311
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/warm_lights_compare.png",
+      "bytes": 4993390
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/comparisons/warm_lights_three_versions.png",
+      "bytes": 7047473
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/covered_walkway.png",
+      "bytes": 6888887
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/covered_walkway_legacy.png",
+      "bytes": 7023177
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/night_building.png",
+      "bytes": 7151834
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/night_building_legacy.png",
+      "bytes": 7220295
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/render-settings.json",
+      "bytes": 837
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/render_legacy.py",
+      "bytes": 148
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/warm_lights.png",
+      "bytes": 6684910
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "current-gallery/warm_lights_legacy.png",
+      "bytes": 6768202
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "decoder_collect.log",
+      "bytes": 1815
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "depth-sufficiency/depth_profiles.npz",
+      "bytes": 2445
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "depth-sufficiency/depth_sufficiency.png",
+      "bytes": 166871
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "depth-sufficiency/results.json",
+      "bytes": 6542
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "depth-sufficiency.log",
+      "bytes": 6543
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/glass_reflection.npz",
+      "bytes": 97039
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/glass_reflection_development_ablations.npz",
+      "bytes": 18890935
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/glass_reflection_development_ablations.png",
+      "bytes": 1332679
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/middle_ceiling.npz",
+      "bytes": 103153
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/middle_ceiling_development_ablations.npz",
+      "bytes": 17806022
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/middle_ceiling_development_ablations.png",
+      "bytes": 1258427
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/near_ceiling.npz",
+      "bytes": 101038
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/near_ceiling_development_ablations.npz",
+      "bytes": 17419646
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/near_ceiling_development_ablations.png",
+      "bytes": 1215938
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/red_layer_response.png",
+      "bytes": 166363
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/results.json",
+      "bytes": 4418
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response/synthetic.npz",
+      "bytes": 918039
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "development-response.log",
+      "bytes": 4445
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/ceiling_lamp.npz",
+      "bytes": 13798495
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/ceiling_lamp_comparison.png",
+      "bytes": 970718
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/full_dye.npz",
+      "bytes": 84207123
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/glass_reflection.npz",
+      "bytes": 15679047
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/glass_reflection_comparison.png",
+      "bytes": 1061758
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/middle_ceiling.npz",
+      "bytes": 14184869
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/middle_ceiling_comparison.png",
+      "bytes": 1005825
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/results.json",
+      "bytes": 12758
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/run.log",
+      "bytes": 12910
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "dir-consistency/synthetic.json",
+      "bytes": 390
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "edge_collect.log",
+      "bytes": 197
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-download.log",
+      "bytes": 4440
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-00-1.json",
+      "bytes": 69334
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-00-1_aligned.npz",
+      "bytes": 85504139
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-00-1_full.jpg",
+      "bytes": 232410
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-00-1_source.jpg",
+      "bytes": 217344
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-01-2.json",
+      "bytes": 72392
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-01-2_aligned.npz",
+      "bytes": 83332742
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-01-2_full.jpg",
+      "bytes": 164339
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-01-2_source.jpg",
+      "bytes": 185705
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-02-3.json",
+      "bytes": 65981
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-02-3_aligned.npz",
+      "bytes": 86465500
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-02-3_full.jpg",
+      "bytes": 206429
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-02-3_source.jpg",
+      "bytes": 165764
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-03-4.json",
+      "bytes": 48612
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-03-4_aligned.npz",
+      "bytes": 68283786
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-03-4_full.jpg",
+      "bytes": 159447
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-03-4_source.jpg",
+      "bytes": 204513
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-04-5.json",
+      "bytes": 62998
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-04-5_aligned.npz",
+      "bytes": 71399520
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-04-5_full.jpg",
+      "bytes": 142303
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-04-5_source.jpg",
+      "bytes": 135514
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-05-6.json",
+      "bytes": 69154
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-05-6_aligned.npz",
+      "bytes": 78076881
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-05-6_full.jpg",
+      "bytes": 150074
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-05-6_source.jpg",
+      "bytes": 136587
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-06-7.json",
+      "bytes": 72642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-06-7_aligned.npz",
+      "bytes": 85635039
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-06-7_full.jpg",
+      "bytes": 213610
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-06-7_source.jpg",
+      "bytes": 191374
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-07-8.json",
+      "bytes": 60224
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-07-8_aligned.npz",
+      "bytes": 80303895
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-07-8_full.jpg",
+      "bytes": 181226
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/R1-07-8_source.jpg",
+      "bytes": 209736
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/results.json",
+      "bytes": 589841
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/summary.json",
+      "bytes": 26507
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights/summary.png",
+      "bytes": 215563
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-highlights.log",
+      "bytes": 328
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-repeat-verify.log",
+      "bytes": 2784
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-restored-files.json",
+      "bytes": 17860
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-summary.log",
+      "bytes": 2781
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/R1-17-18.json",
+      "bytes": 48077
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/R1-17-18_aligned.npz",
+      "bytes": 83780815
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/R1-17-18_full.jpg",
+      "bytes": 97656
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/patch_locations.jpg",
+      "bytes": 112257
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/patches.json",
+      "bytes": 10149
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge/results.json",
+      "bytes": 54660
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "epfl-wedge.log",
+      "bytes": 42
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/after.log",
+      "bytes": 393
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before.json",
+      "bytes": 2498
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before.log",
+      "bytes": 226
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_current_epfl.npy",
+      "bytes": 23943296
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_current_sony.npy",
+      "bytes": 36360992
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_next_epfl.npy",
+      "bytes": 23943296
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_next_sensor_epfl.npy",
+      "bytes": 23943296
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_next_sensor_sony.npy",
+      "bytes": 36360992
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/before_next_sony.npy",
+      "bytes": 36360992
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/candidate_epfl.npy",
+      "bytes": 23943296
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/candidate_sony.npy",
+      "bytes": 36360992
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/capture_before.py",
+      "bytes": 979
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/holdout.log",
+      "bytes": 1993
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/rawio_before.py",
+      "bytes": 28427
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/verification.json",
+      "bytes": 3250
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-candidate/verify_after.py",
+      "bytes": 2304
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-prior-holdout/R1-05-6_roof_opening_1.npz",
+      "bytes": 5204406
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-prior-holdout/R1-05-6_roof_opening_2.npz",
+      "bytes": 5110952
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-prior-holdout/domain-audit.json",
+      "bytes": 1218
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exif-prior-holdout/results.json",
+      "bytes": 23891
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-admissibility.log",
+      "bytes": 13493
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/R1-06-7.json",
+      "bytes": 4605
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/R1-06-7.npz",
+      "bytes": 42744985
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/R1-07-8.json",
+      "bytes": 4029
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/R1-07-8.npz",
+      "bytes": 36539694
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/cafe.json",
+      "bytes": 3915
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/cafe.npz",
+      "bytes": 39243509
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/controlled.json",
+      "bytes": 4712
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/controlled_radiance_candidates.npz",
+      "bytes": 5777
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/metameric-run.log",
+      "bytes": 1756
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/metameric_exposure_bounds.json",
+      "bytes": 154997
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-audit/spectral_admissibility.json",
+      "bytes": 20595
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-blue.log",
+      "bytes": 3317
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-cafe.log",
+      "bytes": 3203
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-controlled.log",
+      "bytes": 2920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "exposure-floor-grass.log",
+      "bytes": 3791
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "geometry-source-refit-review/completed_fit_review.json",
+      "bytes": 3627
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "geometry-source-refit-review/initial_replay_review.json",
+      "bytes": 2166
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "geometry-source-refit-review/strength_radius.json",
+      "bytes": 12967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "geometry-source-refit-review/strength_radius.npz",
+      "bytes": 18795
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "grass-colour-audit/grass_patch.jpg",
+      "bytes": 299991
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "grass-colour-audit/results.json",
+      "bytes": 3513
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "grass-colour-audit/run.py",
+      "bytes": 4142
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "grass-colour-audit/trace.npz",
+      "bytes": 334123737
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1.json",
+      "bytes": 34462
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_bracket.npz",
+      "bytes": 58733495
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_bracket_camera.png",
+      "bytes": 2438529
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp.npz",
+      "bytes": 9491104
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp_compare.png",
+      "bytes": 1804094
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp_multi.png",
+      "bytes": 257488
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp_none.png",
+      "bytes": 261159
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp_real.png",
+      "bytes": 487865
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-00-1_facade_lamp_single.png",
+      "bytes": 257882
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5.json",
+      "bytes": 35132
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_bracket.npz",
+      "bytes": 53684598
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_bracket_camera.png",
+      "bytes": 2196255
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon.npz",
+      "bytes": 8872331
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon_compare.png",
+      "bytes": 1473227
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon_multi.png",
+      "bytes": 184639
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon_none.png",
+      "bytes": 184437
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon_real.png",
+      "bytes": 455181
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_red_beacon_single.png",
+      "bytes": 184779
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway.npz",
+      "bytes": 9171702
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway_compare.png",
+      "bytes": 1714062
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway_multi.png",
+      "bytes": 250612
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway_none.png",
+      "bytes": 256369
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway_real.png",
+      "bytes": 461641
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-04-5_warm_walkway_single.png",
+      "bytes": 251379
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-05-6_bracket.npz",
+      "bytes": 51199636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-05-6_bracket_camera.png",
+      "bytes": 2510842
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8.json",
+      "bytes": 67879
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left.npz",
+      "bytes": 8977688
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left_compare.png",
+      "bytes": 1463070
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left_multi.png",
+      "bytes": 182713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left_none.png",
+      "bytes": 186083
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left_real.png",
+      "bytes": 442194
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_left_single.png",
+      "bytes": 182807
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right.npz",
+      "bytes": 9076499
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right_compare.png",
+      "bytes": 1556703
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right_multi.png",
+      "bytes": 198431
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right_none.png",
+      "bytes": 200844
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right_real.png",
+      "bytes": 461089
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/R1-07-8_twilight_lamp_right_single.png",
+      "bytes": 198664
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/bracket-audit.json",
+      "bytes": 8335
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/bracket-downloads.json",
+      "bytes": 2264
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/bracket-registration.json",
+      "bytes": 4402
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/context.json",
+      "bytes": 8250
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/digital-folder.html",
+      "bytes": 726321
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/digital-index.json",
+      "bytes": 3245
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/drive-folder.html",
+      "bytes": 314489
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/epfl-source-readme.md",
+      "bytes": 959
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/results.json",
+      "bytes": 145949
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/transport.json",
+      "bytes": 4208
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/transport.log",
+      "bytes": 4209
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-chain/transport.png",
+      "bytes": 242265
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/present.py",
+      "bytes": 2931
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/settings.json",
+      "bytes": 1124
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/walkway_detail_exp_plain.png",
+      "bytes": 252703
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/walkway_detail_paper_only.png",
+      "bytes": 259239
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/walkway_detail_real.png",
+      "bytes": 461641
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halation-view-2026-10-21/walkway_overview_and_detail.png",
+      "bytes": 1480554
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-joint-transport/ballistic_oblique_integral.npz",
+      "bytes": 28886
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-joint-transport/full_scattering_MC.npz",
+      "bytes": 68791
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-joint-transport/radial_composition.png",
+      "bytes": 397706
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-joint-transport/results.json",
+      "bytes": 20257
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-joint-transport-run.log",
+      "bytes": 20258
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/ceiling_lamp.npz",
+      "bytes": 96071810
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/ceiling_lamp_comparison.png",
+      "bytes": 1428293
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/glass_reflection.npz",
+      "bytes": 98922659
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/glass_reflection_comparison.png",
+      "bytes": 1600790
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/middle_ceiling.npz",
+      "bytes": 96719542
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/middle_ceiling_comparison.png",
+      "bytes": 1491189
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/radial_profiles.png",
+      "bytes": 484376
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/R1-02-3/results.json",
+      "bytes": 66929
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/paper-probe.log",
+      "bytes": 4529
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/paper_colour_isolation.png",
+      "bytes": 162417
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/paper_probes.json",
+      "bytes": 18771
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms/printing_compare.png",
+      "bytes": 1208824
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-mechanisms-run.log",
+      "bytes": 137
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/brightness_colour_tradeoff.png",
+      "bytes": 167234
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/ceiling_lamp_darker_outer_300_800_Ylt_.4.npz",
+      "bytes": 409272
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/ceiling_lamp_near_edge_0_100.npz",
+      "bytes": 409367
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/ceiling_lamp_real_orange_transition_0_300.npz",
+      "bytes": 393592
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/ceiling_lamp_transition_100_300.npz",
+      "bytes": 393284
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/convergence.json",
+      "bytes": 6451
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/middle_ceiling_darker_outer_300_800_Ylt_.4.npz",
+      "bytes": 408896
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/middle_ceiling_near_edge_0_100.npz",
+      "bytes": 410815
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/middle_ceiling_real_orange_transition_0_300.npz",
+      "bytes": 410686
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/middle_ceiling_transition_100_300.npz",
+      "bytes": 410675
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/reachability.png",
+      "bytes": 100218
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/results.json",
+      "bytes": 34597
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability/results.partial.json",
+      "bytes": 33464
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-reachability-run.log",
+      "bytes": 1701
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/ceiling_lamp.npz",
+      "bytes": 46878895
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/middle_ceiling.npz",
+      "bytes": 47377468
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/results.json",
+      "bytes": 433966
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/summary.tsv",
+      "bytes": 14187
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/target_and_added_colour_vectors.png",
+      "bytes": 156897
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/three_state_photos.png",
+      "bytes": 2536927
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction/three_states_and_residuals.png",
+      "bytes": 2769675
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "halo-residual-direction-run.log",
+      "bytes": 55
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlight-run.log",
+      "bytes": 12238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/highlight_transfer.png",
+      "bytes": 192511
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/raw_stages.npz",
+      "bytes": 60020164
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/report.json",
+      "bytes": 12238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/wedge_frame.npz",
+      "bytes": 35465
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/wedge_gray.npz",
+      "bytes": 35465
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "highlights/wedge_standard.npz",
+      "bytes": 35465
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/build_manifest.py",
+      "bytes": 3925
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/fetch_round2.py",
+      "bytes": 1476
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/fetch_round3.py",
+      "bytes": 1079
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/fetch_sources.py",
+      "bytes": 1419
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/round1.json",
+      "bytes": 1093
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/round2.json",
+      "bytes": 1037
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "historical-emulsion/round3.json",
+      "bytes": 193
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/controlled_results.json",
+      "bytes": 14310
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-00-1.jpg",
+      "bytes": 504235
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-00-1.json",
+      "bytes": 1623
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-02-3.jpg",
+      "bytes": 442193
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-02-3.json",
+      "bytes": 1563
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-06-7.jpg",
+      "bytes": 494656
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-06-7.json",
+      "bytes": 1664
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-07-8.jpg",
+      "bytes": 424577
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/R1-07-8.json",
+      "bytes": 1556
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/cafe.jpg",
+      "bytes": 417096
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/real/cafe.json",
+      "bytes": 1642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial/summary.json",
+      "bytes": 25707
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "illumination-inference-trial.log",
+      "bytes": 8428
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_data.body",
+      "bytes": 218916
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_data.embedded.json",
+      "bytes": 7818
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_data.txt",
+      "bytes": 21688
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_package.body",
+      "bytes": 256985
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_package.embedded.json",
+      "bytes": 23257
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profile_files.body",
+      "bytes": 287104
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profile_files.embedded.json",
+      "bytes": 17671
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profile_files.txt",
+      "bytes": 29368
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profiles.body",
+      "bytes": 212326
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profiles.embedded.json",
+      "bytes": 6875
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_profiles.txt",
+      "bytes": 21101
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_src_tree.body",
+      "bytes": 211468
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_src_tree.embedded.json",
+      "bytes": 5212
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_src_tree.txt",
+      "bytes": 20179
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_web.body",
+      "bytes": 381907
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_web.embedded.json",
+      "bytes": 72824
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/agx_web.txt",
+      "bytes": 17294
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/build_record.py",
+      "bytes": 10246
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_frobisher.body",
+      "bytes": 219614
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_frobisher.embedded.json",
+      "bytes": 4740
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_unity.body",
+      "bytes": 209201
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_unity.embedded.json",
+      "bytes": 3615
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_web.body",
+      "bytes": 238096
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_web.embedded.json",
+      "bytes": 14978
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/colour_hdr_web.txt",
+      "bytes": 27509
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/cs_datasheet_search.body",
+      "bytes": 257824
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_branches_web.body",
+      "bytes": 193141
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_branches_web.embedded.json",
+      "bytes": 2955
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_branches_web.txt",
+      "bytes": 18967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_colour_tree.body",
+      "bytes": 212199
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_colour_tree.embedded.json",
+      "bytes": 5525
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_colour_tree.txt",
+      "bytes": 20713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_digital.body",
+      "bytes": 208287
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_digital.embedded.json",
+      "bytes": 5160
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_film.body",
+      "bytes": 208201
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_film.embedded.json",
+      "bytes": 5138
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_tree.body",
+      "bytes": 209164
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_tree.embedded.json",
+      "bytes": 4995
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_dataset_tree.txt",
+      "bytes": 20179
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_branch.body",
+      "bytes": 247124
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_branch.embedded.json",
+      "bytes": 16927
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_branch.txt",
+      "bytes": 18
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_data_corrected.body",
+      "bytes": 208975
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_data_corrected.embedded.json",
+      "bytes": 4075
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_data_corrected.txt",
+      "bytes": 19698
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_grain_notes.body",
+      "bytes": 74
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_history.body",
+      "bytes": 464039
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_history.txt",
+      "bytes": 101924
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_issues_web.body",
+      "bytes": 264644
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_issues_web.txt",
+      "bytes": 38582
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_main_readme.body",
+      "bytes": 959
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_org.body",
+      "bytes": 200533
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_releases_web.body",
+      "bytes": 174636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_releases_web.txt",
+      "bytes": 16811
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_web.body",
+      "bytes": 263550
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_web.embedded.json",
+      "bytes": 17687
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/epfl_web.txt",
+      "bytes": 865
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/fetch.py",
+      "bytes": 1243
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/flare7k_web.body",
+      "bytes": 343883
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/flare7k_web.embedded.json",
+      "bytes": 50437
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/flare7k_web.txt",
+      "bytes": 8276
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_800t_material_search.body",
+      "bytes": 259768
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_800t_material_search.txt",
+      "bytes": 25402
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_film_sensitometry_search.body",
+      "bytes": 209886
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_film_sensitometry_search.txt",
+      "bytes": 16625
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_hdr_search.body",
+      "bytes": 175437
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_hdr_search.txt",
+      "bytes": 13447
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_material_search.body",
+      "bytes": 175592
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_material_search.txt",
+      "bytes": 13479
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_raw_hdr_search.body",
+      "bytes": 206085
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/github_raw_hdr_search.txt",
+      "bytes": 16742
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/hdr_original_docs.body",
+      "bytes": 6263
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_delta_csv.body",
+      "bytes": 1449
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_delta_documentation.body",
+      "bytes": 6642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_license.body",
+      "bytes": 18046
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_sensitometry_web.body",
+      "bytes": 282188
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_sensitometry_web.embedded.json",
+      "bytes": 28909
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/historical_sensitometry_web.txt",
+      "bytes": 4446
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/iphone_to_film_web.body",
+      "bytes": 371845
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/iphone_to_film_web.embedded.json",
+      "bytes": 76006
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/iphone_to_film_web.txt",
+      "bytes": 17502
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/lumiere_product.body",
+      "bytes": 9934
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/lumiere_web.body",
+      "bytes": 318098
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/lumiere_web.embedded.json",
+      "bytes": 41181
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/lumiere_web.txt",
+      "bytes": 8375
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/production-sha-before.json",
+      "bytes": 2368
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_5219_json.body",
+      "bytes": 12273
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_800t_json.body",
+      "bytes": 13385
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_film_data.body",
+      "bytes": 390902
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_film_data.embedded.json",
+      "bytes": 63306
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_film_data.txt",
+      "bytes": 21398
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_web.body",
+      "bytes": 1070631
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_web.embedded.json",
+      "bytes": 390985
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/redlamp_web.txt",
+      "bytes": 142753
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round1-results.json",
+      "bytes": 4171
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round1.json",
+      "bytes": 1516
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round2-results.json",
+      "bytes": 5283
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round2.json",
+      "bytes": 964
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round3-results.json",
+      "bytes": 6252
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round3.json",
+      "bytes": 1545
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round4-results.json",
+      "bytes": 5724
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round4.json",
+      "bytes": 1351
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round5-results.json",
+      "bytes": 4414
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round5.json",
+      "bytes": 865
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round6-results.json",
+      "bytes": 4622
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round6.json",
+      "bytes": 1141
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round7-results.json",
+      "bytes": 1986
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/round7.json",
+      "bytes": 491
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_density.body",
+      "bytes": 224243
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_density.txt",
+      "bytes": 19118
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_density_data.body",
+      "bytes": 265204
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_measurements.body",
+      "bytes": 261710
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_non_neutral.body",
+      "bytes": 204998
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_non_neutral.txt",
+      "bytes": 16309
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_spectral.body",
+      "bytes": 259946
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/search_cs_spectral.txt",
+      "bytes": 26093
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/sillystill_web.body",
+      "bytes": 291442
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/sillystill_web.embedded.json",
+      "bytes": 31473
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/sillystill_web.txt",
+      "bytes": 2813
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "independent-evidence/tiff-metadata.json",
+      "bytes": 31709
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/ceiling_lamp_fixed_samples.npz",
+      "bytes": 235063
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/geometry-scale.json",
+      "bytes": 13349
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/geometry-scale.log",
+      "bytes": 2576
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/middle_ceiling_fixed_samples.npz",
+      "bytes": 234111
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/registration_sensitivity.png",
+      "bytes": 354101
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit/results.json",
+      "bytes": 206736
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-registration-audit.log",
+      "bytes": 9186
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-prepare.log",
+      "bytes": 858
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/camera-tolerance-audit.json",
+      "bytes": 883
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_comparison.jpg",
+      "bytes": 362316
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_fit.json",
+      "bytes": 117508
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_fit.npz",
+      "bytes": 18842652
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_independent_joint_metamers.npz",
+      "bytes": 8782
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_joint.npz",
+      "bytes": 17851724
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_joint_comparison.jpg",
+      "bytes": 359164
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_legacy_gain.npz",
+      "bytes": 5330032
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_legacy_gain_comparison.jpg",
+      "bytes": 356646
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_metadata_prior.npz",
+      "bytes": 6379926
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_metadata_vs_inverse.jpg",
+      "bytes": 359554
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_partial_fit.json",
+      "bytes": 9167
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_run.log",
+      "bytes": 2318
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_shared_spectrum.jpg",
+      "bytes": 357285
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_source.npz",
+      "bytes": 21001223
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/ceiling_lamp_transfer.npz",
+      "bytes": 10557538
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/cross_lamp_transfer.json",
+      "bytes": 16312
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/ceiling_lamp_comparison.jpg",
+      "bytes": 361729
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/ceiling_lamp_fit.json",
+      "bytes": 66601
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/ceiling_lamp_fit.npz",
+      "bytes": 18851252
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/ceiling_lamp_partial_fit.json",
+      "bytes": 4663
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/ceiling_lamp_run.log",
+      "bytes": 1892
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/middle_ceiling_comparison.jpg",
+      "bytes": 374774
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/middle_ceiling_fit.json",
+      "bytes": 66183
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/middle_ceiling_fit.npz",
+      "bytes": 19165380
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/middle_ceiling_partial_fit.json",
+      "bytes": 4535
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/exploratory_aperture_overlap/middle_ceiling_run.log",
+      "bytes": 1767
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_baseline_native.png",
+      "bytes": 5983611
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_inverse_candidate_native.png",
+      "bytes": 5983731
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_joint_comparison.jpg",
+      "bytes": 307222
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_metadata_completed_prior_native.png",
+      "bytes": 5953197
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_metadata_prior_comparison.jpg",
+      "bytes": 302931
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/full_real_scan.png",
+      "bytes": 35311061
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/independent-rank-audit.json",
+      "bytes": 5170
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/independent-rank-audit.log",
+      "bytes": 5170
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/independent_rank_audit.py",
+      "bytes": 5144
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/joint_render.json",
+      "bytes": 2344
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/joint_render.log",
+      "bytes": 1786
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/joint_render.py",
+      "bytes": 5963
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/legacy_gain_control.json",
+      "bytes": 18200
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/legacy_gain_control.log",
+      "bytes": 11702
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/legacy_gain_control.py",
+      "bytes": 4153
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata-audit.json",
+      "bytes": 9642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata-source-check.json",
+      "bytes": 3122
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata-source-check.log",
+      "bytes": 3180
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata-source-crops.npz",
+      "bytes": 1871692
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata_prior_control.json",
+      "bytes": 2885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata_prior_control.log",
+      "bytes": 2018
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata_prior_control.py",
+      "bytes": 5451
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/metadata_source_check.py",
+      "bytes": 3771
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_comparison.jpg",
+      "bytes": 375104
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_fit.json",
+      "bytes": 117970
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_fit.npz",
+      "bytes": 19160181
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_independent_joint_metamers.npz",
+      "bytes": 8797
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_joint.npz",
+      "bytes": 18190379
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_joint_comparison.jpg",
+      "bytes": 370330
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_legacy_gain.npz",
+      "bytes": 5416336
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_legacy_gain_comparison.jpg",
+      "bytes": 368695
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_metadata_prior.npz",
+      "bytes": 6540282
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_metadata_vs_inverse.jpg",
+      "bytes": 370184
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_partial_fit.json",
+      "bytes": 9289
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_run.log",
+      "bytes": 2498
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_shared_spectrum.jpg",
+      "bytes": 369201
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_source.npz",
+      "bytes": 21144020
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/middle_ceiling_transfer.npz",
+      "bytes": 10809238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/near_lamp_final_comparison.jpg",
+      "bytes": 286942
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/prepared.json",
+      "bytes": 24760
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/transfer.log",
+      "bytes": 9993
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/transfer_runner.py",
+      "bytes": 5259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "inverse-source-radiance/two_lamp_comparison.jpg",
+      "bytes": 576897
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "iss030e122639.NEF",
+      "bytes": 10656312
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp.json",
+      "bytes": 17637
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp.npz",
+      "bytes": 13642674
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp_case.npz",
+      "bytes": 12392784
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp_comparison.jpg",
+      "bytes": 359506
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp_operator.npz",
+      "bytes": 1002796
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp_partial.json",
+      "bytes": 8320
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/ceiling_lamp_split.npz",
+      "bytes": 666148
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling.json",
+      "bytes": 17635
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling.npz",
+      "bytes": 13821585
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling_case.npz",
+      "bytes": 12360534
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling_comparison.jpg",
+      "bytes": 369506
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling_operator.npz",
+      "bytes": 935593
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling_partial.json",
+      "bytes": 8304
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint-radius-source-inverse/middle_ceiling_split.npz",
+      "bytes": 673322
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint_ceiling.log",
+      "bytes": 3862
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "joint_middle.log",
+      "bytes": 3895
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/analyze.log",
+      "bytes": 18876
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/capture.json",
+      "bytes": 672
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp.npz",
+      "bytes": 4285818
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp_geometry.jpg",
+      "bytes": 251351
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp_grid.jpg",
+      "bytes": 163538
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp_input.npz",
+      "bytes": 9329390
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp_masks.jpg",
+      "bytes": 184025
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/ceiling_lamp_scan_mask.jpg",
+      "bytes": 186995
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/decoder-ceiling/ceiling_lamp.npz",
+      "bytes": 3233318
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/decoder-ceiling/middle_ceiling.npz",
+      "bytes": 3239018
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/decoder-ceiling/reanalyze.log",
+      "bytes": 2917
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/decoder-ceiling/results.json",
+      "bytes": 5583
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling.npz",
+      "bytes": 4292869
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling_geometry.jpg",
+      "bytes": 272458
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling_grid.jpg",
+      "bytes": 162531
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling_input.npz",
+      "bytes": 9339638
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling_masks.jpg",
+      "bytes": 180722
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/middle_ceiling_scan_mask.jpg",
+      "bytes": 185179
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-input-audit/results.json",
+      "bytes": 33877
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/camera_proxy_contract.json",
+      "bytes": 8764
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/ceiling_lamp.json",
+      "bytes": 91657
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/ceiling_lamp.npz",
+      "bytes": 30770099
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/ceiling_lamp_comparison.jpg",
+      "bytes": 462809
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/ceiling_lamp_joint.npz",
+      "bytes": 12676044
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/ceiling_lamp_joint_comparison.jpg",
+      "bytes": 278454
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/full_comparison.jpg",
+      "bytes": 316804
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/full_edge_minimum_Y_native.png",
+      "bytes": 5983795
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/joint_render.json",
+      "bytes": 1931
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/middle_ceiling.json",
+      "bytes": 72752
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/middle_ceiling.npz",
+      "bytes": 31267387
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/middle_ceiling_comparison.jpg",
+      "bytes": 483863
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/middle_ceiling_joint.npz",
+      "bytes": 12856158
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/middle_ceiling_joint_comparison.jpg",
+      "bytes": 285631
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/production_snapshot.json",
+      "bytes": 6709
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "lamp-edge-spectral-candidate/two_lamp_latest_comparison.jpg",
+      "bytes": 762020
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1.json",
+      "bytes": 32086
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp.npz",
+      "bytes": 12309917
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_exp_lab.png",
+      "bytes": 257488
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_exp_plain.png",
+      "bytes": 264879
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_lab_compare.png",
+      "bytes": 1255980
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_paper_lab.png",
+      "bytes": 258951
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_paper_plain.png",
+      "bytes": 266160
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_plain_compare.png",
+      "bytes": 1264795
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_facade_lamp_real.png",
+      "bytes": 487865
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-00-1_selected.jpg",
+      "bytes": 291723
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3.json",
+      "bytes": 32047
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp.npz",
+      "bytes": 11530497
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_exp_lab.png",
+      "bytes": 218153
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_exp_plain.png",
+      "bytes": 226053
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_lab_compare.png",
+      "bytes": 1170689
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_paper_lab.png",
+      "bytes": 220192
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_paper_plain.png",
+      "bytes": 228042
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_plain_compare.png",
+      "bytes": 1177907
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_ceiling_lamp_real.png",
+      "bytes": 481448
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-02-3_selected.jpg",
+      "bytes": 254479
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5.json",
+      "bytes": 32421
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_coordinates.jpg",
+      "bytes": 260534
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon.npz",
+      "bytes": 11630365
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_exp_lab.png",
+      "bytes": 184639
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_exp_plain.png",
+      "bytes": 177220
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_lab_compare.png",
+      "bytes": 1026148
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_paper_lab.png",
+      "bytes": 184667
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_paper_plain.png",
+      "bytes": 177221
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_plain_compare.png",
+      "bytes": 1009790
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_red_beacon_real.png",
+      "bytes": 455181
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway.npz",
+      "bytes": 11908158
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_exp_lab.png",
+      "bytes": 250612
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_exp_plain.png",
+      "bytes": 252706
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_lab_compare.png",
+      "bytes": 1320987
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_paper_lab.png",
+      "bytes": 256109
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_paper_plain.png",
+      "bytes": 259237
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_plain_compare.png",
+      "bytes": 1318425
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-04-5_warm_walkway_real.png",
+      "bytes": 461641
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-06-7_coordinates.jpg",
+      "bytes": 381327
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8.json",
+      "bytes": 63199
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_coordinates.jpg",
+      "bytes": 305194
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left.npz",
+      "bytes": 11704477
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_exp_lab.png",
+      "bytes": 182713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_exp_plain.png",
+      "bytes": 185720
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_lab_compare.png",
+      "bytes": 1084080
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_paper_lab.png",
+      "bytes": 185999
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_paper_plain.png",
+      "bytes": 188654
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_plain_compare.png",
+      "bytes": 1089654
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_left_real.png",
+      "bytes": 442194
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right.npz",
+      "bytes": 11844970
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_exp_lab.png",
+      "bytes": 198431
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_exp_plain.png",
+      "bytes": 202379
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_lab_compare.png",
+      "bytes": 1090195
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_paper_lab.png",
+      "bytes": 200562
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_paper_plain.png",
+      "bytes": 204388
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_plain_compare.png",
+      "bytes": 1095962
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/R1-07-8_twilight_lamp_right_real.png",
+      "bytes": 461089
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/regions.json",
+      "bytes": 862
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/results.json",
+      "bytes": 169011
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "light-acceptance/run.log",
+      "bytes": 52
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/ceiling_lamp.npz",
+      "bytes": 45251911
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/local_profiles.png",
+      "bytes": 550293
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/middle_ceiling.npz",
+      "bytes": 47252991
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/reference_regions.png",
+      "bytes": 2738507
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/results.json",
+      "bytes": 265197
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background/review.png",
+      "bytes": 2404577
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-background-run.log",
+      "bytes": 48
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-geometry-review/housing_review.jpg",
+      "bytes": 335766
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-geometry-review/line_fit_independent_numeric_review.json",
+      "bytes": 1102
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-geometry-review/raw_and_scan_geometric_review.jpg",
+      "bytes": 325878
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-geometry-review/source_field_centroid_projection.json",
+      "bytes": 2119
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-registration/ceiling_lamp_geometry.npz",
+      "bytes": 1241998
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-registration/ceiling_lamp_structure_matches.jpg",
+      "bytes": 119251
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-registration/middle_ceiling_geometry.npz",
+      "bytes": 1439983
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-registration/middle_ceiling_structure_matches.jpg",
+      "bytes": 148999
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "local-ceiling-registration/results.json",
+      "bytes": 4949
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/ceiling_lamp.json",
+      "bytes": 4725
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/ceiling_lamp.npz",
+      "bytes": 22583957
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/ceiling_lamp_candidate.png",
+      "bytes": 222566
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/ceiling_lamp_comparison.jpg",
+      "bytes": 518952
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/middle_ceiling.json",
+      "bytes": 4733
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/middle_ceiling.npz",
+      "bytes": 22735238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/middle_ceiling_candidate.png",
+      "bytes": 239519
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/middle_ceiling_comparison.jpg",
+      "bytes": 539491
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate/results.json",
+      "bytes": 28600
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-body-decode-candidate.log",
+      "bytes": 7374
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_chain.json",
+      "bytes": 57983
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_chain.npz",
+      "bytes": 6537602
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_compare.png",
+      "bytes": 1209248
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_measured.png",
+      "bytes": 315278
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_measurements.npz",
+      "bytes": 91122
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_prior.png",
+      "bytes": 315278
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_raw.png",
+      "bytes": 41020
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_distant_lamp_real.png",
+      "bytes": 496486
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_chain.npz",
+      "bytes": 6655778
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_compare.png",
+      "bytes": 1156136
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_measured.png",
+      "bytes": 257440
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_measurements.npz",
+      "bytes": 563914
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_prior.png",
+      "bytes": 257458
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_raw.png",
+      "bytes": 138963
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_facade_lamp_real.png",
+      "bytes": 487879
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-00-1_locations.png",
+      "bytes": 1627604
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_chain.npz",
+      "bytes": 5924269
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_compare.png",
+      "bytes": 838671
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_measured.png",
+      "bytes": 143539
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_measurements.npz",
+      "bytes": 674470
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_prior.png",
+      "bytes": 143539
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_raw.png",
+      "bytes": 190046
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_bright_wall_control_real.png",
+      "bytes": 406119
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_chain.json",
+      "bytes": 202057
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_locations.png",
+      "bytes": 1513769
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_chain.npz",
+      "bytes": 6202187
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_compare.png",
+      "bytes": 1017032
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_measured.png",
+      "bytes": 185959
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_measurements.npz",
+      "bytes": 561658
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_prior.png",
+      "bytes": 185959
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_raw.png",
+      "bytes": 139666
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_red_beacon_real.png",
+      "bytes": 456604
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_chain.npz",
+      "bytes": 6365050
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_compare.png",
+      "bytes": 994178
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_measured.png",
+      "bytes": 195044
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_measurements.npz",
+      "bytes": 691672
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_prior.png",
+      "bytes": 195044
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_raw.png",
+      "bytes": 132384
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_1_real.png",
+      "bytes": 445850
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_chain.npz",
+      "bytes": 6414837
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_compare.png",
+      "bytes": 1042421
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_measured.png",
+      "bytes": 223151
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_measurements.npz",
+      "bytes": 688191
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_prior.png",
+      "bytes": 223151
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_raw.png",
+      "bytes": 136083
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_2_real.png",
+      "bytes": 456463
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_chain.npz",
+      "bytes": 6433602
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_compare.png",
+      "bytes": 1076737
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_measured.png",
+      "bytes": 250608
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_measurements.npz",
+      "bytes": 689695
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_prior.png",
+      "bytes": 250608
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_raw.png",
+      "bytes": 143605
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_3_real.png",
+      "bytes": 461451
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_chain.npz",
+      "bytes": 6405921
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_compare.png",
+      "bytes": 1056172
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_measured.png",
+      "bytes": 245636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_measurements.npz",
+      "bytes": 693248
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_prior.png",
+      "bytes": 245636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_raw.png",
+      "bytes": 148718
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_4_real.png",
+      "bytes": 456367
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_chain.npz",
+      "bytes": 6365396
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_compare.png",
+      "bytes": 1053548
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_measured.png",
+      "bytes": 241784
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_measurements.npz",
+      "bytes": 684938
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_prior.png",
+      "bytes": 241784
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_raw.png",
+      "bytes": 150872
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-04-5_walkway_5_real.png",
+      "bytes": 459011
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_chain.json",
+      "bytes": 118002
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_chain.npz",
+      "bytes": 6347533
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_compare.png",
+      "bytes": 1053517
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_measured.png",
+      "bytes": 238399
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_measurements.npz",
+      "bytes": 1590094
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_prior.png",
+      "bytes": 238399
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_raw.png",
+      "bytes": 332405
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_far_warm_lamp_real.png",
+      "bytes": 446464
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_locations.png",
+      "bytes": 1621949
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_chain.npz",
+      "bytes": 6175482
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_compare.png",
+      "bytes": 1050483
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_measured.png",
+      "bytes": 207168
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_measurements.npz",
+      "bytes": 1601217
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_prior.png",
+      "bytes": 207168
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_raw.png",
+      "bytes": 322348
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_red_beacon_real.png",
+      "bytes": 463998
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_chain.npz",
+      "bytes": 6402718
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_compare.png",
+      "bytes": 1318516
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_measured.png",
+      "bytes": 246076
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_measurements.npz",
+      "bytes": 1606146
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_prior.png",
+      "bytes": 245152
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_raw.png",
+      "bytes": 311920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_1_real.png",
+      "bytes": 457760
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_chain.npz",
+      "bytes": 6225681
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_compare.png",
+      "bytes": 1225762
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_measured.png",
+      "bytes": 225770
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_measurements.npz",
+      "bytes": 1591739
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_prior.png",
+      "bytes": 224897
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_raw.png",
+      "bytes": 299003
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_2_real.png",
+      "bytes": 436031
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_chain.npz",
+      "bytes": 6419495
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_compare.png",
+      "bytes": 1236983
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_measured.png",
+      "bytes": 259259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_measurements.npz",
+      "bytes": 1584273
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_prior.png",
+      "bytes": 259324
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_raw.png",
+      "bytes": 310678
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-05-6_roof_opening_3_real.png",
+      "bytes": 453696
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_chain.json",
+      "bytes": 59611
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_chain.npz",
+      "bytes": 6589017
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_compare.png",
+      "bytes": 1100996
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_measured.png",
+      "bytes": 204034
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_measurements.npz",
+      "bytes": 538678
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_prior.png",
+      "bytes": 204034
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_raw.png",
+      "bytes": 128320
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_illuminated_bollard_real.png",
+      "bytes": 525041
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_chain.npz",
+      "bytes": 6514635
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_compare.png",
+      "bytes": 1151367
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_measured.png",
+      "bytes": 260107
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_measurements.npz",
+      "bytes": 514346
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_prior.png",
+      "bytes": 260107
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_raw.png",
+      "bytes": 118492
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_linear_canopy_light_real.png",
+      "bytes": 513576
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/R1-06-7_locations.png",
+      "bytes": 1468822
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/acceptance-summary.json",
+      "bytes": 25916
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/chain-results.json",
+      "bytes": 465605
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/chain.log",
+      "bytes": 212
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/chain_stages.png",
+      "bytes": 150784
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/context.json",
+      "bytes": 10088
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/decoder.json",
+      "bytes": 1486
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/default-regression.json",
+      "bytes": 1253
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/lamp-measurements.json",
+      "bytes": 57956
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/lamp-measurements.partial.json",
+      "bytes": 53126
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/measurement.log",
+      "bytes": 622
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measured-sources/pbrt-integrators.cpp",
+      "bytes": 158719
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/ceiling_lamp.json",
+      "bytes": 71738
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/ceiling_lamp_old16_geometry_only.json",
+      "bytes": 71763
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/ceiling_lamp_old16_geometry_only_split.npz",
+      "bytes": 2208
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/middle_ceiling.json",
+      "bytes": 68891
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/middle_ceiling_old16_geometry_only.json",
+      "bytes": 72477
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "measurement-aperture-audit/middle_ceiling_old16_geometry_only_split.npz",
+      "bytes": 2118
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/after.npz",
+      "bytes": 350847
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/before.npz",
+      "bytes": 350847
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/chain/red_increment_swatches.png",
+      "bytes": 11803
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/chain/red_response.png",
+      "bytes": 164309
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/chain/results.json",
+      "bytes": 910137
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/chain/stages.npz",
+      "bytes": 538275
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/chain.log",
+      "bytes": 50
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/check_incident.py",
+      "bytes": 1260
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/default_regression.json",
+      "bytes": 372
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/default_snapshots.py",
+      "bytes": 594
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x003.json",
+      "bytes": 60482
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x003.log",
+      "bytes": 2843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x01.json",
+      "bytes": 60485
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x01.log",
+      "bytes": 2843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x03.json",
+      "bytes": 60385
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x03.log",
+      "bytes": 2843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x1.json",
+      "bytes": 60330
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/halo_edge_x1.log",
+      "bytes": 2843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/historical_profile_recompute.json",
+      "bytes": 18270
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/incident_contract.json",
+      "bytes": 546
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/recompute.log",
+      "bytes": 40
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/recompute_legacy.py",
+      "bytes": 641
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/source_manifest.json",
+      "bytes": 971
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/summarize_legacy.py",
+      "bytes": 1793
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "nonneutral-review/tests.log",
+      "bytes": 1259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/city_distance_comparison.png",
+      "bytes": 1231035
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/city_distance_comparison_full.png",
+      "bytes": 4621785
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/city_distance_exp_plain.png",
+      "bytes": 1547412
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/city_distance_paper_plain.png",
+      "bytes": 1548980
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/city_distance_real.png",
+      "bytes": 2650510
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/glass_building_comparison.png",
+      "bytes": 1259677
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/glass_building_comparison_full.png",
+      "bytes": 4979084
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/glass_building_exp_plain.png",
+      "bytes": 1436888
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/glass_building_paper_plain.png",
+      "bytes": 1446004
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/glass_building_real.png",
+      "bytes": 2941484
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/grass_offices_comparison.png",
+      "bytes": 1637732
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/grass_offices_comparison_full.png",
+      "bytes": 6186363
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/grass_offices_exp_plain.png",
+      "bytes": 1903133
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/grass_offices_paper_plain.png",
+      "bytes": 1904789
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/grass_offices_real.png",
+      "bytes": 3691288
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public-render.log",
+      "bytes": 20
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_comparison.png",
+      "bytes": 1385311
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_comparison_full.png",
+      "bytes": 3155145
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_exp_plain.png",
+      "bytes": 1583109
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_paper_plain.png",
+      "bytes": 1588920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_reference.png",
+      "bytes": 1242163
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/public_aurora_settings.json",
+      "bytes": 658
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/render.log",
+      "bytes": 259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/render.py",
+      "bytes": 3709
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/render_public.py",
+      "bytes": 2342
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/roof_lights_comparison.png",
+      "bytes": 1244796
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/roof_lights_comparison_full.png",
+      "bytes": 4675365
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/roof_lights_exp_plain.png",
+      "bytes": 1319241
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/roof_lights_paper_plain.png",
+      "bytes": 1308631
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/roof_lights_real.png",
+      "bytes": 2804559
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/settings.json",
+      "bytes": 1856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/web/access-log.json",
+      "bytes": 1109
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other-nights/web/new_raw_preview.jpg",
+      "bytes": 329688
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "other_nights_selection.jpg",
+      "bytes": 91085
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/3dlut.html",
+      "bytes": 283227
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/LivDevGit_GradeStudio.md",
+      "bytes": 19014
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/cafe_raw_preview.jpg",
+      "bytes": 51221
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/cafe_scan_preview.jpg",
+      "bytes": 78246
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/epfl_notebook.txt",
+      "bytes": 1500000
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/epfl_readme.txt",
+      "bytes": 959
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/github_web.txt",
+      "bytes": 199699
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/halnet.html",
+      "bytes": 269389
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/mossein_iphone-to-film.md",
+      "bytes": 18847
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/pdcgomes_redlamp.md",
+      "bytes": 173885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/releases.txt",
+      "bytes": 174075
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_800T_paired.html",
+      "bytes": 175331
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_800t.txt",
+      "bytes": 257341
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_RAW_readme.html",
+      "bytes": 263789
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_cinestill.txt",
+      "bytes": 255887
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_cinestill_800.html",
+      "bytes": 215031
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_dataset.txt",
+      "bytes": 175439
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_dataset_readme.html",
+      "bytes": 256666
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_digital_film.html",
+      "bytes": 259297
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_exact_cine.html",
+      "bytes": 238068
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_film_emulation_dataset.html",
+      "bytes": 175538
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_film_paired_photography.html",
+      "bytes": 175556
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_film_pairs.txt",
+      "bytes": 175636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_film_simulation_dataset.html",
+      "bytes": 200933
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_filmraw.html",
+      "bytes": 269491
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_paired_readme.html",
+      "bytes": 260541
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_raw.txt",
+      "bytes": 199945
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/search_sensor_raw.html",
+      "bytes": 257035
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/sf20k.html",
+      "bytes": 292490
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/sillystill_page.txt",
+      "bytes": 291338
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/sillystill_readme_master.txt",
+      "bytes": 3718
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_config_root.html",
+      "bytes": 226033
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_dataset_source.txt",
+      "bytes": 9861
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_figures.html",
+      "bytes": 365287
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_imgs.html",
+      "bytes": 211460
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_report.pdf",
+      "bytes": 532317
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_report.txt",
+      "bytes": 45394
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_report_tree.html",
+      "bytes": 260648
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_scripts.html",
+      "bytes": 219037
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/ss_sections.html",
+      "bytes": 236660
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/valrat.html",
+      "bytes": 235485
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/valrat_data.html",
+      "bytes": 205731
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/valrat_raw_link.txt",
+      "bytes": 36
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "paired-source-search/valrat_readme.txt",
+      "bytes": 47
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/angle_absorption.png",
+      "bytes": 150402
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/production_ast_check.json",
+      "bytes": 110
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/production_dependency_check.json",
+      "bytes": 445
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/results.json",
+      "bytes": 15278
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/run.log",
+      "bytes": 15373
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/README.md",
+      "bytes": 1730
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/access.json",
+      "bytes": 258
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/github_search.html",
+      "bytes": 257122
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/mcmlgo.c",
+      "bytes": 19769
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/mirror_manifest.json",
+      "bytes": 900
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/mirror_page.html",
+      "bytes": 254188
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/sample.mci",
+      "bytes": 1502
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/sources/sample.mco",
+      "bytes": 30629
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/synthetic_450nm.npz",
+      "bytes": 31863
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/synthetic_550nm.npz",
+      "bytes": 36339
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/synthetic_650nm.npz",
+      "bytes": 34462
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "photon-transport/synthetic_profiles.png",
+      "bytes": 154968
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/ceiling_lamp.npz",
+      "bytes": 64675074
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/ceiling_lamp_comparison.png",
+      "bytes": 1544602
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/glass_reflection.npz",
+      "bytes": 75631785
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/glass_reflection_comparison.png",
+      "bytes": 1599629
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/middle_ceiling.npz",
+      "bytes": 66817829
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/middle_ceiling_comparison.png",
+      "bytes": 1558517
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density/results.json",
+      "bytes": 62265
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "printing-density-run.log",
+      "bytes": 62266
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/case_metrics.csv",
+      "bytes": 176358
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/partial_camera_holdout.png",
+      "bytes": 193944
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/results.json",
+      "bytes": 708259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/results.partial.json",
+      "bytes": 708259
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/run.log",
+      "bytes": 1078
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/summarize.py",
+      "bytes": 5385
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "radiance-censor-holdout/summary.json",
+      "bytes": 62321
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode/results.json",
+      "bytes": 59364
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-audit/actual/ceiling_lamp.npz",
+      "bytes": 999271
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-audit/actual/middle_ceiling.npz",
+      "bytes": 1000373
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-fixed-white/actual-lamp-controls.json",
+      "bytes": 3020
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-fixed-white/neutral-camera.json",
+      "bytes": 17425
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-fixed-white/results.json",
+      "bytes": 59412
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-fixed-white-run.log",
+      "bytes": 429
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-run.log",
+      "bytes": 450
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-sony/camera-specific-low-colour-baseline.json",
+      "bytes": 5936
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-decode-sony/neutral-camera.json",
+      "bytes": 10228
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/ceiling_lamp.npz",
+      "bytes": 21707666
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/ceiling_lamp_comparison.jpg",
+      "bytes": 356883
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/middle_ceiling.npz",
+      "bytes": 22049868
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/middle_ceiling_comparison.jpg",
+      "bytes": 366642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/results.json",
+      "bytes": 2190
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-film-replay/two_lamp_comparison.jpg",
+      "bytes": 759217
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-neutral-run.log",
+      "bytes": 155
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-hdr-sony-run.log",
+      "bytes": 87
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/access.json",
+      "bytes": 737
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/analog_sample_assessment.json",
+      "bytes": 2376
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/analog_sample_intake.json",
+      "bytes": 2969
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/epfl_intake_control.json",
+      "bytes": 2267
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/private_negative_preview.png",
+      "bytes": 4318056
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "raw-negative-access/private_scene_locator_NOT_COLORIMETRIC.png",
+      "bytes": 5419471
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "reachability-convergence-run.log",
+      "bytes": 6452
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/blue_hour_research_comparison.png",
+      "bytes": 5302673
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/corridor_research_comparison.png",
+      "bytes": 5531150
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/night_building_research_comparison.png",
+      "bytes": 5863544
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/present_saved_candidates.py",
+      "bytes": 2291
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/settings.json",
+      "bytes": 1526
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "research-gallery/warm_lights_research_comparison.png",
+      "bytes": 4390921
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/aligned.npz",
+      "bytes": 84610083
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/comparison.png",
+      "bytes": 1317974
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/comparison_full.png",
+      "bytes": 5176185
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/exp_plain.png",
+      "bytes": 1450745
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/paper_plain.png",
+      "bytes": 1461238
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/real.png",
+      "bytes": 3140923
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/render.log",
+      "bytes": 35
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/render.py",
+      "bytes": 3288
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "restored-cafe/settings.json",
+      "bytes": 1349
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-chroma-jacobian/results.json",
+      "bytes": 349125
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-chroma-jacobian/scan_chroma_jacobian.png",
+      "bytes": 321680
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-chroma-jacobian/stages.npz",
+      "bytes": 1853664
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-chroma-jacobian-run.log",
+      "bytes": 128
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/R1-18-19_regions.jpg",
+      "bytes": 200210
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/R1-19-20_regions.jpg",
+      "bytes": 127936
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/chart_dark.png",
+      "bytes": 185048
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/chart_light.png",
+      "bytes": 167847
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/chart_middle.png",
+      "bytes": 175377
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/report.json",
+      "bytes": 59166
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/texture_diagnostics.png",
+      "bytes": 162325
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_0_0.png",
+      "bytes": 107280
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_0_1.png",
+      "bytes": 105133
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_0_2.png",
+      "bytes": 106562
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_1_0.png",
+      "bytes": 105145
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_1_1.png",
+      "bytes": 103832
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_1_2.png",
+      "bytes": 104669
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_2_0.png",
+      "bytes": 107712
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_2_1.png",
+      "bytes": 105591
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture/white_2_2.png",
+      "bytes": 105711
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "scan-texture.log",
+      "bytes": 617
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3.json",
+      "bytes": 20758
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_ceiling_lamp_local.npz",
+      "bytes": 9732482
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_ceiling_lamp_local.png",
+      "bytes": 1057501
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_ceiling_lamp_partial_only.npz",
+      "bytes": 2460166
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_ceiling_lamp_partial_only.png",
+      "bytes": 1056994
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_overall.png",
+      "bytes": 688410
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_partial_only.json",
+      "bytes": 15540
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-02-3_partial_only_overall.png",
+      "bytes": 1840611
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8.json",
+      "bytes": 31052
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_overall.png",
+      "bytes": 587817
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_partial_only.json",
+      "bytes": 28543
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_partial_only_overall.png",
+      "bytes": 1775375
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_left_local.npz",
+      "bytes": 10071518
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_left_local.png",
+      "bytes": 923228
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_left_partial_only.npz",
+      "bytes": 2699630
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_left_partial_only.png",
+      "bytes": 953636
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_right_local.npz",
+      "bytes": 10187254
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_right_local.png",
+      "bytes": 954343
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_right_partial_only.npz",
+      "bytes": 2742056
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/R1-07-8_twilight_lamp_right_partial_only.png",
+      "bytes": 986904
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/README.md",
+      "bytes": 2587
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/__pycache__/run.cpython-312.pyc",
+      "bytes": 18631
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/partial_only.log",
+      "bytes": 221
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/partial_only.py",
+      "bytes": 5436
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/partial_only_results.json",
+      "bytes": 46774
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/results.json",
+      "bytes": 55121
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/run.log",
+      "bytes": 422
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "sensor-constrained-pairs/run.py",
+      "bytes": 9204
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "shoulder/after_defaults.npz",
+      "bytes": 11486
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "shoulder/curves.npz",
+      "bytes": 18124
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "shoulder/report.json",
+      "bytes": 15605
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "shoulder/shoulder_ablation.png",
+      "bytes": 153405
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "shoulder-run.log",
+      "bytes": 15605
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-geometry-bounds/results.json",
+      "bytes": 5986
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-observability-lp/conditional_input_ambiguity.jpg",
+      "bytes": 160168
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-observability-lp/maximum_Y.npz",
+      "bytes": 40691296
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-observability-lp/minimum_Y.npz",
+      "bytes": 40693413
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-observability-lp/results.json",
+      "bytes": 11971
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-profile-holdout/R1-05-6_roof_opening_1.npz",
+      "bytes": 1900991
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-profile-holdout/R1-05-6_roof_opening_2.npz",
+      "bytes": 1913481
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-profile-holdout/results.json",
+      "bytes": 92611
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-profile-holdout/source_profile_comparison.png",
+      "bytes": 201672
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-profile-holdout.log",
+      "bytes": 59843
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp.json",
+      "bytes": 22226
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp.log",
+      "bytes": 2261
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp.npz",
+      "bytes": 22897198
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp_comparison.jpg",
+      "bytes": 362903
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp_partial.json",
+      "bytes": 2902
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp_strength_radius.json",
+      "bytes": 9779
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/ceiling_lamp_strength_radius.log",
+      "bytes": 4946
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling.json",
+      "bytes": 19697
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling.log",
+      "bytes": 2285
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling.npz",
+      "bytes": 23201470
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling_comparison.jpg",
+      "bytes": 375036
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling_partial.json",
+      "bytes": 2853
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling_strength_radius.json",
+      "bytes": 9787
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/middle_ceiling_strength_radius.log",
+      "bytes": 4951
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/ceiling_lamp.json",
+      "bytes": 23519
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/ceiling_lamp.log",
+      "bytes": 2817
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/ceiling_lamp.npz",
+      "bytes": 22872965
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/ceiling_lamp_comparison.jpg",
+      "bytes": 362967
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/ceiling_lamp_partial.json",
+      "bytes": 2919
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/middle_ceiling.json",
+      "bytes": 21034
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/middle_ceiling.log",
+      "bytes": 2837
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/middle_ceiling.npz",
+      "bytes": 23195339
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/middle_ceiling_comparison.jpg",
+      "bytes": 375255
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/radial-control/middle_ceiling_partial.json",
+      "bytes": 2920
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/round_verification.json",
+      "bytes": 717
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/summarize.py",
+      "bytes": 4088
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "source-spatial-inverse/summary.json",
+      "bytes": 17450
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "spectral-library-coverage/normalized_spectra.npz",
+      "bytes": 182426
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "spectral-library-coverage/results.json",
+      "bytes": 205607
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "spectral-library-coverage-run.log",
+      "bytes": 1103
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/cross_layer_colour.png",
+      "bytes": 95150
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/independent_scan_crosscheck.json",
+      "bytes": 585
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/matrices.npz",
+      "bytes": 834536
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/matrices.png",
+      "bytes": 127094
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/provenance.json",
+      "bytes": 837
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrices/results.json",
+      "bytes": 13787
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "transfer-matrix-run.log",
+      "bytes": 13788
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/DSC03906_camera.png",
+      "bytes": 1552785
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/DSC03906_comparison.png",
+      "bytes": 1245994
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/DSC03906_exp_plain.png",
+      "bytes": 8154034
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/DSC03906_light_details.png",
+      "bytes": 1562977
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/DSC03906_paper_only.png",
+      "bytes": 8170178
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/artifact-trace.log",
+      "bytes": 4642
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/camera_embedded_preview.jpg",
+      "bytes": 345573
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/camera_observed.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/comparison.jpg",
+      "bytes": 335651
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/details.jpg",
+      "bytes": 710288
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/local_ratio.json",
+      "bytes": 3092
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/local_ratio.log",
+      "bytes": 116
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/local_ratio.png",
+      "bytes": 8197384
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/local_ratio_linear.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/local_ratio_stages.npz",
+      "bytes": 6113936
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/observed_floor.json",
+      "bytes": 3089
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/observed_floor.log",
+      "bytes": 123
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/observed_floor.png",
+      "bytes": 8183903
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/observed_floor_linear.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/observed_floor_stages.npz",
+      "bytes": 6046736
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/old_before_prior_rgb.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/old_prior_rgb.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only.json",
+      "bytes": 3175
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only.log",
+      "bytes": 117
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only.png",
+      "bytes": 8192885
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only_closeup.jpg",
+      "bytes": 161755
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only_full_comparison.jpg",
+      "bytes": 328788
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only_linear.npy",
+      "bytes": 72721856
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/partial_only_stages.npz",
+      "bytes": 5963456
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/preparation.json",
+      "bytes": 1849
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/prepare.log",
+      "bytes": 106
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/prepare.py",
+      "bytes": 1534
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/red_ornament_comparison.jpg",
+      "bytes": 211382
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/render_candidates.py",
+      "bytes": 4478
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/saturation.npy",
+      "bytes": 18180560
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/summarize.py",
+      "bytes": 3619
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input-candidates/summary.json",
+      "bytes": 12549
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/input.json",
+      "bytes": 355
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/raw_metadata.json",
+      "bytes": 363
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/red_ornament_source_decomposition.json",
+      "bytes": 1984
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/red_ornament_source_decomposition.npz",
+      "bytes": 291178
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/render.log",
+      "bytes": 355
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/render.py",
+      "bytes": 5248
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/render_arrays.npz",
+      "bytes": 118336390
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/settings.json",
+      "bytes": 1996
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/trace_visible_artifacts.py",
+      "bytes": 5874
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/visible_artifact_radial_trace.json",
+      "bytes": 16713
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/visible_artifact_stages.npz",
+      "bytes": 9939990
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "user-DSC03906/visible_artifact_trace.json",
+      "bytes": 4555
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "version-check/previous_corridor.png",
+      "bytes": 1438840
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "version-check/results.json",
+      "bytes": 562
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "wedge_manual_geometry.json",
+      "bytes": 845
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "wedge_raw_preview.jpg",
+      "bytes": 17059
+    },
+    {
+      "root": "filmlab-audit",
+      "path": "wedge_scan_preview.jpg",
+      "bytes": 54608
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480469.RW2",
+      "bytes": 19375104
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480471.RW2",
+      "bytes": 19365888
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480472.RW2",
+      "bytes": 19342848
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480474.RW2",
+      "bytes": 19362304
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480476.RW2",
+      "bytes": 19355136
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480477.RW2",
+      "bytes": 19295744
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480478.RW2",
+      "bytes": 19355136
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480479.RW2",
+      "bytes": 19343360
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480480.RW2",
+      "bytes": 19358720
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480481.RW2",
+      "bytes": 19354112
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480482.RW2",
+      "bytes": 19317248
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480483.RW2",
+      "bytes": 19351552
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480484.RW2",
+      "bytes": 19353088
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480485.RW2",
+      "bytes": 19351040
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480486.RW2",
+      "bytes": 19348992
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480487.RW2",
+      "bytes": 19313152
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480490.RW2",
+      "bytes": 19278848
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480491.RW2",
+      "bytes": 19272704
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480492.RW2",
+      "bytes": 19355648
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480493.RW2",
+      "bytes": 19197440
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480494.RW2",
+      "bytes": 19213312
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480495.RW2",
+      "bytes": 19222016
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480496.RW2",
+      "bytes": 19195392
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480497.RW2",
+      "bytes": 19206656
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480498.RW2",
+      "bytes": 19214336
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480499.RW2",
+      "bytes": 19194368
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480500.RW2",
+      "bytes": 19203584
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480501.RW2",
+      "bytes": 19208704
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480502.RW2",
+      "bytes": 19668480
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480503.RW2",
+      "bytes": 19587584
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480504.RW2",
+      "bytes": 19395072
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480505.RW2",
+      "bytes": 19492864
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480506.RW2",
+      "bytes": 19582464
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480507.RW2",
+      "bytes": 19357696
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480508.RW2",
+      "bytes": 19416064
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480509.RW2",
+      "bytes": 19494912
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480510.RW2",
+      "bytes": 19657728
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480511.RW2",
+      "bytes": 19708928
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480512.RW2",
+      "bytes": 19689472
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480513.RW2",
+      "bytes": 19475456
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480514.RW2",
+      "bytes": 19741184
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/digital/P1480515.RW2",
+      "bytes": 19572224
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-00-1.TIF",
+      "bytes": 59753648
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-01-2.TIF",
+      "bytes": 59751720
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-02-3.TIF",
+      "bytes": 59753176
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-03-4.TIF",
+      "bytes": 59751664
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-04-5.TIF",
+      "bytes": 59751636
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-05-6.TIF",
+      "bytes": 59751896
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-06-7.TIF",
+      "bytes": 59752416
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-07-8.TIF",
+      "bytes": 52336484
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-08-9.TIF",
+      "bytes": 57337348
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-09-10.TIF",
+      "bytes": 59749268
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-10-11.TIF",
+      "bytes": 59749272
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-11-12.TIF",
+      "bytes": 59749200
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-12-13.TIF",
+      "bytes": 59749264
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-13-14.TIF",
+      "bytes": 59749512
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-14-15.TIF",
+      "bytes": 59749464
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-15-16.TIF",
+      "bytes": 59749528
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-16-17.TIF",
+      "bytes": 59749564
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-17-18.TIF",
+      "bytes": 58835724
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-18-19.TIF",
+      "bytes": 59751424
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-19-20.TIF",
+      "bytes": 59749432
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-20-21.TIF",
+      "bytes": 59752432
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-21-22.TIF",
+      "bytes": 59752080
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-22-23.TIF",
+      "bytes": 59752120
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-23-24.TIF",
+      "bytes": 59752368
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-24-25.TIF",
+      "bytes": 59750084
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-25-26.TIF",
+      "bytes": 59751956
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-26-27.TIF",
+      "bytes": 59751812
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-27-28.TIF",
+      "bytes": 59752084
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-28-29.TIF",
+      "bytes": 59751928
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-29-30.TIF",
+      "bytes": 59749936
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-30-31.TIF",
+      "bytes": 59751892
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-31-32.TIF",
+      "bytes": 59752076
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-32-33.TIF",
+      "bytes": 59752316
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-33-34.TIF",
+      "bytes": 59752408
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-34-35.TIF",
+      "bytes": 59750128
+    },
+    {
+      "root": "filmlab-data",
+      "path": "epfl/data/film/A002382raphael-R1-35-36.TIF",
+      "bytes": 59752524
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-00-1.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-01-2.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-02-3.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-03-4.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-04-5.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-05-6.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-06-7.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-07-8.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_R1-17-18.npz",
+      "bytes": 41089008
+    },
+    {
+      "root": "filmlab-data",
+      "path": "oracle/geo_cafe.npz",
+      "bytes": 41088822
+    },
+    {
+      "root": "filmlab-data",
+      "path": "pairs/sillystill/table_cafe_digital.ARW",
+      "bytes": 24969216
+    },
+    {
+      "root": "filmlab-data",
+      "path": "pairs/sillystill/table_cafe_film.JPG",
+      "bytes": 7510840
+    },
+    {
+      "root": "filmlab-data",
+      "path": "public-night/iss042e297200.NEF",
+      "bytes": 17202207
+    },
+    {
+      "root": "filmlab-data",
+      "path": "public-night/iss042e297200.json",
+      "bytes": 328
+    },
+    {
+      "root": "filmlab-data",
+      "path": "user/DSC03906/DSC03906.ARW",
+      "bytes": 49235456
+    },
+    {
+      "root": "attachments",
+      "path": "0e4c70ba-b9ef-4731-86e2-d0d135f76f54/CineStill_800T_ISO800_2026_Codex_Research_Brief.pdf",
+      "bytes": 175712
+    },
+    {
+      "root": "attachments",
+      "path": "904db93f-d00e-4b5e-a3af-f8283295f497/FilmLab_800T_Halation_Deep_Research_2026-10-20.md",
+      "bytes": 32096
+    },
+    {
+      "root": "attachments",
+      "path": "9bde617f-0155-471d-902b-ad98cae36e73/FilmLab_800T_halation_research_and_execution_2026-10-20.md",
+      "bytes": 20540
+    },
+    {
+      "root": "attachments",
+      "path": "bf465356-ea7a-43f4-b184-ea1f5a09372c/SAMPLE-35mm-scan-primefilm-xa-cinestill800t-Analog.Cafe.tif",
+      "bytes": 21082840
+    },
+    {
+      "root": "attachments",
+      "path": "c3b2224a-defe-42e1-9e80-9c0e4d447d44/LICENSE.txt",
+      "bytes": 757
+    },
+    {
+      "root": "attachments",
+      "path": "cba9bbd4-c0f6-4977-8aa5-8302c2e1fe91/FilmLab_800T_halation_physics_research_2026-10-20.md",
+      "bytes": 11858
+    },
+    {
+      "root": "attachments",
+      "path": "d9f2c7ba-a5cb-416b-8a86-a92d2b6d9eec/DSC03906.ARW.zip",
+      "bytes": 33486819
+    }
+  ],
+  "date": "2026-10-23",
+  "audit_size_note": "Approximately 9.7 GiB audit, 3.3 GiB data, 53 MiB attachments; sizes are inventory, not transfer confirmation.",
+  "license_note": "Original and derivative Analog.Cafe image pixels excluded from Git and records archive. Data listing does not grant redistribution rights.",
+  "epfl_primary_SHA256_rechecked_count": 72
+}

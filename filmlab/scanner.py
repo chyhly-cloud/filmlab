@@ -11,10 +11,11 @@
                    ⚠ "冲印店用 Portra 800 档案扫 CineStill" 只是网上的说法, 未证实。电影负片、CineStill
                    与通用通道的不匹配是成像的一部分, 由逐张自动校正部分补偿 (Fuji 专利 US6668096B1:
                    按每张的密度直方图、LATD、高光侧 (最低密度) 与暗部侧求灰平衡)。
-  4. 数字相纸      Frontier 的设计目标是复现富士 Crystal Archive 相纸的印放效果 (输出为文件:
+  4. 数字相纸      本模型以富士 Crystal Archive 相纸的印放效果作为扫描文件的输出代理 (输出为文件:
                    相纸的最大密度写成文件的黑, 而不是相纸在房间里的反射率),
                    这里用该相纸实测特性曲线的影调形状做反转 (负 → 正)。真实相纸的三层染料
                    组合起来是中性的, 所以三个通道共用一条中性曲线 (三层曲线的平均)。
+                   材料实测曲线不等于 Frontier 文件响应已测定; 证据边界见 docs/EPFL_HIGHLIGHT_VALIDATION.md。
      黑白胶片按冲印店的做法用灰度模式扫描, 档案为该胶片本身。
   5. 反转与校正    和光学印放一样, 校正只有整体反差 (自动色阶的拉伸, 三通道相同) 与每通道的
                    曝光偏移 (C·M·Y 校正键 = 印放光号)。偏移校正后中间调中性, 剩余偏色落在暗部
@@ -97,7 +98,10 @@ class Scanner:
     (冲印店风格); None = 不做输出调整 (物理参考)。"""
 
     def __init__(self, engine, scanner="frontier", profile=None, strength=0.75, stretch_max=1.25,
-                 conditioning="lab", gray_balance=None, paper_white=False):
+                 conditioning="lab", gray_balance=None, paper_white=False, shoulder="exponential"):
+        if shoulder not in ("exponential", "paper_only"):
+            raise ValueError(f"Unknown scan shoulder: {shoulder}")
+        self.shoulder = shoulder
         self.eng = engine
         self.m = SCANNERS[scanner]
         e = engine.e
@@ -152,7 +156,7 @@ class Scanner:
         """按整张底片自动定光 (见 scanning.timing.frame_auto)。"""
         self.timing = tm.frame_auto(self.digital_paper, Dn, nominal, self._c0, self.strength, self.stretch_max,
                                     mid_gray, density_limit, latd_normal, slope_limit, color_limit,
-                                    gray_balance=self.gray_balance)
+                                    gray_balance=self.gray_balance, shoulder=self.shoulder)
 
     # ---- S4d + S4e
     def to_rgb(self, Dn):

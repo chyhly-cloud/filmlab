@@ -20,9 +20,10 @@ def printing_matrix(m, profile_key: str, paper_key: str):
     """窄带扫描密度 → 相纸印放密度 (3×3)。
 
     相纸用宽带感光度透过底片曝光: 每种染料的多余吸收会影响相纸的几层 (串扰), 这让印放的颜色
-    比窄带测量低饱和。Frontier 的目标是复现银盐相纸印放 (Fuji 2001), 所以扫描后要把窄带密度
-    换算成印放密度 (同 Cineon 的 printing density)。换算按扫描仪通用档案胶片的染料光谱拟合 ——
-    冲印店只有一套通用的换算, 实际胶片与它不同的部分就是成像的一部分。"""
+    比窄带测量低饱和。当前模型以银盐相纸印放作为扫描输出代理, 所以把窄带密度
+    换算成印放密度 (类似 Cineon 的 printing density)。换算按扫描仪通用档案胶片的染料光谱拟合 ——
+    冲印店只有一套通用的换算, 实际胶片与它不同的部分就是成像的一部分。
+    这是当前虚拟印放代理的构造, 不是由 Frontier 的数字输出 LUT 测量直接得到的换算。"""
     key = (m, profile_key, paper_key)
     if key not in _PRINTING:
         from .. import spectral

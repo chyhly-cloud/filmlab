@@ -28,7 +28,9 @@ CONTRAST_RANGE = (1.0, 1.0)
 # 灰平衡对单通道反差的最大改变。真实扫描: 暗部接近中性而高光保留胶片的黄绿交叉偏色 —— 冲印店主要
 # 按偏移校正, 只能少量改变通道反差 (±15%, 由 94 张真实扫描的综合误差最小推得)。
 SLOPE_LIMIT = 0.15
-SHOULDER_WHITE = 0.93   # 高光肩部的渐近亮度 (真实 800T 扫描 99 百分位中位数 0.74–0.91), 估计值
+# 成片 99 百分位统计不能辨识扫描仪响应的渐近值。0.93 和下述指数形状均为经验呈现假设,
+# 不是相纸或扫描仪测得的物理参数; 见 docs/SHOULDER_ABLATION.md。默认保留以便历史复现。
+SHOULDER_WHITE = 0.93
 # 逐帧灰平衡方法: "two_point" = 现行 (暗部 / 整体平均偏移 + 受限斜率);
 # "us6160634" = Fuji US6160634 三种估计 0.2:0.5:0.3 加权 (待定: ref3 B 20.78→20.48, C 18.50→17.67,
 # EPFL 夜景 13.25→13.20, SillyStill 12.00→12.04; 见 tools/eval/CRITERIA.md)。高彩度阈值在调参集 A 上选出 0.2。
@@ -87,7 +89,7 @@ def gray_point(paper, ref_density, gray0, strength, stretch_max, mid_gray=0.18, 
 
 def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, density_limit=0.3,
                latd_normal=0.0, slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT,
-               gray_balance=None, chroma_thr=None):
+               gray_balance=None, chroma_thr=None, shoulder="exponential"):
     """按整张底片自动定光 (Frontier 型; Fuji US6668096B1: 由每张的密度直方图求平均密度 / LATD、
     高光侧与暗部侧, 再建立各通道的灰平衡 LUT) → PrintTiming。
 
@@ -95,6 +97,8 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
     颜色  两点灰平衡: 暗部侧 (绿通道密度最低的 1–5%) 与高光侧 (HL_PCT) 在每个通道上映射到中性
           (以档案的中灰平衡为中性)。每通道一个线性映射 (偏移 + 斜率), 力度 strength 部分校正,
           斜率变化不超过 ±slope_limit, 偏移不超过 color_limit。"""
+    if shoulder not in ("exponential", "paper_only"):
+        raise ValueError(f"Unknown scan shoulder: {shoulder}")
     gray_balance = GRAY_BALANCE if gray_balance is None else gray_balance
     chroma_thr = GB_CHROMA_THRESHOLD if chroma_thr is None else chroma_thr
     Dn = np.asarray(Dn, float)
@@ -134,6 +138,10 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
     K, s = gray_point(paper, latd - latd_normal, np.zeros(3), strength, stretch_max, mid_gray, nominal=nominal,
                       density_limit=density_limit, color_limit=0.0, stretch=stretch)
     K = np.full(3, K[1])
+    if shoulder == "paper_only":
+        # 独立消融候选: K/s/M 与默认完全相同, 不拟合新白点、不重定光。
+        # 相纸趾部仍在, 所以此候选不等于高动态范围输出。
+        return PrintTiming(K=K, s=s, M=(off, r))
     # 肩部起点: 高光侧在相纸上的位置, 但不比高光目标更亮
     x_band = float(K[1] - stretch * float(off[1] + r[1] * hl[1]))
     return PrintTiming(K=K, s=s, M=(off, r), x_knee=max(x_band, x_hl),
