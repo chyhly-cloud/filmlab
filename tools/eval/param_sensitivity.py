@@ -79,6 +79,13 @@ def job(args):
     out, name, sid = args
     kind, val, _ = VARIANTS[name]
     apply(kind, val)
+    Path(out).mkdir(parents=True, exist_ok=True)
+    np.savez(f"{out}/{name}__{sid}.npz", **evaluate_scene(sid, roll=1))
+    return name, sid
+
+
+def evaluate_scene(sid, roll=1):
+    """在已打好补丁的进程里评估一个场景: 定光预言机 O1 后的逐格 Lab (S)、真实 (R)、有效格、到光源距离 (µm)、拟合光号。"""
     import colour, rawpy
     from dataclasses import replace
     from scipy.optimize import least_squares
@@ -94,7 +101,7 @@ def job(args):
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
-    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": 1, "frame": seed % 36, "grain": 0}))
+    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": roll, "frame": seed % 36, "grain": 0}))
     neg = eng.develop_negative(m)
     tr = {}
     eng.scan(neg, trace=tr)
@@ -121,10 +128,7 @@ def job(args):
 
     fit = least_squares(lambda x: np.nan_to_num((render(x) - R)[keep].ravel(), nan=50.0), [0, 0, 0],
                         bounds=([-1.5, -0.8, -0.8], [1.5, 0.8, 0.8]), loss="soft_l1", f_scale=5.0)
-    S = render(fit.x)
-    Path(out).mkdir(parents=True, exist_ok=True)
-    np.savez(f"{out}/{name}__{sid}.npz", S=S, R=R, keep=keep, dist=dc, x=fit.x)
-    return name, sid
+    return dict(S=render(fit.x), R=R, keep=keep, dist=dc, x=fit.x)
 
 
 def gray_card_check(kind, val):
