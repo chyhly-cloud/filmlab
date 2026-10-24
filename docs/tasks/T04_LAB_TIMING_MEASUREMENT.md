@@ -53,7 +53,7 @@ O1 的颜色偏移是加在模型自动定光 `M` 的偏移 `off0` 之上的，�
   （直接调用 `accept_t02.scene_job` 的渲染与对齐，不另写一套）；
 - O1 / O2 阶段在 24 px 格子上拟合（与 `oracle_timing.py` 相同的拟合器与边界，但引擎配置与 auto 阶段相同：`roll=None`、`grain=0`、`next`），把拟合出的光号套回**整幅图**再算区域统计。
 
-## 交付物（新分支 `codex/t04-lab-timing`，基于 `handoff/recovered-research-2026-10-23` 最新提交）
+## 交付物（新分支 `codex/t04-lab-timing`，基于 `handoff/recovered-research-2026-10-23` 上合并 PR #5 之后的最新提交；`next` 不受 PR #5 影响，基准不变）
 
 1. `tools/eval/lab_timing.py`：可单场景运行（`python3 lab_timing.py 场景 输出.json`，输出与全量结果同结构、只含该场景：`{"frames": {场景: …}（咖啡店无）, "ledger": {场景: …}}`）与全量运行；固定全部随机种子；单场景结果与全量结果中该场景的数值必须完全相同。
 2. `tools/eval/t04_result.json`，结构：

@@ -31,3 +31,8 @@
 
 `tools/eval/t03_sheet.py` 生成：真实 | next | next_oblique 的完整画面与光源局部。是否采用由用户决定；`next_oblique` 仍为可选代际，
 current / next 不变。
+
+## 决定（2026-10-24，用户）
+
+保留为可选研究代际：PR #5 合并进 `handoff/recovered-research-2026-10-23`，`next_oblique` 可用，但**不并入 next**，验收结论仍记为不通过。
+合并后全部测试 344/344；PR 不改动 current / legacy / next 的输出（三代严格回归各 42/42，验收时已测）。
