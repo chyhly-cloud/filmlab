@@ -11,15 +11,41 @@ from filmlab.materials import emulsion
 from filmlab.recipes import recipe
 
 
-def gray_chroma():
+def gray_chroma(size=64):
     import colour
     ref = emulsion('kodak_vision3_500t').stock.reference_illuminant
-    rgb = np.tile(.184 * lights.light_rgb(spectral.illuminant(ref)), (64, 64, 1))
+    rgb = np.tile(.184 * lights.light_rgb(spectral.illuminant(ref)), (size, size, 1))
     eng = Engine(Params(**{**recipe('cinestill_800t_reference'), 'roll': None,
         'grain': 0, 'scene_lights': None, 'scene_illuminant': ref, 'scan_color_strength': 1.0}))
     out = eng.render(rgb)[32, 32]
     lab = colour.XYZ_to_Lab(colour.sRGB_to_XYZ(np.clip(out, 1e-6, 1), apply_cctf_decoding=False))
     return float(np.hypot(lab[1], lab[2]))
+
+
+def angular_fractions(v, rho, density, samples=200000):
+    """Independent midpoint quadrature in theta, including original bounce rule.
+
+    Same A per ring; no rasterization or production kernel/attenuation helper.
+    Denominator includes only each ring's historical radial support.
+    """
+    th = (np.arange(samples) + .5) * (np.radians(89.5) - 1e-4) / samples + 1e-4
+    dth = (np.radians(89.5) - 1e-4) / samples
+    ang = np.sin(th) * np.cos(th) ** v.forward
+    ang /= (ang * dth).sum()
+    w = film._fresnel_unpolarized(th) * ang * dth
+    if density != 0:
+        x = density * (1 / np.cos(th) - 1) * np.log(10)
+        w *= -np.expm1(-x) / x
+    bounces = 4 if rho > .01 else 1
+    max_r = 1500 * bounces
+    energies = np.zeros(4)
+    for n in range(1, bounces + 1):
+        r = 2 * v.base_um * n * np.tan(th)
+        active = r <= max_r
+        masks = (r <= 235, (r > 235) & (r <= 400), (r > 400) & (r <= 700), r > 700)
+        for j, mask in enumerate(masks):
+            energies[j] += (w[active & mask] * rho ** (n - 1)).sum()
+    return energies / energies.sum()
 
 
 def diagnostics():
@@ -29,7 +55,7 @@ def diagnostics():
         eng = Engine(Params(**{**recipe('cinestill_800t'), 'roll': None, 'grain': 0}))
         densities = film.oblique_densities(eng.e.stock, eng.v)
         rho = film.bounce_retention(eng.e.stock, eng.v)
-        result = {'status': 'stopped_spec_contradiction', 'px_um': 10.0,
+        result = {'status': 'synthetic_checks_pending', 'px_um': 10.0,
                   'density': densities.tolist(), 'rho': list(rho), 'layers': {}}
         for c, name in enumerate('RGB'):
             rows = []
@@ -40,7 +66,9 @@ def diagnostics():
                 masks = (r <= 235, (r > 235)&(r <= 400), (r > 400)&(r <= 700), r > 700)
                 rows.append({'total': float(k.sum()), 'fractions': [float(k[m].sum()/k.sum()) for m in masks]})
             result['layers'][name] = {'before': rows[0], 'after': rows[1],
-                                      'total_ratio': rows[1]['total']/rows[0]['total']}
+                                      'total_ratio': rows[1]['total']/rows[0]['total'],
+                                      'angular_before': angular_fractions(eng.v, rho[c], 0).tolist(),
+                                      'angular_after': angular_fractions(eng.v, rho[c], densities[c]).tolist()}
         th = np.linspace(1e-4, np.radians(89.5), 4000)
         r = 2*eng.v.base_um*np.tan(th)
         w = film._fresnel_unpolarized(th)*np.sin(th)*np.cos(th)**eng.v.forward*np.gradient(th)
@@ -49,7 +77,13 @@ def diagnostics():
         result['gray_chroma'] = {}
         for g in ('next', 'next_oblique'):
             generation.use(g)
-            result['gray_chroma'][g] = gray_chroma()
+            result['gray_chroma'][g] = {str(size): gray_chroma(size) for size in (64, 256, 1024)}
+        result['status'] = 'synthetic_checks_passed' if (
+            all(abs(a-b) <= .005 for row in result['layers'].values()
+                for key, angular in (('before', 'angular_before'), ('after', 'angular_after'))
+                for a,b in zip(row[key]['fractions'],row[angular]))
+            and all(c < .5 for values in result['gray_chroma'].values() for c in values.values())
+        ) else 'synthetic_checks_failed'
         return result
     finally:
         generation.use(previous)

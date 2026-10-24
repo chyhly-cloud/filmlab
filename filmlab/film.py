@@ -78,11 +78,12 @@ def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500
     scale = total / max(k.sum(), 1e-12)
     if oblique_density == 0:
         return k * scale
-    # Keep the original raster integration correction. Never normalize the
-    # attenuated weights back to their former energy.
+    # Correct raster integration to the attenuated analytic total (T03 v2),
+    # never back to the original unattenuated energy.
     w = w * oblique_attenuation(th, oblique_density)
     k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
-    return k * scale
+    total = w[r <= r_max_um].sum()
+    return k * (total / max(k.sum(), 1e-12))
 
 
 def oblique_attenuation(theta, density):
