@@ -19,6 +19,8 @@ GENERATIONS = {
     "legacy": ("D55", (), {}),
     "current": ("D55", ("gray_halo", "grain_aperture"), {}),
     "next": ("D65", ("gray_halo", "grain_aperture", "linear_white"), {}),
+    # T03 v2: optional uniform-depth oblique-path absorption candidate.
+    "next_oblique": ("D65", ("gray_halo", "grain_aperture", "linear_white", "halo_oblique"), {}),
     # 实验: next + Vision3 5219 按 Kodak 原始测量重新解混。底片层面与 Kodak 实测一致 (独立验证), 但成片在全部评估上变差,
     # 机理未查明 (见 CRITERIA.md "Kodak 原始 5219"), 不并入 next。
     "next_k5219": ("D65", ("gray_halo", "grain_aperture", "linear_white"), {"kodak_vision3_500t": "kodak_raw"}),
