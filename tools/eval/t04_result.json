@@ -1,0 +1,74 @@
+{
+  "frames": {},
+  "k": {},
+  "lightbox": {},
+  "verdict": null,
+  "ledger": {},
+  "metadata": {
+    "base_commit": "a43c2af1162eff92f72513ed0d349e9cae6a2235",
+    "status": "stopped_auto_not_closed",
+    "measurement_complete": false,
+    "closure_tolerance": 1e-06,
+    "auto_checks": [
+      {
+        "scene": "R1-00-1",
+        "actual": 10.681290489485985,
+        "baseline": 10.025349766370226,
+        "abs_error": 0.6559407231157586,
+        "closed": false
+      }
+    ],
+    "unimplemented_after_stop": [
+      "real O1/O2 measurement",
+      "cell bootstrap",
+      "frame bootstrap",
+      "regional ledger",
+      "colour-regression scatter"
+    ],
+    "stop_rule": "auto abs_error >= 1e-6",
+    "input_provenance": {
+      "raw": {
+        "filename": "P1480514.RW2",
+        "sha256": "6c31063064a4b50b44a1a9a796dadd1d93009a6353f448a95c78bc5d9579a9ff",
+        "expected_sha256": "6c31063064a4b50b44a1a9a796dadd1d93009a6353f448a95c78bc5d9579a9ff",
+        "verified": true
+      },
+      "film": {
+        "filename": "A002382raphael-R1-00-1.TIF",
+        "sha256": "cbe2f2121b93879b7d2556dffaf09427ccf8c64b4a7673ef999d4f0578c5c17b",
+        "expected_sha256": "cbe2f2121b93879b7d2556dffaf09427ccf8c64b4a7673ef999d4f0578c5c17b",
+        "verified": true
+      }
+    },
+    "geometry_cache": {
+      "filename": "geo_R1-00-1.npz",
+      "sha256": "2dee66510ac7a8dd25d5539c204d515c3f72db7ad34c197eed48fb7714ca41b5"
+    },
+    "runtime": {
+      "python": "3.14.8 (main, Sep 30 2026, 17:55:09) [Clang 17.0.0 (clang-1700.6.4.2)]",
+      "packages": {
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "colour-science": "0.4.7",
+        "rawpy": "0.27.1",
+        "scikit-image": "0.26.0",
+        "Pillow": "13.0.0"
+      },
+      "libraw_version": [
+        0,
+        22,
+        1
+      ]
+    },
+    "direct_call": "accept_t02.scene_job(({}, \"R1-00-1\"))",
+    "completed_measurement_scenes": 0,
+    "auto_checks_completed": 1,
+    "cause": "Local auto result differs from the committed baseline. Input hashes verified; baseline has no matching runtime/geometry fingerprint, so environment versus alignment cause is unresolved. No baseline, geometry or defaults were changed.",
+    "single_scene_full_equality": "Not measured: stopped before frame/ledger values were produced.",
+    "report_plotting": {
+      "matplotlib": "3.11.2",
+      "installed_after_preflight": true,
+      "scene_recomputed": false
+    }
+  }
+}
