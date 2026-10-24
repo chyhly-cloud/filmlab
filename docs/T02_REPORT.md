@@ -1,25 +1,47 @@
-# T02 EPFL 冲印店扫描档案校准：运行中
+# T02 EPFL 冲印店扫描档案校准
 
-基于最新交接提交 `c2f2df7`，分支 `codex/t02-lab-profile`。当前为进行中的交付，没有最终拟合或留出验收结论。
+- 基线：`handoff/recovered-research-2026-10-23` / `c2f2df7`。
+- 执行状态：`complete`；只使用固定 TRAIN 11 场景，22/22 输入文件已重新核验 SHA256。
+- 只拟合 latd_normal、latd_limit、highlight_aim、shoulder_white、color_strength，conditioning=lab/none 分别拟合，按训练目标选较小者；不依据留出结果做选择。
+- 目标 = 11 场景全图 ΔE00 中位的均值 + 0.5 × 有有效光源邻域的训练场景 ΔE00 中位的均值。无有效邻域记 null、不当成零；邻域场景集合必须与该组基准一致。
+- 评估直接调用 accept_t02.scene_job()，由其内部恰好调用一次 apply()；实际自动定光，next、roll=None、grain=0。每场景新进程，不使用 O1 预言机。
+- 固定种子 20261024；每组：现值基准 + 43 点稀疏内部网格（中心、各轴四分位点、内部角点），再做原范围内有界 Powell。每组最多 200 次，总计 ≤400；所有场景和候选原子存盘、可续跑。
+- 任一已评估候选触及 2% 边界区域，不论目标是否改善，立即停止该组；仍独立完成另一个 conditioning。不扩大范围、不换参数、不重启已终止搜索。
 
-- 仅使用固定 TRAIN 11 个场景，复用 T01 训练输入；22/22 RAW/扫描文件 SHA256 已重新通过清单验证。没有读取留出图像、缓存或结果。
-- `calibrate_lab.py` 直接调用 `accept_t02.scene_job()`；它内部恰好调用一次 `apply()`，不在外层重复注入。使用实际自动定光，不用 O1 预言机。
-- 只搜索规格指定的五个连续扫描变量；`conditioning=lab/none` 各自拟合并保留完整日志，按训练目标选择。
-- 目标为全图 ΔE00 场景均值 + 0.5×有有效光源邻域场景的邻域 ΔE00 均值；缺失邻域记 null，不当成零，跨候选的有效邻域场景集合必须一致。
-- 固定种子 20261024；每组现值基准 +43点内部稀疏网格，再有界 Powell；每组不超过200候选，总数≤400。
-- 任一已评估候选落入边界附近2%区域，无论是否改善目标，都立即终止该组；仍独立执行另一个 conditioning。不放宽范围、不重新拟合已终止组。
-- `Params` 的扫描覆盖字段默认 None，沿用原常数；显式可选配方 `cinestill_800t_epfl_profile` 已接入，目前禁用。胶片/显影/光晕和矩阵、tint、P、LED数值均未改动。
-- 改动前保存的合成回归基准与改动后结果逐位一致：三代际各42项，共126项（6幅合成输入×7配置；不是 Claude 的真实回归夹具）。
-- 当前全量测试：342 passed，3个已有 colour 光谱对齐警告。包括两种 conditioning 下配方与验收注入的逐位一致、负片染料不变、不污染默认引擎、触边立即停止、续跑不重开、最终档案启用条件。
+| conditioning | 状态 | 候选数 | 最佳全图 | 最佳光源旁 | 最佳目标 |
+|---|---|---:|---:|---:|---:|
+| lab | stopped_boundary | 61 | 9.478259 | 15.204246 | 17.080381 |
+| none | stopped_boundary | 62 | 9.637086 | 16.430177 | 17.852174 |
 
-持久任务 `t02-lab-calibration` 正在计算。`t02-lab-delivery` 等待两组拟合结束后写出最终参数、结果和本报告，复测并生成本地提交与交付清单；本线程的每小时完成检查通过 GitHub 连接器上传最终文件、核验远端完整树并更新 PR。本机命令行没有 GitHub 写入凭据，不将本地提交当作上传成功。
+每组最佳参数与停止事件：
 
-`status=running` 的日志及当前 `{}` 参数占位符不得作为已完成档案使用。最终采用须经 Claude 独立验收及用户目视批准。
+- lab 最佳参数：`{"latd_normal": -0.046633217005056515, "latd_limit": 0.26000000000000006, "highlight_aim": 0.675, "shoulder_white": 0.9225, "color_strength": 0.25, "conditioning": "lab"}`；最佳点是否贴边：False。
+- lab 触边停止事件：`{"index": 60, "keys": ["latd_limit"], "params": {"latd_normal": -0.046633217005056515, "latd_limit": 0.4936853036017161, "highlight_aim": 0.675, "shoulder_white": 0.9225, "color_strength": 0.25, "conditioning": "lab"}}`。
+- none 最佳参数：`{"latd_normal": -0.058239894875685316, "latd_limit": 0.13999999999999999, "highlight_aim": 0.675, "shoulder_white": 0.9225, "color_strength": 0.5, "conditioning": "none"}`；最佳点是否贴边：False。
+- none 触边停止事件：`{"index": 61, "keys": ["latd_limit"], "params": {"latd_normal": -0.058239894875685316, "latd_limit": 0.49368530360171603, "highlight_aim": 0.675, "shoulder_white": 0.9225, "color_strength": 0.5, "conditioning": "none"}}`。
 
-Claude 验收命令（完成后运行）：
+- 本机 lab 现值基准：全图 12.281277，光源旁 15.008418，目标 19.785486。
+- 规格的训练基准为全图 12.308、光源旁 14.873；不同环境/配准引起的差异应由 Claude 独立复核，没有为贴合基准修改数据、评估器或参数。
+- 训练选择：lab，来源拟合状态 `stopped_boundary`；参数 `t02_profile_params.json` 是该组最佳已评估点，不保证该组已正常收敛或没有触边事件。
+- 训练目标相对 lab 现值改善：2.705105。
+- 可选配方 `cinestill_800t_epfl_profile` 的 enabled=False。触边或未正常完成的来源组不得启用，即使它的最佳点在内部且训练目标更小。最终采用仍需 Claude 独立验收和用户目视批准。
+- 正式接入使用 Params 的四个可选扫描覆盖字段，默认 None；颜色力度与 conditioning 使用现有字段。不修改全局常数，不污染其他引擎；胶片/显影/光晕及矩阵/tint/P/LED 数值保持原样。
+- 改动前后合成输入逐位回归退出码：0；三代际各 42 项，共126项，这是6幅合成输入×7种配置，不冒称 Claude 的真实回归夹具。
+- 全量测试退出码：0；完整输出见 `t02_test_result.json`。
+- 未查看或运行留出数据、缓存或验收结果，未自行报告留出指标。
+
+## 复现与独立验收
+
+拟合命令（已终止的完整日志不会自动重开搜索）：
+
+```bash
+FILMLAB_DATA=… OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python tools/eval/calibrate_lab.py
+```
+
+由 Claude 独立执行：
 
 ```bash
 FILMLAB_DATA=… python tools/eval/accept_t02.py tools/eval/t02_profile_params.json 输出.json
 ```
 
-请先审查两组停止状态、边界事件与参数/日志一致性，再检查灰卡、三代际严格回归、留出表现和他店隔离，并将完整画面与光源局部对比交用户目视。拟合方不运行或报告留出结果。
+请先审查两组停止状态、边界事件和完整评估记录，再核验灰卡、默认输出逐位回归、留出验收及他店隔离。完整画面与光源局部对比图应交用户目视；不放宽范围、不根据留出结果重新拟合。

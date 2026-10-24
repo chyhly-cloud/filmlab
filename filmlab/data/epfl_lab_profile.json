@@ -1,6 +1,13 @@
 {
   "enabled": false,
-  "params": null,
-  "status": "running",
+  "params": {
+    "latd_normal": -0.046633217005056515,
+    "latd_limit": 0.26000000000000006,
+    "highlight_aim": 0.675,
+    "shoulder_white": 0.9225,
+    "color_strength": 0.25,
+    "conditioning": "lab"
+  },
+  "status": "stopped_boundary",
   "acceptance": "pending independent Claude validation and user visual approval"
 }
