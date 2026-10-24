@@ -1,0 +1,12 @@
+{
+  "default_regression": {
+    "exit_code": 0,
+    "stdout": "PASS synthetic default regression: 42/42 per generation, 126/126 total\n",
+    "stderr": ""
+  },
+  "pytest": {
+    "exit_code": 0,
+    "stdout": "........................................................................ [ 21%]\n........................................................................ [ 42%]\n........................................................................ [ 63%]\n........................................................................ [ 84%]\n......................................................                   [100%]\n=============================== warnings summary ===============================\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"CIE 1931 2 Degree Standard Observer\" colour matching functions shape.\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"D55\" spectral data shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n342 passed, 3 warnings in 19.64s\n",
+    "stderr": ""
+  }
+}

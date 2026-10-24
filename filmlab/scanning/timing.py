@@ -89,7 +89,7 @@ def gray_point(paper, ref_density, gray0, strength, stretch_max, mid_gray=0.18, 
 
 def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, density_limit=0.3,
                latd_normal=0.0, slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT,
-               gray_balance=None, chroma_thr=None, shoulder="exponential"):
+               gray_balance=None, chroma_thr=None, shoulder="exponential", highlight_aim=None, shoulder_white=None):
     """按整张底片自动定光 (Frontier 型; Fuji US6668096B1: 由每张的密度直方图求平均密度 / LATD、
     高光侧与暗部侧, 再建立各通道的灰平衡 LUT) → PrintTiming。
 
@@ -130,7 +130,7 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
     latd = Dm.mean(0)
     # 反差: 把暗部侧到高光侧的密度范围放进相纸的再现范围 (相纸曲线 3%–97%), 上下限 CONTRAST_RANGE。
     x, cv = paper.x, paper.curve
-    x_hl = float(np.interp(-np.log10(HIGHLIGHT_AIM), cv, x))      # 高光侧落在相纸上的位置
+    x_hl = float(np.interp(-np.log10(HIGHLIGHT_AIM if highlight_aim is None else highlight_aim), cv, x))
     span_paper = float(x[np.argmax(cv >= 0.97 * cv.max())] - x_hl)
     span_film = max(float(hl[1] - sh[1]), 0.05)
     stretch = float(np.clip(span_paper / span_film, CONTRAST_RANGE[0], CONTRAST_RANGE[1]))
@@ -145,7 +145,7 @@ def frame_auto(paper, Dn, nominal, gray0, strength, stretch_max, mid_gray=0.18, 
     # 肩部起点: 高光侧在相纸上的位置, 但不比高光目标更亮
     x_band = float(K[1] - stretch * float(off[1] + r[1] * hl[1]))
     return PrintTiming(K=K, s=s, M=(off, r), x_knee=max(x_band, x_hl),
-                       x_white=float(np.interp(-np.log10(SHOULDER_WHITE), cv, x)))
+                       x_white=float(np.interp(-np.log10(SHOULDER_WHITE if shoulder_white is None else shoulder_white), cv, x)))
 
 
 def gray_balance_us6160634(D, sh, hl, c0, color_limit, chroma_thr, k=(0.2, 0.5, 0.3), axis=False):

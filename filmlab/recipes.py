@@ -49,6 +49,17 @@ def near_infrared_estimate(strength=1.0):
 # --------------------------------------------------------------- 配方 --
 def recipe(name: str) -> dict:
     """返回 engine.Params 的关键字参数。"""
+    if name == "cinestill_800t_epfl_profile":
+        import json
+        from pathlib import Path
+        profile = json.loads((Path(__file__).parent / "data/epfl_lab_profile.json").read_text())
+        if not profile["enabled"]:
+            raise ValueError("EPFL lab profile is unavailable: T02 has no qualified fit")
+        p = profile["params"]
+        return dict(recipe("cinestill_800t"), timing="frame", scan_latd_normal=p["latd_normal"],
+                    scan_latd_limit=p["latd_limit"], scan_highlight_aim=p["highlight_aim"],
+                    scan_shoulder_white=p["shoulder_white"], scan_color_strength=p["color_strength"],
+                    output_conditioning=None if p["conditioning"] == "none" else "lab")
     if name == "cinestill_800t_reference":
         # 物理参考 (docs/ARCHITECTURE.md): 同一张 CineStill 800T 底片, 扫描时按胶片在设计光源 (3200K) 下的中灰
         # 一次定光、不做逐帧自动校色 (操作员变量), 不做输出调整 (冲印店风格)。用来检验胶片物理与扫描硬件。

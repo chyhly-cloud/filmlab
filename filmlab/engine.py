@@ -89,6 +89,11 @@ class Params:
     scan_neutral: str = "profile"
     scan_color_strength: float | None = None
     scan_gray_balance: str | None = None
+    # 显式冲印店档案覆盖；None 沿用当前模块常数 / 胶卷抽样值。
+    scan_latd_normal: float | None = None
+    scan_latd_limit: float | None = None
+    scan_highlight_aim: float | None = None
+    scan_shoulder_white: float | None = None
     # 实验扫描影调: paper_only 只移除额外指数肩部, 保留同一定光和数字相纸。
     # 非实测扫描响应, 不改变默认或 next; 不保证高光/颜色改善。
     scan_shoulder: str = "exponential"
@@ -439,7 +444,11 @@ class Engine:
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
             # 数码冲印机按整张底片的平均密度 (密度直方图) 定亮度; 夜景底片大部分接近片基, 平均密度很低
             # → 冲印店提亮, 但有上限。按"正常场景印成正常"标定, 正常场景的平均密度比灰卡低 LATD_NORMAL。
-            sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
+            p = self.p
+            sc.balance_frame(Dn, gray, p.mid_gray,
+                             density_limit=self.v.latd_limit if p.scan_latd_limit is None else p.scan_latd_limit,
+                             latd_normal=LATD_NORMAL if p.scan_latd_normal is None else p.scan_latd_normal,
+                             highlight_aim=p.scan_highlight_aim, shoulder_white=p.scan_shoulder_white)
         if trace is not None:
             trace["Dn"] = Dn.reshape(*shape, 3).copy()
             trace["timing"] = sc.timing

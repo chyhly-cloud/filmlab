@@ -152,11 +152,12 @@ class Scanner:
                                        mid_gray, nominal, density_limit, color_limit, stretch)
 
     def balance_frame(self, Dn, nominal, mid_gray=0.18, density_limit=0.3, latd_normal=0.0,
-                      slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT):
+                      slope_limit=SLOPE_LIMIT, color_limit=COLOR_LIMIT, highlight_aim=None, shoulder_white=None):
         """按整张底片自动定光 (见 scanning.timing.frame_auto)。"""
         self.timing = tm.frame_auto(self.digital_paper, Dn, nominal, self._c0, self.strength, self.stretch_max,
                                     mid_gray, density_limit, latd_normal, slope_limit, color_limit,
-                                    gray_balance=self.gray_balance, shoulder=self.shoulder)
+                                    gray_balance=self.gray_balance, shoulder=self.shoulder,
+                                    highlight_aim=highlight_aim, shoulder_white=shoulder_white)
 
     # ---- S4d + S4e
     def to_rgb(self, Dn):

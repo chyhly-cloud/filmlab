@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "base_commit": "c2f2df7",
+  "seed": 20261024,
+  "train": {
+    "R1-00-1": "夜景",
+    "R1-02-3": "夜景",
+    "R1-04-5": "夜景",
+    "R1-06-7": "夜景",
+    "R1-07-8": "黄昏",
+    "R1-26-27": "钨丝灯箱",
+    "R1-28-29": "钨丝灯箱",
+    "R1-31-32": "白光灯管",
+    "R1-33-34": "白光灯管",
+    "R1-21-22": "品红灯管",
+    "R1-25-26": "品红灯管"
+  },
+  "bounds": {
+    "latd_normal": [
+      -0.4,
+      0.2
+    ],
+    "latd_limit": [
+      0.02,
+      0.5
+    ],
+    "highlight_aim": [
+      0.45,
+      0.9
+    ],
+    "shoulder_white": [
+      0.85,
+      0.995
+    ],
+    "color_strength": [
+      0.0,
+      1.0
+    ]
+  },
+  "budget_total": 400,
+  "budget_per_conditioning": 200,
+  "status": "running",
+  "selected": null,
+  "runs": {
+    "lab": {
+      "status": "running",
+      "evaluations": [
+        {
+          "index": 0,
+          "params": {
+            "latd_normal": -0.14,
+            "latd_limit": 0.12,
+            "highlight_aim": 0.65,
+            "shoulder_white": 0.93,
+            "color_strength": 0.925,
+            "conditioning": "lab"
+          },
+          "status": "pending",
+          "scenes": {
+            "R1-00-1": {
+              "full": 10.681290489485985,
+              "near": 12.962305042459246
+            },
+            "R1-02-3": {
+              "full": 9.553841771296998,
+              "near": 8.037927937243406
+            },
+            "R1-04-5": {
+              "full": 7.071268599390686,
+              "near": 11.069750220902199
+            },
+            "R1-06-7": {
+              "full": 11.8498631170453,
+              "near": 13.057181313651789
+            },
+            "R1-07-8": {
+              "full": 13.334861855939373,
+              "near": 29.91492528630129
+            },
+            "R1-26-27": {
+              "full": 12.145622660549613,
+              "near": null
+            },
+            "R1-28-29": {
+              "full": 12.704488598176313,
+              "near": null
+            },
+            "R1-31-32": {
+              "full": 19.09256048054535,
+              "near": null
+            },
+            "R1-33-34": {
+              "full": 16.191953239927468,
+              "near": null
+            },
+            "R1-21-22": {
+              "full": 10.843697160502089,
+              "near": null
+            }
+          }
+        }
+      ],
+      "best_index": null,
+      "boundary_event": null
+    },
+    "none": {
+      "status": "pending",
+      "evaluations": [],
+      "best_index": null,
+      "boundary_event": null
+    }
+  }
+}
