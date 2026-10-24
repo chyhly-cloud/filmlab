@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "tools/eval/t03_kernel_diagnostic.py",
+      "tools/eval/t03_kernel_result.json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"status\": \"synthetic_checks_passed\",\n  \"px_um\": 10.0,\n  \"density\": [\n    0.531653790930433,\n    1.1149708349566143,\n    3.0387741781681443\n  ],\n  \"rho\": [\n    0.09361224283801377,\n    0.007387124398407857,\n    7.585066010872299e-06\n  ],\n  \"layers\": {\n    \"R\": {\n      \"before\": {\n        \"total\": 0.5794578197443723,\n        \"fractions\": [\n          0.09271696183486323,\n          0.4405822814812428,\n          0.2918966492388497,\n          0.1748041074450441\n        ]\n      },\n      \"after\": {\n        \"total\": 0.3620630443558057,\n        \"fractions\": [\n          0.12945116010526095,\n          0.5161037722169377,\n          0.25975366090586044,\n          0.09469140677194093\n        ]\n      },\n      \"total_ratio\": 0.6248307159191152,\n      \"angular_before\": [\n        0.09082258834277895,\n        0.44236260728972293,\n        0.2921854569000892,\n        0.1746293474674089\n      ],\n      \"angular_after\": [\n        0.12699931966379346,\n        0.5184499138074773,\n        0.25995359069362844,\n        0.09459717583510086\n      ]\n    },\n    \"G\": {\n      \"before\": {\n        \"total\": 0.5137645000861826,\n        \"fractions\": [\n          0.10241136281497557,\n          0.4914079359368521,\n          0.28584344098680936,\n          0.12033726026136292\n        ]\n      },\n      \"after\": {\n        \"total\": 0.23343888441503252,\n        \"fractions\": [\n          0.1716552985096358,\n          0.5903103196142616,\n          0.1991650111491662,\n          0.03886937072693619\n        ]\n      },\n      \"total_ratio\": 0.45436943264058494,\n      \"angular_before\": [\n        0.10079649498541507,\n        0.4958964224851986,\n        0.2875354849874499,\n        0.11577159754193651\n      ],\n      \"angular_after\": [\n        0.1687394886110518,\n        0.5937581906926782,\n        0.19945875540411734,\n        0.0380435652921527\n      ]\n    },\n    \"B\": {\n      \"before\": {\n        \"total\": 0.5137645000861826,\n        \"fractions\": [\n          0.10241136281497557,\n          0.4914079359368521,\n          0.28584344098680936,\n          0.12033726026136292\n        ]\n      },\n      \"after\": {\n        \"total\": 0.11675875619786483,\n        \"fractions\": [\n          0.23685389206134547,\n          0.5789346388596263,\n          0.15561215495862635,\n          0.028599314120401915\n        ]\n      },\n      \"total_ratio\": 0.2272612377427379,\n      \"angular_before\": [\n        0.10079649498541507,\n        0.4958964224851986,\n        0.2875354849874499,\n        0.11577159754193651\n      ],\n      \"angular_after\": [\n        0.2336008590675866,\n        0.5826073919144278,\n        0.1558037256536706,\n        0.02798802336431515\n      ]\n    }\n  },\n  \"red_single_bounce_angular_fraction_over_700\": 0.05417540890189598,\n  \"gray_chroma\": {\n    \"next\": {\n      \"64\": 0.21169797417206138,\n      \"256\": 0.2102681411548667,\n      \"1024\": 0.20469191350942195\n    },\n    \"next_oblique\": {\n      \"64\": 0.21169797417210554,\n      \"256\": 0.2115966592370334,\n      \"1024\": 0.1964349365646338\n    }\n  }\n}\n\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "tools/eval/t03_default_regression.py"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS baseline SHA256 bitwise synthetic regression: 126/126\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "-m",
+      "pytest",
+      "tests",
+      "-q"
+    ],
+    "exit_code": 0,
+    "stdout": "........................................................................ [ 20%]\n........................................................................ [ 41%]\n........................................................................ [ 62%]\n........................................................................ [ 83%]\n........................................................                 [100%]\n=============================== warnings summary ===============================\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"CIE 1931 2 Degree Standard Observer\" colour matching functions shape.\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"D55\" spectral data shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n344 passed, 3 warnings in 124.57s (0:02:04)\n",
+    "stderr": ""
+  }
+]
