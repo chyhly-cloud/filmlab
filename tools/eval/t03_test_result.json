@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "tools/eval/t03_kernel_diagnostic.py",
+      "tools/eval/t03_kernel_result.json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"status\": \"stopped_spec_contradiction\",\n  \"px_um\": 10.0,\n  \"density\": [\n    0.531653790930433,\n    1.1149708349566143,\n    3.0387741781681443\n  ],\n  \"rho\": [\n    0.09361224283801377,\n    0.007387124398407857,\n    7.585066010872299e-06\n  ],\n  \"layers\": {\n    \"R\": {\n      \"before\": {\n        \"total\": 0.5794578197443723,\n        \"fractions\": [\n          0.09271696183486323,\n          0.4405822814812428,\n          0.2918966492388497,\n          0.1748041074450441\n        ]\n      },\n      \"after\": {\n        \"total\": 0.3620782304193397,\n        \"fractions\": [\n          0.12945995464872506,\n          0.5161430626642153,\n          0.25974007604853977,\n          0.09465690663851993\n        ]\n      },\n      \"total_ratio\": 0.6248569232857543\n    },\n    \"G\": {\n      \"before\": {\n        \"total\": 0.5137645000861826,\n        \"fractions\": [\n          0.10241136281497557,\n          0.4914079359368521,\n          0.28584344098680936,\n          0.12033726026136292\n        ]\n      },\n      \"after\": {\n        \"total\": 0.23249148298778807,\n        \"fractions\": [\n          0.17165529850963585,\n          0.5903103196142617,\n          0.1991650111491662,\n          0.0388693707269362\n        ]\n      },\n      \"total_ratio\": 0.4525253943174125\n    },\n    \"B\": {\n      \"before\": {\n        \"total\": 0.5137645000861826,\n        \"fractions\": [\n          0.10241136281497557,\n          0.4914079359368521,\n          0.28584344098680936,\n          0.12033726026136292\n        ]\n      },\n      \"after\": {\n        \"total\": 0.11626364296459579,\n        \"fractions\": [\n          0.23685389206134552,\n          0.5789346388596263,\n          0.15561215495862635,\n          0.02859931412040191\n        ]\n      },\n      \"total_ratio\": 0.22629754088710466\n    }\n  },\n  \"red_single_bounce_angular_fraction_over_700\": 0.05417540890189598,\n  \"gray_chroma\": {\n    \"next\": 0.21169797417206138,\n    \"next_oblique\": 0.9034216204901253\n  }\n}\n\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      ".local/default_regression.py",
+      "check"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS synthetic default regression: 42/42 per generation, 126/126 total\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "-m",
+      "pytest",
+      "tests",
+      "-q"
+    ],
+    "exit_code": 1,
+    "stdout": "........................................................................ [ 21%]\n..................FF.................................................... [ 42%]\n........................................................................ [ 63%]\n........................................................................ [ 84%]\n......................................................                   [100%]\n=================================== FAILURES ===================================\n_____________________ test_red_energy_over_700_requirement _____________________\n\nengine = <filmlab.engine.Engine object at 0x10aa7fe00>\n\n    def test_red_energy_over_700_requirement(engine):\n        k = film.layer_halation_kernel(10,engine.v,film.bounce_retention(engine.e.stock,engine.v)[0],engine._halo_oblique_densities()[0])\n        yy,xx = np.indices(k.shape)\n        r = np.hypot(yy-k.shape[0]//2,xx-k.shape[1]//2)*10\n>       assert k[r>700].sum()/k.sum() < .05\nE       assert (0.034273205252643942 / 0.36207823041933968) < 0.05\nE        +  where 0.034273205252643942 = <built-in method sum of numpy.ndarray object at 0x10aca7e70>()\nE        +    where <built-in method sum of numpy.ndarray object at 0x10aca7e70> = array([  6.06486993e-12,   6.09338499e-12,   6.12188652e-12, ...,\\n         6.12188652e-12,   6.09338499e-12,   6.06486993e-12]).sum\nE        +  and   0.36207823041933968 = <built-in method sum of numpy.ndarray object at 0x10aca77b0>()\nE        +    where <built-in method sum of numpy.ndarray object at 0x10aca77b0> = array([[  6.06486993e-12,   6.09338499e-12,   6.12188652e-12, ...,\\n          6.12188652e-12,   6.09338499e-12,   6.064....06486993e-12,   6.09338499e-12,   6.12188652e-12, ...,\\n          6.12188652e-12,   6.09338499e-12,   6.06486993e-12]]).sum\n\ntests/test_halo_oblique.py:80: AssertionError\n_________________________ test_3200k_gray_requirement __________________________\n\nengine = <filmlab.engine.Engine object at 0x10abc8590>\n\n    def test_3200k_gray_requirement(engine):\n        from tools.eval.t03_kernel_diagnostic import gray_chroma\n>       assert gray_chroma() < .5\nE       assert 0.9034216204901253 < 0.5\nE        +  where 0.9034216204901253 = <function gray_chroma at 0x10ac622a0>()\n\ntests/test_halo_oblique.py:85: AssertionError\n=============================== warnings summary ===============================\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"CIE 1931 2 Degree Standard Observer\" colour matching functions shape.\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"D55\" spectral data shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/test_halo_oblique.py::test_red_energy_over_700_requirement - ass...\nFAILED tests/test_halo_oblique.py::test_3200k_gray_requirement - assert 0.903...\n2 failed, 340 passed, 3 warnings in 64.45s (0:01:04)\n",
+    "stderr": ""
+  }
+]

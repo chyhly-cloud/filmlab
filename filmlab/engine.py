@@ -60,6 +60,7 @@ class Params:
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
+    #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -309,19 +310,31 @@ class Engine:
                                                           self._back_reflect)
         return self._halo_ref_cache
 
+    def _halo_oblique_densities(self):
+        if "halo_oblique" not in self.p.corrections:
+            return (0.0, 0.0, 0.0)
+        if not hasattr(self, "_halo_oblique_density_cache"):
+            self._halo_oblique_density_cache = film.oblique_densities(self.e.stock, self.v)
+        return self._halo_oblique_density_cache
+
     def _halo_total_multi(self):
         """每层光晕核的总量, 与 film.halation 对画面用的核一致 (红层含多次反射)。"""
         if not hasattr(self, "_halo_total_multi_cache"):
             rho = film.bounce_retention(self.e.stock, self.v)
+            densities = self._halo_oblique_densities()
             self._halo_total_multi_cache = np.array([
-                (film.multi_bounce_kernel(10.0, self.v.base_um, self.v.forward, rho[c]) if rho[c] > 0.01
-                 else film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward)).sum()
+                film.layer_halation_kernel(10.0, self.v, rho[c], densities[c]).sum()
                 for c in range(3)])
         return self._halo_total_multi_cache
 
     def _halo_total(self):
         if not hasattr(self, "_halo_total_cache"):
-            self._halo_total_cache = film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward).sum()
+            if "halo_oblique" in self.p.corrections:
+                self._halo_total_cache = np.array([
+                    film.layer_halation_kernel(10.0, self.v, oblique_density=d).sum()
+                    for d in self._halo_oblique_densities()])
+            else:
+                self._halo_total_cache = film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward).sum()
         return self._halo_total_cache
 
     def _timing(self, target_rgb=None):
@@ -377,7 +390,8 @@ class Engine:
         if trace is not None:
             trace['scattered_exposure'] = H.copy()
         if halo_src is not None:
-            H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v))
+            H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v),
+                              oblique_densities=self._halo_oblique_densities())
             H = np.clip(H, 1e-9, None)                   # 曝光量物理上非负
         logH = self._log_exposure(H)
         if trace is not None:

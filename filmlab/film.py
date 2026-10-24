@@ -55,7 +55,7 @@ def _fresnel_unpolarized(theta, n1=1.5, n2=1.0):
     return out
 
 
-def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0):
+def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, *, oblique_density=0.0):
     """片基内反射的光学核: 到达片基的单位漫射光, 回到乳剂时在半径 r 处的分布。
 
     穿过浑浊乳剂到达片基的漫射光按 cos^forward θ 分布 (1 = 朗伯, 越大越前向)。
@@ -75,7 +75,29 @@ def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500
     ring_area = np.pi * (edges[1:] ** 2 - edges[:-1] ** 2)
     k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
     total = w[r <= r_max_um].sum()
-    return k * (total / max(k.sum(), 1e-12))
+    scale = total / max(k.sum(), 1e-12)
+    if oblique_density == 0:
+        return k * scale
+    # Keep the original raster integration correction. Never normalize the
+    # attenuated weights back to their former energy.
+    w = w * oblique_attenuation(th, oblique_density)
+    k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
+    return k * scale
+
+
+def oblique_attenuation(theta, density):
+    """Uniform-depth average of extra oblique optical depth; no fit constants."""
+    if not np.isfinite(density) or density < 0:
+        raise ValueError("Oblique density must be finite and nonnegative")
+    x = density * (1.0 / np.cos(theta) - 1.0) * np.log(10.0)
+    return np.divide(-np.expm1(-x), x, out=np.ones_like(x), where=x != 0)
+
+
+def oblique_densities(stock: Stock, v):
+    """Vertical density to the base, weighted by each layer's sensitivity."""
+    down, _, _ = emulsion_stack(stock, v.layer_absorbance, v.yellow_filter)
+    sens = 10.0 ** stock.log_sensitivity
+    return -np.log10((down[:, None] * sens).sum(axis=0) / sens.sum(axis=0))
 
 
 def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15, turbidity_power=3.0):
@@ -135,29 +157,37 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
     return fn(E, w)
 
 
-def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4):
+def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0):
     """多次反射: 光回到乳剂后, 在乳剂正面 (乳剂/空气, 同样 >42° 全反射) 再被反射回片基,
     每多一次往返横向再偏移 2·t·tanθ, 形成 2 倍、3 倍半径的外环。
     rho = 每多一次往返保留的比例 ≈ (该波段穿透整个乳剂的透射率)², 所以外环越来越红。
     近似限制: rho 不依赖入射光谱/角度, 后续界面未逐次乘菲涅耳系数, 返回吸收未按斜光程变化;
     不包含完整的上下行重复吸收及散射输运。见 docs/HALATION_CHAIN_AUDIT.md。"""
     k1 = halation_kernel(px_um, base_um=base_um, forward=forward,
-                         r_max_um=1500.0 * bounces)
+                         r_max_um=1500.0 * bounces, oblique_density=oblique_density)
     total = k1.copy()
     for n in range(2, bounces + 1):
-        kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces)
+        kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces, oblique_density=oblique_density)
         total += rho ** (n - 1) * kn
     return total
 
 
-def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0)):
-    """把每层的光晕源按片基光学核 (含多次反射) 在空间上铺开, 加到曝光量上。"""
+def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0):
+    """One layer's kernel, shared by picture convolution and gray-card timing."""
+    if rho > 0.01:
+        return multi_bounce_kernel(px_um, v.base_um, v.forward, rho,
+                                   oblique_density=oblique_density)
+    return halation_kernel(px_um, base_um=v.base_um, forward=v.forward,
+                           oblique_density=oblique_density)
+
+
+def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0), *, oblique_densities=(0.0, 0.0, 0.0)):
+    """Spread each layer's halo source with its own base-reflection kernel."""
     from scipy.signal import fftconvolve
     out = H.copy()
     for c in range(3):
         if halo_source[..., c].max() > 0:
-            k = multi_bounce_kernel(px_um, v.base_um, v.forward, rho[c]) if rho[c] > 0.01 \
-                else halation_kernel(px_um, base_um=v.base_um, forward=v.forward)
+            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c])
             out[..., c] += fftconvolve(halo_source[..., c], k, mode="same")
     return out
 
