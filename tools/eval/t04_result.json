@@ -18,13 +18,6 @@
         "closed": false
       }
     ],
-    "unimplemented_after_stop": [
-      "real O1/O2 measurement",
-      "cell bootstrap",
-      "frame bootstrap",
-      "regional ledger",
-      "colour-regression scatter"
-    ],
     "stop_rule": "auto abs_error >= 1e-6",
     "input_provenance": {
       "raw": {
@@ -63,12 +56,48 @@
     "direct_call": "accept_t02.scene_job(({}, \"R1-00-1\"))",
     "completed_measurement_scenes": 0,
     "auto_checks_completed": 1,
-    "cause": "Local auto result differs from the committed baseline. Input hashes verified; baseline has no matching runtime/geometry fingerprint, so environment versus alignment cause is unresolved. No baseline, geometry or defaults were changed.",
+    "cause": "Confirmed static configuration conflict: baseline T03 apply bypass uses nominal strength 0.75, direct T02 apply forces 0.925. This has not been verified by rerendering and does not prove it explains the entire observed gap.",
     "single_scene_full_equality": "Not measured: stopped before frame/ledger values were produced.",
     "report_plotting": {
       "matplotlib": "3.11.2",
       "installed_after_preflight": true,
       "scene_recomputed": false
+    },
+    "implementation_status": "measurement_pipeline_implemented_synthetic_verified_real_run_stopped",
+    "implemented_not_run_on_real_data": [
+      "O1/O2",
+      "200 cell bootstraps per frame",
+      "10000 paired frame bootstraps",
+      "colour and density OLS",
+      "lightbox within/between summaries",
+      "full-image regional ledger",
+      "scatter and ledger heatmap"
+    ],
+    "configuration_diagnosis": {
+      "method": "static source inspection only; no additional real scene calculation",
+      "baseline_path": "accept_t03.scene_job overrides accept_t02.apply with _use(gen), returning {}",
+      "baseline_scan_color_strength_parameter": null,
+      "baseline_effective_scan_strength_roll_none": 0.75,
+      "t04_requested_path": "direct accept_t02.scene_job(({}, sid)), original apply unchanged",
+      "direct_scan_color_strength_parameter": 0.925,
+      "source_evidence": [
+        "tools/eval/accept_t03.py:scene_job/_use",
+        "tools/eval/accept_t02.py:apply",
+        "filmlab/variation.py:Variation.scan_strength/sample",
+        "filmlab/engine.py:scanner construction"
+      ],
+      "conclusion": "The two source paths have a definite configuration mismatch. Its numerical contribution to the observed gap has not been measured.",
+      "resolution": "Claude must clarify baseline-compatible apply semantics. Do not choose a new strength, change the baseline or relax tolerance."
+    },
+    "scene_list_diagnosis": {
+      "method": "static TRAIN/HOLDOUT membership only",
+      "lightbox_counts": {
+        "钨丝灯箱": 4,
+        "白光灯管": 4,
+        "品红灯管": 3
+      },
+      "specification_claim": "three lightbox groups, four frames each",
+      "resolution": "Keep the fixed 21-scene set; do not add/relabel a frame to manufacture the fourth magenta observation. Claude should clarify the wording."
     }
   }
 }
