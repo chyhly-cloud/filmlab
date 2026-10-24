@@ -51,7 +51,7 @@ def job(args):
     from filmlab.engine import Engine, Params
     from filmlab.recipes import recipe
     from filmlab.rawio import film_metering
-    generation.use("next")
+    generation.use(os.environ.get("GENERATION", "next"))
     Hm, real = ot.geometry(sid)
     rawp, _, bias = ot.sources(sid)
     rgb = pc.load_digital(rawp, 1400)[0]
