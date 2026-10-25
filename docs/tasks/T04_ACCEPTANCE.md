@@ -1,7 +1,7 @@
 # T04 验收记录（PR #6，提交 9b4815a；规格澄清 v2 后）
 
 完整测量由验收方在验收环境运行（`lab_timing.py`，PR 代码原样）：21 个场景全部完成，用时 29.5 分钟，无帧贴边界。
-结果：`tools/eval/t04_result_acceptance.json`；图：`docs/figures/t04/`。
+结果：`tools/eval/t04_result.json`；图：`docs/figures/t04/`。
 
 ## 独立验收（`accept_t04.py`）
 

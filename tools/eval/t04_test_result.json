@@ -1,0 +1,15 @@
+{
+  "filmlab_tree": "081dac42993d4f9b8b4780d1d643421ad96c6632",
+  "unchanged": true,
+  "baseline_sha256": "c9343617565fdae5375c00bdbcf8b3ab3e6da7dbc7d4a52ba1aa72422b81c777",
+  "regional_key_rename": {
+    "reference_commit": "1e101b8",
+    "synthetic_only": true,
+    "masks_and_metrics_exactly_equal": true
+  },
+  "tests": {
+    "exit_code": 0,
+    "stdout": "........................................................................ [ 19%]\n........................................................................ [ 39%]\n........................................................................ [ 59%]\n........................................................................ [ 78%]\n........................................................................ [ 98%]\n.....                                                                    [100%]\n=============================== warnings summary ===============================\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"CIE 1931 2 Degree Standard Observer\" colour matching functions shape.\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"D55\" spectral data shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n365 passed, 3 warnings in 88.46s (0:01:28)\n",
+    "stderr": ""
+  }
+}
