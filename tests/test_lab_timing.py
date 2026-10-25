@@ -98,14 +98,14 @@ def test_region_boundaries_signed_ledger_and_empty_regions():
     lab = encoded_lab(real)
     ok = np.ones((1,5),bool)
     masks = regions(lab,ok,np.array([[0,100,300,1500,1501]]))
-    assert [int(masks[k].sum()) for k in ('core','near','middle','far')] == [2,1,1,1]
+    assert [int(masks[k].sum()) for k in ('核心','近','中','远')] == [2,1,1,1]
     masks['empty'] = np.zeros_like(ok)
     same = ledger_stage(real, lab, masks)
-    assert same['full'] == {'n':5,'dE':0.,'dL':0.,'da':0.,'db':0.}
+    assert same['全图'] == {'n':5,'dE':0.,'dL':0.,'da':0.,'db':0.}
     assert same['empty'] == {'n':0,'dE':None,'dL':None,'da':None,'db':None}
     shifted = real+.01
     delta = encoded_lab(shifted)-lab
-    measured = ledger_stage(shifted, lab, masks)['full']
+    measured = ledger_stage(shifted, lab, masks)['全图']
     np.testing.assert_allclose([measured[k] for k in ('dL','da','db')],np.median(delta,axis=(0,1)))
     assert measured['dL'] > 0
 
@@ -128,7 +128,7 @@ def test_single_and_batch_identical_values_and_checkpoint(tmp_path):
         rng = np.random.default_rng(lt.scene_seed(sid))
         values = rng.normal(size=3).tolist()
         return {'check':lt.check_closure(sid,baseline,baseline),'status':'complete',
-                'frame':{'x':values,'group':group},'ledger':{'auto':{'full':{'dE':values[0]}}},'boundary':[]}
+                'frame':{'x':values,'group':group},'ledger':{'auto':{'全图':{'dE':values[0]}}},'boundary':[]}
     ids = ['R1-00-1','R1-02-3']
     batch = lt.run_measurement(ids,tmp_path/'batch.json',synthetic_runner)
     single = lt.run_measurement(ids[:1],tmp_path/'single.json',synthetic_runner)
@@ -191,7 +191,7 @@ def test_synthetic_full_image_fits_bootstraps_and_single_batch_equality():
     real=srgb_encode(np.clip(scanner.to_rgb(dn),0,1))
     scanner.timing=t0
     ok=np.ones(dn.shape[:2],bool)
-    full=lt.ledger_stage(auto,lt.encoded_lab(real),{'full':ok})['full']['dE']
+    full=lt.ledger_stage(auto,lt.encoded_lab(real),{'全图':ok})['全图']['dE']
     context={'scanner':scanner,'Dn':dn,'timing':t0,'aligned':auto,'real':real,
              'ok':ok,'H':np.eye(3),'distance_um':None,'measured':{'full':full}}
     first=lt.measure_context(context,'synthetic-grid','synthetic')
@@ -201,9 +201,9 @@ def test_synthetic_full_image_fits_bootstraps_and_single_batch_equality():
     np.testing.assert_allclose(first['frame']['x'],truth,atol=1e-6,rtol=0)
     assert first['frame']['n_cells']==36
     assert len(first['frame']['c_lab_se'])==2
-    assert first['ledger']['O1']['full']['dE']<1e-6
-    assert first['ledger']['O2']['full']['dE']<1e-6
-    assert first['ledger']['auto']['full']['dE']==full
+    assert first['ledger']['O1']['全图']['dE']<1e-6
+    assert first['ledger']['O2']['全图']['dE']<1e-6
+    assert first['ledger']['auto']['全图']['dE']==full
     fourth=lt.measure_context(context,'synthetic-grid','synthetic',boundary_count=3)
     assert fourth['status']=='complete'  # only actual boundary fits count
 
@@ -227,12 +227,14 @@ def test_capture_observes_actual_call_and_restores_profiler(monkeypatch):
         eng=engine
         w=Engine.scan(eng)
         Hm=np.eye(3); real=w; ok=np.ones((2,2),bool)
+        core=np.ones((2,2),bool); d=np.zeros((2,2))
         return args[1],{'full':1.}
     original=sys.getprofile()
     captured=lt.capture_auto('synthetic',scene_job)
     assert calls==[({},'synthetic')]
     assert captured['timing'] is timing
     np.testing.assert_array_equal(captured['Dn'],captured['aligned'])
+    np.testing.assert_array_equal(captured['distance_um'],np.zeros((2,2)))
     assert sys.getprofile() is original
     def broken(args):
         raise RuntimeError('synthetic capture error')
@@ -268,12 +270,50 @@ def test_completed_report_uses_measured_data_and_refuses_stop(tmp_path):
     result['frames']=dict(zip([s for s in groups if s!='cafe'],synthetic_frames().values()))
     for sid,frame in result['frames'].items():frame['group']=groups[sid]
     result['ledger']={sid:{stage:{region:{'n':10,'dE':float(v),'dL':.1,'da':-.2,'db':.3}
-                      for region,v in [('full',3),('dark',7),('midtones',4),('highlights',6)]}
+                      for region,v in [('全图',3),('暗部',7),('中间调',4),('亮部',6)]}
                       for stage in ('auto','O1','O2')} for sid in groups}
     lt.finalize(result,list(groups))
     lt.write_report(result,tmp_path/'REPORT.md')
     report=(tmp_path/'REPORT.md').read_text()
     assert '合并 k' in report and '**>5**' in report
+    assert '| 品红灯管 | 3 | 2 |' in report
+    assert '全图' in report and '中间调' in report
     assert (tmp_path/'figures/t04/timing_scatter.png').stat().st_size>1000
     assert (tmp_path/'figures/t04/ledger_heatmap.png').stat().st_size>1000
     with pytest.raises(ValueError):lt.write_report(lt.empty_result(),tmp_path/'STOP.md')
+
+
+def test_capture_auto_uses_nominal_next_configuration(monkeypatch):
+    """Actual Engine configuration, with synthetic scan arrays and no scene IO."""
+    import accept_t02
+    import tools.eval.lab_timing as lt
+    from filmlab.engine import Engine, Params
+    from filmlab.recipes import recipe
+    observed = {}
+    original_apply = accept_t02.apply
+
+    def scan(self):
+        sc = self.scanner
+        shape = (2, 2)
+        Dn = np.ones((4, 3))
+        return Dn.reshape(*shape, 3)
+
+    def scene_job(args):
+        extra = accept_t02.apply({})
+        params = Params(**{**recipe('cinestill_800t'), 'timing': 'frame',
+                           'roll': None, 'grain': 0, **extra})
+        eng = Engine(params)
+        observed.update(extra=extra, parameter=params.scan_color_strength,
+                        nominal=eng.v.scan_strength, actual=eng.scanner.strength)
+        w = eng.scan()
+        Hm = np.eye(3)
+        real = np.zeros_like(w)
+        ok = np.ones((2, 2), bool)
+        return args[1], {'full': 1.}
+
+    monkeypatch.setattr(Engine, 'scan', scan)
+    monkeypatch.setattr(accept_t02, 'scene_job', scene_job)
+    lt.capture_auto('synthetic-nominal')
+    assert observed == {'extra': {}, 'parameter': None, 'nominal': .75, 'actual': .75}
+    assert accept_t02.apply is original_apply
+    assert 'scan_color_strength=None' in lt.method_metadata()['configuration']

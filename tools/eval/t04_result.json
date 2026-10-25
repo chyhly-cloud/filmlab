@@ -87,7 +87,7 @@
         "filmlab/engine.py:scanner construction"
       ],
       "conclusion": "The two source paths have a definite configuration mismatch. Its numerical contribution to the observed gap has not been measured.",
-      "resolution": "Claude must clarify baseline-compatible apply semantics. Do not choose a new strength, change the baseline or relax tolerance."
+      "resolution": "Resolved by specification clarification v2 (4278c6c): use T03 nominal apply override; full measurement in acceptance environment."
     },
     "scene_list_diagnosis": {
       "method": "static TRAIN/HOLDOUT membership only",
@@ -97,7 +97,25 @@
         "品红灯管": 3
       },
       "specification_claim": "three lightbox groups, four frames each",
-      "resolution": "Keep the fixed 21-scene set; do not add/relabel a frame to manufacture the fourth magenta observation. Claude should clarify the wording."
+      "resolution": "Confirmed by clarification v2: fixed groups are 4/4/3; magenta sample SD uses ddof=1, df=2. No scene added or relabelled."
+    },
+    "review_v2": {
+      "commit": "4278c6c",
+      "implementation": "nominal T03 apply override; Chinese region keys; actual group sizes and SD df",
+      "current_tool_configuration": "accept_t02.scene_job(({}, sid)) with apply = lambda params: accept_t03._use(\"next\"); nominal Params.scan_color_strength=None, Variation.scan_strength=0.75 (T04 clarification v2)",
+      "historical_auto_checks_configuration": "Original T02 apply with scan_color_strength=0.925; not rerun after v2",
+      "local_cache": "Unchanged; differs from acceptance cache; no real scene rerun",
+      "full_measurement_owner": "Claude in baseline acceptance environment",
+      "lightbox_frames": [
+        4,
+        4,
+        3
+      ],
+      "lightbox_sd_df": [
+        3,
+        3,
+        2
+      ]
     }
   }
 }

@@ -1,6 +1,7 @@
 """T04 measurement, with a mandatory auto-baseline gate before every O1.
 
-No production configuration is modified beyond accept_t02.scene_job itself.
+The auto entry point uses T03's nominal next configuration with the unchanged
+accept_t02.scene_job renderer and alignment.
 A mismatch stops the run; it is never converted into a scientific verdict.
 Single and batch runs use identical scene seeds and fresh worker processes.
 """
@@ -124,7 +125,9 @@ def method_metadata():
             'undefined_bootstrap_slopes': 'omit zero-variance draws; record count',
             'within_sd': 'sample standard deviation, ddof=1',
             'scene_order': 'TRAIN insertion order then HOLDOUT insertion order',
-            'configuration': 'unmodified accept_t02.scene_job(({}, sid)); no T03 apply override'}
+            'configuration': 'accept_t02.scene_job(({}, sid)) with apply = lambda params: '
+                             'accept_t03._use("next"); nominal Params.scan_color_strength=None, '
+                             'Variation.scan_strength=0.75 (T04 clarification v2)'}
 
 
 def scene_seed(sid):
@@ -139,8 +142,11 @@ def capture_auto(sid, scene_job=None):
     The profile is restored even on failure. This runs in a disposable process.
     """
     from filmlab.engine import Engine
+    import accept_t02
+    import accept_t03
     if scene_job is None:
-        from accept_t02 import scene_job
+        scene_job = accept_t02.scene_job
+    original_apply = accept_t02.apply
     scans, state = {}, {}
     previous = sys.getprofile()
 
@@ -154,10 +160,13 @@ def capture_auto(sid, scene_job=None):
             state.update(frame.f_locals)
 
     try:
+        # Same entry-point override as accept_t03.scene_job; renderer unchanged.
+        accept_t02.apply = lambda params: accept_t03._use("next")
         sys.setprofile(observe)
         measured_sid, measured = scene_job(({}, sid))
     finally:
         sys.setprofile(previous)
+        accept_t02.apply = original_apply
     if measured_sid != sid or 'eng' not in state or id(state['eng']) not in scans:
         raise RuntimeError('scene_job/Engine.scan observation contract changed')
     density, timing = scans[id(state['eng'])]
@@ -173,19 +182,19 @@ def encoded_lab(rgb):
 
 
 def regions(real_lab, ok, distance_um=None):
-    masks = {'full': ok, 'dark': ok & (real_lab[..., 0] < 25),
-             'midtones': ok & (real_lab[..., 0] >= 25) & (real_lab[..., 0] <= 70),
-             'highlights': ok & (real_lab[..., 0] > 70)}
+    masks = {'全图': ok, '暗部': ok & (real_lab[..., 0] < 25),
+             '中间调': ok & (real_lab[..., 0] >= 25) & (real_lab[..., 0] <= 70),
+             '亮部': ok & (real_lab[..., 0] > 70)}
     if distance_um is not None:
         d = distance_um
-        masks.update(core=ok & (d <= 100), near=ok & (d > 100) & (d <= 300),
-                     middle=ok & (d > 300) & (d <= 1500), far=ok & (d > 1500))
+        masks.update({'核心': ok & (d <= 100), '近': ok & (d > 100) & (d <= 300),
+                      '中': ok & (d > 300) & (d <= 1500), '远': ok & (d > 1500)})
     return masks
 
 
 def ledger_stage(encoded, real_lab, masks):
     import colour
-    ok = masks['full']
+    ok = masks['全图']
     lab = encoded_lab(np.where(ok[..., None], encoded, 0))
     de = colour.delta_E(lab, real_lab, method='CIE 2000')
     delta = lab-real_lab
@@ -231,7 +240,7 @@ def measure_context(context, sid, group, boundary_count=0):
     masks = regions(real_lab, c['ok'], c['distance_um'])
     ledger = {'auto': ledger_stage(c['aligned'], real_lab, masks)}
     # Catch instrumentation/metric drift before a real oracle fit.
-    if abs(ledger['auto']['full']['dE']-c['measured']['full']) >= CLOSURE_TOLERANCE:
+    if abs(ledger['auto']['全图']['dE']-c['measured']['full']) >= CLOSURE_TOLERANCE:
         raise DefinitionMismatch('Captured auto ledger disagrees with direct scene_job')
     tf = ProjectiveTransform(c['H'])
     wp = lambda a: warp(a, tf.inverse, output_shape=c['real'].shape[:2], order=1, cval=np.nan)
@@ -459,7 +468,7 @@ def write_report(result, path):
     from accept_calibration import TRAIN, HOLDOUT
     scene_groups = {**TRAIN, **HOLDOUT}
     ledger_groups = sorted({scene_groups[s] for s in result['ledger']})
-    region_order = ['full', 'core', 'near', 'middle', 'far', 'dark', 'midtones', 'highlights']
+    region_order = ['全图', '核心', '近', '中', '远', '暗部', '中间调', '亮部']
     summaries, labels, data = {}, [], []
     for group in ledger_groups:
         for stage in ('auto', 'O1', 'O2'):
@@ -474,7 +483,8 @@ def write_report(result, path):
     data = np.asarray(data)
     fig, ax = plt.subplots(figsize=(11, max(5, len(labels)*.3)))
     im = ax.imshow(np.ma.masked_invalid(data), aspect='auto', cmap='viridis')
-    ax.set_xticks(range(len(region_order)), region_order, rotation=30)
+    ax.set_xticks(range(len(region_order)),
+                  ['Full', 'Core', 'Near', 'Middle', 'Far', 'Dark', 'Midtones', 'Highlights'], rotation=30)
     ax.set_yticks(range(len(labels)), labels)
     for i in range(len(labels)):
         for j in range(len(region_order)):
@@ -493,11 +503,13 @@ def write_report(result, path):
               '', '| 剔除组 | kR | kB | kK |', '|---|---:|---:|---:|']
     for group, values in k['leave_group_out'].items():
         lines.append('| '+group+' | '+' | '.join(f'{x:.6f}' for x in values)+' |')
-    lines += ['', '| 灯箱组 | c_lab 均值 R/B | 组内 SD R/B | c_auto 均值 R/B | 组内 SD R/B |', '|---|---|---|---|---|']
+    lines += ['', '| 灯箱组 | 帧数 | SD 自由度 | c_lab 均值 R/B | 组内 SD R/B | c_auto 均值 R/B | 组内 SD R/B |', '|---|---:|---:|---|---|---|---|']
     for group, values in result['lightbox'].items():
-        lines.append('| '+group+' | '+' | '.join(str(values[key]) for key in
+        n = sum(f['group'] == group for f in frames.values())
+        lines.append(f'| {group} | {n} | {n-1} | '+' | '.join(str(values[key]) for key in
                       ('c_lab_mean','c_lab_within_sd','c_auto_mean','c_auto_within_sd'))+' |')
-    lines += ['', '组间均值差（前组减后组，R/B）：', '', '```json',
+    lines += ['', '灯箱组实际为4 / 4 / 3帧。组内样本SD使用ddof=1；品红灯管3帧，自由度为2。',
+              '', '组间均值差（前组减后组，R/B）：', '', '```json',
               json.dumps(result['metadata']['lightbox_between_mean_differences'], ensure_ascii=False, indent=2), '```',
               '', '散点颜色：'+', '.join(f'G{i+1}={g}' for i,g in enumerate(groups))+'。',
               '', '![颜色光号与格子标准误](figures/t04/timing_scatter.png)',
