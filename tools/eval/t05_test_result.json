@@ -1,0 +1,21 @@
+{
+  "base_commit": "324ac5d510a0b52ff35fae37d11db9115681319e",
+  "synthetic_only": true,
+  "regression": {
+    "compared_to_base": true,
+    "bitwise_equal": true,
+    "cases": 102,
+    "generations": [
+      "current",
+      "legacy",
+      "next"
+    ],
+    "scope": "all existing RECIPES plus explicit cinestill frame per generation"
+  },
+  "tests": {
+    "exit_code": 0,
+    "stdout": "........................................................................ [ 19%]\n........................................................................ [ 38%]\n........................................................................ [ 57%]\n........................................................................ [ 76%]\n........................................................................ [ 96%]\n...............                                                          [100%]\n=============================== warnings summary ===============================\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"CIE 1931 2 Degree Standard Observer\" colour matching functions shape.\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"D55\" spectral data shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\ntests/test_system.py::test_tungsten_film_daylight_vs_tungsten_light\n  /Users/hly/Documents/Codex/filmlab-t01/.venv/lib/python3.14/site-packages/colour/utilities/verbose.py:340: ColourRuntimeWarning: Aligning \"E\" illuminant shape to \"(360.0, 780.0, 5.0)\".\n    warn(*args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n375 passed, 3 warnings in 131.09s (0:02:11)\n",
+    "stderr": ""
+  },
+  "accept_t05_run": false
+}

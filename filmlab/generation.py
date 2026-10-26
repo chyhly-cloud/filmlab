@@ -4,6 +4,7 @@
   current  正式基线: legacy + 已核实且不引起退步的修正 (gray_halo, grain_aperture)
   next     下一代候选: current + 输入端的两处已核实计算修正 —— RAW 日光白平衡按 D65 中性 (LibRaw 约定)、
            非日光光源的线性曝光映射保白点 (linear_white)。扫描仪的经验常数 (饱和度矩阵、LAB_TINT、定光参数) 不变。
+  next_balance 可选: next + T04训练集中位数的固定印放光号偏移，仅逐帧自动定光
   next_k5219  实验: next + Vision3 5219 按 Kodak 原始测量重新解混 (stocks._kodak_raw_5219)
   next_halo   历史实验复现: next + 未标定光晕倍数（旧评估重复解码，原倍率证据已撤销）
   next_sensor 修正候选: next + RAW 截断按传感器饱和堆积判定 (rawio.sensor_saturation), 不再把未过曝画面中最亮的 3% 当作截断
@@ -19,6 +20,8 @@ GENERATIONS = {
     "legacy": ("D55", (), {}),
     "current": ("D55", ("gray_halo", "grain_aperture"), {}),
     "next": ("D65", ("gray_halo", "grain_aperture", "linear_white"), {}),
+    # T05: optional fixed printer-light offsets; default generations unchanged.
+    "next_balance": ("D65", ("gray_halo", "grain_aperture", "linear_white", "lab_balance"), {}),
     # T03 v2: optional uniform-depth oblique-path absorption candidate.
     "next_oblique": ("D65", ("gray_halo", "grain_aperture", "linear_white", "halo_oblique"), {}),
     # 实验: next + Vision3 5219 按 Kodak 原始测量重新解混。底片层面与 Kodak 实测一致 (独立验证), 但成片在全部评估上变差,

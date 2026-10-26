@@ -13,7 +13,7 @@
   · 反转片: 只有一次"材料校准" (标准冲洗、标准光源下让中灰中性, 用来抵消数据误差),
     之后任何偏离标准的条件 (交叉冲洗、错误光源、推冲) 造成的偏色都保留
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 
 import numpy as np
@@ -34,6 +34,19 @@ HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14
+# T05 fixed O1 offsets: T04 TRAIN (11 frames) medians; t04_result.json at
+# 663232d16005e2ba44ebe47310509217c52332f1, fixed by spec commit 324ac5d.
+# These are existing printer-light units, not adjustable calibration factors.
+LAB_BALANCE_DELTA_K = -0.11437142396955352
+LAB_BALANCE_DELTA_R = -0.12100152025600766
+LAB_BALANCE_DELTA_B = -0.008793146365340334
+
+
+def _lab_balance(timing):
+    """Add the fixed O1 printer-light offsets, preserving all other fields."""
+    off, r = timing.M if timing.M is not None else (np.zeros(3), np.ones(3))
+    return replace(timing, K=timing.K + LAB_BALANCE_DELTA_K,
+                   M=(off + np.array([LAB_BALANCE_DELTA_R, 0.0, LAB_BALANCE_DELTA_B]), r))
 
 
 @dataclass
@@ -61,6 +74,7 @@ class Params:
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
+    #   "lab_balance"    T04训练集中位数的固定印放光号偏移，仅逐帧扫描定光 (可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -454,6 +468,8 @@ class Engine:
             # 数码冲印机按整张底片的平均密度 (密度直方图) 定亮度; 夜景底片大部分接近片基, 平均密度很低
             # → 冲印店提亮, 但有上限。按"正常场景印成正常"标定, 正常场景的平均密度比灰卡低 LATD_NORMAL。
             sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
+            if "lab_balance" in self.p.corrections:
+                sc.timing = _lab_balance(sc.timing)
         if trace is not None:
             trace["Dn"] = Dn.reshape(*shape, 3).copy()
             trace["timing"] = sc.timing
