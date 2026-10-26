@@ -25,7 +25,7 @@ def expected_delta():
     return np.median(np.array([fr[s]["x"] for s in TRAIN]), 0)
 
 
-def code_delta():
+def code_delta(gen):
     """在被测代码中读出纠正量: 同一合成画面分别用 next 与候选代际做逐帧自动定光, 取 PrintTiming 的差 (K, 红, 蓝);
     同时返回其余量的最大变化 (三通道 K 的不一致、绿通道偏移、r、s、x_knee、x_white; 必须 < 1e-12)。"""
     from filmlab import generation
@@ -33,8 +33,8 @@ def code_delta():
     from filmlab.recipes import recipe
     rgb = np.random.default_rng(0).uniform(0.02, 0.6, (48, 64, 3))
     ts = []
-    for gen in ("next", os.environ["GEN"]):
-        generation.use(gen)
+    for g in ("next", gen):
+        generation.use(g)
         eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "grain": 0}))
         eng.scan(eng.develop_negative(rgb))
         ts.append(eng.scanner.timing)
@@ -53,8 +53,7 @@ def evaluate(gen):
     with mp.get_context("spawn").Pool(int(os.environ.get("NPROC", "3")), maxtasksperchild=1) as p:
         sc = dict(p.map(accept_t03.scene_job, [(gen, s) for s in SCENES]))
         gray = p.apply(accept_t03.gray_job, (gen,))
-        os.environ["GEN"] = gen
-        delta, other = p.apply(code_delta)
+        delta, other = p.apply(code_delta, (gen,))
     return {"generation": gen, "scenes": sc, "gray_chroma": gray, "code_delta": delta, "code_other_change": other}
 
 
