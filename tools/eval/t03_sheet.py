@@ -1,6 +1,6 @@
 """T03 目视对照: 完整画面 (真实 | next | next_oblique) 与光源最密集处的 3 倍局部, 对齐到真实扫描并标全图 ΔE00 中位。
 
-配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库)。
+配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库), 对比的代际由 GENS 指定 (逗号分隔, 默认 next,next_oblique)。
 用法: FILMLAB_DATA=… [REPO=…] python3 t03_sheet.py 输出目录 场景…
 """
 import os, sys, zlib, warnings
@@ -9,7 +9,7 @@ import numpy as np
 warnings.filterwarnings("ignore")
 REPO = Path(os.environ.get("REPO", Path(__file__).resolve().parents[2]))
 sys.path[:0] = [str(Path(__file__).resolve().parent), str(REPO)]
-GENS = ("next", "next_oblique")
+GENS = tuple(os.environ.get("GENS", "next,next_oblique").split(","))
 
 
 def render(args):
