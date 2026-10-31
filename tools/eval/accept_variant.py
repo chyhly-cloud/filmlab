@@ -9,6 +9,8 @@
              film_metering 倍数的中位数 (log10 = FIXED_LOG_SCALE, 由 tools/eval 的测光诊断在验收方事先算出, 不按 ΔE 选)
   no_satmat  输出调整不用 SATURATION_MATRIX (他店 SillyStill 拟合的经验矩阵, 实为降饱和), 保留 LAB_TINT
   plain      不做输出调整 (物理参考输出: 不用 SATURATION_MATRIX, 也不用 LAB_TINT)
+  lab_colour 冲印店颜色处理的实测模型 (T07): 固定光号 (standard) + 逐帧颜色偏移 off = a − k·(底片整帧平均密度 − 档案中灰),
+             R、B 各一组 (a, k), 取自 t07_result.json 训练集回归 (主估计量 mean), 照抄不调; 亮度不逐帧调整
   多个变体用逗号组合, 如 fixed_exposure,no_satmat
 
 用法: FILMLAB_DATA=… python3 accept_variant.py 变体 输出.json
@@ -20,7 +22,9 @@ HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(HERE.parents[1])]
 from accept_calibration import TRAIN, HOLDOUT
 
-VARIANTS = ("no_slope", "fixed_exposure", "no_satmat", "plain")
+VARIANTS = ("no_slope", "fixed_exposure", "no_satmat", "plain", "lab_colour")
+# T07 训练集回归 (t07_result.json summary.mean.train_fit), 照抄
+LAB_COLOUR = {"R": (-0.02300027899845071, 0.6458938636987954), "B": (0.007245716407750681, 0.3859439484936917)}
 FIXED_LOG_SCALE = 0.6129018861240094
 
 
@@ -35,6 +39,32 @@ def install(variant):
     elif variant == "plain":
         from filmlab import scanner
         scanner.Scanner._condition = lambda self, rgb: np.clip(rgb, 0.0, None)
+    elif variant == "lab_colour":
+        from dataclasses import replace
+        from filmlab import engine, negative
+        i0, m0 = engine.Engine.__init__, negative.Negative.measure
+
+        def init(self, p, *a, **k):
+            i0(self, replace(p, timing="standard"), *a, **k)
+            sc = getattr(self, "scanner", None)
+            if sc is not None and not sc.mono:
+                sc._t07_gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
+                sc._t07_base = sc.timing
+
+        def measure(self, instrument, *a, **k):
+            r = m0(self, instrument, *a, **k)
+            sc = getattr(instrument, "__self__", None)
+            if getattr(sc, "_t07_base", None) is not None and r.shape[-1] == 3:
+                D = r.reshape(-1, 3)
+                v = D[np.all(np.isfinite(D), -1)].mean(0) - sc._t07_gray
+                t0 = sc._t07_base
+                off0, r0 = t0.M if t0.M is not None else (np.zeros(3), np.ones(3))
+                aR, kR = LAB_COLOUR["R"]; aB, kB = LAB_COLOUR["B"]
+                d = np.array([aR - kR * (v[0] - v[1]), 0.0, aB - kB * (v[2] - v[1])])
+                sc.timing = replace(t0, M=(np.asarray(off0) + d, r0))
+            return r
+        engine.Engine.__init__ = init
+        negative.Negative.measure = measure
     elif variant == "no_slope":
         from filmlab import scanner
         b0 = scanner.Scanner.balance_frame
