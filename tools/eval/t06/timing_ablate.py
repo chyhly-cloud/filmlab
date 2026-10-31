@@ -1,6 +1,6 @@
 """诊断: 逐帧定光 (frame) 的哪一部分压缩了光源偏色。对 balance_frame 得到的 PrintTiming 逐项替换, 测区域 L a b。
 变体: frame 原样 / 斜率 r=1 / 去掉高光肩部 / 亮度 K 加上 O1 实测的 x_K / 三者都改 / standard 定光。"""
-import json, sys, zlib, warnings
+import json, os, sys, zlib, warnings
 import numpy as np
 from dataclasses import replace
 warnings.filterwarnings("ignore")
@@ -10,6 +10,9 @@ XK = {s: v["x"][0] for s, v in json.load(open(str(Path(__file__).resolve().paren
 
 def job(args):
     sid, var = args
+    if os.environ.get("BASE"):                   # 基础变体 (accept_variant.py), 如 fixed_exposure,plain
+        import accept_variant
+        accept_variant.install(os.environ["BASE"])
     import colour, rawpy
     import oracle_timing as ot, pair_compare as pc
     from scipy.ndimage import zoom
@@ -35,7 +38,8 @@ def job(args):
     rawp, _, bias = ot.sources(sid)
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
-    m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
+    from filmlab import rawio as _rio
+    m, _ = _rio.film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "standard" if var == "standard" else "frame",
                            "roll": None, "frame": seed % 36, "grain": 0}))
     out = np.clip(eng.render(m), 0, None)
@@ -54,7 +58,7 @@ if __name__ == "__main__":
     import multiprocessing as mp
     tr = json.load(open(sys.argv[1]))
     scenes = sys.argv[2:]
-    jobs = [(s, v) for s in scenes for v in ("frame", "r1", "noknee", "K", "all", "standard")]
+    jobs = [(s, v) for s in scenes for v in os.environ.get("VARS", "frame,r1,noknee,K,all,standard").split(",")]
     with mp.get_context("spawn").Pool(3, maxtasksperchild=1) as p:
         for sid, var, lab in p.imap(job, jobs):
             rl = tr[sid]["real_Lab"]
