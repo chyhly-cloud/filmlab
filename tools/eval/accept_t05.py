@@ -67,11 +67,11 @@ def verdict(res, base):
     mh = float(np.mean([df[s] for s in HOLDOUT_EPFL]))
     if mh > -0.5:
         ok = False; msg.append(f"EPFL 留出全图平均变化 {mh:+.3f} (需 ≤ −0.5)")
-    groups = {g: float(np.mean([df[s] for s in HOLDOUT if HOLDOUT[s] == g])) for g in set(HOLDOUT.values())}
+    groups = {g: float(np.mean([df[s] for s in HOLDOUT_EPFL if HOLDOUT_EPFL[s] == g])) for g in set(HOLDOUT_EPFL.values())}
     for g, v in groups.items():
         if v > 0.5:
             ok = False; msg.append(f"留出分组 {g} 变差 {v:+.2f}")
-    for s in HOLDOUT:
+    for s in HOLDOUT_EPFL:                      # 咖啡店 (他店) 按规格只报告, 不判定
         if df[s] > 1.5:
             ok = False; msg.append(f"留出场景 {s} 变差 {df[s]:+.2f}")
     dn = [S[s]["near"] - B[s]["near"] for s in HOLDOUT_EPFL if np.isfinite(S[s]["near"]) and np.isfinite(B[s]["near"])]
@@ -81,7 +81,7 @@ def verdict(res, base):
     if res["gray_chroma"] >= 0.5:
         ok = False; msg.append(f"灰卡彩度 {res['gray_chroma']:.2f}")
     report = {"holdout_epfl_full_change": mh, "holdout_groups": groups, "holdout_near_change": mn,
-              "holdout_scenes": {s: round(df[s], 3) for s in HOLDOUT},
+              "holdout_scenes": {s: round(df[s], 3) for s in HOLDOUT}, "cafe_full_change_report_only": round(df["cafe"], 3),
               "train_full_change_in_sample": float(np.mean([df[s] for s in TRAIN])), "gray_chroma": res["gray_chroma"]}
     return ok, msg, report
 
