@@ -15,10 +15,29 @@ warnings.filterwarnings("ignore")
 REPO = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(REPO / "tools/eval"), str(REPO)]
 BINS = np.array([0, 25, 50, 100, 150, 200, 300, 400, 500, 700, 1000, 1500])
+W_ABOVE = 2.0 / 3.0  # 按层深度斜程衰减: 红层上方散射的比例 (运行时由 scatter_above_red 计算)
 HALF = 80          # 局部窗口半宽 (真实扫描 1600 像素缩略图, 约 22.5 µm / 像素)
 
 
-def oblique_patch(D):
+def scatter_above_red(stock, v):
+    """红感层波段内, 散射发生在红感层之上 (蓝层、绿层) 的比例 (按 film.emulsion_stack 的同一吸收与散射设定,
+    红层感光度加权; 计入光向下穿过各层时的衰减)。用于"按层深度"的斜程衰减: 上方散射的光整层斜穿红层。"""
+    from filmlab import film
+    from filmlab.film import WAVELENGTHS
+    S = 10.0 ** stock.log_sensitivity
+    A = np.asarray(v.layer_absorbance)[None, :] * S / S.max(0)
+    Ay = v.yellow_filter / (1.0 + np.exp((WAVELENGTHS - 505.0) / 9.0))
+    turb = 0.15 * (550.0 / WAVELENGTHS) ** 3.0
+    aR, aG, aB = A[:, 0] + turb, A[:, 1] + turb, A[:, 2] + turb
+    t = lambda d: 10.0 ** -d
+    sc = lambda a: (1 - t(a)) * turb / np.maximum(a, 1e-9)          # 该层被散射 (而非吸收) 的比例
+    above = sc(aB) + t(aB + Ay) * sc(aG)
+    inside = t(aB + Ay + aG) * sc(aR)
+    w = S[:, 0]
+    return float((above * w).sum() / ((above + inside) * w).sum())
+
+
+def oblique_patch(D, layered=False):
     """实验: 光晕核加入下行斜程衰减 10^(−D·(1/cosθ − 1)) (D = 斜穿的乳剂密度; 垂直方向的衰减已在 halation_response 里)。
     "固定深度"近似: 光在乳剂上部散射后整层斜穿; 与 T03 采用的均匀深度平均不同。各层同一 D (G/B 光晕本来很小)。
     不再归一 (吸收即损失), 栅格按衰减后的解析总量校正; 多次反射外环 (base_um×n) 同样乘这一衰减。"""
@@ -30,7 +49,14 @@ def oblique_patch(D):
         r = 2.0 * base_um * np.tan(th)
         ang = np.sin(th) * np.cos(th) ** forward
         ang /= (ang * np.gradient(th)).sum()
-        w = film._fresnel_unpolarized(th, n_base) * ang * np.gradient(th) * 10.0 ** (-D * (1.0 / np.cos(th) - 1.0))
+        u = 1.0 / np.cos(th) - 1.0
+        fixed = 10.0 ** (-D * u)
+        if layered:
+            uni = np.where(u > 1e-9, (1.0 - 10.0 ** (-D * u)) / np.maximum(D * u * np.log(10.0), 1e-12), 1.0)
+            att = W_ABOVE * fixed + (1.0 - W_ABOVE) * uni
+        else:
+            att = fixed
+        w = film._fresnel_unpolarized(th, n_base) * ang * np.gradient(th) * att
         n = int(np.ceil(r_max_um / px_um))
         yy, xx = np.mgrid[-n:n + 1, -n:n + 1] * px_um
         rr = np.hypot(yy, xx)
@@ -61,7 +87,14 @@ def halo_diag_patch(scale=None, forward=None):
 def job(args):
     out, sid = args
     if os.environ.get("HALO_OBLIQUE_D"):
-        oblique_patch(float(os.environ["HALO_OBLIQUE_D"]))
+        layered = os.environ.get("HALO_OBLIQUE_MODE") == "layered"
+        if layered:
+            global W_ABOVE
+            from filmlab import generation, variation
+            from filmlab.materials import emulsion
+            generation.use(os.environ.get("GENERATION", "next"))
+            W_ABOVE = scatter_above_red(emulsion("kodak_vision3_500t").stock, variation.sample(None, 0, None))
+        oblique_patch(float(os.environ["HALO_OBLIQUE_D"]), layered)
     if os.environ.get("HALO_SCALE") or os.environ.get("HALO_FORWARD"):
         halo_diag_patch(float(os.environ["HALO_SCALE"]) if os.environ.get("HALO_SCALE") else None,
                         float(os.environ["HALO_FORWARD"]) if os.environ.get("HALO_FORWARD") else None)
