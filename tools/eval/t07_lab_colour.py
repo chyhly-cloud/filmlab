@@ -47,6 +47,10 @@ def job(sid):
     br = (Y >= lo) & (Y <= hi) & ok_d
     cast = {"mean": rel(Dn[ok_d].mean(0)), "latd": rel(-np.log10(np.mean(10.0 ** -Dn[ok_d], 0))),
             "bright": rel(np.median(Dn[br], 0))}
+    # 亮度水平 (绿通道相对档案中灰, 密度): 冲印店逐帧亮度调整的横轴 (T08)
+    level = {"mean": float(Dn[ok_d].mean(0)[1] - gray[1]),
+             "latd": float(-np.log10(np.mean(10.0 ** -Dn[ok_d][:, 1])) - gray[1]),
+             "bright": float(np.median(Dn[br][:, 1]) - gray[1])}
     tf = ProjectiveTransform(Hm)
     dw = warp(Dn, tf.inverse, output_shape=real.shape[:2], order=1, cval=np.nan)
     ok = np.all(np.isfinite(dw), -1)
@@ -59,7 +63,7 @@ def job(sid):
         return sc.to_rgb(dc)
     _, x = lt.oracle_fit(render, t0, dc, R, keep, 1)
     sc.timing = t0
-    return sid, {"x": [float(v) for v in x], "cast": cast}
+    return sid, {"x": [float(v) for v in x], "cast": cast, "level": level}
 
 
 def regress(res, S, est):
