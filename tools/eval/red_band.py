@@ -19,11 +19,13 @@ HALF = 80          # 局部窗口半宽 (真实扫描 1600 像素缩略图, 约 
 
 
 def oblique_patch(D):
-    """实验: 光晕核加入下行斜程衰减 10^(−D·(1/cosθ − 1)) (D = 斜穿的乳剂密度; 垂直方向的衰减已在 halation_response 里)。"""
+    """实验: 光晕核加入下行斜程衰减 10^(−D·(1/cosθ − 1)) (D = 斜穿的乳剂密度; 垂直方向的衰减已在 halation_response 里)。
+    "固定深度"近似: 光在乳剂上部散射后整层斜穿; 与 T03 采用的均匀深度平均不同。各层同一 D (G/B 光晕本来很小)。
+    不再归一 (吸收即损失), 栅格按衰减后的解析总量校正; 多次反射外环 (base_um×n) 同样乘这一衰减。"""
     from filmlab import film
     k0 = film.halation_kernel
 
-    def kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0):
+    def kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, **_):
         th = np.linspace(1e-4, np.radians(89.5), 4000)
         r = 2.0 * base_um * np.tan(th)
         ang = np.sin(th) * np.cos(th) ** forward
@@ -39,10 +41,30 @@ def oblique_patch(D):
     film.halation_kernel = kernel
 
 
+def halo_diag_patch(scale=None, forward=None):
+    """诊断 (不是候选): HALO_SCALE 把光晕响应整体乘以常数 (画面与定光中灰一致, 因为两者都经 halation_response);
+    HALO_FORWARD 改光晕核的角分布指数 cos^m (Variation.forward)。"""
+    from dataclasses import replace
+    from filmlab import film, variation
+    if scale is not None:
+        r0 = film.halation_response
+
+        def resp(*a, **k):
+            f = r0(*a, **k)
+            return lambda rgb: scale * f(rgb)
+        film.halation_response = resp
+    if forward is not None:
+        s0 = variation.sample
+        variation.sample = lambda *a, **k: replace(s0(*a, **k), forward=forward)
+
+
 def job(args):
     out, sid = args
     if os.environ.get("HALO_OBLIQUE_D"):
         oblique_patch(float(os.environ["HALO_OBLIQUE_D"]))
+    if os.environ.get("HALO_SCALE") or os.environ.get("HALO_FORWARD"):
+        halo_diag_patch(float(os.environ["HALO_SCALE"]) if os.environ.get("HALO_SCALE") else None,
+                        float(os.environ["HALO_FORWARD"]) if os.environ.get("HALO_FORWARD") else None)
     import colour, rawpy
     import oracle_timing as ot, pair_compare as pc
     from scipy.ndimage import distance_transform_edt, zoom, uniform_filter
