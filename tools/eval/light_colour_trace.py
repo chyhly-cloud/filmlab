@@ -1,6 +1,6 @@
 """T06 光源颜色逐级追踪: 同一区域 (画面大面积亮区, 灯箱里即白墙) 的颜色在每一级是多少, 光源之间的差在哪一级塌缩。
 
-配置与 T03 / T04 / T05 验收相同 (next, roll=None, grain=0, 实际自动定光)。区域: 输入亮度 40–90 百分位、非截断的像素
+配置与 T03 / T04 / T05 验收相同 (next, roll=None, grain=0, 实际自动定光)。区域: 输入亮度 40–90 百分位、非截断的像素 (MASK=blue 时改为相机 B/G 最高的 3%, 即饱和蓝色)
 (在模拟几何里定义, 再按固定单应性变换到真实扫描几何)。各级 (全部为区域中位数):
   cam   相机线性 RGB (RAW 日光白平衡, 测光后): log10(R/G), log10(B/G)。日光白 = 0; 钨丝灯 R/G > 0、B/G < 0。
   expo  三层乳剂直接曝光 H (散射与光晕之前): log10(H/H_G) − 同一胶片在设计光源 (3200K) 下中灰的 log10(H/H_G)。
@@ -9,7 +9,7 @@
   sim / real  成片与真实扫描的 CIELAB a*, b*。
 另记录模型对该帧估计的光源类别份额 (light_mix)。
 
-用法: FILMLAB_DATA=… python3 light_colour_trace.py 输出.json [场景…]   (默认 21 个验收场景)
+用法: FILMLAB_DATA=… [VARIANT=…] [MASK=blue] python3 light_colour_trace.py 输出.json [场景…]   (默认 21 个验收场景)
 """
 import json, os, sys, zlib, warnings
 from pathlib import Path
@@ -20,6 +20,9 @@ sys.path[:0] = [str(Path(__file__).resolve().parent), str(REPO)]
 
 
 def job(sid):
+    if os.environ.get("VARIANT"):                # 结构变体 (accept_variant.py), 如 fixed_exposure,plain
+        import accept_variant
+        accept_variant.install(os.environ["VARIANT"])
     import colour, rawpy
     import oracle_timing as ot, pair_compare as pc
     from scipy.ndimage import zoom
@@ -34,7 +37,7 @@ def job(sid):
     rawp, _, bias = ot.sources(sid)
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
-    m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
+    m, _ = rawio.film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": seed % 36, "grain": 0}))
     tn, ts = {}, {}
     neg = eng.develop_negative(m, trace=tn)
@@ -49,8 +52,14 @@ def job(sid):
         sat = rawio.sensor_saturation(r)
     clip = np.zeros(Y.shape, bool) if sat is None else \
         zoom(sat.astype(float), (Y.shape[0] / sat.shape[0], Y.shape[1] / sat.shape[1]), order=1)[:Y.shape[0], :Y.shape[1]] > 0.05
-    lo, hi = np.percentile(Y[~clip], [40, 90])
-    mask = (Y >= lo) & (Y <= hi) & ~clip
+    if os.environ.get("MASK") == "blue":
+        # 饱和蓝色区域: 非截断、亮度 > 20 百分位的像素中, 相机 log10(B/G) 最高的 3%
+        ok = ~clip & (Y > np.percentile(Y[~clip], 20))
+        bg = np.log10(np.maximum(m[..., 2], 1e-9) / np.maximum(m[..., 1], 1e-9))
+        mask = ok & (bg >= np.percentile(bg[ok], 97))
+    else:
+        lo, hi = np.percentile(Y[~clip], [40, 90])
+        mask = (Y >= lo) & (Y <= hi) & ~clip
     med = lambda a: np.median(a[mask], 0)
     lg = lambda v: [float(np.log10(v[0] / v[1])), float(np.log10(v[2] / v[1]))]
     cam = lg(med(m))

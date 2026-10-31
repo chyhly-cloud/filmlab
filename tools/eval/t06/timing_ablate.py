@@ -4,7 +4,7 @@ import json, sys, zlib, warnings
 import numpy as np
 from dataclasses import replace
 warnings.filterwarnings("ignore")
-from pathlib import Path; sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[2])]
+from pathlib import Path; sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[3])]
 XK = {s: v["x"][0] for s, v in json.load(open(str(Path(__file__).resolve().parents[1] / "t04_result.json")))["frames"].items()}
 
 

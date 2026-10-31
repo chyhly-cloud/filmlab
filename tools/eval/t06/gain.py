@@ -2,7 +2,7 @@
 import json, os, sys, zlib, warnings
 import numpy as np
 warnings.filterwarnings("ignore")
-from pathlib import Path; sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[2])]
+from pathlib import Path; sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[3])]
 
 
 def job(args):

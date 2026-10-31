@@ -7,6 +7,9 @@
   no_slope   逐帧定光不做各通道斜率灰平衡 (balance_frame 的 slope_limit = 0; 偏移按 r = 1 一致地计算)
   fixed_exposure  胶片与数码拿到同一份曝光: 胶片曝光 = RAW 线性 × 全程常数, 不逐帧测光。常数 = 训练集 11 帧
              film_metering 倍数的中位数 (log10 = FIXED_LOG_SCALE, 由 tools/eval 的测光诊断在验收方事先算出, 不按 ΔE 选)
+  no_satmat  输出调整不用 SATURATION_MATRIX (他店 SillyStill 拟合的经验矩阵, 实为降饱和), 保留 LAB_TINT
+  plain      不做输出调整 (物理参考输出: 不用 SATURATION_MATRIX, 也不用 LAB_TINT)
+  多个变体用逗号组合, 如 fixed_exposure,no_satmat
 
 用法: FILMLAB_DATA=… python3 accept_variant.py 变体 输出.json
 """
@@ -17,12 +20,22 @@ HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(HERE.parents[1])]
 from accept_calibration import TRAIN, HOLDOUT
 
-VARIANTS = ("no_slope", "fixed_exposure")
+VARIANTS = ("no_slope", "fixed_exposure", "no_satmat", "plain")
 FIXED_LOG_SCALE = 0.6129018861240094
 
 
 def install(variant):
-    if variant == "no_slope":
+    if "," in variant:
+        for v in variant.split(","):
+            install(v)
+        return
+    if variant == "no_satmat":
+        from filmlab import scanner
+        scanner.SATURATION_MATRIX = np.eye(3)
+    elif variant == "plain":
+        from filmlab import scanner
+        scanner.Scanner._condition = lambda self, rgb: np.clip(rgb, 0.0, None)
+    elif variant == "no_slope":
         from filmlab import scanner
         b0 = scanner.Scanner.balance_frame
 

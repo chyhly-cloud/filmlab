@@ -1,6 +1,6 @@
 """T03 目视对照: 完整画面 (真实 | next | next_oblique) 与光源最密集处的 3 倍局部, 对齐到真实扫描并标全图 ΔE00 中位。
 
-配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库), 对比的代际由 GENS 指定 (逗号分隔, 默认 next,next_oblique)。
+配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库), 对比的代际由 GENS 指定 (逗号分隔, 默认 next,next_oblique; 可写 代际+变体, 如 next+fixed_exposure)。
 用法: FILMLAB_DATA=… [REPO=…] python3 t03_sheet.py 输出目录 场景…
 """
 import os, sys, zlib, warnings
@@ -9,11 +9,16 @@ import numpy as np
 warnings.filterwarnings("ignore")
 REPO = Path(os.environ.get("REPO", Path(__file__).resolve().parents[2]))
 sys.path[:0] = [str(Path(__file__).resolve().parent), str(REPO)]
-GENS = tuple(os.environ.get("GENS", "next,next_oblique").split(","))
+_G = os.environ.get("GENS", "next,next_oblique")
+GENS = tuple(_G.split(";" if ";" in _G else ","))     # 组合变体含逗号时用分号分隔代际
 
 
 def render(args):
     gen, sid = args
+    gen, *variant = gen.split("+")              # "代际+变体": 变体见 accept_variant.py
+    if variant:
+        import accept_variant
+        accept_variant.install(variant[0])
     from filmlab import generation
     generation.use(gen)
     import oracle_timing as ot, pair_compare as pc
