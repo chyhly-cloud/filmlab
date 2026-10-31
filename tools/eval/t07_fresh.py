@@ -34,9 +34,16 @@ def k_job(args):
 
 if __name__ == "__main__":
     import multiprocessing as mp, oracle_timing as ot
+    unaligned = []
+    for s in JUDGED + REPORT:         # 先在主进程里建好配准缓存, 避免并行写同一文件; 失败的帧记为无法评估 (不替换)
+        try:
+            ot.geometry(s)
+        except RuntimeError as e:
+            print("无法评估 (配准失败, 发生在任何 ΔE 计算之前):", e)
+            unaligned.append(s)
+    JUDGED[:] = [s for s in JUDGED if s not in unaligned]
+    REPORT[:] = [s for s in REPORT if s not in unaligned]
     S = JUDGED + REPORT
-    for s in S:                       # 先在主进程里建好配准缓存, 避免并行写同一文件
-        ot.geometry(s)
     jobs = [(v, s) for s in S for v in ("none", CAND)]
     with mp.get_context("spawn").Pool(int(os.environ.get("NPROC", "3")), maxtasksperchild=1) as p:
         full = p.map(full_job, jobs)
@@ -55,4 +62,4 @@ if __name__ == "__main__":
     ok = np.mean(dj) <= -0.5 and max(dj) <= 1.5
     print(f"\n判定帧平均变化 {np.mean(dj):+.3f}, 最大变差 {max(dj):+.2f} → {'通过' if ok else '不通过'}")
     print(f"只看颜色 (报告) 判定帧平均变化 {np.mean([res[s][CAND]['k'] - res[s]['none']['k'] for s in JUDGED]):+.3f}")
-    json.dump({"results": res, "pass": bool(ok)}, open(sys.argv[1], "w"), indent=1)
+    json.dump({"results": res, "pass": bool(ok), "unaligned": unaligned}, open(sys.argv[1], "w"), indent=1)
