@@ -1,6 +1,6 @@
 """T06 光源颜色逐级追踪: 同一区域 (画面大面积亮区, 灯箱里即白墙) 的颜色在每一级是多少, 光源之间的差在哪一级塌缩。
 
-配置与 T03 / T04 / T05 验收相同 (next, roll=None, grain=0, 实际自动定光)。区域: 输入亮度 40–90 百分位、非截断的像素 (MASK=blue 时改为相机 B/G 最高的 3%, 即饱和蓝色)
+配置与 T03 / T04 / T05 验收相同 (next, roll=None, grain=0, 实际自动定光)。区域: 输入亮度 40–90 百分位、非截断的像素 (MASK=blue 时改为相机 B/G 最高的 3%, 即饱和蓝色; MASK=bright 时为亮度 97–99.7 百分位的非截断亮区)
 (在模拟几何里定义, 再按固定单应性变换到真实扫描几何)。各级 (全部为区域中位数):
   cam   相机线性 RGB (RAW 日光白平衡, 测光后): log10(R/G), log10(B/G)。日光白 = 0; 钨丝灯 R/G > 0、B/G < 0。
   expo  三层乳剂直接曝光 H (散射与光晕之前): log10(H/H_G) − 同一胶片在设计光源 (3200K) 下中灰的 log10(H/H_G)。
@@ -52,7 +52,11 @@ def job(sid):
         sat = rawio.sensor_saturation(r)
     clip = np.zeros(Y.shape, bool) if sat is None else \
         zoom(sat.astype(float), (Y.shape[0] / sat.shape[0], Y.shape[1] / sat.shape[1]), order=1)[:Y.shape[0], :Y.shape[1]] > 0.05
-    if os.environ.get("MASK") == "blue":
+    if os.environ.get("MASK") == "bright":
+        # 灯照亮的最亮区域 (非截断): 亮度 97–99.7 百分位
+        lo, hi = np.percentile(Y[~clip], [97, 99.7])
+        mask = (Y >= lo) & (Y <= hi) & ~clip
+    elif os.environ.get("MASK") == "blue":
         # 饱和蓝色区域: 非截断、亮度 > 20 百分位的像素中, 相机 log10(B/G) 最高的 3%
         ok = ~clip & (Y > np.percentile(Y[~clip], 20))
         bg = np.log10(np.maximum(m[..., 2], 1e-9) / np.maximum(m[..., 1], 1e-9))
