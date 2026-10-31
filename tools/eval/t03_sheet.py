@@ -20,6 +20,9 @@ def render(args):
         import accept_variant
         accept_variant.install(variant[0])
     from filmlab import generation
+    if gen == "next_lab_layered":                # T11 候选 (在本进程注册)
+        import t11_layered
+        t11_layered.install()
     generation.use(gen)
     import oracle_timing as ot, pair_compare as pc
     from filmlab.engine import Engine, Params

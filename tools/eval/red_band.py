@@ -106,6 +106,9 @@ def job(args):
     from filmlab.engine import Engine, Params
     from filmlab.recipes import recipe
     from filmlab.rawio import film_metering
+    if os.environ.get("GENERATION") == "next_lab_layered":       # T11 候选 (在本进程注册)
+        import t11_layered
+        t11_layered.install()
     generation.use(os.environ.get("GENERATION", "next"))
     Hm, real = ot.geometry(sid)
     rawp, _, bias = ot.sources(sid)
