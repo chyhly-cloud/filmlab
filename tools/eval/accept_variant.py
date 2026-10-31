@@ -10,7 +10,8 @@
   no_satmat  输出调整不用 SATURATION_MATRIX (他店 SillyStill 拟合的经验矩阵, 实为降饱和), 保留 LAB_TINT
   plain      不做输出调整 (物理参考输出: 不用 SATURATION_MATRIX, 也不用 LAB_TINT)
   lab_colour 冲印店颜色处理的实测模型 (T07): 固定光号 (standard) + 逐帧颜色偏移 off = a − k·(底片整帧平均密度 − 档案中灰),
-             R、B 各一组 (a, k), 取自 t07_result.json 训练集回归 (主估计量 mean), 照抄不调; 亮度不逐帧调整
+             R、B 各一组 (a, k), 取自 t07_result.json 训练集回归 (主估计量 mean), 照抄不调; 亮度不逐帧调整;
+             只替换逐帧自动定光 (timing="frame"), 物理参考配方不受影响
   多个变体用逗号组合, 如 fixed_exposure,no_satmat
 
 用法: FILMLAB_DATA=… python3 accept_variant.py 变体 输出.json
@@ -45,9 +46,11 @@ def install(variant):
         i0, m0 = engine.Engine.__init__, negative.Negative.measure
 
         def init(self, p, *a, **k):
-            i0(self, replace(p, timing="standard"), *a, **k)
+            # 只替换逐帧自动定光 (冲印店的操作); 物理参考等其他定光方式不受影响 (与 T05 规格相同)
+            frame = p.timing == "frame"
+            i0(self, replace(p, timing="standard") if frame else p, *a, **k)
             sc = getattr(self, "scanner", None)
-            if sc is not None and not sc.mono:
+            if frame and sc is not None and not sc.mono:
                 sc._t07_gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 sc._t07_base = sc.timing
 
