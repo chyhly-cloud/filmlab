@@ -13,7 +13,7 @@
   · 反转片: 只有一次"材料校准" (标准冲洗、标准光源下让中灰中性, 用来抵消数据误差),
     之后任何偏离标准的条件 (交叉冲洗、错误光源、推冲) 造成的偏色都保留
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 
 import numpy as np
@@ -34,6 +34,12 @@ HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
 LATD_NORMAL = -0.14
+# 冲印店颜色处理的实测 (T07, docs/tasks/T07_LAB_COLOUR.md): 以固定光号 (800T 设计光源中灰印成中性) 为参照,
+# 逐帧颜色偏移 = a − k·(底片整帧平均密度 − 档案中灰) (R−G、B−G, 密度)。EPFL 这家 Frontier 冲印店、
+# 训练集 11 帧的回归 (tools/eval/t07_result.json, 提交 afbd990); 逐帧留一时 kR 0.62–0.68、kB 0.41–0.67。
+# 只代表这家冲印店, 未经独立数据验证; 仅用于可选代际 next_lab ("lab_measured")。
+LAB_MEASURED_COLOUR = {"R": (-0.02300027899845071, 0.6458938636987954),
+                       "B": (0.007245716407750681, 0.3859439484936917)}
 
 
 @dataclass
@@ -61,6 +67,8 @@ class Params:
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
+    #   "lab_measured"   逐帧定光 (timing="frame") 改为实测的冲印店颜色处理 (LAB_MEASURED_COLOUR, 亮度不逐帧调整),
+    #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -183,16 +191,23 @@ class Engine:
         self.scanner = None
         if self.polarity == "negative" and p.output == "scan":
             from .scanner import Scanner
+            lab_measured = "lab_measured" in p.corrections and p.timing == "frame"
             self.scanner = Scanner(self, p.scanner, p.scan_profile,
                                    self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
-                                   self.v.scan_stretch, p.output_conditioning, p.scan_gray_balance,
-                                   paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder)
+                                   self.v.scan_stretch, None if lab_measured else p.output_conditioning,
+                                   p.scan_gray_balance, paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder)
             if p.scan_neutral == "film" and not self.scanner.mono:
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 self.scanner.conversion.gray0 = g - g[1]
             if p.timing != "frame":
                 st = self._gray_state(actual_light=(p.timing != "standard"))
                 self.scanner.balance(self.scanner.normalized_density(self._transmittance(st))[0], p.mid_gray)
+            self._lab_base = None
+            if lab_measured and not self.scanner.mono:
+                # 固定光号作参照, 逐帧只加实测的颜色偏移 (scan)
+                g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
+                self.scanner.balance(g, p.mid_gray)
+                self._lab_gray, self._lab_base = g, self.scanner.timing
 
     # ---- S0/S1 ----
     def _expose_lin(self, rgb, M, compensation=True):
@@ -447,7 +462,15 @@ class Engine:
         # S4a + S4b: 光学测量 → 去片基 / 印放密度 / 档案 (按块, 直接积分到扫描通道)
         Dn = neg.measure(sc.normalized_density, chunk).reshape(-1, 3)
         # S4c: 定光
-        if self.p.timing == "frame":           # 按整张底片的 LATD 自动校正 (亮度校正有上限)
+        if self.p.timing == "frame" and getattr(self, "_lab_base", None) is not None:
+            # 实测的冲印店颜色处理 (LAB_MEASURED_COLOUR): 固定光号 + 按整帧平均密度的偏色给颜色偏移
+            v = Dn[np.all(np.isfinite(Dn), -1)].mean(0) - self._lab_gray
+            (aR, kR), (aB, kB) = LAB_MEASURED_COLOUR["R"], LAB_MEASURED_COLOUR["B"]
+            t0 = self._lab_base
+            off0, r0 = t0.M if t0.M is not None else (np.zeros(3), np.ones(3))
+            d = np.array([aR - kR * (v[0] - v[1]), 0.0, aB - kB * (v[2] - v[1])])
+            sc.timing = replace(t0, M=(np.asarray(off0) + d, r0))
+        elif self.p.timing == "frame":           # 按整张底片的 LATD 自动校正 (亮度校正有上限)
             # 不做逐张校正时的平衡 = 扫描仪档案的标准: 胶片在其设计光源下 (灯光片 3200K) 的中灰。
             # 冲印店不知道场景用的什么光; RAW 的日光白平衡与此无关。
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]

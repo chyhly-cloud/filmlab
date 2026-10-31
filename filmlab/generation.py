@@ -6,6 +6,8 @@
            非日光光源的线性曝光映射保白点 (linear_white)。扫描仪的经验常数 (饱和度矩阵、LAB_TINT、定光参数) 不变。
   next_k5219  实验: next + Vision3 5219 按 Kodak 原始测量重新解混 (stocks._kodak_raw_5219)
   next_halo   历史实验复现: next + 未标定光晕倍数（旧评估重复解码，原倍率证据已撤销）
+  next_lab    研究候选 (T07): next + 胶片与数码同一份曝光 + 实测的冲印店颜色处理 + 不套他店输出调整。
+              通过预设留出条件, 但留出集多次使用、无独立数据验证; 只代表 EPFL 这次拍摄与这家冲印店。不并入 next。
   next_sensor 修正候选: next + RAW 截断按传感器饱和堆积判定 (rawio.sensor_saturation), 不再把未过曝画面中最亮的 3% 当作截断
 
 用法: from filmlab import generation; generation.use("next")   (整个进程生效; 默认为 current)
@@ -28,8 +30,12 @@ GENERATIONS = {
     # 保留数值以便历史复现；不是测得的物理强度，不并入 next。
     "next_halo": ("D65", ("gray_halo", "grain_aperture", "linear_white", "halation_measured"), {}),
 }
+# T07 研究候选 (见 docs/tasks/T07_LAB_COLOUR.md): 只代表 EPFL 这次拍摄与这家冲印店, 不并入 next
+GENERATIONS["next_lab"] = ("D65", ("gray_halo", "grain_aperture", "linear_white", "lab_measured"), {})
 # RAW 截断判定 (rawio.CLIP_DETECT); 未列出的代际用历史的 channel_max
 CLIP_DETECT = {"next_sensor": "sensor"}
+# 胶片曝光的推算方式 (rawio.METERING); 未列出的代际逐帧测光
+METERING = {"next_lab": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
@@ -39,6 +45,7 @@ def use(name: str):
     wb, corr, revisions = GENERATIONS[name]
     lights.WB_REFERENCE = wb
     rawio.CLIP_DETECT = CLIP_DETECT.get(name, "channel_max")
+    rawio.METERING = METERING.get(name, "meter")
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
     stocks.load_stock.cache_clear()

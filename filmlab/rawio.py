@@ -563,6 +563,13 @@ def film_exposure(rgb, path=None, gray=0.184):
 EI_SURVEY_EV = (1.32, 1.0, 0.68, 0.68, 0.68, 0.68, 0.5, 0.32, 0.32, 0.0, 0.0, 0.0, 0.0)
 
 
+# 胶片曝光的推算方式 (由 filmlab.generation.use 设置): "meter" = 按下述测光模型逐帧推算 (默认);
+# "session" = 胶片与数码拿到同一份曝光 (RAW 线性 × 全程常数 10^SESSION_LOG_SCALE), 不逐帧测光。
+# 常数 = EPFL 这次拍摄训练集 11 帧测光倍数的中位数 (docs/tasks/T06_LIGHT_COLOUR_DIAGNOSIS.md); 只适用于该次拍摄。
+METERING = "meter"
+SESSION_LOG_SCALE = 0.6129018861240094
+
+
 def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=None, bias_ev=None):
     """胶片摄影师用胶片相机拍同一场景: 按 EI 测光, 但受相机的物理极限约束。
 
@@ -578,6 +585,8 @@ def film_metering(rgb, l_clip=None, ei=800.0, rng=None, gray=0.184, t_original=N
     随机    每张的镜头与快门在常见范围内取 (rng): N_min ∈ {1.4, 1.8, 2} (夜拍 800T 常用大光圈定焦),
             手持 t_max ∈ [1/60, 1/15] s。
     返回    胶片曝光 (中灰 = gray, 即胶片按 EI 正确曝光时中灰卡的位置) 与说明。"""
+    if METERING == "session":
+        return rgb * 10.0 ** SESSION_LOG_SCALE, "同一份曝光 (会话常数)"
     rng = np.random.default_rng(0) if rng is None else rng
     Y = np.clip(rgb @ LUMA, 0, None)
     h, w = Y.shape
