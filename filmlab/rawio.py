@@ -403,6 +403,9 @@ HIGHLIGHT_PRIOR = [
 MAX_STOPS = 8.0
 # 截断光源亮度的整体偏移 (档), load_raw(source_stops=None) 时使用。0 = 原先验。见 docs/tasks/T13_HALO_STRENGTH.md
 SOURCE_STOPS = 0.0
+# 截断区重建颜色的取样 (T16): "ring" = 外圈较宽环带里最亮的 30% (原行为);
+# "edge" = 紧邻截断边界外 1–3 像素的实测像素 —— 离灯芯最近的同一光源的光, 保证边界两侧颜色连续
+RECON_COLOUR = "ring"
 # 细长的截断区 (宽 ≤ 2 像素, 长宽比 ≥ 4): 粗糙金属 / 湿地面上的镜面反光 (铁轨、车身边缘) 或霓虹灯管。
 # 反光的亮度 ≈ 反射率 × 灯的亮度 × (灯的立体角 / 散射瓣的立体角), 被拉成一条线正说明散射瓣远大于灯,
 # 所以比灯本身暗得多; 霓虹灯管本身约 1e3 cd/m²。估计范围 (对数均匀): 1e2 – 2e3。
@@ -452,7 +455,11 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
         ring = ndimage.binary_dilation(blob, iterations=pad) & ~ndimage.binary_dilation(blob, iterations=2) \
             & (lab[y0:y1, x0:x1] == 0)
         sub = rgb[y0:y1, x0:x1]
-        if ring.sum() >= 5:
+        edge = ndimage.binary_dilation(blob, iterations=3) & ~blob & (lab[y0:y1, x0:x1] == 0)
+        if RECON_COLOUR == "edge" and edge.sum() >= 5:
+            col = np.median(rgb[y0:y1, x0:x1][edge], 0)
+            col = col / (col @ LUMA) if col @ LUMA > 0 else np.ones(3)   # 不截负值: 与边界外像素完全同色
+        elif ring.sum() >= 5:
             # 周围一圈里最亮的那部分最接近光源本身的颜色
             ry = Y[y0:y1, x0:x1][ring]
             sel = ring.copy()
@@ -460,8 +467,9 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
             col = np.median(sub[sel], 0)
         else:
             col = np.median(sub[blob], 0)
-        col = np.clip(col, 1e-6, None)
-        col = col / (col @ LUMA)
+        if not (RECON_COLOUR == "edge" and edge.sum() >= 5):
+            col = np.clip(col, 1e-6, None)
+            col = col / (col @ LUMA)
         base = np.percentile(Y[y0:y1, x0:x1][blob], 90)          # 截断亮度
         _, lum_range, stop_range = next(p for p in HIGHLIGHT_PRIOR if area / total < p[0])
         if _line_like(clip_frac[y0:y1, x0:x1] * blob > 0.25):

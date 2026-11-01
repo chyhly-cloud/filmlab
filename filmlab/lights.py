@@ -210,7 +210,7 @@ def training_reflectances(n=3000, seed=7):
     return np.vstack([R, gray])
 
 
-def linear_response(light_spec, receiver_weights, white_preserving=False):
+def linear_response(light_spec, receiver_weights, white_preserving=False, space="srgb"):
     """返回函数: 场景线性 RGB (日光白平衡) → 该光源下接收者 (乳剂各层等) 的响应。
 
     用几千条自然界典型的平滑反射光谱作训练集, 拟合 "相机 RGB → 反射率 × 光源光谱 × 接收者"
@@ -220,13 +220,28 @@ def linear_response(light_spec, receiver_weights, white_preserving=False):
     系数约束为非负 (NNLS): 任何颜色的光多一些, 各层曝光只会增加, 不会减少。不加约束时,
     钠灯这类近单色光下训练样本的相机颜色几乎共线, 最小二乘会给出正负相消的大系数,
     遇到训练范围外的像素 (镜头眩光、重建的高光、噪声) 就会外推出离谱的曝光 (例如灯芯的
-    红层曝光为 0、周围蓝层却被曝光)。"""
+    红层曝光为 0、周围蓝层却被曝光)。
+
+    space="xyz" (T16): 在 CIE XYZ 里拟合与应用。XYZ 是非负配色函数对光谱的积分, 任何真实的光都 ≥ 0,
+    乳剂感光度也非负, 所以 "非负系数" 在 XYZ 里才是物理约束 (光多 → 曝光多, 且永不为负)。
+    sRGB 的三个通道对应带负瓣的等效感光度: 钠灯这类色域外的颜色在 sRGB 里蓝通道为负,
+    乘上非负系数会给出负的蓝层曝光 (被截为 0), 而相机的原始蓝通道其实有正的信号。
+    输入先按同一白平衡矩阵换回 XYZ, 再截去噪声造成的负值。"""
     R = training_reflectances()
     rad = R * light_spec[None, :]
     rgb = camera_rgb(rad)
     scale = 1.0 / (camera_rgb(light_spec) @ np.array([0.2126, 0.7152, 0.0722]))
     target = (rad * scale) @ receiver_weights
     rgb = rgb * scale
+    if space == "srgb_bxyz":
+        # T16: 红、绿层在 sRGB 里拟合 (更准), 蓝层在 XYZ 里拟合: 蓝层感光度与 Z 配色函数同在短波,
+        # 能写成非负配色函数的非负组合; sRGB 蓝通道为负的真实颜色 (钠灯下的黄色、灯芯旁) 不再给出 0 的蓝层曝光
+        fs = linear_response(light_spec, receiver_weights, white_preserving, "srgb")
+        fx = linear_response(light_spec, receiver_weights, white_preserving, "xyz")
+        return lambda x: np.concatenate([fs(x)[..., :2], fx(x)[..., 2:]], -1)
+    if space == "xyz":
+        to_xyz = np.linalg.inv(_daylight_wb()[0]).T        # camera_rgb 的逆: 线性 sRGB → XYZ / Y_白
+        rgb = rgb @ to_xyz
     from scipy.optimize import nnls
     w = 1.0 / np.maximum(target.mean(1, keepdims=True), 1e-6)     # 相对误差
     M = np.stack([nnls(rgb * w, target[:, k] * w[:, 0])[0] for k in range(target.shape[1])], 1)
@@ -234,8 +249,11 @@ def linear_response(light_spec, receiver_weights, white_preserving=False):
         # 保白点 (Finlayson & Drew 1996): 中性反射率在该光源下的响应必须精确 (可直接积分得到);
         # 无约束的拟合在 3200K 下会让中灰的蓝层曝光偏高 0.06 log。按列缩放, 保持非负。
         wt = (light_spec * scale) @ receiver_weights
-        wp = (camera_rgb(light_spec) * scale) @ M
+        wl = camera_rgb(light_spec) * scale
+        wp = (wl @ to_xyz if space == "xyz" else wl) @ M
         M = M * (wt / np.maximum(wp, 1e-12))[None, :]
+    if space == "xyz":
+        return lambda x: np.clip(np.asarray(x) @ to_xyz, 0.0, None) @ M
     return lambda x: np.asarray(x) @ M
 
 

@@ -37,15 +37,22 @@ GENERATIONS["next_lab"] = ("D65", ("gray_halo", "grain_aperture", "linear_white"
 # T11 研究候选 (见 docs/tasks/T11_HALO_LAYERED.md)
 GENERATIONS["next_lab_halo"] = ("D65", GENERATIONS["next_lab"][1] + ("halo_oblique", "halo_layered"), {})
 # RAW 截断判定 (rawio.CLIP_DETECT); 未列出的代际用历史的 channel_max
-CLIP_DETECT = {"next_sensor": "sensor"}
+CLIP_DETECT = {"next_sensor": "sensor", "next_lab_halo_meas": "sensor"}
+# 截断高光重建方式 (rawio.HIGHLIGHT_RECON); 未列出的代际用 "prior"
+HIGHLIGHT_RECON = {"next_lab_halo_meas": "per_channel"}
 # 胶片曝光的推算方式 (rawio.METERING); 未列出的代际逐帧测光
 # T15 研究候选: 光晕链的两项第一性原理补项 (docs/tasks/T15_HALO_PHYSICS.md)
 #   next_lab_halo_ret   = next_lab_halo + 返回光斜光程吸收 (无自由参数)
 #   next_lab_halo_plate = next_lab_halo_ret + 相机压片板反射 (反射率 engine.PLATE_REFLECTANCE)
 GENERATIONS["next_lab_halo_ret"] = ("D65", GENERATIONS["next_lab_halo"][1] + ("halo_return",), {})
 GENERATIONS["next_lab_halo_plate"] = ("D65", GENERATIONS["next_lab_halo_ret"][1] + ("halo_plate",), {})
+# T16 诊断 next_lab_halo_meas = next_lab_halo_plate + 传感器饱和判定 + 逐通道重建 (未采用, 见 T16 文档)
+GENERATIONS["next_lab_halo_meas"] = GENERATIONS["next_lab_halo_plate"]
+# T16 研究候选 next_lab_halo_edge = next_lab_halo_plate + 蓝层在 XYZ 里非负映射 + 截断区颜色取紧邻边界的实测像素
+GENERATIONS["next_lab_halo_edge"] = ("D65", GENERATIONS["next_lab_halo_plate"][1] + ("blue_xyz",), {})
+RECON_COLOUR = {"next_lab_halo_edge": "edge"}
 METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
-            "next_lab_halo_plate": "session"}
+            "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
@@ -55,6 +62,8 @@ def use(name: str):
     wb, corr, revisions = GENERATIONS[name]
     lights.WB_REFERENCE = wb
     rawio.CLIP_DETECT = CLIP_DETECT.get(name, "channel_max")
+    rawio.HIGHLIGHT_RECON = HIGHLIGHT_RECON.get(name, "prior")
+    rawio.RECON_COLOUR = RECON_COLOUR.get(name, "ring")
     rawio.METERING = METERING.get(name, "meter")
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)

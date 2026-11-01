@@ -18,7 +18,7 @@ def install():
     generation.GENERATIONS[GEN] = generation.GENERATIONS["next_lab_halo"]
     generation.METERING[GEN] = generation.METERING["next_lab_halo"]
     generation.CLIP_DETECT[GEN] = "sensor"
-    rawio.HIGHLIGHT_RECON = "per_channel"
+    generation.HIGHLIGHT_RECON[GEN] = "per_channel"      # generation.use 按代际表设置 rawio.HIGHLIGHT_RECON
     generation.use(GEN)
 
 

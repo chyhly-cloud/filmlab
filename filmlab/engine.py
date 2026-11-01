@@ -30,7 +30,7 @@ PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行�
 GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
-PLATE_REFLECTANCE = 0.0    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究量, 见 docs/tasks/T15_HALO_PHYSICS.md
+PLATE_REFLECTANCE = 0.2    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究取值 (黑漆 ~0.05, 金属 ~0.5), 见 docs/tasks/T15_HALO_PHYSICS.md
 HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
@@ -71,6 +71,9 @@ class Params:
     #   "halo_layered"   (配合 halo_oblique) 斜程衰减按层深度: 红层之上散射的光整层斜穿 (T11, 无自由参数; 可选)
     #   "halo_return"    返回光按实际斜光程 1/cosθ 被各层吸收 (T15, 无自由参数; 可选)
     #   "halo_plate"     穿出片基背面的光被相机压片板反射回乳剂 (T15, 反射率 PLATE_REFLECTANCE; 可选)
+    #   "xyz_exposure"   人造光源的 RGB → 曝光映射在 XYZ 里做非负拟合 (T16 诊断, 未采用; 可选)
+    #   "blue_xyz"       人造光源下蓝层的 RGB → 曝光映射改在 XYZ 里做非负拟合 (T16, 无参数; 可选):
+    #                    sRGB 蓝通道为负的真实颜色 (钠灯下的黄、灯芯旁) 不再得到 0 蓝层曝光, 截断边界不再出现黄色硬边
     #   "lab_measured"   逐帧定光 (timing="frame") 改为实测的冲印店颜色处理 (LAB_MEASURED_COLOUR, 亮度不逐帧调整),
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
@@ -471,6 +474,10 @@ class Engine:
             spec = members[c.key][1]
             method = "spectral" if c.key == "daylight" else \
                 ("linear_wp" if "linear_white" in p.corrections else "linear")   # 见 tools/check_lights.py
+            if method != "spectral" and "xyz_exposure" in p.corrections:
+                method += "_xyz"                                                  # T16 诊断: 三层都在 XYZ 里
+            elif method != "spectral" and "blue_xyz" in p.corrections:
+                method += "_bxyz"                                                 # T16: 蓝层在 XYZ 里非负映射
             H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
             if src is not None:
                 src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,

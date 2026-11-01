@@ -31,10 +31,15 @@ def exposure_response(stock: Stock, light, scene_filter=None, method="spectral")
             linear   = 该光源下训练出的线性映射 (人造光源下更稳更准, 见 tools/check_lights.py)。"""
     from . import lights
     sens = 10.0 ** stock.log_sensitivity
-    if method == "linear_wp":
-        return lights.linear_response(_spec(light), _filt(scene_filter)[:, None] * sens, white_preserving=True)
-    fn = lights.linear_response if method == "linear" else lights.response_under
-    return fn(_spec(light), _filt(scene_filter)[:, None] * sens)
+    if method.startswith("linear"):          # linear / linear_wp / linear_xyz / linear_wp_xyz (T16)
+        return lights.linear_response(_spec(light), _filt(scene_filter)[:, None] * sens,
+                                      white_preserving="_wp" in method, space=_space(method))
+    return lights.response_under(_spec(light), _filt(scene_filter)[:, None] * sens)
+
+
+def _space(method):
+    """linear 方法名的后缀 → lights.linear_response 的拟合空间: _xyz / _bxyz (T16) / 无 = sRGB。"""
+    return "srgb_bxyz" if method.endswith("_bxyz") else ("xyz" if method.endswith("_xyz") else "srgb")
 
 
 def expose(rgb_lin, response):
@@ -206,10 +211,9 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
     sens = 10.0 ** stock.log_sensitivity
     unit = ((E * F) @ sens) / ((E * F) @ direct)      # 吸收 → datasheet 曝光单位 (按中灰)
     w = F[:, None] * T_down[:, None] * back * v.diffuse_fraction * back_reflect * unit[None, :]
-    if method == "linear_wp":
-        return lights.linear_response(E, w, white_preserving=True)
-    fn = lights.linear_response if method == "linear" else lights.response_under
-    return fn(E, w)
+    if method.startswith("linear"):
+        return lights.linear_response(E, w, white_preserving="_wp" in method, space=_space(method))
+    return lights.response_under(E, w)
 
 
 def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0, oblique_w=0.0,
