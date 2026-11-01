@@ -158,7 +158,11 @@ def oblique_densities(stock: Stock, v):
     return -np.log10((down[:, None] * sens).sum(axis=0) / sens.sum(axis=0))
 
 
-def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15, turbidity_power=3.0, path=1.0):
+# 乳剂每层的散射消光密度 (550 nm, ∝ λ^-3; 卤化银颗粒散射)。决定光晕中绿层与红层之比 (T24); 默认 0.15 (未定标的原设定)
+TURBIDITY = 0.15
+
+
+def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=None, turbidity_power=3.0, path=1.0):
     """彩色胶片的乳剂叠层 (自上而下): 蓝感层 → 黄滤光层 → 绿感层 → 红感层 → 片基。
 
     光在叠层中被三种东西衰减:
@@ -180,7 +184,7 @@ def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15
     A = np.asarray(layer_absorbance)[None, :] * S / S.max(0)       # (81,3) R G B 层的吸收密度
     Ay = yellow_filter / (1.0 + np.exp((WAVELENGTHS - 505.0) / 9.0))  # 黄滤光层挡蓝光
     mask = np.clip(stock.base_density - stock.base_density.min(), 0, None) if stock.kind == "negative" else 0.0
-    turb = turbidity * (550.0 / WAVELENGTHS) ** turbidity_power      # 每层散射消光密度
+    turb = (TURBIDITY if turbidity is None else turbidity) * (550.0 / WAVELENGTHS) ** turbidity_power      # 每层散射消光密度
     aR, aG, aB = A[:, 0] + turb, A[:, 1] + turb, A[:, 2] + turb
     if path != 1.0:      # 斜穿: 各层的光程 (密度) 同乘 1/cosθ (T15 return_gain)
         A, Ay, mask, turb = A * path, Ay * path, mask * path, turb * path
