@@ -316,7 +316,7 @@ def sensor_saturation(raw, per_channel=False):
 
 
 def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstruct", seed=0, denoise_raw=True,
-             clip_detect=None, complete_exif=False):
+             clip_detect=None, complete_exif=False, source_stops=None):
     """white_balance:
       daylight  固定日光白平衡 (默认): 保留场景真实的光色, 由胶片自己决定钨丝灯 / 日光下的表现,
                 就像胶片相机没有自动白平衡一样
@@ -326,7 +326,10 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
     denoise_raw: 去除数码传感器噪声 (默认开)
     clip_detect: 截断判定方法, None = 模块默认 CLIP_DETECT
     complete_exif: 显式实验候选; 从匹配的内嵌JPEG补齐缺失曝光元数据。默认关闭。
-                   只校正记录，不保证既有随机亮度先验准确。"""
+                   只校正记录，不保证既有随机亮度先验准确。
+    source_stops: 截断光源比亮度先验再亮 (+) / 暗 (−) 多少档, 同时决定灯芯与光晕强度 (T13)。
+                  截断之上的真实亮度在单张 RAW 中不可知: EPFL 场景所需值从 −2 (黄昏) 到 +3 (夜间大面积亮窗) 不等。
+                  None = 模块默认 SOURCE_STOPS (0 = 原先验, 逐位不变)。"""
     with rawpy.imread(str(path)) as raw:
         kw = dict(use_camera_wb=(white_balance == "camera"), use_auto_wb=(white_balance == "auto"))
         if white_balance == "daylight":
@@ -375,13 +378,14 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
         l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
         cam_d = reconstruct_highlights_cam(xyz @ np.linalg.inv(A), f3, clip_lv, np.random.default_rng(frame_seed),
-                                           l_clip)
+                                           l_clip, SOURCE_STOPS if source_stops is None else source_stops)
         return (cam_d @ A) @ XYZ_TO_SRGB.T
     rgb = xyz @ XYZ_TO_SRGB.T
     if highlights == "reconstruct" and clip is not None and clip.any():
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
         l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
-        rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed), l_clip)
+        rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed), l_clip,
+                                     SOURCE_STOPS if source_stops is None else source_stops)
     return rgb
 
 
@@ -397,6 +401,8 @@ HIGHLIGHT_PRIOR = [
     (1.0, (1e3, 1e4), (0.0, 1.5)),
 ]
 MAX_STOPS = 8.0
+# 截断光源亮度的整体偏移 (档), load_raw(source_stops=None) 时使用。0 = 原先验。见 docs/tasks/T13_HALO_STRENGTH.md
+SOURCE_STOPS = 0.0
 # 细长的截断区 (宽 ≤ 2 像素, 长宽比 ≥ 4): 粗糙金属 / 湿地面上的镜面反光 (铁轨、车身边缘) 或霓虹灯管。
 # 反光的亮度 ≈ 反射率 × 灯的亮度 × (灯的立体角 / 散射瓣的立体角), 被拉成一条线正说明散射瓣远大于灯,
 # 所以比灯本身暗得多; 霓虹灯管本身约 1e3 cd/m²。估计范围 (对数均匀): 1e2 – 2e3。
@@ -414,7 +420,14 @@ def _line_like(blob):
     return width <= 2.0 and length >= 4.0 * width
 
 
-def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
+def _shift_stops(stops, offset):
+    """亮度先验整体平移 offset 档 (offset = 0 时原样返回, 逐位不变); 不低于 0.05 档, 上限随正偏移放宽。"""
+    if not offset:
+        return stops
+    return float(np.clip(stops + offset, 0.05, MAX_STOPS + max(offset, 0.0)))
+
+
+def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
     """重建传感器截断的高光。
 
     每个截断区域:
@@ -458,6 +471,7 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
             stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
         else:
             stops = rng.uniform(*stop_range)
+        stops = _shift_stops(stops, source_stops)
         d = ndimage.distance_transform_edt(blob)
         dome = (d / max(d.max(), 1.0)) ** 0.7
         lum = base * 2.0 ** (stops * dome)
@@ -469,7 +483,7 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None):
     return out
 
 
-def reconstruct_highlights_cam(cam, sat_frac, clip_lv, rng, l_clip=None):
+def reconstruct_highlights_cam(cam, sat_frac, clip_lv, rng, l_clip=None, source_stops=0.0):
     """逐通道重建截断高光 (相机原始通道, 传感器饱和判定时使用)。
 
     与 reconstruct_highlights 的区别: 截断像素里**未饱和的通道是实测值, 保留**, 并用来约束饱和通道:
@@ -522,6 +536,7 @@ def reconstruct_highlights_cam(cam, sat_frac, clip_lv, rng, l_clip=None):
                 stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
             else:
                 stops = rng.uniform(*stop_range)
+            stops = _shift_stops(stops, source_stops)
             d = ndimage.distance_transform_edt(blob)
             dome = 2.0 ** (stops * (d / max(d.max(), 1.0)) ** 0.7)[blob]
             satc = np.isfinite(lv)
