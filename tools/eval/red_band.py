@@ -61,14 +61,15 @@ def halo_diag_patch(scale=None, forward=None):
     from dataclasses import replace
     from filmlab import film, variation
     if scale is not None:
-        r0 = film.halation_response
+        # 总是包装原始函数 (同一进程里重复施加时不叠乘)
+        r0 = film.__dict__.setdefault("_halation_response_orig", film.halation_response)
 
         def resp(*a, **k):
             f = r0(*a, **k)
             return lambda rgb: scale * f(rgb)
         film.halation_response = resp
     if forward is not None:
-        s0 = variation.sample
+        s0 = variation.__dict__.setdefault("_sample_orig", variation.sample)
         variation.sample = lambda *a, **k: replace(s0(*a, **k), forward=forward)
 
 
