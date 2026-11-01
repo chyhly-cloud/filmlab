@@ -1,6 +1,6 @@
 """T03 目视对照: 完整画面 (真实 | next | next_oblique) 与光源最密集处的 3 倍局部, 对齐到真实扫描并标全图 ΔE00 中位。
 
-配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库), 对比的代际由 GENS 指定 (逗号分隔, 默认 next,next_oblique; 可写 代际+变体, 如 next+fixed_exposure; 代际@s 为光晕源强度 ×s 的诊断)。
+配置与验收相同 (实际自动定光、roll=None、grain=0)。被测代码由环境变量 REPO 指定 (默认本仓库), 对比的代际由 GENS 指定 (逗号分隔, 默认 next,next_oblique; 可写 代际+变体, 如 next+fixed_exposure; 代际@s 为光晕源强度 ×s 的诊断; 代际#档数 为截断光源亮度旋钮)。
 用法: FILMLAB_DATA=… [REPO=…] python3 t03_sheet.py 输出目录 场景…
 """
 import os, sys, zlib, warnings
@@ -15,6 +15,10 @@ GENS = tuple(_G.split(";" if ";" in _G else ","))     # 组合变体含逗号时
 
 def render(args):
     gen, sid = args
+    if "#" in gen:                              # "代际#档数": 截断光源亮度旋钮 rawio.SOURCE_STOPS (T13)
+        gen, st = gen.split("#")
+        from filmlab import rawio
+        rawio.SOURCE_STOPS = float(st)
     if "@" in gen:                              # "代际@s": 光晕源强度 ×s (诊断, red_band.halo_diag_patch)
         gen, s = gen.split("@")
         import red_band
