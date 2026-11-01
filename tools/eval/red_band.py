@@ -97,9 +97,9 @@ def job(args):
     if os.environ.get("GENERATION") == "next_lab_layered":       # T11 候选 (在本进程注册)
         import t11_layered
         t11_layered.install()
-        if os.environ.get("GENERATION") == "next_lab_halo_pc":                   # T12 候选 (在本进程注册)
-            import t12_pc
-            t12_pc.install()
+    if os.environ.get("GENERATION") == "next_lab_halo_pc":       # T12 候选 (在本进程注册)
+        import t12_pc
+        t12_pc.install()
     generation.use(os.environ.get("GENERATION", "next"))
     Hm, real = ot.geometry(sid)
     rawp, _, bias = ot.sources(sid)
