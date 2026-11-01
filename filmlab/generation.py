@@ -69,6 +69,15 @@ METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_re
 GENERATIONS["next_x_e2ghalo"] = ("D65", GENERATIONS["next"][1] + ("halo_oblique", "halo_layered", "blue_xyz", "camera_glare"), {})
 RECON_COLOUR["next_x_e2ghalo"] = "edge"
 APERTURE_RANGE["next_x_e2ghalo"] = (1.4, 8.0)
+# T22 单项消融: 在 A (= next_lab) 上只加一项, 看各项对灯芯黄圈和灯的颜色的作用
+_A = GENERATIONS["next_lab"][1]
+GENERATIONS["t22_edge"] = ("D65", _A, {}); RECON_COLOUR["t22_edge"] = "edge"          # 截断区取边界颜色
+GENERATIONS["t22_bxyz"] = ("D65", _A + ("blue_xyz",), {})                             # 蓝层 XYZ 映射
+GENERATIONS["t22_ap"] = ("D65", _A, {}); APERTURE_RANGE["t22_ap"] = (1.4, 8.0)        # 光圈缺失时的截断亮度
+GENERATIONS["t22_obl"] = ("D65", _A + ("halo_oblique", "halo_layered"), {})           # 光晕斜光程/分层
+GENERATIONS["t22_glare"] = ("D65", _A + ("camera_glare",), {})                        # 拍摄端眩光
+for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare"):
+    METERING[_g] = "session"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
