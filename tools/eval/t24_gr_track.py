@@ -1,6 +1,6 @@
 """T24: 光晕的绿/红之比 —— 与灯的亮度无关的测量 (EPFL 真实冲扫 vs 模型, 同一配准几何)。
 
-光晕主导的像素里 (模型红层 光晕/直接 > 3, 距灯芯 100–1500 µm), 光晕越弱颜色越从橙走向红。
+距灯芯 100–1500 µm 且场景本身暗 (数码 RAW 比中灰暗 4 档以上) 的像素: 胶片上的亮光只能是光晕, 光晕越弱颜色越从橙走向红。
 灯的亮度只决定像素落在这条轨迹的哪个位置, 不改变轨迹本身; 乳剂散射 (film.TURBIDITY) 改变轨迹。
 按成片线性 R 分档 (log2), 比较每档 G/R 中位数: 真实 vs 模型。
 
@@ -43,19 +43,30 @@ def job(args):
     halo = tr["total_exposure"] - tr["scattered_exposure"]
     ratio = W(halo[..., 0] / np.maximum(tr["direct_exposure"][..., 0], 1e-9))
     mo, re = W(out_lin), colour.models.eotf_sRGB(real)
+    valid = np.all(np.isfinite(mo), -1)
     cw = W(core.astype(float)) > 0.5
     um = 36000.0 / max(real.shape[:2])
-    d = distance_transform_edt(~cw) * um
-    mask = (d > 100) & (d < 1500) & (ratio > 3.0) & np.all(np.isfinite(mo), -1)
-    res = {"n": int(mask.sum())}
+    d, (iy, ix) = distance_transform_edt(~cw, return_indices=True)
+    d = d * um
+    from scipy import ndimage as ndi
+    lab, n = ndi.label(cw)
+    own = lab[iy, ix]
+    res = {}
+    # 场景本身暗的像素 (数码 RAW 测光后亮度比中灰暗 4 档以上): 胶片上那里的亮光只能是光晕 (及镜头眩光), 不是被照亮的物体
+    inp = W(m)
+    dark = (inp @ np.array([0.2126, 0.7152, 0.0722])) < 0.184 / 16
     for k, a in (("real", re), ("model", mo)):
+        a = np.nan_to_num(a, nan=0.0)
+        mask = (d > 100) & (d < 1500) & dark & (a[..., 0] < 0.999) & valid
         R, G = a[mask][:, 0], a[mask][:, 1]
         lr = np.log2(np.maximum(R, 1e-6))
         rows = []
         for lo, hi in zip(RB[:-1], RB[1:]):
-            s = (lr >= lo) & (lr < hi)
-            rows.append([int(s.sum()), float(np.median(G[s] / np.maximum(R[s], 1e-6))) if s.sum() >= 15 else None])
+            s_ = (lr >= lo) & (lr < hi)
+            rows.append([int(s_.sum()), float(np.median(G[s_] / np.maximum(R[s_], 1e-6))) if s_.sum() >= 15 else None])
         res[k] = rows
+        res["n_" + k] = int(((lr >= RB[0]) & mask[mask]).sum())
+    res["n"] = res["n_real"]
     return gen, turb, sid, res
 
 
@@ -82,5 +93,5 @@ if __name__ == "__main__":
             e = [np.log(m[1] / q[1]) for q, m in zip(r["real"], r["model"]) if q[1] and m[1] and q[1] > 0 and m[1] > 0]
             if e:
                 errs.append(np.mean(e))
-            print(f"  {s} n={r['n']:6d} 真实 G/R {line_r}\n  {'':17s} 模型 G/R {line_m}   平均 ln(模型/真实) {np.mean(e) if e else np.nan:+.3f}")
+            print(f"  {s} n={r["n_real"]:6d}/{r["n_model"]:6d} 真实 G/R {line_r}\n  {'':17s} 模型 G/R {line_m}   平均 ln(模型/真实) {np.mean(e) if e else np.nan:+.3f}")
         print(f"  场景等权 平均 ln(模型/真实) = {np.mean(errs):+.3f}   |偏差| 均值 = {np.mean(np.abs(errs)):.3f}")

@@ -1,6 +1,6 @@
 """T24: 网上真实 800T 扫描里光晕的绿/红轨迹 (与 t24_gr_track.py 同一分档)。
 灯芯: 三通道线性 ≥ 0.93; 光晕主导: 距灯芯 100–1500 µm 且线性 R ≥ 4 × 该灯 1.5–2.5 mm 外圈的背景 R (只按 R 选, 不偏向 G/R)。
-用法: python3 t24_ref_track.py 参考目录"""
+用法: python3 t24_ref_track.py 参考目录 [文件通配 (模型成片, 按 135 画幅)]"""
 import sys
 from pathlib import Path
 import numpy as np
@@ -11,8 +11,9 @@ import t19_halo_stats as hs
 RB = np.arange(-4.0, 0.51, 0.5)
 ref = Path(sys.argv[1])
 tracks = []
-for line in open(ref / "curated.tsv"):
-    f, url, page, fmt = line.rstrip("\n").split("\t")
+lines = [l.rstrip("\n").split("\t") for l in open(ref / "curated.tsv")] if len(sys.argv) < 3 else \
+    [[f, "", "", "135"] for f in sorted(p.name for p in ref.glob(sys.argv[2]))]
+for f, url, page, fmt in lines:
     im = hs.srgb_to_lin(np.asarray(Image.open(ref / f).convert("RGB")) / 255.0)
     um = hs.px_um(im.shape, fmt)
     if um is None:

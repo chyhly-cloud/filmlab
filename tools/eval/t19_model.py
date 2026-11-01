@@ -1,6 +1,6 @@
 """T19: 模型在夜景 RAW 上的光晕统计量, 与参考集 (t19_reference.py) 用同一测量代码。
 流程同 examples/night.py (EXIF 测光), 长边 1600 像素 (≈ 22.5 µm/像素, 与参考扫描相近), 输出按 8 位 sRGB 量化后再解码测量。
-用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录)"""
+用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24)"""
 import json, os, sys, zlib, warnings
 from pathlib import Path
 import numpy as np
@@ -12,7 +12,8 @@ sys.path[:0] = [str(HERE), str(HERE.parents[1])]
 def job(a):
     gen, f = a
     cache = Path(os.environ.get("CACHE", "/tmp/t19_cache")); cache.mkdir(parents=True, exist_ok=True)
-    tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "")
+    tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "") \
+        + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
     if not c.exists():
@@ -21,6 +22,12 @@ def job(a):
         from filmlab.recipes import recipe
         from filmlab.io import srgb_encode
         generation.use(gen)
+        if os.environ.get("TURB"):                       # 乳剂散射密度 (T24, film.TURBIDITY)
+            from filmlab import film as _film
+            _film.TURBIDITY = float(os.environ["TURB"])
+        if os.environ.get("HALO_K"):                     # 光晕强度倍数 (配合 halation_measured, T24 诊断)
+            from filmlab import engine as _e2
+            _e2.HALATION_MEASURED = float(os.environ["HALO_K"])
         rawio.SOURCE_STOPS = float(os.environ.get("STOPS", "0"))
         if os.environ.get("GLARE"):                      # "η,r0_µm": 拍摄端眩光 (T20)
             from filmlab import engine as _eng
