@@ -51,6 +51,8 @@ GENERATIONS["next_lab_halo_meas"] = GENERATIONS["next_lab_halo_plate"]
 # T16 研究候选 next_lab_halo_edge = next_lab_halo_plate + 蓝层在 XYZ 里非负映射 + 截断区颜色取紧邻边界的实测像素
 GENERATIONS["next_lab_halo_edge"] = ("D65", GENERATIONS["next_lab_halo_plate"][1] + ("blue_xyz",), {})
 RECON_COLOUR = {"next_lab_halo_edge": "edge"}
+# T17: 手动镜头光圈缺失时, 由实测快门与 ISO + 光圈范围求截断亮度 (rawio.APERTURE_RANGE); 未列出的代际 None
+APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0)}
 METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
             "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
@@ -64,6 +66,7 @@ def use(name: str):
     rawio.CLIP_DETECT = CLIP_DETECT.get(name, "channel_max")
     rawio.HIGHLIGHT_RECON = HIGHLIGHT_RECON.get(name, "prior")
     rawio.RECON_COLOUR = RECON_COLOUR.get(name, "ring")
+    rawio.APERTURE_RANGE = APERTURE_RANGE.get(name)
     rawio.METERING = METERING.get(name, "meter")
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)

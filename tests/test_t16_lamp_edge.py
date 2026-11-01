@@ -52,3 +52,19 @@ def test_production_generations_unaffected():
         eng = _eng(g)
         assert "blue_xyz" not in eng.p.corrections
         assert rawio.RECON_COLOUR == "ring"
+
+
+def test_aperture_range_only_when_fnumber_missing(monkeypatch):
+    from fractions import Fraction
+
+    class T:
+        def __init__(self, v):
+            self.values = [Fraction(v)]
+    tags = {"EXIF ExposureTime": T("1/50"), "EXIF FNumber": T("0"), "EXIF ISOSpeedRatings": T("800")}
+    monkeypatch.setattr(rawio, "_exif", lambda p: tags)
+    monkeypatch.setattr(rawio, "APERTURE_RANGE", None)
+    assert rawio.clip_luminance("x") is None                      # 原行为: 光圈缺失 → 无 EXIF
+    monkeypatch.setattr(rawio, "APERTURE_RANGE", (1.4, 8.0))
+    assert abs(rawio.clip_luminance("x") - 120.0 * 1.4 * 8.0 / (0.02 * 800)) < 1e-9
+    tags["EXIF FNumber"] = T("2")
+    assert abs(rawio.clip_luminance("x") - 120.0 * 4.0 / (0.02 * 800)) < 1e-9   # 有光圈时不用范围

@@ -156,6 +156,10 @@ def exif_exposure(path, *, complete_exif=False):
         return None
 
 
+# 光圈缺失 (手动镜头 FNumber = 0) 时的可能范围; None = 视为读不到 EXIF (原行为)。研究代际设为 (1.4, 8.0), 见 T17
+APERTURE_RANGE = None
+
+
 def clip_luminance(path, *, complete_exif=False):
     """由 EXIF 曝光参数计算截断亮度的名义代理 (cd/m²)。
     ISO 12232 饱和感光度: S_sat = 78 / H_sat; 焦平面照度 H = q·L·t / N² (q ≈ 0.65, 镜头透过率等)
@@ -168,9 +172,13 @@ def clip_luminance(path, *, complete_exif=False):
             t, n, s = (float(fields[name][1]) for name in ("time_s", "f_number", "iso"))
             return 120.0 * n * n / (t * s)
         val = lambda k: float(Fraction(str(tags[k].values[0])))
-        t, n = val("EXIF ExposureTime"), val("EXIF FNumber")
+        t = val("EXIF ExposureTime")
+        n = val("EXIF FNumber") if "EXIF FNumber" in tags else 0.0
         iso_key = "EXIF ISOSpeedRatings" if "EXIF ISOSpeedRatings" in tags else "EXIF PhotographicSensitivity"
         s = val(iso_key)
+        if n <= 0 and APERTURE_RANGE is not None:
+            # 手动镜头 (无触点) 的 FNumber 记为 0 或缺失: 快门与 ISO 仍是实测值, 光圈取可能范围的几何中值 (T17)
+            n = float(np.sqrt(APERTURE_RANGE[0] * APERTURE_RANGE[1]))
         if t > 0 and n > 0 and s > 0:
             return 120.0 * n * n / (t * s)
     except Exception:
