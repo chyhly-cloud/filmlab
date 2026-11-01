@@ -63,6 +63,12 @@ APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0), "next_lab_halo_e2": (1.4, 8.
 METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
             "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session",
             "next_lab_halo_e2": "session", "next_lab_halo_e2p": "session", "next_lab_halo_e2g": "session"}
+# T22 交叉对照 (docs/tasks/T22_CROSS_AXES.md): 把"整体颜色/定光"和"灯的光晕"两条轴拆开看
+#   A = next_lab: 研究线的固定冲印定光 + next 的光晕链 (无斜光程、环带取色)
+#   B = next_x_e2ghalo: next 的逐帧定光 + e2g 的光晕链 (斜光程/分层、蓝层 XYZ、边界取色、光圈范围; 眩光由 CAMERA_GLARE 设定)
+GENERATIONS["next_x_e2ghalo"] = ("D65", GENERATIONS["next"][1] + ("halo_oblique", "halo_layered", "blue_xyz", "camera_glare"), {})
+RECON_COLOUR["next_x_e2ghalo"] = "edge"
+APERTURE_RANGE["next_x_e2ghalo"] = (1.4, 8.0)
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
