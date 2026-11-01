@@ -39,7 +39,13 @@ GENERATIONS["next_lab_halo"] = ("D65", GENERATIONS["next_lab"][1] + ("halo_obliq
 # RAW 截断判定 (rawio.CLIP_DETECT); 未列出的代际用历史的 channel_max
 CLIP_DETECT = {"next_sensor": "sensor"}
 # 胶片曝光的推算方式 (rawio.METERING); 未列出的代际逐帧测光
-METERING = {"next_lab": "session", "next_lab_halo": "session"}
+# T15 研究候选: 光晕链的两项第一性原理补项 (docs/tasks/T15_HALO_PHYSICS.md)
+#   next_lab_halo_ret   = next_lab_halo + 返回光斜光程吸收 (无自由参数)
+#   next_lab_halo_plate = next_lab_halo_ret + 相机压片板反射 (反射率 engine.PLATE_REFLECTANCE)
+GENERATIONS["next_lab_halo_ret"] = ("D65", GENERATIONS["next_lab_halo"][1] + ("halo_return",), {})
+GENERATIONS["next_lab_halo_plate"] = ("D65", GENERATIONS["next_lab_halo_ret"][1] + ("halo_plate",), {})
+METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
+            "next_lab_halo_plate": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 

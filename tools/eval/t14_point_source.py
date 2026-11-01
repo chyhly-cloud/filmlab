@@ -10,6 +10,8 @@ from filmlab.recipes import recipe
 from filmlab.io import srgb_encode
 from PIL import Image
 GEN = os.environ.get("GEN", "next_lab_halo")
+if os.environ.get("PLATE"):
+    from filmlab import engine as _e; _e.PLATE_REFLECTANCE = float(os.environ["PLATE"])
 generation.use(GEN)
 W, Hh = 1400, 934
 px = 36000 / W

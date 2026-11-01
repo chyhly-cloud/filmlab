@@ -14,6 +14,8 @@ def job(a):
     from PIL import Image
     generation.use(gen)
     rawio.SOURCE_STOPS = stops
+    if os.environ.get("PLATE"):
+        from filmlab import engine as _e; _e.PLATE_REFLECTANCE = float(os.environ["PLATE"])
     if os.environ.get("MAXS"):
         rawio.MAX_STOPS = float(os.environ["MAXS"])
     ex = rawio.exif_exposure(f)
@@ -22,7 +24,7 @@ def job(a):
                                t_original=ex[0] if ex else None)
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": 0}))
     img = srgb_encode(np.clip(eng.render(m), 0, 1))
-    p = Path(out) / f"{Path(f).stem}_{gen}_{stops:+g}{'_m'+os.environ['MAXS'] if os.environ.get('MAXS') else ''}.jpg"
+    p = Path(out) / f"{Path(f).stem}_{gen}_{stops:+g}{'_m'+os.environ['MAXS'] if os.environ.get('MAXS') else ''}{'_p'+os.environ['PLATE'] if os.environ.get('PLATE') else ''}.jpg"
     Image.fromarray((img * 255).astype(np.uint8)).save(p, quality=92)
     return str(p)
 

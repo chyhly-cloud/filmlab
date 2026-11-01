@@ -30,6 +30,7 @@ PRINTER_POINT = 0.025      # 1 个印放光号 = 0.025 logE (电影 / 冲印行�
 GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
+PLATE_REFLECTANCE = 0.0    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究量, 见 docs/tasks/T15_HALO_PHYSICS.md
 HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
@@ -68,6 +69,8 @@ class Params:
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
     #   "halo_layered"   (配合 halo_oblique) 斜程衰减按层深度: 红层之上散射的光整层斜穿 (T11, 无自由参数; 可选)
+    #   "halo_return"    返回光按实际斜光程 1/cosθ 被各层吸收 (T15, 无自由参数; 可选)
+    #   "halo_plate"     穿出片基背面的光被相机压片板反射回乳剂 (T15, 反射率 PLATE_REFLECTANCE; 可选)
     #   "lab_measured"   逐帧定光 (timing="frame") 改为实测的冲印店颜色处理 (LAB_MEASURED_COLOUR, 亮度不逐帧调整),
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
@@ -342,22 +345,32 @@ class Engine:
             self._halo_oblique_w_cache = (w, w, w)
         return self._halo_oblique_w_cache
 
+    def _halo_extra(self):
+        """T15 光晕核附加项: (三层 return_gain, 压片板反射率)。未启用时为 (None×3, 0)。"""
+        if not hasattr(self, "_halo_extra_cache"):
+            g = film.return_gain(self.e.stock, self.v) if "halo_return" in self.p.corrections else (None, None, None)
+            pl = PLATE_REFLECTANCE if "halo_plate" in self.p.corrections else 0.0
+            self._halo_extra_cache = (g, pl)
+        return self._halo_extra_cache
+
     def _halo_total_multi(self):
         """每层光晕核的总量, 与 film.halation 对画面用的核一致 (红层含多次反射)。"""
         if not hasattr(self, "_halo_total_multi_cache"):
             rho = film.bounce_retention(self.e.stock, self.v)
             densities, ws = self._halo_oblique_densities(), self._halo_oblique_ws()
+            g, pl = self._halo_extra()
             self._halo_total_multi_cache = np.array([
-                film.layer_halation_kernel(10.0, self.v, rho[c], densities[c], ws[c]).sum()
+                film.layer_halation_kernel(10.0, self.v, rho[c], densities[c], ws[c], g[c], pl).sum()
                 for c in range(3)])
         return self._halo_total_multi_cache
 
     def _halo_total(self):
         if not hasattr(self, "_halo_total_cache"):
             if "halo_oblique" in self.p.corrections:
+                g, pl = self._halo_extra()
                 self._halo_total_cache = np.array([
-                    film.layer_halation_kernel(10.0, self.v, oblique_density=d, oblique_w=w).sum()
-                    for d, w in zip(self._halo_oblique_densities(), self._halo_oblique_ws())])
+                    film.layer_halation_kernel(10.0, self.v, oblique_density=d, oblique_w=w, return_gain=gc, plate=pl).sum()
+                    for d, w, gc in zip(self._halo_oblique_densities(), self._halo_oblique_ws(), g)])
             else:
                 self._halo_total_cache = film.halation_kernel(10.0, base_um=self.v.base_um, forward=self.v.forward).sum()
         return self._halo_total_cache
@@ -416,7 +429,8 @@ class Engine:
             trace['scattered_exposure'] = H.copy()
         if halo_src is not None:
             H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v),
-                              oblique_densities=self._halo_oblique_densities(), oblique_ws=self._halo_oblique_ws())
+                              oblique_densities=self._halo_oblique_densities(), oblique_ws=self._halo_oblique_ws(),
+                              return_gains=self._halo_extra()[0], plate=self._halo_extra()[1])
             H = np.clip(H, 1e-9, None)                   # 曝光量物理上非负
         logH = self._log_exposure(H)
         if trace is not None:

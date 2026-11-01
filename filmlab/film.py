@@ -56,14 +56,42 @@ def _fresnel_unpolarized(theta, n1=1.5, n2=1.0):
 
 
 def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, *, oblique_density=0.0,
-                    oblique_w=0.0):
+                    oblique_w=0.0, return_gain=None, plate=0.0):
     """片基内反射的光学核: 到达片基的单位漫射光, 回到乳剂时在半径 r 处的分布。
 
     穿过浑浊乳剂到达片基的漫射光按 cos^forward θ 分布 (1 = 朗伯, 越大越前向)。
     以角度 θ 进入片基的光在背面按菲涅耳反射 (θ > 临界角 ≈ 42° 时全反射),
     回到乳剂时横向偏移 r = 2·t·tanθ。所以光晕是一个环: 半径 ≈ 2·130µm·tan42° ≈ 235µm,
     这是在给定角分布、平面界面与片基厚度假设下的几何结果; 环半径测试只能验证实现自洽,
-    不能独立证明真实 CineStill 的传播核。见 docs/HALATION_CHAIN_AUDIT.md。"""
+    不能独立证明真实 CineStill 的传播核。见 docs/HALATION_CHAIN_AUDIT.md。
+
+    return_gain (T15): θ → 返回光斜穿该层时吸收相对垂直吸收的倍数 (film.return_gain), None = 垂直吸收 (原行为)。
+    plate (T15): 相机压片板的 (镜面) 反射率。低于临界角、穿出片基背面的光被压片板反射后
+      以同一角度回到乳剂 (横向偏移同为 2·t·tanθ, 忽略压片板与片基之间的空气隙), 0 = 不计 (原行为)。"""
+    if return_gain is None and plate == 0:
+        return _halation_kernel_base(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w)
+    th = np.linspace(1e-4, np.radians(89.5), 4000)
+    r = 2.0 * base_um * np.tan(th)
+    ang = np.sin(th) * np.cos(th) ** forward
+    ang /= (ang * np.gradient(th)).sum()
+    R = _fresnel_unpolarized(th, n_base)
+    refl = np.where(R < 1.0, R + (1.0 - R) ** 2 * plate / (1.0 - plate * R), 1.0)
+    w = refl * ang * np.gradient(th)
+    if oblique_density != 0:
+        w = w * oblique_attenuation(th, oblique_density, oblique_w)
+    if return_gain is not None:
+        w = w * return_gain(th)
+    n = int(np.ceil(r_max_um / px_um))
+    yy, xx = np.mgrid[-n:n + 1, -n:n + 1] * px_um
+    rr = np.hypot(yy, xx)
+    edges = np.append(r, r[-1] * 1.01)
+    ring_area = np.pi * (edges[1:] ** 2 - edges[:-1] ** 2)
+    k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
+    return k * (w[r <= r_max_um].sum() / max(k.sum(), 1e-12))
+
+
+def _halation_kernel_base(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w):
+    """原 halation_kernel (逐位不变)。"""
     th = np.linspace(1e-4, np.radians(89.5), 4000)
     r = 2.0 * base_um * np.tan(th)
     ang = np.sin(th) * np.cos(th) ** forward
@@ -125,7 +153,7 @@ def oblique_densities(stock: Stock, v):
     return -np.log10((down[:, None] * sens).sum(axis=0) / sens.sum(axis=0))
 
 
-def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15, turbidity_power=3.0):
+def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15, turbidity_power=3.0, path=1.0):
     """彩色胶片的乳剂叠层 (自上而下): 蓝感层 → 黄滤光层 → 绿感层 → 红感层 → 片基。
 
     光在叠层中被三种东西衰减:
@@ -149,6 +177,8 @@ def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=0.15
     mask = np.clip(stock.base_density - stock.base_density.min(), 0, None) if stock.kind == "negative" else 0.0
     turb = turbidity * (550.0 / WAVELENGTHS) ** turbidity_power      # 每层散射消光密度
     aR, aG, aB = A[:, 0] + turb, A[:, 1] + turb, A[:, 2] + turb
+    if path != 1.0:      # 斜穿: 各层的光程 (密度) 同乘 1/cosθ (T15 return_gain)
+        A, Ay, mask, turb = A * path, Ay * path, mask * path, turb * path
     t = lambda d: 10.0 ** -d
     absorbed = lambda a_layer, a_abs: (1 - t(a_layer)) * (a_abs / np.maximum(a_layer, 1e-9))
     # 直接曝光: 只有被感光层"吸收"(而非散射) 的部分形成潜影
@@ -182,41 +212,60 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
     return fn(E, w)
 
 
-def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0, oblique_w=0.0):
+def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0, oblique_w=0.0,
+                        return_gain=None, plate=0.0):
     """多次反射: 光回到乳剂后, 在乳剂正面 (乳剂/空气, 同样 >42° 全反射) 再被反射回片基,
     每多一次往返横向再偏移 2·t·tanθ, 形成 2 倍、3 倍半径的外环。
     rho = 每多一次往返保留的比例 ≈ (该波段穿透整个乳剂的透射率)², 所以外环越来越红。
     近似限制: rho 不依赖入射光谱/角度, 后续界面未逐次乘菲涅耳系数, 返回吸收未按斜光程变化;
     不包含完整的上下行重复吸收及散射输运。见 docs/HALATION_CHAIN_AUDIT.md。"""
     k1 = halation_kernel(px_um, base_um=base_um, forward=forward,
-                         r_max_um=1500.0 * bounces, oblique_density=oblique_density, oblique_w=oblique_w)
+                         r_max_um=1500.0 * bounces, oblique_density=oblique_density, oblique_w=oblique_w,
+                         return_gain=return_gain, plate=plate)
     total = k1.copy()
     for n in range(2, bounces + 1):
         kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces,
-                             oblique_density=oblique_density, oblique_w=oblique_w)
+                             oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate)
         total += rho ** (n - 1) * kn
     return total
 
 
-def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0, oblique_w=0.0):
+def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0, oblique_w=0.0, return_gain=None, plate=0.0):
     """One layer's kernel, shared by picture convolution and gray-card timing."""
     if rho > 0.01:
         return multi_bounce_kernel(px_um, v.base_um, v.forward, rho,
-                                   oblique_density=oblique_density, oblique_w=oblique_w)
+                                   oblique_density=oblique_density, oblique_w=oblique_w,
+                                   return_gain=return_gain, plate=plate)
     return halation_kernel(px_um, base_um=v.base_um, forward=v.forward,
-                           oblique_density=oblique_density, oblique_w=oblique_w)
+                           oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate)
 
 
 def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0), *, oblique_densities=(0.0, 0.0, 0.0),
-             oblique_ws=(0.0, 0.0, 0.0)):
+             oblique_ws=(0.0, 0.0, 0.0), return_gains=(None, None, None), plate=0.0):
     """Spread each layer's halo source with its own base-reflection kernel."""
     from scipy.signal import fftconvolve
     out = H.copy()
     for c in range(3):
         if halo_source[..., c].max() > 0:
-            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c], oblique_ws[c])
+            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c], oblique_ws[c], return_gains[c], plate)
             out[..., c] += fftconvolve(halo_source[..., c], k, mode="same")
     return out
+
+
+def return_gain(stock: Stock, v, light=None):
+    """T15: 返回光以角度 θ 斜穿乳剂时, 各层吸收相对垂直返回的倍数 g_c(θ) (三个函数, 无拟合)。
+
+    halation_response 按垂直光程计算返回吸收 (back), 但进入光晕核的光都以 θ 返回 (全反射部分 θ > 42°),
+    在每层走过 1/cosθ 倍的光程。g_c(θ) = Σλ w(λ)·back_c(λ, 1/cosθ) / Σλ w(λ)·back_c(λ, 1),
+    w(λ) = 光源 × 到达片基的透射率 (默认胶片参考光源), 即到达片基、将要返回的光的光谱。"""
+    E = _spec(light if light is not None else stock.reference_illuminant)
+    T_down, _, back1 = emulsion_stack(stock, v.layer_absorbance, v.yellow_filter)
+    wl = E * T_down
+    den = wl @ back1
+    s = np.geomspace(1.0, 1.0 / np.cos(np.radians(89.5)), 200)
+    num = np.array([wl @ emulsion_stack(stock, v.layer_absorbance, v.yellow_filter, path=si)[2] for si in s])
+    g = num / np.maximum(den, 1e-30)
+    return tuple((lambda th, gc=g[:, c]: np.interp(1.0 / np.cos(th), s, gc)) for c in range(3))
 
 
 def bounce_retention(stock: Stock, v):
