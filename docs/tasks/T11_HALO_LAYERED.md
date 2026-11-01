@@ -103,3 +103,19 @@ w = 0.7651（由模型叠层算出）。
 - 真实 R1-04-5 窗框细条上有清晰的红橙描边，是 200–300 µm 处强光晕的直接证据。两个模型都没有，指向截断窗户的重建亮度偏低。
 
 下一步：用短曝光包围帧测出截断光源的真实亮度（R1-00-1、R1-04-5、R1-05-6、R1-06-7 有包围帧），检验"按层深度的形状 + 实测光源"能否在不调强度的前提下复现真实光晕。
+
+## 决定（2026-11-01，用户）：作为研究代际 `next_lab_halo`
+
+生产代码：
+- `film.oblique_attenuation(theta, density, w_above=0.0)`：w = 0 时走原 T03 代码，逐位不变；
+- 新增 `film.scatter_above_red`；
+- 核函数链增加 `oblique_w` 参数；
+- `engine._halo_oblique_ws()` 与修正标志 `"halo_layered"`；
+- `generation.next_lab_halo` = next_lab + halo_oblique + halo_layered。
+
+核验：
+- 与 T11 评估在 21 个场景上全图与光源旁的差为 0.0；灰卡 0.2117，相同；
+- 测试 377/377，新增 `tests/test_halo_layered.py`，其中验证 w = 0 时与 T03 公式逐位相同；
+- current / legacy / next 严格逐位回归各 42/42。
+
+不并入 next_lab。

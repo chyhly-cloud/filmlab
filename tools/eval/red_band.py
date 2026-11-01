@@ -20,21 +20,9 @@ HALF = 80          # 局部窗口半宽 (真实扫描 1600 像素缩略图, 约 
 
 
 def scatter_above_red(stock, v):
-    """红感层波段内, 散射发生在红感层之上 (蓝层、绿层) 的比例 (按 film.emulsion_stack 的同一吸收与散射设定,
-    红层感光度加权; 计入光向下穿过各层时的衰减)。用于"按层深度"的斜程衰减: 上方散射的光整层斜穿红层。"""
+    """见 filmlab.film.scatter_above_red (T11 后移入生产代码)。"""
     from filmlab import film
-    from filmlab.film import WAVELENGTHS
-    S = 10.0 ** stock.log_sensitivity
-    A = np.asarray(v.layer_absorbance)[None, :] * S / S.max(0)
-    Ay = v.yellow_filter / (1.0 + np.exp((WAVELENGTHS - 505.0) / 9.0))
-    turb = 0.15 * (550.0 / WAVELENGTHS) ** 3.0
-    aR, aG, aB = A[:, 0] + turb, A[:, 1] + turb, A[:, 2] + turb
-    t = lambda d: 10.0 ** -d
-    sc = lambda a: (1 - t(a)) * turb / np.maximum(a, 1e-9)          # 该层被散射 (而非吸收) 的比例
-    above = sc(aB) + t(aB + Ay) * sc(aG)
-    inside = t(aB + Ay + aG) * sc(aR)
-    w = S[:, 0]
-    return float((above * w).sum() / ((above + inside) * w).sum())
+    return film.scatter_above_red(stock, v)
 
 
 def oblique_patch(D, layered=False):

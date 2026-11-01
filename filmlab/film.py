@@ -55,7 +55,8 @@ def _fresnel_unpolarized(theta, n1=1.5, n2=1.0):
     return out
 
 
-def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, *, oblique_density=0.0):
+def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, *, oblique_density=0.0,
+                    oblique_w=0.0):
     """片基内反射的光学核: 到达片基的单位漫射光, 回到乳剂时在半径 r 处的分布。
 
     穿过浑浊乳剂到达片基的漫射光按 cos^forward θ 分布 (1 = 朗伯, 越大越前向)。
@@ -80,18 +81,41 @@ def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500
         return k * scale
     # Correct raster integration to the attenuated analytic total (T03 v2),
     # never back to the original unattenuated energy.
-    w = w * oblique_attenuation(th, oblique_density)
+    w = w * oblique_attenuation(th, oblique_density, oblique_w)
     k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
     total = w[r <= r_max_um].sum()
     return k * (total / max(k.sum(), 1e-12))
 
 
-def oblique_attenuation(theta, density):
-    """Uniform-depth average of extra oblique optical depth; no fit constants."""
+def oblique_attenuation(theta, density, w_above=0.0):
+    """Extra oblique optical depth below the scattering point; no fit constants.
+
+    w_above = 0: uniform-depth average (T03). w_above > 0 (T11): that fraction of
+    the light was scattered above the layer and crosses it fully (10^-D·u); the
+    rest is the uniform-depth average. w_above comes from scatter_above_red()."""
     if not np.isfinite(density) or density < 0:
         raise ValueError("Oblique density must be finite and nonnegative")
     x = density * (1.0 / np.cos(theta) - 1.0) * np.log(10.0)
-    return np.divide(-np.expm1(-x), x, out=np.ones_like(x), where=x != 0)
+    uniform = np.divide(-np.expm1(-x), x, out=np.ones_like(x), where=x != 0)
+    if w_above == 0:
+        return uniform
+    return w_above * np.exp(-x) + (1.0 - w_above) * uniform
+
+
+def scatter_above_red(stock: Stock, v):
+    """红感层波段内, 散射发生在红感层之上 (蓝层、绿层) 的比例 (T11)。
+    与 emulsion_stack 同一吸收与散射设定, 红层感光度加权, 计入光向下穿过各层的衰减; 不拟合。"""
+    S = 10.0 ** stock.log_sensitivity
+    A = np.asarray(v.layer_absorbance)[None, :] * S / S.max(0)
+    Ay = v.yellow_filter / (1.0 + np.exp((WAVELENGTHS - 505.0) / 9.0))
+    turb = 0.15 * (550.0 / WAVELENGTHS) ** 3.0
+    aR, aG, aB = A[:, 0] + turb, A[:, 1] + turb, A[:, 2] + turb
+    t = lambda d: 10.0 ** -d
+    sc = lambda a: (1 - t(a)) * turb / np.maximum(a, 1e-9)          # 该层被散射 (而非吸收) 的比例
+    above = sc(aB) + t(aB + Ay) * sc(aG)
+    inside = t(aB + Ay + aG) * sc(aR)
+    w = S[:, 0]
+    return float((above * w).sum() / ((above + inside) * w).sum())
 
 
 def oblique_densities(stock: Stock, v):
@@ -158,37 +182,39 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
     return fn(E, w)
 
 
-def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0):
+def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0, oblique_w=0.0):
     """多次反射: 光回到乳剂后, 在乳剂正面 (乳剂/空气, 同样 >42° 全反射) 再被反射回片基,
     每多一次往返横向再偏移 2·t·tanθ, 形成 2 倍、3 倍半径的外环。
     rho = 每多一次往返保留的比例 ≈ (该波段穿透整个乳剂的透射率)², 所以外环越来越红。
     近似限制: rho 不依赖入射光谱/角度, 后续界面未逐次乘菲涅耳系数, 返回吸收未按斜光程变化;
     不包含完整的上下行重复吸收及散射输运。见 docs/HALATION_CHAIN_AUDIT.md。"""
     k1 = halation_kernel(px_um, base_um=base_um, forward=forward,
-                         r_max_um=1500.0 * bounces, oblique_density=oblique_density)
+                         r_max_um=1500.0 * bounces, oblique_density=oblique_density, oblique_w=oblique_w)
     total = k1.copy()
     for n in range(2, bounces + 1):
-        kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces, oblique_density=oblique_density)
+        kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces,
+                             oblique_density=oblique_density, oblique_w=oblique_w)
         total += rho ** (n - 1) * kn
     return total
 
 
-def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0):
+def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0, oblique_w=0.0):
     """One layer's kernel, shared by picture convolution and gray-card timing."""
     if rho > 0.01:
         return multi_bounce_kernel(px_um, v.base_um, v.forward, rho,
-                                   oblique_density=oblique_density)
+                                   oblique_density=oblique_density, oblique_w=oblique_w)
     return halation_kernel(px_um, base_um=v.base_um, forward=v.forward,
-                           oblique_density=oblique_density)
+                           oblique_density=oblique_density, oblique_w=oblique_w)
 
 
-def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0), *, oblique_densities=(0.0, 0.0, 0.0)):
+def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0), *, oblique_densities=(0.0, 0.0, 0.0),
+             oblique_ws=(0.0, 0.0, 0.0)):
     """Spread each layer's halo source with its own base-reflection kernel."""
     from scipy.signal import fftconvolve
     out = H.copy()
     for c in range(3):
         if halo_source[..., c].max() > 0:
-            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c])
+            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c], oblique_ws[c])
             out[..., c] += fftconvolve(halo_source[..., c], k, mode="same")
     return out
 

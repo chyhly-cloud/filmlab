@@ -8,6 +8,8 @@
   next_halo   历史实验复现: next + 未标定光晕倍数（旧评估重复解码，原倍率证据已撤销）
   next_lab    研究候选 (T07): next + 胶片与数码同一份曝光 + 实测的冲印店颜色处理 + 不套他店输出调整。
               通过预设留出条件, 但留出集多次使用、无独立数据验证; 只代表 EPFL 这次拍摄与这家冲印店。不并入 next。
+  next_lab_halo 研究候选 (T11): next_lab + 光晕斜程衰减按层深度 (形状修正; 强度仍依赖截断光源的重建)。
+              红带与全图通过, 光源旁未通过预设条件; 用户目视后同意作为研究代际。不并入 next_lab。
   next_sensor 修正候选: next + RAW 截断按传感器饱和堆积判定 (rawio.sensor_saturation), 不再把未过曝画面中最亮的 3% 当作截断
 
 用法: from filmlab import generation; generation.use("next")   (整个进程生效; 默认为 current)
@@ -32,10 +34,12 @@ GENERATIONS = {
 }
 # T07 研究候选 (见 docs/tasks/T07_LAB_COLOUR.md): 只代表 EPFL 这次拍摄与这家冲印店, 不并入 next
 GENERATIONS["next_lab"] = ("D65", ("gray_halo", "grain_aperture", "linear_white", "lab_measured"), {})
+# T11 研究候选 (见 docs/tasks/T11_HALO_LAYERED.md)
+GENERATIONS["next_lab_halo"] = ("D65", GENERATIONS["next_lab"][1] + ("halo_oblique", "halo_layered"), {})
 # RAW 截断判定 (rawio.CLIP_DETECT); 未列出的代际用历史的 channel_max
 CLIP_DETECT = {"next_sensor": "sensor"}
 # 胶片曝光的推算方式 (rawio.METERING); 未列出的代际逐帧测光
-METERING = {"next_lab": "session"}
+METERING = {"next_lab": "session", "next_lab_halo": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
