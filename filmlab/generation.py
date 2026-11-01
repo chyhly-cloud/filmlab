@@ -76,7 +76,8 @@ GENERATIONS["t22_bxyz"] = ("D65", _A + ("blue_xyz",), {})                       
 GENERATIONS["t22_ap"] = ("D65", _A, {}); APERTURE_RANGE["t22_ap"] = (1.4, 8.0)        # 光圈缺失时的截断亮度
 GENERATIONS["t22_obl"] = ("D65", _A + ("halo_oblique", "halo_layered"), {})           # 光晕斜光程/分层
 GENERATIONS["t22_glare"] = ("D65", _A + ("camera_glare",), {})                        # 拍摄端眩光
-for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare"):
+GENERATIONS["t22_ea"] = ("D65", _A, {}); RECON_COLOUR["t22_ea"] = "edge"; APERTURE_RANGE["t22_ea"] = (1.4, 8.0)  # 边界取色 + 光圈范围
+for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare", "t22_ea"):
     METERING[_g] = "session"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
