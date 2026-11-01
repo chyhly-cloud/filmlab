@@ -79,7 +79,8 @@ GENERATIONS["t22_glare"] = ("D65", _A + ("camera_glare",), {})                  
 GENERATIONS["t22_ea"] = ("D65", _A, {}); RECON_COLOUR["t22_ea"] = "edge"; APERTURE_RANGE["t22_ea"] = (1.4, 8.0)  # 边界取色 + 光圈范围
 GENERATIONS["t24_hk"] = ("D65", _A + ("blue_xyz", "halation_measured"), {})   # T24 诊断: 光晕强度 × engine.HALATION_MEASURED
 GENERATIONS["t24_gl"] = ("D65", _A + ("blue_xyz", "camera_glare"), {})        # T24 诊断: 蓝层 XYZ + 拍摄端眩光
-for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare", "t22_ea", "t24_hk", "t24_gl"):
+GENERATIONS["t24_hkgl"] = ("D65", _A + ("blue_xyz", "halation_measured", "camera_glare"), {})   # T24 诊断: 光晕强度 + 眩光
+for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare", "t22_ea", "t24_hk", "t24_gl", "t24_hkgl"):
     METERING[_g] = "session"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
