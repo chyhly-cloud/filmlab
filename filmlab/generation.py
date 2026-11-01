@@ -50,11 +50,14 @@ GENERATIONS["next_lab_halo_plate"] = ("D65", GENERATIONS["next_lab_halo_ret"][1]
 GENERATIONS["next_lab_halo_meas"] = GENERATIONS["next_lab_halo_plate"]
 # T16 研究候选 next_lab_halo_edge = next_lab_halo_plate + 蓝层在 XYZ 里非负映射 + 截断区颜色取紧邻边界的实测像素
 GENERATIONS["next_lab_halo_edge"] = ("D65", GENERATIONS["next_lab_halo_plate"][1] + ("blue_xyz",), {})
-RECON_COLOUR = {"next_lab_halo_edge": "edge"}
+# T19 研究候选 next_lab_halo_e2 = next_lab_halo + T16 (蓝层 XYZ、边界取色) + T17 (光圈缺失), 不含 T15 两项光晕补项
+GENERATIONS["next_lab_halo_e2"] = ("D65", GENERATIONS["next_lab_halo"][1] + ("blue_xyz",), {})
+RECON_COLOUR = {"next_lab_halo_edge": "edge", "next_lab_halo_e2": "edge"}
 # T17: 手动镜头光圈缺失时, 由实测快门与 ISO + 光圈范围求截断亮度 (rawio.APERTURE_RANGE); 未列出的代际 None
-APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0)}
+APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0), "next_lab_halo_e2": (1.4, 8.0)}
 METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
-            "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session"}
+            "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session",
+            "next_lab_halo_e2": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 

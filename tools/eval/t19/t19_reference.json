@@ -1,0 +1,525 @@
+{
+ "images": {
+  "m35_46694_d7e3bfe6.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_14-1.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 53,
+    "60-150": 3,
+    "150-400": 5
+   }
+  },
+  "m35_46694_ddceb6d2.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_08.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 27,
+    "60-150": 2,
+    "150-400": 0
+   }
+  },
+  "m35_46694_09e1b783.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_34.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 3,
+    "60-150": 0,
+    "150-400": 0
+   }
+  },
+  "m35_46694_981c2f12.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_13.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 13,
+    "60-150": 2,
+    "150-400": 2
+   }
+  },
+  "m35_46694_2beafb08.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_35.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 34,
+    "60-150": 2,
+    "150-400": 6
+   }
+  },
+  "m35_46694_898caa02.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_10.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 22,
+    "60-150": 7,
+    "150-400": 4
+   }
+  },
+  "m35_46694_870dd280.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_16.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 18,
+    "60-150": 6,
+    "150-400": 1
+   }
+  },
+  "m35_46694_f877005f.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_22.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 9,
+    "60-150": 1,
+    "150-400": 0
+   }
+  },
+  "m35_46694_d3b85e97.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_04.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 182,
+    "60-150": 8,
+    "150-400": 1
+   }
+  },
+  "m35_46694_1a041e17.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_11.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 1,
+    "60-150": 0,
+    "150-400": 0
+   }
+  },
+  "m35_46694_6842a3d3.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_12.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 142,
+    "60-150": 0,
+    "150-400": 0
+   }
+  },
+  "m35_46694_efd36663.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_15.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 161,
+    "60-150": 9,
+    "150-400": 3
+   }
+  },
+  "m35_46694_5068f010.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_20.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 48,
+    "60-150": 2,
+    "150-400": 2
+   }
+  },
+  "m35_46694_808e0731.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_06.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 55,
+    "60-150": 7,
+    "150-400": 7
+   }
+  },
+  "m35_46694_b8419f6a.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_05.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 11,
+    "60-150": 1,
+    "150-400": 0
+   }
+  },
+  "m35_46694_2a0bc8cc.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_27.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 92,
+    "60-150": 7,
+    "150-400": 0
+   }
+  },
+  "m35_46694_c167b17c.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_29.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 18,
+    "60-150": 2,
+    "150-400": 0
+   }
+  },
+  "m35_46694_9d487b18.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_32.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 24,
+    "60-150": 4,
+    "150-400": 3
+   }
+  },
+  "m35_46694_9ff40b2a.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_30.jpg",
+   "um_px": 15.0,
+   "n": {
+    "0-60": 25,
+    "60-150": 1,
+    "150-400": 1
+   }
+  },
+  "m35_46694_26bd7ef7.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_24.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 149,
+    "60-150": 16,
+    "150-400": 5
+   }
+  },
+  "m35_46694_4766020c.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_25.jpg",
+   "um_px": 22.5,
+   "n": {
+    "0-60": 50,
+    "60-150": 6,
+    "150-400": 12
+   }
+  },
+  "m35_46694_f87c8a49.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_40.jpg",
+   "um_px": 18.75,
+   "n": {
+    "0-60": 86,
+    "60-150": 7,
+    "150-400": 0
+   }
+  },
+  "m35_46694_74045c5b.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_41.jpg",
+   "um_px": 18.75,
+   "n": {
+    "0-60": 13,
+    "60-150": 1,
+    "150-400": 0
+   }
+  },
+  "m35_46694_24db001f.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Schroeder_CS_42.jpg",
+   "um_px": 18.75,
+   "n": {
+    "0-60": 123,
+    "60-150": 8,
+    "150-400": 4
+   }
+  },
+  "emul_ph_b63c260c.jpg": {
+   "url": "https://i0.wp.com/emulsive.org/wp-content/uploads/2020/06/5-Frames...-Of-fun-at-the-fair-on-CineStill-800T-EI-800-35mm-format-Leica-M3-by-Maxime-Evangelista-5.jpg",
+   "um_px": 30.0,
+   "n": {
+    "0-60": 30,
+    "60-150": 5,
+    "150-400": 35
+   }
+  },
+  "emul_ph_08b4c960.jpg": {
+   "url": "https://i0.wp.com/emulsive.org/wp-content/uploads/2018/01/Down-the-canal-Shot-on-Cinestill-800T-at-EI-800-Color-motion-picture-negative-in-35mm-format.jpg",
+   "um_px": 28.125,
+   "n": {
+    "0-60": 140,
+    "60-150": 38,
+    "150-400": 12
+   }
+  },
+  "emul_ph_dd2021e1.jpg": {
+   "url": "https://i0.wp.com/emulsive.org/wp-content/uploads/2018/01/Urgent-business-Shot-on-Cinestill-800T-at-EI-800-Color-motion-picture-negative-in-35mm-format.jpg",
+   "um_px": 28.125,
+   "n": {
+    "0-60": 69,
+    "60-150": 7,
+    "150-400": 3
+   }
+  },
+  "m35_taipei_5a0b45f0.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Jim-Sangwine-Pentax-6x7-105mm-CineStill-800T-01.jpg",
+   "um_px": 37.91469194312796,
+   "n": {
+    "0-60": 37,
+    "60-150": 0,
+    "150-400": 2
+   }
+  },
+  "m35_taipei_5df8426d.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Jim-Sangwine-Pentax-6x7-105mm-CineStill-800T-02-1.jpg",
+   "um_px": 37.4331550802139,
+   "n": {
+    "0-60": 0,
+    "60-150": 0,
+    "150-400": 0
+   }
+  },
+  "m35_taipei_43051a45.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Jim-Sangwine-Pentax-6x7-105mm-CineStill-800T-04.jpg",
+   "um_px": 42.61796042617961,
+   "n": {
+    "0-60": 15,
+    "60-150": 6,
+    "150-400": 0
+   }
+  },
+  "m35_taipei_9cc1f52e.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/Jim-Sangwine-Pentax-6x7-105mm-CineStill-800T-05.jpg",
+   "um_px": 44.90777866880513,
+   "n": {
+    "0-60": 7,
+    "60-150": 2,
+    "150-400": 2
+   }
+  },
+  "m35_t5_c4bbb4a8.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/cinestill800t-kevan-wilkinson-4.jpg",
+   "um_px": 24.0,
+   "n": {
+    "0-60": 196,
+    "60-150": 21,
+    "150-400": 6
+   }
+  },
+  "m35_t5_0abd0562.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/cinestill800t-kevan-wilkinson-2.jpg",
+   "um_px": 24.0,
+   "n": {
+    "0-60": 116,
+    "60-150": 12,
+    "150-400": 4
+   }
+  },
+  "m35_t5_c3218a5d.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/cinestill800t-kevan-wilkinson-3.jpg",
+   "um_px": 24.0,
+   "n": {
+    "0-60": 205,
+    "60-150": 25,
+    "150-400": 6
+   }
+  },
+  "m35_t5_b21d9959.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/cinestill800t-kevan-wilkinson-1.jpg",
+   "um_px": 24.0,
+   "n": {
+    "0-60": 111,
+    "60-150": 11,
+    "150-400": 8
+   }
+  },
+  "m35_t5_b067a512.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/cinestill800t-kevan-wilkinson-5.jpg",
+   "um_px": 24.0,
+   "n": {
+    "0-60": 104,
+    "60-150": 11,
+    "150-400": 2
+   }
+  },
+  "m35_felten_0d068c92.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/20190418-000096070030.jpg",
+   "um_px": 18.75,
+   "n": {
+    "0-60": 27,
+    "60-150": 12,
+    "150-400": 8
+   }
+  },
+  "m35_felten_8c031525.jpg": {
+   "url": "https://www.35mmc.com/wp-content/uploads/2023/09/20190415-000095130006.jpg",
+   "um_px": 18.75,
+   "n": {
+    "0-60": 137,
+    "60-150": 10,
+    "150-400": 4
+   }
+  }
+ },
+ "summary": {
+  "0-60": {
+   "n": 37,
+   "r": [
+    0.3454,
+    0.3488,
+    0.3719,
+    0.4005,
+    0.4119,
+    0.4305,
+    0.4565,
+    0.4328,
+    0.4346,
+    0.3581,
+    0.3342,
+    0.3233
+   ],
+   "b": [
+    0.3229,
+    0.3223,
+    0.2962,
+    0.2648,
+    0.2549,
+    0.2494,
+    0.2442,
+    0.2341,
+    0.2499,
+    0.2882,
+    0.334,
+    0.3463
+   ],
+   "Y": [
+    0.8856,
+    0.8191,
+    0.5948,
+    0.414,
+    0.3162,
+    0.2469,
+    0.2103,
+    0.1476,
+    0.1244,
+    0.1053,
+    0.0724,
+    0.05
+   ],
+   "dr": [
+    0.0053,
+    0.0346,
+    0.0785,
+    0.101,
+    0.1145,
+    0.1044,
+    0.1086,
+    0.0724,
+    0.0711,
+    0.0529,
+    0.0154,
+    0.0
+   ]
+  },
+  "60-150": {
+   "n": 33,
+   "r": [
+    0.3452,
+    0.3535,
+    0.4051,
+    0.4536,
+    0.5001,
+    0.5244,
+    0.5176,
+    0.4967,
+    0.4383,
+    0.4134,
+    0.3992,
+    0.3181
+   ],
+   "b": [
+    0.3214,
+    0.3175,
+    0.2875,
+    0.2598,
+    0.2129,
+    0.2086,
+    0.2136,
+    0.1969,
+    0.2275,
+    0.2272,
+    0.2298,
+    0.3016
+   ],
+   "Y": [
+    0.9149,
+    0.8577,
+    0.6528,
+    0.4762,
+    0.4265,
+    0.3499,
+    0.2936,
+    0.2242,
+    0.1853,
+    0.1202,
+    0.0804,
+    0.0753
+   ],
+   "dr": [
+    0.0107,
+    0.0288,
+    0.0597,
+    0.1234,
+    0.1647,
+    0.1465,
+    0.1564,
+    0.1501,
+    0.0717,
+    0.0284,
+    0.0032,
+    0.0
+   ]
+  },
+  "150-400": {
+   "n": 26,
+   "r": [
+    0.3486,
+    0.3662,
+    0.408,
+    0.4675,
+    0.5264,
+    0.56,
+    0.5176,
+    0.5286,
+    0.4884,
+    0.4451,
+    0.3632,
+    0.3094
+   ],
+   "b": [
+    0.3198,
+    0.3062,
+    0.2679,
+    0.2208,
+    0.1807,
+    0.1435,
+    0.1576,
+    0.1774,
+    0.1773,
+    0.2336,
+    0.2995,
+    0.3214
+   ],
+   "Y": [
+    0.9213,
+    0.8743,
+    0.7033,
+    0.5134,
+    0.4265,
+    0.3628,
+    0.2919,
+    0.2512,
+    0.2169,
+    0.107,
+    0.0891,
+    0.0946
+   ],
+   "dr": [
+    0.0403,
+    0.065,
+    0.1091,
+    0.1508,
+    0.182,
+    0.1622,
+    0.1372,
+    0.1188,
+    0.1207,
+    0.0667,
+    0.0465,
+    0.0
+   ]
+  }
+ }
+}

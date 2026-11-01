@@ -1,0 +1,79 @@
+"""T19 光晕统计量: 对真实 CineStill 800T 扫描 (参考) 与模型成片用同一套代码测量点光源周围的径向颜色分布。
+
+灯芯: 线性 RGB 三通道都 ≥ CORE (印成纯白) 的连通块, 不接触画面边缘。按等效半径分组 (胶片 µm)。
+每个像素只归属最近的灯芯 (距离变换的最近点), 按到灯芯边缘的距离 (胶片 µm) 分环, 取线性 RGB 中位数。
+输出每个灯芯组的: 色度 r = R/(R+G+B)、b = B/(R+G+B)、亮度 Y, 以及相对 1.5–2.5 mm 环 (局部背景) 的红色度增量。
+画幅比例: 135 (36×24 mm): 宽高比 1.45–1.55 时长边 = 36 mm; 更方的裁切按短边 = 24 mm; 更宽的裁切比例不明, 跳过。
+         6x7: 短边 = 56 mm。
+"""
+import numpy as np
+from scipy import ndimage
+
+BINS = np.array([0, 25, 50, 100, 150, 200, 300, 400, 500, 700, 1000, 1500, 2500])
+SIZES = ((0, 60), (60, 150), (150, 400))       # 灯芯等效半径 (µm)
+CORE = 0.9
+
+
+def px_um(shape, fmt):
+    h, w = shape[:2]
+    lo, hi = min(h, w), max(h, w)
+    a = hi / lo
+    if fmt == "6x7":
+        return 56000.0 / lo
+    if 1.45 <= a <= 1.55:
+        return 36000.0 / hi
+    if a < 1.45:
+        return 24000.0 / lo
+    return None
+
+
+def srgb_to_lin(x):
+    x = np.asarray(x, float)
+    return np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
+
+
+def profiles(lin, um):
+    """lin: 线性 RGB (h,w,3); um: µm/像素。→ {size_class: [每灯芯 (len(BINS)-1, 3) 中位 RGB]}"""
+    core = (lin >= CORE).all(-1)
+    lab, n = ndimage.label(core)
+    out = {s: [] for s in SIZES}
+    if n == 0:
+        return out
+    h, w = core.shape
+    d, (iy, ix) = ndimage.distance_transform_edt(~core, return_indices=True)
+    d = d * um
+    owner = lab[iy, ix]
+    objs = ndimage.find_objects(lab)
+    area = np.bincount(lab.ravel())
+    reach = int(np.ceil(BINS[-1] / um)) + 2
+    for k, sl in enumerate(objs, start=1):
+        if sl[0].start == 0 or sl[1].start == 0 or sl[0].stop == h or sl[1].stop == w:
+            continue
+        r_eq = np.sqrt(area[k] / np.pi) * um
+        cls = next((s for s in SIZES if s[0] <= r_eq < s[1]), None)
+        if cls is None:
+            continue
+        y0, y1 = max(sl[0].start - reach, 0), min(sl[0].stop + reach, h)
+        x0, x1 = max(sl[1].start - reach, 0), min(sl[1].stop + reach, w)
+        mine = owner[y0:y1, x0:x1] == k
+        dd = d[y0:y1, x0:x1]
+        px = lin[y0:y1, x0:x1]
+        prof = np.full((len(BINS) - 1, 3), np.nan)
+        for i, (lo, hi) in enumerate(zip(BINS[:-1], BINS[1:])):
+            m = mine & (dd > lo) & (dd <= hi)
+            if m.sum() >= 6:
+                prof[i] = np.median(px[m], 0)
+        if np.isfinite(prof[-1]).all():            # 需要局部背景
+            out[cls].append(prof)
+    return out
+
+
+def summarize(list_of_profiles):
+    """多灯芯 → 中位色度 / 亮度 / 红色度增量 (相对 1.5–2.5 mm)。"""
+    P = np.array(list_of_profiles)                  # (n, bins, 3)
+    S = np.nansum(P, -1)
+    r, b = P[..., 0] / S, P[..., 2] / S
+    Y = P @ np.array([0.2126, 0.7152, 0.0722])
+    dr = r - r[:, -1:]
+    med = lambda a: np.nanmedian(a, 0)
+    return {"n": len(P), "r": med(r), "b": med(b), "Y": med(Y), "dr": med(dr)}
