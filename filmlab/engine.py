@@ -31,6 +31,8 @@ GRAY = 0.184
 # 默认的计算修正 (Params.corrections), 由 filmlab.generation.use() 按管线代际设置
 DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
 PLATE_REFLECTANCE = 0.2    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究取值 (黑漆 ~0.05, 金属 ~0.5), 见 docs/tasks/T15_HALO_PHYSICS.md
+# T20 拍摄端眩光 (仅 "camera_glare" 时使用): η = 被散射的比例, r0 = 分布的核心半径 (µm, 胶片面), β = 尾部指数
+CAMERA_GLARE = {"eta": 0.0, "r0_um": 100.0, "beta": 1.5}
 HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
@@ -69,6 +71,7 @@ class Params:
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
     #   "halo_layered"   (配合 halo_oblique) 斜程衰减按层深度: 红层之上散射的光整层斜穿 (T11, 无自由参数; 可选)
+    #   "camera_glare"   拍摄端 (镜头 / 柔光镜) 的眩光扩散, 不属于胶片 (T20, 参数 CAMERA_GLARE; 可选)
     #   "halo_return"    返回光按实际斜光程 1/cosθ 被各层吸收 (T15, 无自由参数; 可选)
     #   "halo_plate"     穿出片基背面的光被相机压片板反射回乳剂 (T15, 反射率 PLATE_REFLECTANCE; 可选)
     #   "xyz_exposure"   人造光源的 RGB → 曝光映射在 XYZ 里做非负拟合 (T16 诊断, 未采用; 可选)
@@ -414,6 +417,9 @@ class Engine:
         self.light_W = None
         h, w = rgb_lin.shape[:2]
         self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
+        if "camera_glare" in p.corrections:              # T20: 拍摄端 (镜头 / 柔光镜) 眩光, 不属于胶片; 参数 CAMERA_GLARE
+            from .optics import lens_glare
+            rgb_lin = lens_glare(rgb_lin, self.px_um, **CAMERA_GLARE)
         if p.scene_lights == "auto" and p.exposure_hook is None and min(rgb_lin.shape[:2]) >= 32:
             H, halo_src = self._expose_mixed(rgb_lin * 2.0 ** p.exposure_ev)
         else:

@@ -11,7 +11,16 @@ SCENES = ["R1-00-1", "R1-01-2", "R1-02-3", "R1-03-4", "R1-04-5", "R1-05-6", "R1-
 
 
 def job(a):
-    gen, sid = a
+    spec, sid = a
+    gen, _, gl = spec.partition("~")            # 代际~η:r0: 拍摄端眩光 (T20)
+    if gl:
+        from filmlab import engine
+        eta, r0 = (float(x) for x in gl.split(":"))
+        engine.CAMERA_GLARE = {"eta": eta, "r0_um": r0, "beta": 1.5}
+    gen, _, pl = gen.partition("@")             # 代际@压片板反射率
+    if pl:
+        from filmlab import engine
+        engine.PLATE_REFLECTANCE = float(pl)
     import t19_halo_stats as hs
     import oracle_timing as ot
     if gen == "real":
@@ -24,7 +33,7 @@ def job(a):
         img = np.round(np.clip(img, 0, 1) * 255) / 255.0
     um = 36000.0 / max(img.shape[:2])
     pr = hs.profiles(hs.srgb_to_lin(img), um)
-    return gen, sid, {f"{s[0]}-{s[1]}": (np.nanmedian(np.array(v), 0).tolist() if v else None) for s, v in pr.items()}, um
+    return spec, sid, {f"{s[0]}-{s[1]}": (np.nanmedian(np.array(v), 0).tolist() if v else None) for s, v in pr.items()}, um
 
 
 if __name__ == "__main__":
@@ -38,8 +47,9 @@ if __name__ == "__main__":
     def st(P):
         P = np.array(P); S = np.nansum(P, -1); r = P[..., 0] / S; b = P[..., 2] / S
         Y = P @ np.array([0.2126, 0.7152, 0.0722])
-        return np.nanmedian(r - r[:, -1:], 0), np.nanmedian((Y - Y[:, -1:]) / np.maximum(Y[:, :1] - Y[:, -1:], 1e-6), 0), np.nanmedian(b, 0)
-    print("环 µm", hs.BINS[1:-1].tolist())
+        return np.nanmedian(r - r[:, -1:], 0), np.nanmedian((Y - Y[:, -1:]) / np.maximum(Y[:, 1:2] - Y[:, -1:], 1e-6), 0), np.nanmedian(b, 0)
+    print("环 µm", hs.BINS[1:-1].tolist(), "(亮度形状以 50 µm 环归一; RMS 取 50–1000 µm)")
+    score = {}
     for s in hs.SIZES:
         k = f"{s[0]}-{s[1]}"
         print("== 灯芯", k)
@@ -48,6 +58,16 @@ if __name__ == "__main__":
             if not P:
                 continue
             dr, y, b = st(P)
-            print(f"  {g:18s} n={len(P)} Δr " + " ".join(f"{x:6.3f}" for x in dr[:-1]))
+            if g == "real":
+                ref = (dr, y)
+            sel = slice(1, 10)
+            e_dr = float(np.sqrt(np.nanmean((dr[sel] - ref[0][sel]) ** 2)))
+            e_y = float(np.sqrt(np.nanmean((np.log10(np.maximum(y[sel], 1e-3)) - np.log10(np.maximum(ref[1][sel], 1e-3))) ** 2)))
+            score.setdefault(g, {})[k] = (e_dr, e_y)
+            print(f"  {g:18s} n={len(P)} RMS Δr {e_dr:.3f}  RMS log亮度 {e_y:.3f}")
+            print(f"  {'':18s}      Δr " + " ".join(f"{x:6.3f}" for x in dr[:-1]))
             print(f"  {'':18s}      Y  " + " ".join(f"{x:6.3f}" for x in y[:-1]))
             print(f"  {'':18s}      b  " + " ".join(f"{x:6.3f}" for x in b[:-1]))
+    print("\n汇总 (三组均值)  RMS Δr / RMS log亮度")
+    for g, v in score.items():
+        print(f"  {g:24s} {np.mean([a for a, _ in v.values()]):.3f} / {np.mean([b_ for _, b_ in v.values()]):.3f}")

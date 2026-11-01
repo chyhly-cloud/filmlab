@@ -12,7 +12,7 @@ sys.path[:0] = [str(HERE), str(HERE.parents[1])]
 def job(a):
     gen, f = a
     cache = Path(os.environ.get("CACHE", "/tmp/t19_cache")); cache.mkdir(parents=True, exist_ok=True)
-    tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}"
+    tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
     if not c.exists():
@@ -22,6 +22,10 @@ def job(a):
         from filmlab.io import srgb_encode
         generation.use(gen)
         rawio.SOURCE_STOPS = float(os.environ.get("STOPS", "0"))
+        if os.environ.get("GLARE"):                      # "η,r0_µm": 拍摄端眩光 (T20)
+            from filmlab import engine as _eng
+            eta, r0 = (float(x) for x in os.environ["GLARE"].split(","))
+            _eng.CAMERA_GLARE = {"eta": eta, "r0_um": r0, "beta": 1.5}
         ex = rawio.exif_exposure(f)
         rgb = rawio.load_raw(f, max_size=1600)
         m, _ = rawio.film_metering(rgb, rawio.clip_luminance(f), rng=np.random.default_rng(zlib.crc32(Path(f).stem.encode())),

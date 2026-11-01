@@ -52,12 +52,17 @@ GENERATIONS["next_lab_halo_meas"] = GENERATIONS["next_lab_halo_plate"]
 GENERATIONS["next_lab_halo_edge"] = ("D65", GENERATIONS["next_lab_halo_plate"][1] + ("blue_xyz",), {})
 # T19 研究候选 next_lab_halo_e2 = next_lab_halo + T16 (蓝层 XYZ、边界取色) + T17 (光圈缺失), 不含 T15 两项光晕补项
 GENERATIONS["next_lab_halo_e2"] = ("D65", GENERATIONS["next_lab_halo"][1] + ("blue_xyz",), {})
-RECON_COLOUR = {"next_lab_halo_edge": "edge", "next_lab_halo_e2": "edge"}
+# T20 研究候选 next_lab_halo_e2p = next_lab_halo_e2 + 相机压片板反射 (反射率 engine.PLATE_REFLECTANCE), 不含返回斜光程
+GENERATIONS["next_lab_halo_e2p"] = ("D65", GENERATIONS["next_lab_halo_e2"][1] + ("halo_plate",), {})
+# T20 外观选项 next_lab_halo_e2g = next_lab_halo_e2 + 拍摄端眩光 (engine.CAMERA_GLARE), 不属于胶片物理
+GENERATIONS["next_lab_halo_e2g"] = ("D65", GENERATIONS["next_lab_halo_e2"][1] + ("camera_glare",), {})
+RECON_COLOUR = {"next_lab_halo_edge": "edge", "next_lab_halo_e2": "edge", "next_lab_halo_e2p": "edge", "next_lab_halo_e2g": "edge"}
 # T17: 手动镜头光圈缺失时, 由实测快门与 ISO + 光圈范围求截断亮度 (rawio.APERTURE_RANGE); 未列出的代际 None
-APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0), "next_lab_halo_e2": (1.4, 8.0)}
+APERTURE_RANGE = {"next_lab_halo_edge": (1.4, 8.0), "next_lab_halo_e2": (1.4, 8.0), "next_lab_halo_e2p": (1.4, 8.0),
+                  "next_lab_halo_e2g": (1.4, 8.0)}
 METERING = {"next_lab": "session", "next_lab_halo": "session", "next_lab_halo_ret": "session",
             "next_lab_halo_plate": "session", "next_lab_halo_meas": "session", "next_lab_halo_edge": "session",
-            "next_lab_halo_e2": "session"}
+            "next_lab_halo_e2": "session", "next_lab_halo_e2p": "session", "next_lab_halo_e2g": "session"}
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
