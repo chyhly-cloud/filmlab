@@ -23,6 +23,9 @@ def render(args):
     if gen == "next_lab_layered":                # T11 候选 (在本进程注册)
         import t11_layered
         t11_layered.install()
+    if gen == "next_lab_halo_pc":                   # T12 候选 (在本进程注册)
+        import t12_pc
+        t12_pc.install()
     generation.use(gen)
     import oracle_timing as ot, pair_compare as pc
     from filmlab.engine import Engine, Params
