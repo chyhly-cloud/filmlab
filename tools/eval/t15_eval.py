@@ -2,7 +2,7 @@
 代际写法: 代际名[@压片板反射率], 如 next_lab_halo_plate@0.2。
 输出: 红带 RMS (accept_t03 的 4 个场景, 150–1500 µm 红色度) + T13 的 8 个场景的全图 / 光源旁 (0–300 µm) ΔE00。
 
-用法: FILMLAB_DATA=… [FWD=m] python3 t15_eval.py 输出.json 代际…   (FWD: engine.HALO_FORWARD, T34)
+用法: FILMLAB_DATA=… [FWD=m] [SEED=n] python3 t15_eval.py 输出.json 代际…   (FWD: engine.HALO_FORWARD, T34; SEED: rawio.SEED_OFFSET, T39)
 """
 import json, os, sys, warnings
 from pathlib import Path
@@ -22,6 +22,9 @@ def job(args):
         engine.PLATE_REFLECTANCE = engine.PLATE_REFLECTANCE_LAMBERT = float(pl)
     if os.environ.get("FWD"):          # T34: 光晕核角分布指数 cos^m (engine.HALO_FORWARD; 仅含 "halo_forward" 的代际生效)
         engine.HALO_FORWARD = float(os.environ["FWD"])
+    if os.environ.get("SEED"):         # T39: 截断重建随机数种子偏移
+        from filmlab import rawio
+        rawio.SEED_OFFSET = int(os.environ["SEED"])
     import accept_t03
     if kind == "band":
         os.environ["TAG"] = "_" + spec.replace("@", "_")

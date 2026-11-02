@@ -2,7 +2,8 @@
 流程同 examples/night.py (EXIF 测光), 长边 1600 像素 (≈ 22.5 µm/像素, 与参考扫描相近), 输出按 8 位 sRGB 量化后再解码测量。
 用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25),
 FWD (光晕核角分布指数 cos^m, engine.HALO_FORWARD, 需代际含 "halo_forward", T26), BOUNCES (多次反射次数, 临时诊断, T26),
-PLATE (压片板反射率: engine.PLATE_REFLECTANCE 与 PLATE_REFLECTANCE_LAMBERT, 需代际含 "halo_plate", T36)"""
+PLATE (压片板反射率: engine.PLATE_REFLECTANCE 与 PLATE_REFLECTANCE_LAMBERT, 需代际含 "halo_plate", T36),
+SEED (截断重建随机数种子偏移 rawio.SEED_OFFSET, 缓存名后缀 _s{SEED}, T39)"""
 import json, os, sys, zlib, warnings
 from pathlib import Path
 import numpy as np
@@ -17,7 +18,8 @@ def job(a):
     tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "") \
         + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "") \
         + (f"_f{os.environ['FWD']}" if os.environ.get("FWD") else "") + (f"_b{os.environ['BOUNCES']}" if os.environ.get("BOUNCES") else "") \
-        + (f"_p{os.environ['PLATE']}" if os.environ.get("PLATE") else "") + ("_remjet" if os.environ.get("REMJET") else "")
+        + (f"_p{os.environ['PLATE']}" if os.environ.get("PLATE") else "") + (f"_s{os.environ['SEED']}" if os.environ.get("SEED") else "") \
+        + ("_remjet" if os.environ.get("REMJET") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
     if not c.exists():
@@ -33,6 +35,7 @@ def job(a):
             from filmlab import engine as _e2
             _e2.HALATION_MEASURED = float(os.environ["HALO_K"])
         rawio.SOURCE_STOPS = float(os.environ.get("STOPS", "0"))
+        rawio.SEED_OFFSET = int(os.environ.get("SEED", "0"))
         if os.environ.get("FWD"):                        # 光晕核角分布指数 (T26, 仅含 "halo_forward" 的代际生效)
             from filmlab import engine as _e3
             _e3.HALO_FORWARD = float(os.environ["FWD"])

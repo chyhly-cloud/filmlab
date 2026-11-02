@@ -280,7 +280,12 @@ CLIP_DETECT = "channel_max"
 #                 "measured" = 同 stops, 但每块的截断区平均亮度 (flux, 档) 从夜景 HDRI 实测分布 (按类与尺寸档) 抽样,
 #                              再反解穹顶档数 (T37 候选, 见 MEASURED_FLUX)
 #                 "measured_cond" = 同 measured, 但分布还以块的观测量为条件 (T38 候选, 见 _block_obs、MEASURED_COND)
+#                 "measured_cond2" = 条件为 块外背景 bg × 传感器三通道饱和比例 nsat3 (T39 候选, 见 MEASURED_COND2)
+#                 "measured_cond2_corr" = 同 measured_cond2, 但同一张图里落在同一条件格的块的分位按实测的帧内组内相关
+#                              (MEASURED_COND2_ICC) 相关抽样 (T39 诊断 t39_corr)
 HIGHLIGHT_RECON = "prior"
+# T39: 截断重建随机数种子的整体偏移 (多种子评估用; 0 = 原行为, 逐位不变)
+SEED_OFFSET = 0
 
 
 def sensor_saturation(raw, per_channel=False):
@@ -357,6 +362,10 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         detect = clip_detect or CLIP_DETECT
         sensor = sensor_saturation(raw, per_channel=True) if detect == "sensor" and (highlights == "reconstruct" or denoise_raw) \
             else None
+        # T39: 逐通道饱和 (相机原始通道) 只用于 measured_cond2 的观测量 nsat3 / nch, 与当前截断判定同一判据:
+        #      channel_max 下为各通道 ≥ 0.97 × 该通道最大值, sensor 下为传感元饱和堆积; 截断判定本身不变
+        want_sat3 = highlights == "reconstruct" and HIGHLIGHT_RECON in ("measured_cond2", "measured_cond2_corr")
+        sat3_obs = sensor if want_sat3 else None
         xyz = raw.postprocess(output_color=rawpy.ColorSpace.XYZ, **common, **kw).astype(np.float32) / 65535.0
         clip = None
         if highlights == "reconstruct" or denoise_raw:
@@ -375,6 +384,8 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
                 cam = raw.postprocess(output_color=rawpy.ColorSpace.raw, user_wb=[1, 1, 1, 1], **common)
                 mx = cam.reshape(-1, 3).max(0).astype(np.float32)
                 clip = (cam >= 0.97 * mx).any(-1).astype(np.float32)
+                if want_sat3:
+                    sat3_obs = cam >= 0.97 * mx
     step = max(1, int(round(max(xyz.shape[:2]) / max_size)))
     per_channel = detect == "sensor" and HIGHLIGHT_RECON == "per_channel" and highlights == "reconstruct" \
         and clip is not None and clip.any()
@@ -393,16 +404,22 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         cl = None if (clip is None or per_channel) else _downsample(clip, step)
         xyz = denoise(xyz.astype(np.float64), estimate_noise(xyz), out_matrix=XYZ_TO_SRGB, clipped=cl)
     if per_channel:
-        frame_seed = zlib.crc32(str(path).encode()) ^ seed
+        frame_seed = zlib.crc32(str(path).encode()) ^ (seed + SEED_OFFSET)
         l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
         cam_d = reconstruct_highlights_cam(xyz @ np.linalg.inv(A), f3, clip_lv, np.random.default_rng(frame_seed),
                                            l_clip, SOURCE_STOPS if source_stops is None else source_stops)
         return (cam_d @ A) @ XYZ_TO_SRGB.T
     rgb = xyz @ XYZ_TO_SRGB.T
     if highlights == "reconstruct" and clip is not None and clip.any():
-        frame_seed = zlib.crc32(str(path).encode()) ^ seed
+        frame_seed = zlib.crc32(str(path).encode()) ^ (seed + SEED_OFFSET)
         l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
         kw = {} if skirt_lin is None else {"skirt_lin": skirt_lin}
+        if HIGHLIGHT_RECON in ("measured_cond2", "measured_cond2_corr"):
+            s3 = np.zeros(clip.shape + (3,), bool)
+            if sat3_obs is not None:
+                h, w = min(sat3_obs.shape[0], s3.shape[0]), min(sat3_obs.shape[1], s3.shape[1])
+                s3[:h, :w] = sat3_obs[:h, :w]
+            kw["sat"] = tuple(_downsample(a.astype(np.float32), step) for a in (s3.any(-1), s3.all(-1), s3.sum(-1)))
         rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed), l_clip,
                                      SOURCE_STOPS if source_stops is None else source_stops, **kw)
     return rgb
@@ -499,14 +516,17 @@ def _measured_stops(flux, dome, f):
 # T38 候选 HIGHLIGHT_RECON = "measured_cond" (docs/tasks/T38_CONDITIONAL_LAMP_PRIOR.md): 同 "measured", 但 flux 的分位表
 # 还按块的观测量分档 (条件分布)。观测量只用 RAW 里也有的量 (截断后的亮度 Y、截断子像素比例 clip_frac、块标记),
 # 由 _block_obs 计算; tools/eval/t38_hdri_obs.py 在 HDRI 假想照片上调用同一函数。
-def _block_obs(Y, lab, k, sl, clip_frac, base):
+def _block_obs(Y, lab, k, sl, clip_frac, base, sat=None):
     """块 k (lab 为膨胀后的连通标记, sl 为其外接框) 的观测量:
       r      截断子像素面积的等效半径 (像素)
       bg     块外环带 (距块边 max(r,2)–max(3r,4) 像素, 不含任何截断块) 的 Y 中位 / base, 档
       skirt  紧贴块外 1–2 像素 (不含截断块) 的 Y 均值 / base, 档
       slope  距块边 [1, 1+R] 与 (1+R, 1+2R] 两环 Y 中位之比, 档 (R = max(r, 1); 正 = 向外衰减)
       fmean  块内 clip_frac > 0 像素的 clip_frac 均值
-      compact 截断核 (clip_frac > 0.25) 面积 / 外接圆面积"""
+      compact 截断核 (clip_frac > 0.25) 面积 / 外接圆面积
+    T39: sat = (f_any, f_all, f_ch) 时另给 (传感器逐通道饱和, 相机原始通道, 已按 step 下采样为比例):
+      nsat3  块内三通道都饱和的比例 Σ f_all / Σ f_any (块内没有任何通道饱和时为 0)
+      nch    块内饱和像素的平均饱和通道数 Σ f_ch / Σ f_any (0–3)"""
     f_blob = np.where(lab[sl] == k, clip_frac[sl], 0.0)
     r = float(np.sqrt(max(f_blob.sum(), 1e-9) / np.pi))
     R = max(r, 1.0)
@@ -533,8 +553,15 @@ def _block_obs(Y, lab, k, sl, clip_frac, base):
         compact = min(1.0, core.sum() / (np.pi * renc * renc))
     else:
         compact = float("nan")
-    return {"r": r, "bg": lg(bg), "skirt": lg(sk), "slope": slope,
-            "fmean": float(fpos.mean()) if fpos.size else float("nan"), "compact": compact}
+    out = {"r": r, "bg": lg(bg), "skirt": lg(sk), "slope": slope,
+           "fmean": float(fpos.mean()) if fpos.size else float("nan"), "compact": compact}
+    if sat is not None:
+        f_any, f_all, f_ch = sat
+        bb = lab[sl] == k
+        na = float(f_any[sl][bb].sum())
+        out["nsat3"] = float(f_all[sl][bb].sum()) / na if na > 0 else 0.0
+        out["nch"] = float(f_ch[sl][bb].sum()) / na if na > 0 else 0.0
+    return out
 
 
 # T38: 条件分位表 {"var": 观测量名, "edges": 观测档边界, "flux": {类: [尺寸档][观测档] 21 分位},
@@ -550,6 +577,51 @@ def _cond_flux(cls, r_um, obs, u):
         tab = MEASURED_COND["flux"][cls][k][int(np.searchsorted(MEASURED_COND["edges"], v, side="right"))]
     else:
         tab = MEASURED_COND["flux_all"][cls][k]
+    return float(np.interp(u, MEASURED_Q, tab))
+
+
+# T39: 二维条件分位表 {"vars": ["bg", "nsat3"], "edges": {"bg": [...], "nsat3": [...]},
+#      "flux": {类: [尺寸档][bg 档][nsat3 档] 21 分位}, "flux_ns": {类: [尺寸档][nsat3 档]} (bg 缺失时), "flux_all": {类: [尺寸档]}};
+#      由 tools/eval/t39_summary.py 生成, 存于 data/lamp_flux_cond2.json
+MEASURED_COND2 = json.loads((Path(__file__).parent / "data" / "lamp_flux_cond2.json").read_text()) \
+    if (Path(__file__).parent / "data" / "lamp_flux_cond2.json").exists() else None
+
+
+# T39 t39_corr: 同一张假想照片、同一条件格 (类, 尺寸档, bg 档, nsat3 档) 内条件分位 u 的组内相关 (高斯秩尺度),
+# 由 tools/eval/t39_summary.py 在 24 张 HDRI 上测得 (大面积只有 13 组, 取灯具值)。高斯 copula: u' = Φ(√ρ·z_组 + √(1−ρ)·Φ⁻¹(u)),
+# 边缘分布不变; z_组 由本帧随机数种子与格的编号确定, 不消耗每块的随机数。
+MEASURED_COND2_ICC = {"lamp": 0.42, "line": 0.46, "large": 0.42}
+
+
+def _cond2_cell(cls, r_um, obs):
+    T = MEASURED_COND2
+    k = int(np.searchsorted(MEASURED_SIZE_UM, r_um, side="right"))
+    j = int(np.searchsorted(T["edges"]["nsat3"], obs.get("nsat3", 0.0), side="right"))
+    bg = obs.get("bg", float("nan"))
+    b = int(np.searchsorted(T["edges"]["bg"], bg, side="right")) if np.isfinite(bg) else -1
+    return ("lamp", "line", "large").index(cls), k, b, j
+
+
+def _cond2_corr_u(rng, cls, r_um, obs, u):
+    from scipy.special import ndtr, ndtri
+    ss = getattr(rng.bit_generator, "seed_seq", None)
+    ent = int(ss.entropy) if ss is not None and isinstance(ss.entropy, int) else 0
+    ci, k, b, j = _cond2_cell(cls, r_um, obs)
+    zg = np.random.default_rng([ent, 39, ci, k, b + 1, j]).standard_normal()
+    rho = MEASURED_COND2_ICC[cls]
+    return float(ndtr(np.sqrt(rho) * zg + np.sqrt(1.0 - rho) * ndtri(min(max(u, 1e-9), 1 - 1e-9))))
+
+
+def _cond2_flux(cls, r_um, obs, u):
+    """measured_cond2: 类、尺寸档、bg 档、nsat3 档的条件分布在 u 处的分位 (档)。"""
+    T = MEASURED_COND2
+    k = int(np.searchsorted(MEASURED_SIZE_UM, r_um, side="right"))
+    j = int(np.searchsorted(T["edges"]["nsat3"], obs.get("nsat3", 0.0), side="right"))
+    bg = obs.get("bg", float("nan"))
+    if np.isfinite(bg):
+        tab = T["flux"][cls][k][int(np.searchsorted(T["edges"]["bg"], bg, side="right"))][j]
+    else:
+        tab = T["flux_ns"][cls][k][j]
     return float(np.interp(u, MEASURED_Q, tab))
 
 
@@ -727,7 +799,7 @@ def _skirt_block_stops(sk, k, sl, base):
                                                     "spread": float(spread)}, "ok"   # spread: 各 Δ 推得幅度之差 (档)
 
 
-def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, skirt_lin=None):
+def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, skirt_lin=None, sat=None):
     """重建传感器截断的高光。
 
     每个截断区域:
@@ -736,7 +808,8 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             不会低于截断点
       形状  从边缘 (= 截断亮度, 保证连续) 向内部逐渐变亮的穹顶, 模拟发光体中心最亮
       面积  只有像素里被截断的那部分子像素换成亮源 (clip_frac), 不放大细亮线的面积
-    skirt_lin: 降噪前的线性 RGB; 给出时 (HIGHLIGHT_RECON = "skirt") 档数改由裙边 / 同图 PSF 推算, 见 skirt_psf"""
+    skirt_lin: 降噪前的线性 RGB; 给出时 (HIGHLIGHT_RECON = "skirt") 档数改由裙边 / 同图 PSF 推算, 见 skirt_psf
+    sat: (f_any, f_all, f_nch) 传感器逐通道饱和下采样后的比例 (T39 "measured_cond2"; None 时 nsat3 = 0)"""
     mask = ndimage.binary_dilation(clip_frac > 0.25)
     lab, n = ndimage.label(mask)
     if n == 0:
@@ -785,7 +858,7 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             lum_range, stop_range = LINE_PRIOR
         if HIGHLIGHT_RECON == "stops":   # T30: 与 L_clip 无关, 同样每块抽一次随机数
             stops = float(np.clip(rng.uniform(*_stops_range(lum_range)), 0.05, MAX_STOPS))
-        elif HIGHLIGHT_RECON in ("measured", "measured_cond"):   # T37 / T38: 抽 flux, 穹顶档数在下面按该块的 d、f 反解
+        elif HIGHLIGHT_RECON in ("measured", "measured_cond", "measured_cond2", "measured_cond2_corr"):   # T37–T39: 抽 flux, 穹顶档数在下面按该块的 d、f 反解
             u = rng.uniform()
             stops = None
         elif l_clip is not None:
@@ -807,13 +880,20 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             if HIGHLIGHT_RECON == "measured_cond":
                 obs = _block_obs(Y, lab, k, sl, clip_frac, base)
                 flux_s = _cond_flux(cls, r_um, obs, u)
+            elif HIGHLIGHT_RECON in ("measured_cond2", "measured_cond2_corr"):
+                if sat is None:
+                    z = np.zeros(clip_frac.shape, np.float32)
+                    sat = (z, z, z)
+                obs = _block_obs(Y, lab, k, sl, clip_frac, base, sat=sat)
+                uu = _cond2_corr_u(rng, cls, r_um, obs, u) if HIGHLIGHT_RECON == "measured_cond2_corr" else u
+                flux_s = _cond2_flux(cls, r_um, obs, uu)
             else:
                 flux_s = _measured_flux(cls, r_um, u)
             stops = _measured_stops(flux_s, ((d / max(d.max(), 1.0)) ** MEASURED_DOME)[blob], fb)
             stops = max(stops, 0.05)
         stops = _shift_stops(stops, source_stops)
         d = ndimage.distance_transform_edt(blob)
-        dome = (d / max(d.max(), 1.0)) ** (MEASURED_DOME if HIGHLIGHT_RECON in ("measured", "measured_cond") else 0.7)
+        dome = (d / max(d.max(), 1.0)) ** (MEASURED_DOME if HIGHLIGHT_RECON in ("measured", "measured_cond", "measured_cond2", "measured_cond2_corr") else 0.7)
         lum = base * 2.0 ** (stops * dome)
         region = out[y0:y1, x0:x1]
         # 下采样像素是盒式平均: 只有被截断的那部分 (f) 是被藏起来的亮源, 其余保持观测值。
@@ -826,7 +906,7 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
                               "r_eq": float(np.sqrt(f.sum() / np.pi)),
                               "flux": float(np.log2(max((f[:, 0] * lum[blob]).sum(), 1e-12) / max(f.sum() * base, 1e-12))),
                               "cy": 0.5 * (sl[0].start + sl[0].stop), "cx": 0.5 * (sl[1].start + sl[1].stop)})
-            if HIGHLIGHT_RECON == "measured_cond":
+            if HIGHLIGHT_RECON in ("measured_cond", "measured_cond2", "measured_cond2_corr"):
                 STOPS_LOG[-1]["obs"] = obs
     return out
 
