@@ -18,8 +18,8 @@ def job(args):
     spec, kind, sid, out = args
     gen, _, pl = spec.partition("@")
     from filmlab import engine
-    if pl:
-        engine.PLATE_REFLECTANCE = float(pl)
+    if pl:                             # 镜面 (T15) 与朗伯 (T36, halo_plate_lambert) 两种处理都用这个值
+        engine.PLATE_REFLECTANCE = engine.PLATE_REFLECTANCE_LAMBERT = float(pl)
     if os.environ.get("FWD"):          # T34: 光晕核角分布指数 cos^m (engine.HALO_FORWARD; 仅含 "halo_forward" 的代际生效)
         engine.HALO_FORWARD = float(os.environ["FWD"])
     import accept_t03

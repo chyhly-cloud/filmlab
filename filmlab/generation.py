@@ -133,6 +133,17 @@ HIGHLIGHT_RECON["t34_phys"] = "stops"
 MASK_PLACEMENT["t34_phys"] = "layers"
 RECON_COLOUR["t34_phys"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t34_phys"] = APERTURE_RANGE.get("t31_base")
+# T36 研究候选 (docs/tasks/T36_GREEN_W_PLATE.md):
+#   t36_phys = t34_phys + 按层深度的 w 逐层计算 (halo_layered_perlayer: 绿层 w 由绿层之上的散射算出, 蓝层 w = 0; 无自由参数)
+#   t36_base = t36_phys + 哑光压片板的朗伯漫反射 (halo_plate + halo_plate_lambert, 反射率 engine.PLATE_REFLECTANCE_LAMBERT)
+GENERATIONS["t36_phys"] = ("D65", GENERATIONS["t34_phys"][1] + ("halo_layered_perlayer",), {})
+GENERATIONS["t36_base"] = ("D65", GENERATIONS["t36_phys"][1] + ("halo_plate", "halo_plate_lambert"), {})
+for _g in ("t36_phys", "t36_base"):
+    METERING[_g] = "session"
+    HIGHLIGHT_RECON[_g] = "stops"
+    MASK_PLACEMENT[_g] = "layers"
+    RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
+    APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

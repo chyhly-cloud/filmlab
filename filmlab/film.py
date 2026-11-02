@@ -61,7 +61,7 @@ def _fresnel_unpolarized(theta, n1=1.5, n2=1.0):
 
 
 def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500.0, *, oblique_density=0.0,
-                    oblique_w=0.0, return_gain=None, plate=0.0):
+                    oblique_w=0.0, return_gain=None, plate=0.0, plate_diffuse=False):
     """片基内反射的光学核: 到达片基的单位漫射光, 回到乳剂时在半径 r 处的分布。
 
     穿过浑浊乳剂到达片基的漫射光按 cos^forward θ 分布 (1 = 朗伯, 越大越前向)。
@@ -72,7 +72,13 @@ def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500
 
     return_gain (T15): θ → 返回光斜穿该层时吸收相对垂直吸收的倍数 (film.return_gain), None = 垂直吸收 (原行为)。
     plate (T15): 相机压片板的 (镜面) 反射率。低于临界角、穿出片基背面的光被压片板反射后
-      以同一角度回到乳剂 (横向偏移同为 2·t·tanθ, 忽略压片板与片基之间的空气隙), 0 = 不计 (原行为)。"""
+      以同一角度回到乳剂 (横向偏移同为 2·t·tanθ, 忽略压片板与片基之间的空气隙), 0 = 不计 (原行为)。
+    plate_diffuse (T36): 压片板按朗伯 (哑光) 漫反射处理, 见 _plate_lambert_kernel; False = 上述镜面处理 (逐位不变)。"""
+    if plate_diffuse and plate > 0:
+        k = halation_kernel(px_um, base_um, n_base, forward, r_max_um, oblique_density=oblique_density,
+                            oblique_w=oblique_w, return_gain=return_gain, plate=0.0)
+        return k + _plate_lambert_kernel(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w,
+                                         return_gain, plate, k.shape[0] // 2)
     if return_gain is None and plate == 0:
         return _halation_kernel_base(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w)
     th = np.linspace(1e-4, np.radians(89.5), 4000)
@@ -93,6 +99,60 @@ def halation_kernel(px_um, base_um=130.0, n_base=1.5, forward=1.5, r_max_um=1500
     ring_area = np.pi * (edges[1:] ** 2 - edges[:-1] ** 2)
     k = np.interp(rr, r, w / ring_area, right=0.0) * px_um ** 2
     return k * (w[r <= r_max_um].sum() / max(k.sum(), 1e-12))
+
+
+def _plate_lambert_kernel(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w, return_gain, plate,
+                          n_half):
+    """T36: 低于临界角穿出片基背面、被哑光 (朗伯) 压片板漫反射回乳剂的光 (片基背面菲涅耳反射 R(θ) 部分仍按镜面留在主核里)。
+
+    下行: 以 θ 到达片基背面的光 (权重 = 主核同一 cos^m 角分布 × 下行斜程 A(θ)), 透出 1 − R(θ), 横移 a = t·tanθ。
+    压片板: 漫反射率 ρ, 朗伯 (出射强度 ∝ cosθ_a)。回到片基背面时按菲涅耳 (空气 → 片基) 透入, 其余被背面反射回压片板,
+      往返的几何级数 → 透入片基的比例 ρ·T_d / (1 − ρ·R_d), R_d = 朗伯入射的半球反射率, T_d = 1 − R_d。
+      空气隙 (压片板压紧, 远小于 t) 忽略: 在空气隙里来回不产生横移。
+    回程: 由光学扩展量守恒 (n²·cosθ'·dΩ' = cosθ_a·dΩ_a), 透入片基的光在 θ' ∈ [0, θc] 内按 (1 − R(θ'))·2n²·sinθ'·cosθ' 分布,
+      横移 b = t·tanθ', 方位与下行无关 (漫反射); 回到乳剂时该层吸收按 θ' 的斜光程 return_gain(θ')。
+    落点 = 两段横移的矢量和 |a + b| (相对方位均匀), 用细网格上两段环分布的二维卷积求径向分布, 再按解析总量栅格化。
+    能量: Σ_θ<θc w(θ)·(1 − R(θ)) · ρ·T_d/(1 − ρ·R_d) · <g(θ')>, 不重新归一 (吸收的就是损失)。"""
+    from scipy.signal import fftconvolve
+    tc = np.arcsin(1.0 / n_base)
+    th = np.linspace(1e-4, np.radians(89.5), 4000)
+    ang = np.sin(th) * np.cos(th) ** forward
+    ang /= (ang * np.gradient(th)).sum()
+    R = _fresnel_unpolarized(th, n_base)
+    w_out = ang * np.gradient(th) * (1.0 - R) * (th < tc)                     # 透出片基背面
+    if oblique_density != 0:
+        w_out = w_out * oblique_attenuation(th, oblique_density, oblique_w)
+    tp = np.linspace(1e-5, tc - 1e-6, 2000)                                     # 回程角 θ' (片基内)
+    Rp = _fresnel_unpolarized(tp, n_base)
+    w_ret = (1.0 - Rp) * 2.0 * n_base ** 2 * np.sin(tp) * np.cos(tp) * np.gradient(tp)
+    T_d = w_ret.sum()                                                           # 朗伯入射透入片基的比例
+    R_d = 1.0 - T_d
+    g_ret = return_gain(tp) if return_gain is not None else np.ones_like(tp)
+    E = w_out.sum() * plate * T_d / (1.0 - plate * R_d) * (w_ret * g_ret).sum() / T_d
+    # 两段横移的环分布 (细网格, 步长 t/130), 二维卷积 → 径向分布
+    ds = base_um / 130.0
+    a_max = base_um * np.tan(tc)
+    m = int(np.ceil(a_max / ds)) + 2
+    y, x = np.mgrid[-m:m + 1, -m:m + 1] * ds
+    rho_g = np.hypot(y, x)
+    def ring(theta, wt):
+        rr = base_um * np.tan(theta)
+        edges = np.append(rr, rr[-1] * 1.0001)
+        area = np.pi * (edges[1:] ** 2 - edges[:-1] ** 2)
+        return np.interp(rho_g, rr, wt / area, right=0.0)
+    sel = th < tc
+    conv = fftconvolve(ring(th[sel], w_out[sel]), ring(tp, w_ret * g_ret), mode="full")
+    M = conv.shape[0] // 2
+    yy, xx = np.mgrid[-M:M + 1, -M:M + 1] * ds
+    rc = np.hypot(yy, xx).ravel()
+    nb = int(np.ceil(rc.max() / ds)) + 1
+    idx = np.minimum((rc / ds).astype(int), nb - 1)
+    dens = np.bincount(idx, conv.ravel(), nb) / np.maximum(np.bincount(idx, None, nb), 1)
+    r_c = (np.arange(nb) + 0.5) * ds
+    r_c[0] = 0.0
+    yy, xx = np.mgrid[-n_half:n_half + 1, -n_half:n_half + 1] * px_um
+    k = np.interp(np.hypot(yy, xx), r_c, dens, right=0.0)
+    return k * (E / max(k.sum(), 1e-30))
 
 
 def _halation_kernel_base(px_um, base_um, n_base, forward, r_max_um, oblique_density, oblique_w):
@@ -149,6 +209,22 @@ def scatter_above_red(stock: Stock, v):
     inside = t(aB + Ay + aG) * sc(aR)
     w = S[:, 0]
     return float((above * w).sum() / ((above + inside) * w).sum())
+
+
+def scatter_above_layers(stock: Stock, v):
+    """T36: 按层的 w —— 各感光层波段内, 散射发生在该层之上的比例 (同 scatter_above_red 的叠层设定, 该层感光度加权)。
+    红层: = scatter_above_red (之上为蓝层、绿层); 绿层: 之上只有蓝层 (散射) 与黄滤光层 (只吸收、不散射);
+    蓝层: 之上没有层, w = 0 (即 T03 的均匀深度平均)。"""
+    S = 10.0 ** stock.log_sensitivity
+    A = np.asarray(v.layer_absorbance)[None, :] * S / S.max(0)
+    Ay = v.yellow_filter / (1.0 + np.exp((WAVELENGTHS - 505.0) / 9.0))
+    turb = 0.15 * (550.0 / WAVELENGTHS) ** 3.0
+    aG, aB = A[:, 1] + turb, A[:, 2] + turb
+    t = lambda d: 10.0 ** -d
+    sc = lambda a: (1 - t(a)) * turb / np.maximum(a, 1e-9)
+    above, inside = sc(aB), t(aB + Ay) * sc(aG)
+    wG = float((above * S[:, 1]).sum() / ((above + inside) * S[:, 1]).sum())
+    return scatter_above_red(stock, v), wG, 0.0
 
 
 def oblique_densities(stock: Stock, v):
@@ -239,7 +315,7 @@ def halation_response(stock: Stock, light, scene_filter, v, back_reflect: float,
 
 
 def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_density=0.0, oblique_w=0.0,
-                        return_gain=None, plate=0.0):
+                        return_gain=None, plate=0.0, plate_diffuse=False):
     """多次反射: 光回到乳剂后, 在乳剂正面 (乳剂/空气, 同样 >42° 全反射) 再被反射回片基,
     每多一次往返横向再偏移 2·t·tanθ, 形成 2 倍、3 倍半径的外环。
     rho = 每多一次往返保留的比例 ≈ (该波段穿透整个乳剂的透射率)², 所以外环越来越红。
@@ -247,33 +323,37 @@ def multi_bounce_kernel(px_um, base_um, forward, rho, bounces=4, *, oblique_dens
     不包含完整的上下行重复吸收及散射输运。见 docs/HALATION_CHAIN_AUDIT.md。"""
     k1 = halation_kernel(px_um, base_um=base_um, forward=forward,
                          r_max_um=1500.0 * bounces, oblique_density=oblique_density, oblique_w=oblique_w,
-                         return_gain=return_gain, plate=plate)
+                         return_gain=return_gain, plate=plate, plate_diffuse=plate_diffuse)
     total = k1.copy()
     for n in range(2, bounces + 1):
         kn = halation_kernel(px_um, base_um=base_um * n, forward=forward, r_max_um=1500.0 * bounces,
-                             oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate)
+                             oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate,
+                             plate_diffuse=plate_diffuse)
         total += rho ** (n - 1) * kn
     return total
 
 
-def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0, oblique_w=0.0, return_gain=None, plate=0.0):
+def layer_halation_kernel(px_um, v, rho=0.0, oblique_density=0.0, oblique_w=0.0, return_gain=None, plate=0.0,
+                          plate_diffuse=False):
     """One layer's kernel, shared by picture convolution and gray-card timing."""
     if rho > 0.01:
         return multi_bounce_kernel(px_um, v.base_um, v.forward, rho,
                                    oblique_density=oblique_density, oblique_w=oblique_w,
-                                   return_gain=return_gain, plate=plate)
+                                   return_gain=return_gain, plate=plate, plate_diffuse=plate_diffuse)
     return halation_kernel(px_um, base_um=v.base_um, forward=v.forward,
-                           oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate)
+                           oblique_density=oblique_density, oblique_w=oblique_w, return_gain=return_gain, plate=plate,
+                           plate_diffuse=plate_diffuse)
 
 
 def halation(H, halo_source, px_um, v, rho=(0.0, 0.0, 0.0), *, oblique_densities=(0.0, 0.0, 0.0),
-             oblique_ws=(0.0, 0.0, 0.0), return_gains=(None, None, None), plate=0.0):
+             oblique_ws=(0.0, 0.0, 0.0), return_gains=(None, None, None), plate=0.0, plate_diffuse=False):
     """Spread each layer's halo source with its own base-reflection kernel."""
     from scipy.signal import fftconvolve
     out = H.copy()
     for c in range(3):
         if halo_source[..., c].max() > 0:
-            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c], oblique_ws[c], return_gains[c], plate)
+            k = layer_halation_kernel(px_um, v, rho[c], oblique_densities[c], oblique_ws[c], return_gains[c], plate,
+                                      plate_diffuse)
             out[..., c] += fftconvolve(halo_source[..., c], k, mode="same")
     return out
 
