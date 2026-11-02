@@ -387,3 +387,33 @@ def emulsion_scatter(H, px_um, sigma_um=4.0):
     if s < 0.3:
         return H
     return gaussian_filter(H, (s, s, 0))
+
+
+# T41: 乳剂正面散射按 Kodak VISION3 5219 官方 MTF (H-1-5219 Rev 3-26 第 3 页, 3200K / ECN-2 / Status M; 独立数字化与第三方数字化相差 ≤ 2%)。
+# 官方曲线除以低频平台 1.03 (显影邻接效应, 模型另由 DIR 抑制剂扩散给出) 后, 按二维指数 PSF ∝ exp(−r/a) (浑浊薄层的扩散近似,
+# MTF = (1 + (2πaf)²)^−1.5) 逐层拟合 20–70 c/mm (蓝层 12–70): a = 2.04 / 2.31 / 3.37 µm (R G B 层), log RMS 0.04 / 0.06 / 0.06。
+# 原设定 (三层同一高斯 σ = 4 µm) 在 50 c/mm 给 45%, 官方 R/G 为 57% / 50% (/1.03), 蓝层形状不符 (log RMS 0.25)。
+# 见 docs/tasks/T41_NEAR_FIELD_GLOW.md。r > 25 µm 的能量 ≤ 5e-3 (蓝层), 不产生灯芯外 25–200 µm 的近场光;
+# 在 22.5 µm/像素上只有约 3% (R) / 4% (G) / 10% (B) 落到相邻像素 (原设定 σ/像素 < 0.3 时整项跳过)。
+EMULSION_PSF_A_UM = (2.04, 2.31, 3.37)
+
+
+def emulsion_scatter_kodak(H, px_um, a_um=EMULSION_PSF_A_UM):
+    """T41: 逐层二维指数 PSF 的乳剂正面散射 (按像素面积积分, 归一)。a/像素 < 0.1 时 (核几乎全在中心像素) 直接返回。"""
+    from scipy.signal import fftconvolve
+    out = np.empty_like(H, dtype=float)
+    for c in range(H.shape[-1]):
+        a = a_um[c] / px_um
+        if a < 0.1:
+            out[..., c] = H[..., c]
+            continue
+        n = int(np.ceil(12 * a))
+        sub = 5                                    # 每像素 5×5 子采样, 近似像素面积积分
+        g = (np.arange(-n * sub - sub // 2, n * sub + sub // 2 + 1) + 0.0) / sub
+        yy, xx = np.meshgrid(g, g, indexing="ij")
+        k = np.exp(-np.hypot(yy, xx) / a)
+        k = k.reshape(2 * n + 1, sub, 2 * n + 1, sub).sum((1, 3))
+        k /= k.sum()
+        x = np.pad(np.asarray(H[..., c], float), n, mode="reflect")
+        out[..., c] = fftconvolve(x, k, mode="valid")
+    return out

@@ -183,6 +183,19 @@ HIGHLIGHT_RECON["t35_base"] = "stops"
 MASK_PLACEMENT["t35_base"] = "layers"
 RECON_COLOUR["t35_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t35_base"] = APERTURE_RANGE.get("t31_base")
+# T41 (docs/tasks/T41_NEAR_FIELD_GLOW.md): 灯芯旁近场 (正面扩散) 的逐项消融与修正, 均在 t31_base 上 (定光、灯亮度先验、遮罩、蓝层同 t31_base):
+#   t41_emul  = t31_base + 乳剂正面散射按 Kodak 5219 官方 MTF (emulsion_mtf: 逐层指数 PSF, 取代高斯 σ = 4 µm)
+#   t41_glare = t31_base + 拍摄端眩光 (camera_glare, 参数 engine.CAMERA_GLARE; 消融用, t19_model.py 的 GLARE 可覆盖)
+#   t41_base  = t31_base + emulsion_mtf + 拍摄端镜头 PSF 近场 (camera_glare + camera_glare_t41, 参数 engine.CAMERA_GLARE_T41)
+GENERATIONS["t41_emul"] = ("D65", GENERATIONS["t31_base"][1] + ("emulsion_mtf",), {})
+GENERATIONS["t41_glare"] = ("D65", GENERATIONS["t31_base"][1] + ("camera_glare",), {})
+GENERATIONS["t41_base"] = ("D65", GENERATIONS["t31_base"][1] + ("emulsion_mtf", "camera_glare", "camera_glare_t41"), {})
+for _g in ("t41_emul", "t41_glare", "t41_base"):
+    METERING[_g] = "session"
+    HIGHLIGHT_RECON[_g] = "stops"
+    MASK_PLACEMENT[_g] = "layers"
+    RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
+    APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

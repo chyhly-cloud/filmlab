@@ -3,7 +3,9 @@
 用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25),
 FWD (光晕核角分布指数 cos^m, engine.HALO_FORWARD, 需代际含 "halo_forward", T26), BOUNCES (多次反射次数, 临时诊断, T26),
 PLATE (压片板反射率: engine.PLATE_REFLECTANCE 与 PLATE_REFLECTANCE_LAMBERT, 需代际含 "halo_plate", T36),
-SEED (截断重建随机数种子偏移 rawio.SEED_OFFSET, 缓存名后缀 _s{SEED}, T39)"""
+SEED (截断重建随机数种子偏移 rawio.SEED_OFFSET, 缓存名后缀 _s{SEED}, T39),
+T41 诊断 (只改扫描端, 缓存名后缀 _sb / _sf / _sh): SCANBLUR (扫描光学 MTF: 在底片透射率上做高斯模糊, σ µm 胶片面),
+SCANFLARE ("η,r0_µm": 扫描仪杂散光, 在底片透射率上按 optics.lens_glare 同一 Moffat 核), SHOULDER (Params.scan_shoulder)"""
 import json, os, sys, zlib, warnings
 from pathlib import Path
 import numpy as np
@@ -19,6 +21,9 @@ def job(a):
         + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "") \
         + (f"_f{os.environ['FWD']}" if os.environ.get("FWD") else "") + (f"_b{os.environ['BOUNCES']}" if os.environ.get("BOUNCES") else "") \
         + (f"_p{os.environ['PLATE']}" if os.environ.get("PLATE") else "") + (f"_s{os.environ['SEED']}" if os.environ.get("SEED") else "") \
+        + (f"_sb{os.environ['SCANBLUR']}" if os.environ.get("SCANBLUR") else "") \
+        + (f"_sf{os.environ['SCANFLARE']}" if os.environ.get("SCANFLARE") else "") \
+        + (f"_sh{os.environ['SHOULDER']}" if os.environ.get("SHOULDER") else "") \
         + ("_remjet" if os.environ.get("REMJET") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
@@ -50,6 +55,27 @@ def job(a):
             from filmlab import engine as _eng
             eta, r0 = (float(x) for x in os.environ["GLARE"].split(","))
             _eng.CAMERA_GLARE = {"eta": eta, "r0_um": r0, "beta": 1.5}
+        if os.environ.get("SCANBLUR") or os.environ.get("SCANFLARE"):     # T41: 扫描端光学 (透射率空间, 只作用于整幅图)
+            from filmlab import negative as _neg
+            _m0 = _neg.Negative.__dict__.get("_measure_orig", _neg.Negative.measure)
+            _neg.Negative._measure_orig = _m0
+
+            def _measure(self, instrument, chunk=_neg.CHUNK):
+                D = _m0(self, instrument, chunk)
+                if D.ndim != 3 or D.shape[-1] != 3 or min(D.shape[:2]) < 32:
+                    return D
+                um = 36000.0 / max(D.shape[:2])
+                T = 10.0 ** -D
+                if os.environ.get("SCANBLUR"):
+                    from scipy.ndimage import gaussian_filter
+                    sb = float(os.environ["SCANBLUR"]) / um
+                    T = gaussian_filter(T, (sb, sb, 0))
+                if os.environ.get("SCANFLARE"):
+                    from filmlab.optics import lens_glare
+                    eta, r0 = (float(x) for x in os.environ["SCANFLARE"].split(","))
+                    T = lens_glare(T, um, eta, r0)
+                return -np.log10(np.clip(T, 1e-12, None))
+            _neg.Negative.measure = _measure
         ex = rawio.exif_exposure(f)
         rgb = rawio.load_raw(f, max_size=1600)
         m, _ = rawio.film_metering(rgb, rawio.clip_luminance(f), rng=np.random.default_rng(zlib.crc32(Path(f).stem.encode())),
@@ -58,6 +84,8 @@ def job(a):
         if os.environ.get("REMJET"):                     # 对照: 同一乳剂带 remjet (Vision3 500T 原片, 无片基光晕)
             from filmlab import materials
             extra["film"] = materials.emulsion("kodak_vision3_500t")
+        if os.environ.get("SHOULDER"):
+            extra["scan_shoulder"] = os.environ["SHOULDER"]
         eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": 0, **extra}))
         Image.fromarray((np.clip(srgb_encode(np.clip(eng.render(m), 0, 1)), 0, 1) * 255 + 0.5).astype(np.uint8)).save(c)
     import t19_halo_stats as hs

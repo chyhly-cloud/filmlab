@@ -36,6 +36,10 @@ PLATE_REFLECTANCE = 0.2    # T15 相机压片板 (镜面) 反射率, 仅 "halo_p
 PLATE_REFLECTANCE_LAMBERT = 0.05
 # T20 拍摄端眩光 (仅 "camera_glare" 时使用): η = 被散射的比例, r0 = 分布的核心半径 (µm, 胶片面), β = 尾部指数
 CAMERA_GLARE = {"eta": 0.0, "r0_um": 100.0, "beta": 1.5}
+# T41 拍摄端 (胶片相机镜头) 相对数码 RAW 多出的眩光 (仅 "camera_glare" + "camera_glare_t41" 时使用, 取代 CAMERA_GLARE)。
+# 同一 Moffat 形状 (β = 1.5); η、r0 由 EPFL 同场景配对 (训练 4 景) 灯芯外 0–500 µm 环的 G、B 定 (模型里这两层几乎不含片基光晕),
+# 留出 2 景同样最好。η = 1% 在普通镜头杂散光指数 (ISO 9358) 1–5% 的范围内。见 docs/tasks/T41_NEAR_FIELD_GLOW.md
+CAMERA_GLARE_T41 = {"eta": 0.01, "r0_um": 200.0, "beta": 1.5}
 # T26/T30 散射光到达片基时的角分布指数 cos^m 的校正值 (仅 "halo_forward" 时使用, 覆盖 Variation.forward;
 # None = 不改)。4.0 由真实 800T 减带 remjet 对照的光晕剖面形状定 (T26, T28), 用户目视采纳 (T30)。
 HALO_FORWARD = 4.0
@@ -87,6 +91,8 @@ class Params:
     #   "halo_forward"   光晕核的散射角分布指数 cos^m 改用 HALO_FORWARD (T26; 可选)
     #   "halo_plate"     穿出片基背面的光被相机压片板反射回乳剂 (T15, 反射率 PLATE_REFLECTANCE; 可选)
     #   "halo_plate_lambert" (配合 halo_plate) 压片板按哑光朗伯漫反射处理, 反射率 PLATE_REFLECTANCE_LAMBERT (T36; 可选)
+    #   "emulsion_mtf"   乳剂正面散射按 Kodak 5219 官方 MTF: 逐层二维指数 PSF (film.EMULSION_PSF_A_UM), 取代高斯 σ=4 µm (T41; 可选)
+    #   "camera_glare_t41" (配合 camera_glare) 拍摄端眩光参数用 CAMERA_GLARE_T41 (T41; 可选)
     #   "halo_layered_perlayer" (配合 halo_layered) 按层深度的 w 逐层计算: 绿层用绿层之上散射的比例, 蓝层 0 (T36; 可选)
     #   "xyz_exposure"   人造光源的 RGB → 曝光映射在 XYZ 里做非负拟合 (T16 诊断, 未采用; 可选)
     #   "blue_xyz"       人造光源下蓝层的 RGB → 曝光映射改在 XYZ 里做非负拟合 (T16, 无参数; 可选):
@@ -447,7 +453,8 @@ class Engine:
         self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
         if "camera_glare" in p.corrections:              # T20: 拍摄端 (镜头 / 柔光镜) 眩光, 不属于胶片; 参数 CAMERA_GLARE
             from .optics import lens_glare
-            rgb_lin = lens_glare(rgb_lin, self.px_um, **CAMERA_GLARE)
+            rgb_lin = lens_glare(rgb_lin, self.px_um, **(CAMERA_GLARE_T41 if "camera_glare_t41" in p.corrections
+                                                           else CAMERA_GLARE))
         if p.scene_lights == "auto" and p.exposure_hook is None and min(rgb_lin.shape[:2]) >= 32:
             H, halo_src = self._expose_mixed(rgb_lin * 2.0 ** p.exposure_ev)
         else:
@@ -461,7 +468,10 @@ class Engine:
         if trace is not None:
             trace['direct_exposure'] = H.copy()
             trace['halo_source'] = None if halo_src is None else halo_src.copy()
-        H = film.emulsion_scatter(H, self.px_um)
+        if "emulsion_mtf" in p.corrections:              # T41: 乳剂正面散射按 Kodak 5219 官方 MTF (逐层指数 PSF)
+            H = film.emulsion_scatter_kodak(H, self.px_um)
+        else:
+            H = film.emulsion_scatter(H, self.px_um)
         if trace is not None:
             trace['scattered_exposure'] = H.copy()
         if halo_src is not None:
