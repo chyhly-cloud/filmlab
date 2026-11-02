@@ -5,7 +5,9 @@
 它的肩部会把高光渐渐压缩, 而且光晕的强度正比于光源的真实亮度。所以要先把截断的高光
 按物理上合理的范围重建出来, 胶片模拟才能得到正确的高光与光晕。
 """
+import json
 import zlib
+from pathlib import Path
 from fractions import Fraction
 
 import numpy as np
@@ -277,6 +279,7 @@ CLIP_DETECT = "channel_max"
 #                 "stops" = 同 prior, 但档数与 EXIF 无关: 灯具类块在 STOPS_PRIOR 内均匀取值, 细线 / 大面积保持与灯具的相对偏移 (T30 候选)
 #                 "measured" = 同 stops, 但每块的截断区平均亮度 (flux, 档) 从夜景 HDRI 实测分布 (按类与尺寸档) 抽样,
 #                              再反解穹顶档数 (T37 候选, 见 MEASURED_FLUX)
+#                 "measured_cond" = 同 measured, 但分布还以块的观测量为条件 (T38 候选, 见 _block_obs、MEASURED_COND)
 HIGHLIGHT_RECON = "prior"
 
 
@@ -491,6 +494,63 @@ def _measured_stops(flux, dome, f):
         m = 0.5 * (lo + hi)
         lo, hi = (m, hi) if g(m) < target else (lo, m)
     return 0.5 * (lo + hi)
+
+
+# T38 候选 HIGHLIGHT_RECON = "measured_cond" (docs/tasks/T38_CONDITIONAL_LAMP_PRIOR.md): 同 "measured", 但 flux 的分位表
+# 还按块的观测量分档 (条件分布)。观测量只用 RAW 里也有的量 (截断后的亮度 Y、截断子像素比例 clip_frac、块标记),
+# 由 _block_obs 计算; tools/eval/t38_hdri_obs.py 在 HDRI 假想照片上调用同一函数。
+def _block_obs(Y, lab, k, sl, clip_frac, base):
+    """块 k (lab 为膨胀后的连通标记, sl 为其外接框) 的观测量:
+      r      截断子像素面积的等效半径 (像素)
+      bg     块外环带 (距块边 max(r,2)–max(3r,4) 像素, 不含任何截断块) 的 Y 中位 / base, 档
+      skirt  紧贴块外 1–2 像素 (不含截断块) 的 Y 均值 / base, 档
+      slope  距块边 [1, 1+R] 与 (1+R, 1+2R] 两环 Y 中位之比, 档 (R = max(r, 1); 正 = 向外衰减)
+      fmean  块内 clip_frac > 0 像素的 clip_frac 均值
+      compact 截断核 (clip_frac > 0.25) 面积 / 外接圆面积"""
+    f_blob = np.where(lab[sl] == k, clip_frac[sl], 0.0)
+    r = float(np.sqrt(max(f_blob.sum(), 1e-9) / np.pi))
+    R = max(r, 1.0)
+    pad = int(np.ceil(max(3.0 * r, 4.0) + 2))
+    y0, y1 = max(sl[0].start - pad, 0), min(sl[0].stop + pad, Y.shape[0])
+    x0, x1 = max(sl[1].start - pad, 0), min(sl[1].stop + pad, Y.shape[1])
+    lw = lab[y0:y1, x0:x1]
+    b = lw == k
+    free = lw == 0
+    Yw = Y[y0:y1, x0:x1]
+    d = ndimage.distance_transform_edt(~b)
+    lg = lambda v: float(np.log2(max(v, 1e-6 * base) / base)) if np.isfinite(v) else float("nan")
+    med = lambda m: float(np.median(Yw[m])) if m.any() else float("nan")
+    bg = med(free & (d >= max(r, 2.0)) & (d <= max(3.0 * r, 4.0)))
+    sk = float(np.mean(Yw[free & (d >= 1) & (d <= 2)])) if (free & (d >= 1) & (d <= 2)).any() else float("nan")
+    a, c = med(free & (d >= 1) & (d <= 1 + R)), med(free & (d > 1 + R) & (d <= 1 + 2 * R))
+    slope = float(np.log2(max(a, 1e-6 * base) / max(c, 1e-6 * base))) if np.isfinite(a) and np.isfinite(c) else float("nan")
+    fw = clip_frac[y0:y1, x0:x1]
+    fpos = fw[b & (fw > 0)]
+    core = b & (fw > 0.25)
+    if core.any():
+        ys, xs = np.nonzero(core)
+        renc = float(np.sqrt(((ys - ys.mean()) ** 2 + (xs - xs.mean()) ** 2).max())) + 0.5
+        compact = min(1.0, core.sum() / (np.pi * renc * renc))
+    else:
+        compact = float("nan")
+    return {"r": r, "bg": lg(bg), "skirt": lg(sk), "slope": slope,
+            "fmean": float(fpos.mean()) if fpos.size else float("nan"), "compact": compact}
+
+
+# T38: 条件分位表 {"var": 观测量名, "edges": 观测档边界, "flux": {类: [尺寸档][观测档] 21 分位},
+#      "flux_all": {类: [尺寸档] 21 分位} (观测量缺失时用)}; 由 tools/eval/t38_summary.py 生成, 存于 data/lamp_flux_cond.json
+MEASURED_COND = json.loads((Path(__file__).parent / "data" / "lamp_flux_cond.json").read_text())
+
+
+def _cond_flux(cls, r_um, obs, u):
+    """measured_cond: 该类、尺寸档、观测档的条件分布在 u 处的分位 (档); 观测量缺失时用同一 HDRI 假想 RAW 的无条件分布。"""
+    k = int(np.searchsorted(MEASURED_SIZE_UM, r_um, side="right"))
+    v = obs.get(MEASURED_COND["var"], float("nan"))
+    if np.isfinite(v):
+        tab = MEASURED_COND["flux"][cls][k][int(np.searchsorted(MEASURED_COND["edges"], v, side="right"))]
+    else:
+        tab = MEASURED_COND["flux_all"][cls][k]
+    return float(np.interp(u, MEASURED_Q, tab))
 
 
 def _stops_range(lum_range):
@@ -725,7 +785,7 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             lum_range, stop_range = LINE_PRIOR
         if HIGHLIGHT_RECON == "stops":   # T30: 与 L_clip 无关, 同样每块抽一次随机数
             stops = float(np.clip(rng.uniform(*_stops_range(lum_range)), 0.05, MAX_STOPS))
-        elif HIGHLIGHT_RECON == "measured":   # T37: 抽 flux, 穹顶档数在下面按该块的 d、f 反解
+        elif HIGHLIGHT_RECON in ("measured", "measured_cond"):   # T37 / T38: 抽 flux, 穹顶档数在下面按该块的 d、f 反解
             u = rng.uniform()
             stops = None
         elif l_clip is not None:
@@ -744,11 +804,16 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             fb = np.clip(clip_frac[y0:y1, x0:x1][blob], 0.0, 1.0)
             r_um = float(np.sqrt(fb.sum() / np.pi)) * 36000.0 / max(rgb.shape[:2])
             d = ndimage.distance_transform_edt(blob)
-            stops = _measured_stops(_measured_flux(cls, r_um, u), ((d / max(d.max(), 1.0)) ** MEASURED_DOME)[blob], fb)
+            if HIGHLIGHT_RECON == "measured_cond":
+                obs = _block_obs(Y, lab, k, sl, clip_frac, base)
+                flux_s = _cond_flux(cls, r_um, obs, u)
+            else:
+                flux_s = _measured_flux(cls, r_um, u)
+            stops = _measured_stops(flux_s, ((d / max(d.max(), 1.0)) ** MEASURED_DOME)[blob], fb)
             stops = max(stops, 0.05)
         stops = _shift_stops(stops, source_stops)
         d = ndimage.distance_transform_edt(blob)
-        dome = (d / max(d.max(), 1.0)) ** (MEASURED_DOME if HIGHLIGHT_RECON == "measured" else 0.7)
+        dome = (d / max(d.max(), 1.0)) ** (MEASURED_DOME if HIGHLIGHT_RECON in ("measured", "measured_cond") else 0.7)
         lum = base * 2.0 ** (stops * dome)
         region = out[y0:y1, x0:x1]
         # 下采样像素是盒式平均: 只有被截断的那部分 (f) 是被藏起来的亮源, 其余保持观测值。
@@ -759,7 +824,10 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             STOPS_LOG.append({"area": int(area), "stops": float(stops),
                               "cls": "line" if lum_range == LINE_PRIOR[0] else ("large" if area / total >= HIGHLIGHT_PRIOR[0][0] else "lamp"),
                               "r_eq": float(np.sqrt(f.sum() / np.pi)),
-                              "flux": float(np.log2(max((f[:, 0] * lum[blob]).sum(), 1e-12) / max(f.sum() * base, 1e-12)))})
+                              "flux": float(np.log2(max((f[:, 0] * lum[blob]).sum(), 1e-12) / max(f.sum() * base, 1e-12))),
+                              "cy": 0.5 * (sl[0].start + sl[0].stop), "cx": 0.5 * (sl[1].start + sl[1].stop)})
+            if HIGHLIGHT_RECON == "measured_cond":
+                STOPS_LOG[-1]["obs"] = obs
     return out
 
 

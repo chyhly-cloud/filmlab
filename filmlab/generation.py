@@ -152,6 +152,14 @@ HIGHLIGHT_RECON["t37_base"] = "measured"
 MASK_PLACEMENT["t37_base"] = "layers"
 RECON_COLOUR["t37_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t37_base"] = APERTURE_RANGE.get("t31_base")
+# T38 研究候选 t38_base = t31_base + 截断块亮度按观测量条件化的实测分布 (rawio.HIGHLIGHT_RECON = "measured_cond";
+#   docs/tasks/T38_CONDITIONAL_LAMP_PRIOR.md)。其余同 t31_base
+GENERATIONS["t38_base"] = GENERATIONS["t31_base"]
+METERING["t38_base"] = "session"
+HIGHLIGHT_RECON["t38_base"] = "measured_cond"
+MASK_PLACEMENT["t38_base"] = "layers"
+RECON_COLOUR["t38_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t38_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
