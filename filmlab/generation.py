@@ -97,6 +97,13 @@ GENERATIONS["t30_stops_f"] = GENERATIONS["t26_fwd"]
 for _g in ("t30_stops", "t30_stops_f"):
     METERING[_g] = "session"
     HIGHLIGHT_RECON[_g] = "stops"
+# T30 研究基准 t30_base = t22_bxyz + 光晕核 cos^4 (engine.HALO_FORWARD) + 一致的截断灯亮度先验 (rawio "stops")
+#   = t30_stops_f 在 HALO_FORWARD=4.0 下的别名; 用户目视采纳 (docs/tasks/T30_UNIFORM_STOPS_PRIOR.md)
+GENERATIONS["t30_base"] = GENERATIONS["t30_stops_f"]
+METERING["t30_base"] = "session"
+HIGHLIGHT_RECON["t30_base"] = "stops"
+RECON_COLOUR["t30_base"] = RECON_COLOUR.get("t30_stops_f", "ring")
+APERTURE_RANGE["t30_base"] = APERTURE_RANGE.get("t30_stops_f")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 

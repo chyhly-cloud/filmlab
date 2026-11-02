@@ -33,9 +33,9 @@ DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
 PLATE_REFLECTANCE = 0.2    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究取值 (黑漆 ~0.05, 金属 ~0.5), 见 docs/tasks/T15_HALO_PHYSICS.md
 # T20 拍摄端眩光 (仅 "camera_glare" 时使用): η = 被散射的比例, r0 = 分布的核心半径 (µm, 胶片面), β = 尾部指数
 CAMERA_GLARE = {"eta": 0.0, "r0_um": 100.0, "beta": 1.5}
-# T26 散射光到达片基时的角分布指数 cos^m 的校正值 (仅 "halo_forward" 时使用, 覆盖 Variation.forward;
-# None = 不改)。见 docs/tasks/T26_HALO_ANGULAR.md
-HALO_FORWARD = None
+# T26/T30 散射光到达片基时的角分布指数 cos^m 的校正值 (仅 "halo_forward" 时使用, 覆盖 Variation.forward;
+# None = 不改)。4.0 由真实 800T 减带 remjet 对照的光晕剖面形状定 (T26, T28), 用户目视采纳 (T30)。
+HALO_FORWARD = 4.0
 HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
