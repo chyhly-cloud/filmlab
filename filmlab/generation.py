@@ -90,6 +90,13 @@ METERING["t26_fwd"] = "session"
 GENERATIONS["t28_skirt"] = GENERATIONS["t26_fwd"]
 METERING["t28_skirt"] = "session"
 HIGHLIGHT_RECON["t28_skirt"] = "skirt"
+# T30 候选: 截断块高出截断电平的档数不再由 EXIF 绝对亮度换算, 灯具类在 rawio.STOPS_PRIOR 内均匀取值 (rawio.HIGHLIGHT_RECON = "stops")
+#   (docs/tasks/T30_UNIFORM_STOPS_PRIOR.md)。t30_stops = t22_bxyz + "stops"; t30_stops_f = t26_fwd + "stops", 须配 FWD (engine.HALO_FORWARD)
+GENERATIONS["t30_stops"] = GENERATIONS["t22_bxyz"]
+GENERATIONS["t30_stops_f"] = GENERATIONS["t26_fwd"]
+for _g in ("t30_stops", "t30_stops_f"):
+    METERING[_g] = "session"
+    HIGHLIGHT_RECON[_g] = "stops"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 

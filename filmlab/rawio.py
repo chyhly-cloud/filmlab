@@ -274,6 +274,7 @@ def denoise(img, params, chroma_boost=2.5, out_matrix=None, clipped=None):
 CLIP_DETECT = "channel_max"
 # 截断高光的重建: "prior" = 旧法 (整像素用周围颜色 × 亮度先验覆盖); "per_channel" = 保留未饱和通道的实测值 (实验, 只在 sensor 判定下可用);
 #                 "skirt" = 同 prior, 但每块高出截断的档数由 RAW 裙边 / 同图近场 PSF 推算, 给不出稳定 PSF 时回退 prior (T28 候选)
+#                 "stops" = 同 prior, 但档数与 EXIF 无关: 灯具类块在 STOPS_PRIOR 内均匀取值, 细线 / 大面积保持与灯具的相对偏移 (T30 候选)
 HIGHLIGHT_RECON = "prior"
 
 
@@ -423,6 +424,25 @@ RECON_COLOUR = "ring"
 # 反光的亮度 ≈ 反射率 × 灯的亮度 × (灯的立体角 / 散射瓣的立体角), 被拉成一条线正说明散射瓣远大于灯,
 # 所以比灯本身暗得多; 霓虹灯管本身约 1e3 cd/m²。估计范围 (对数均匀): 1e2 – 2e3。
 LINE_PRIOR = ((1e2, 2e3), (0.5, 2.5))
+
+
+# T30 候选 HIGHLIGHT_RECON = "stops" (docs/tasks/T30_UNIFORM_STOPS_PRIOR.md): 估计的物理量仍是"截断块高出截断电平多少档",
+# 但不再由 EXIF 的截断亮度 L_clip 把绝对亮度 (cd/m²) 换算过来 —— 那样换算使各场景相差 4–6 档 (L_clip 3.24–1200 cd/m²,
+# 加上 MAX_STOPS 截顶与缺光圈时的 2–5 档), 而 RAW 裙边在场景之间没有这种差别 (T27 第 2、3 节)。
+# 灯具类: 档数在 STOPS_PRIOR 内均匀取值 (= 亮度对数均匀), 所有场景同一规则, 有无光圈 EXIF 都一样。
+# 锚定在用户目视认可的长曝光组 (n29240 / n40825 的原先验档数分布), 不是独立测得的绝对亮度。
+# 细线 / 大面积: 保持与灯具的相对关系 —— 各自 cd/m² 范围的下限 / 上限相对灯具范围下限 / 上限的档数差
+#   (大面积 1e3–1e4: −1.00 / −1.58 档; 细线 1e2–2e3: −4.32 / −3.91 档), 见 _stops_range。
+# 穹顶形状、颜色、截断判定、每块一次随机数抽取都与 prior 相同; 结果限制在 [0.05, MAX_STOPS]。
+STOPS_PRIOR = (6.0, 8.0)
+STOPS_LOG = None          # 诊断: 设为 list 时, 每块追加 {"area", "cls", "stops", "r_eq", "flux"} (所有模式; 不影响输出)
+
+
+def _stops_range(lum_range):
+    """stops 模式下某类块的档数范围: 灯具类为 STOPS_PRIOR, 其余类按 cd/m² 范围相对灯具范围平移。"""
+    lamp = HIGHLIGHT_PRIOR[0][1]
+    return (STOPS_PRIOR[0] + float(np.log2(lum_range[0] / lamp[0])),
+            STOPS_PRIOR[1] + float(np.log2(lum_range[1] / lamp[1])))
 
 
 def _line_like(blob):
@@ -648,7 +668,9 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
         _, lum_range, stop_range = next(p for p in HIGHLIGHT_PRIOR if area / total < p[0])
         if _line_like(clip_frac[y0:y1, x0:x1] * blob > 0.25):
             lum_range, stop_range = LINE_PRIOR
-        if l_clip is not None:
+        if HIGHLIGHT_RECON == "stops":   # T30: 与 L_clip 无关, 同样每块抽一次随机数
+            stops = float(np.clip(rng.uniform(*_stops_range(lum_range)), 0.05, MAX_STOPS))
+        elif l_clip is not None:
             L = np.exp(rng.uniform(*np.log(lum_range)))
             stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
         else:
@@ -668,6 +690,11 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
         # 细的反光线 (铁轨、金属边) 只占像素的一小部分, 不能把整个像素 (更不能把膨胀出的一圈) 都当成灯。
         f = np.clip(clip_frac[y0:y1, x0:x1][blob], 0.0, 1.0)[:, None]
         region[blob] = (1.0 - f) * region[blob] + f * (lum[blob][:, None] * col[None, :])
+        if STOPS_LOG is not None:     # flux: 截断子像素里重建 / 截断电平 (档), 即 f 加权的 2^(stops·dome) 平均
+            STOPS_LOG.append({"area": int(area), "stops": float(stops),
+                              "cls": "line" if lum_range == LINE_PRIOR[0] else ("large" if area / total >= HIGHLIGHT_PRIOR[0][0] else "lamp"),
+                              "r_eq": float(np.sqrt(f.sum() / np.pi)),
+                              "flux": float(np.log2(max((f[:, 0] * lum[blob]).sum(), 1e-12) / max(f.sum() * base, 1e-12)))})
     return out
 
 
