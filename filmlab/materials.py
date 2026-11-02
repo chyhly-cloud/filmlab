@@ -52,6 +52,9 @@ class Emulsion:
 
 # 防光晕层: 光往返两次穿过吸收层后剩下的比例 (估计值)。strong ≈ 透射 10% 两次; weak ≈ 35% 两次
 HALATION = {"strong": 0.01, "weak": 0.12}
+# T33: DIR 层间抑制量 (Emulsion.dir_amount) 按档案键覆盖, 由 filmlab.generation 按代际设置。
+# 空 = 原取值 (彩色 1.0, 未定标; 逐位不变)。见 docs/tasks/T33_BLUE_LAYER_DIR.md
+DIR_AMOUNT = {}
 
 
 def from_stock(stock: Stock) -> Emulsion:
@@ -81,7 +84,7 @@ def from_stock(stock: Stock) -> Emulsion:
         key=stock.key, name=stock.name, stock=stock, design=design, native_process=native,
         log_exposure=x, S_nom=S, halide_cap=halide, coupler_cap=coupler,
         silver_covering=1.0 if design == "bw" else SILVER_COVERING_COLOR,
-        dir_amount={"bw": 0.3, "paper": 0.0}.get(design, 1.0),
+        dir_amount=DIR_AMOUNT.get(stock.key, {"bw": 0.3, "paper": 0.0}.get(design, 1.0)),
         halation=0.0 if stock.key in ECN2_STOCKS else HALATION.get(stock.antihalation, 0.01),
         remjet=stock.key in ECN2_STOCKS,
         speed_loss=np.zeros(3), fog_exposure=np.full(3, -np.inf),

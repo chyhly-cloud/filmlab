@@ -125,6 +125,8 @@ METERING["t32_k5219"] = "session"
 HIGHLIGHT_RECON["t32_k5219"] = "stops"
 MASK_PLACEMENT["t32_k5219"] = "layers"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
+# DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
+DIR_AMOUNT = {}
 _active = "current"
 
 
@@ -140,6 +142,7 @@ def use(name: str):
     film.MASK_PLACEMENT = MASK_PLACEMENT.get(name)
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
+    materials.DIR_AMOUNT.clear(); materials.DIR_AMOUNT.update(DIR_AMOUNT.get(name, {}))
     stocks.load_stock.cache_clear()
     materials.emulsion.cache_clear()
     # 依赖相机 RGB 或默认修正的缓存
