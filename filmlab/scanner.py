@@ -98,7 +98,8 @@ class Scanner:
     (冲印店风格); None = 不做输出调整 (物理参考)。"""
 
     def __init__(self, engine, scanner="frontier", profile=None, strength=0.75, stretch_max=1.25,
-                 conditioning="lab", gray_balance=None, paper_white=False, shoulder="exponential"):
+                 conditioning="lab", gray_balance=None, paper_white=False, shoulder="exponential",
+                 paper_channel=False):
         if shoulder not in ("exponential", "paper_only"):
             raise ValueError(f"Unknown scan shoulder: {shoulder}")
         self.shoulder = shoulder
@@ -113,7 +114,7 @@ class Scanner:
         # S4b 胶片类型换算 (档案: 反差拉齐 + 该胶片中灰的通道平衡)
         self.conversion = conversion.FilmTypeConversion(self.m, profile, prof_key, engine._transmittance_base())
         # S4d 数字相纸
-        self.digital_paper = digital_paper(self.m.virtual_paper, paper_white)
+        self.digital_paper = digital_paper(self.m.virtual_paper, paper_white, paper_channel)
         self.paper = self.digital_paper.paper
         self.curve = self.digital_paper.curve
         # S4c 定光 (操作员变量)

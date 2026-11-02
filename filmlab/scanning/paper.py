@@ -26,8 +26,12 @@ def neutral_paper_curve(paper):
 
 
 class DigitalPaper:
-    def __init__(self, paper_key, paper_white=False):
+    def __init__(self, paper_key, paper_white=False, per_channel=False):
         self.paper_white = paper_white          # True: 以相纸白 (而不是 D50 完美白) 为白点做色适应 → 相纸白 = 输出白
+        # True (T42): 输出按通道独立 —— 每个通道 = 中性灰阶在该相纸密度下的输出 (与色度换算的中性灰阶逐点相同),
+        # 不经相纸染料光谱 / D50 观看 / sRGB 原色的跨通道换算。Frontier 的文件输出是逐通道灰平衡 LUT
+        # (Fuji US6668096B1; 饱和度运算矩阵在这家冲印店未见, T32 第 5 节), 不是相纸印放的色度。
+        self.per_channel = per_channel
         self.paper = emulsion(paper_key)
         self.x = self.paper.log_exposure
         self.curve = neutral_paper_curve(self.paper)
@@ -45,8 +49,12 @@ class DigitalPaper:
     def reference_print(self, Dp, output_black=OUTPUT_BLACK, chunk=1 << 16):
         """相纸密度 (…, 3) → 线性 sRGB (展平, (n, 3))。每个通道驱动相纸的一层: 先求出中性灰阶上各层的
         染料量 (扫描仪的中性标定), 通道密度 Dp_c 按这一关系换算为第 c 层的染料量, 再由染料光谱、
-        D50 观看光源算出颜色。相纸白 = 白, 相纸最大密度 (k) = 黑 (相对介质渲染 + 黑点补偿)。"""
+        D50 观看光源算出颜色。相纸白 = 白, 相纸最大密度 (k) = 黑 (相对介质渲染 + 黑点补偿)。
+        per_channel: 每通道按中性灰阶的亮度 10^-Dp_c 换算 (同一黑点映射), 没有跨通道项 (T42)。"""
         from .. import spectral
+        if self.per_channel:
+            flat = Dp.reshape(-1, 3)
+            return output_black + (1.0 - output_black) * (10.0 ** -flat - self.k) / (1.0 - self.k)
         if self._lut is None:
             self._lut = self._neutral_layers()
         Dg, layers, illum, white, wxy = self._lut
@@ -89,9 +97,9 @@ class DigitalPaper:
 _PAPERS = {}
 
 
-def digital_paper(paper_key, paper_white=False):
+def digital_paper(paper_key, paper_white=False, per_channel=False):
     """同一种数字相纸只标定一次 (中性灰阶的染料量求解较慢)。"""
-    key = (paper_key, paper_white)
+    key = (paper_key, paper_white, per_channel)
     if key not in _PAPERS:
-        _PAPERS[key] = DigitalPaper(paper_key, paper_white)
+        _PAPERS[key] = DigitalPaper(paper_key, paper_white, per_channel)
     return _PAPERS[key]

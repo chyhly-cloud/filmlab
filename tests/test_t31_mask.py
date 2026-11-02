@@ -24,7 +24,7 @@ def test_default_none_for_existing_generations():
     try:
         for g in generation.GENERATIONS:
             generation.use(g)
-            assert film.MASK_PLACEMENT == ("layers" if g in ("t31_mask", "t31_base", "t32_k5219", "t34_phys", "t36_phys", "t36_base", "t37_base", "t38_base", "t39_base", "t39_corr", "t35_base", "t41_emul", "t41_glare", "t41_base") else None)
+            assert film.MASK_PLACEMENT == ("layers" if g in ("t31_mask", "t31_base", "t32_k5219", "t34_phys", "t36_phys", "t36_base", "t37_base", "t38_base", "t39_base", "t39_corr", "t35_base", "t41_emul", "t41_glare", "t41_base", "t42_base") else None)
     finally:
         generation.use("current")
     assert film.MASK_PLACEMENT is None

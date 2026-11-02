@@ -83,6 +83,8 @@ class Params:
     #   "grain_aperture" 颗粒 RMS 的 48 µm 圆孔径按等面积换算                               [默认]
     #   "linear_white"   非日光光源的线性曝光映射保白点 (中性反射率的曝光精确)
     #   "paper_white"    数字相纸以相纸白为白 (介质相对渲染; 呈现约定)
+    #   "paper_channel"  数字相纸的输出按通道独立 (中性灰阶不变, 去掉相纸染料 / D50 / sRGB 原色的跨通道换算;
+    #                    T42, docs/tasks/T42_SATURATION.md; 可选)
     #   "halation_measured" 历史实验强度 ×HALATION_MEASURED（非实测，旧指标证据已撤销，仅供复现）
     #   "halo_oblique"   逐层、均匀深度平均的额外斜程衰减 (无自由参数; 可选)
     #   "halo_layered"   (配合 halo_oblique) 斜程衰减按层深度: 红层之上散射的光整层斜穿 (T11, 无自由参数; 可选)
@@ -228,7 +230,8 @@ class Engine:
             self.scanner = Scanner(self, p.scanner, p.scan_profile,
                                    self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
                                    self.v.scan_stretch, None if lab_measured else p.output_conditioning,
-                                   p.scan_gray_balance, paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder)
+                                   p.scan_gray_balance, paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder,
+                                   paper_channel="paper_channel" in p.corrections)
             if p.scan_neutral == "film" and not self.scanner.mono:
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 self.scanner.conversion.gray0 = g - g[1]

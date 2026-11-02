@@ -196,6 +196,14 @@ for _g in ("t41_emul", "t41_glare", "t41_base"):
     MASK_PLACEMENT[_g] = "layers"
     RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
     APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
+# T42 (docs/tasks/T42_SATURATION.md): 逐级定位过饱和。t42_base = t31_base + 数字相纸输出按通道独立 (paper_channel):
+#   R 通道的跨通道放大来自 S4d 相纸染料 → D50 → sRGB 的色度换算 (中性灰阶不变); 其余 (定光、光晕链、灯亮度先验、遮罩、蓝层) 同 t31_base
+GENERATIONS["t42_base"] = ("D65", GENERATIONS["t31_base"][1] + ("paper_channel",), {})
+METERING["t42_base"] = "session"
+HIGHLIGHT_RECON["t42_base"] = "stops"
+MASK_PLACEMENT["t42_base"] = "layers"
+RECON_COLOUR["t42_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t42_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
