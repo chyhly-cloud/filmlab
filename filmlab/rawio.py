@@ -272,7 +272,8 @@ def denoise(img, params, chroma_boost=2.5, out_matrix=None, clipped=None):
 # 截断判定: "channel_max" = 每张图各通道最大值的 97% (历史做法; 没有任何饱和的画面也会把最亮的部分判为截断);
 #           "sensor"      = 传感器数据在饱和值处的堆积 (见 sensor_saturation)。current / next 保持 channel_max。
 CLIP_DETECT = "channel_max"
-# 截断高光的重建: "prior" = 旧法 (整像素用周围颜色 × 亮度先验覆盖); "per_channel" = 保留未饱和通道的实测值 (实验, 只在 sensor 判定下可用)
+# 截断高光的重建: "prior" = 旧法 (整像素用周围颜色 × 亮度先验覆盖); "per_channel" = 保留未饱和通道的实测值 (实验, 只在 sensor 判定下可用);
+#                 "skirt" = 同 prior, 但每块高出截断的档数由 RAW 裙边 / 同图近场 PSF 推算, 给不出稳定 PSF 时回退 prior (T28 候选)
 HIGHLIGHT_RECON = "prior"
 
 
@@ -378,6 +379,9 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
         clip_lv = np.array([np.median(cam[..., c][sat3[..., c]]) if sat3[..., c].any() else np.inf for c in range(3)])
         f3 = _downsample(sat3.astype(np.float32), step)
     xyz = _downsample(xyz, step)
+    # T28 "skirt": 裙边与 PSF 在降噪前的下采样线性值上测 (只在该模式下取, 其余模式不经过这里)
+    skirt_lin = (xyz @ XYZ_TO_SRGB.T).astype(np.float64) if (HIGHLIGHT_RECON == "skirt" and highlights == "reconstruct"
+                                                          and not per_channel) else None
     if denoise_raw:      # 在线性的传感器信号上做 (下采样后噪声模型同样成立, 只是方差更小)
         # 逐通道重建时, 截断像素里未饱和的通道是实测值, 不按缺失数据抹掉它们的颜色
         cl = None if (clip is None or per_channel) else _downsample(clip, step)
@@ -392,8 +396,9 @@ def load_raw(path, max_size=2400, white_balance="daylight", highlights="reconstr
     if highlights == "reconstruct" and clip is not None and clip.any():
         frame_seed = zlib.crc32(str(path).encode()) ^ seed
         l_clip = clip_luminance(path, complete_exif=True) if complete_exif else clip_luminance(path)
+        kw = {} if skirt_lin is None else {"skirt_lin": skirt_lin}
         rgb = reconstruct_highlights(rgb, _downsample(clip, step), np.random.default_rng(frame_seed), l_clip,
-                                     SOURCE_STOPS if source_stops is None else source_stops)
+                                     SOURCE_STOPS if source_stops is None else source_stops, **kw)
     return rgb
 
 
@@ -438,7 +443,156 @@ def _shift_stops(stops, offset):
     return float(np.clip(stops + offset, 0.05, MAX_STOPS + max(offset, 0.0)))
 
 
-def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
+# T28 候选 HIGHLIGHT_RECON = "skirt" (docs/tasks/T28_SHAPE_BRIGHTNESS.md):
+# 每块高出截断的档数 s 不再按 EXIF 的绝对亮度先验, 而由同一张 RAW 推算 ——
+#   近场 PSF: 未截断的紧凑亮点 (峰值 0.1–0.9 截断电平, 离截断 > 20 px, 孤立, 背景 < 峰值 5%, 半峰面积 ≤ 9 px) 的径向剖面 / 峰值;
+#   裙边: 截断核 (clip_frac > 0.25) 外 1–3 像素、未截断像素的线性亮度 − 背景 (12–16 px 环);
+#   光源取半径 ρ 的均匀圆盘: 幅度由裙边定, ρ 由截断面积定 (_skirt_block_stops); s = log2(穹顶峰值处的预测值 / 截断电平)。
+#   点源 (ρ = 0) 时即 s = log2(裙边 / (截断电平 × PSF(Δ)))。合成检验 (已知 PSF 的点源与 1–4 像素圆盘): 中位偏差 −0.3…+0.6 档。
+# 假设: 截断源与未截断亮点共用同一镜头 PSF; 未截断亮点是近似点源 (若有一定大小, PSF 被估宽, s 偏低); PSF 径向对称、全画面相同。
+# 回退到 prior (同一随机数, 结果与 prior 相同): 该图紧凑亮点 < SKIRT_PSF_MIN 个或 PSF 自助标准误 > SKIRT_PSF_MAX_SE 档;
+#   单块: 大面积 (≥ 画面 0.5%)、背景 > 截断电平 25%、没有可用裙边像素。裙边不高于背景时取下限。
+SKIRT_RANGE = (0.5, 8.0)
+SKIRT_PSF_R = 12
+SKIRT_PSF_MIN = 8
+SKIRT_PSF_MAX_SE = 0.5
+SKIRT_LOG = None          # 诊断: 设为 list 时, 每张图追加 {"psf": …, "blocks": […]}
+
+
+def skirt_psf(lin, clip_frac):
+    """同一张图里未截断紧凑亮点的近场 PSF 径向剖面 p(r)/p(0), r = 0..SKIRT_PSF_R (像素)。返回 (剖面或 None, 信息)。"""
+    Y = lin @ LUMA
+    info = {"n": 0}
+    if not (clip_frac > 0.9).any():
+        return None, info
+    cl = float(np.median(Y[clip_frac > 0.9]))
+    dc = ndimage.distance_transform_edt(~(clip_frac > 0))
+    pk = (Y == ndimage.maximum_filter(Y, 7)) & (Y > 0.1 * cl) & (Y < 0.9 * cl) & (dc > 20)
+    h, w = Y.shape
+    W = SKIRT_PSF_R + 5
+    yy, xx = np.mgrid[-W:W + 1, -W:W + 1]
+    rr = np.hypot(yy, xx)
+    rings = [np.abs(rr - r) <= 0.5 for r in range(SKIRT_PSF_R + 1)]
+    bgr = (rr > SKIRT_PSF_R + 2) & (rr <= W)
+    P = []
+    for y, x in zip(*np.nonzero(pk)):
+        if y < W or x < W or y >= h - W or x >= w - W:
+            continue
+        win = Y[y - W:y + W + 1, x - W:x + W + 1]
+        bg = np.median(win[bgr])
+        v = win - bg
+        p0 = v[W, W]
+        if bg > 0.05 * p0 or (v[rr <= 4] > 0.5 * p0).sum() > 9 or (win[rr <= SKIRT_PSF_R + 1] > win[W, W]).any():
+            continue
+        P.append([np.median(v[m]) / p0 for m in rings])
+    P = np.array(P)
+    info.update(n=len(P), clip=cl)
+    if len(P) < SKIRT_PSF_MIN:
+        info["why"] = "psf_points"
+        return None, info
+    prof = np.median(P, 0)
+    br = np.random.default_rng(0)
+    bs = np.array([np.median(P[br.integers(0, len(P), len(P))], 0) for _ in range(200)])
+    se = np.std(np.log2(np.clip(bs[:, 1:4], 1e-6, None)), 0)
+    info.update(prof=prof.tolist(), se=se.tolist())
+    if not np.all(prof[1:4] > 0) or se.max() > SKIRT_PSF_MAX_SE:
+        info["why"] = "psf_unstable"
+        return None, info
+    info["why"] = "ok"
+    return np.clip(prof, 0.0, None), info
+
+
+def _skirt_g(prof, pts, yy, xx):
+    """Σ_j p(|y − x_j|) / n: 圆盘 (采样点 pts) 经 PSF 剖面 p (峰值 = 1) 后在 (yy, xx) 处的值, 点源时中心为 1。"""
+    R = len(prof) - 1
+    g = np.zeros(np.broadcast(yy, xx).shape)
+    for py, px in pts:
+        g += np.interp(np.hypot(yy - py, xx - px), np.arange(R + 1), prof, right=0.0)
+    return g / len(pts)
+
+
+def _skirt_block_stops(sk, k, sl, base):
+    """一个截断块 (标号 k) 的档数估计 → (s 或 None, 信息, 原因)。sk 为 reconstruct_highlights 里准备的字典。
+    光源 = 半径 ρ 的均匀圆盘 (中心 = 穹顶峰值像素, 与 p 的原点约定一致), 经同图 PSF 剖面 p:
+      幅度 a 由边界外 1–3 像素的裙边定 (每个 Δ 一个值, 取几何平均);
+      ρ 由截断面积定: 预测值 a·G ≥ 截断电平的像素数 = 实测 f ≥ 0.5 的像素数 (p 是像素尺度的剖面, 在像素中心比较)。点源 (ρ = 0) 时即 s = log2(裙边 / (截断电平 × p(Δ)))。
+    s = log2(重建在穹顶峰值处应写入的光源部分 / (f·截断电平))。"""
+    M = SKIRT_PSF_R + 6
+    H, Wd = sk["Ylin"].shape
+    y0, y1 = max(sl[0].start - M, 0), min(sl[0].stop + M, H)
+    x0, x1 = max(sl[1].start - M, 0), min(sl[1].stop + M, Wd)
+    win = (slice(y0, y1), slice(x0, x1))
+    blob = sk["lab"][win] == k
+    fr = np.clip(sk["clip"][win], 0.0, 1.0)
+    free = (sk["own"][win] == k) & (fr == 0)
+    dc = sk["dc"][win]
+    Yl = sk["Ylin"][win]
+    bgm = free & (dc > 12) & (dc <= 16)
+    if bgm.sum() < 5:
+        return None, None, "no_bg"
+    bgv = float(np.median(Yl[bgm]))
+    if bgv > 0.25 * base:
+        return None, None, "bright_bg"
+    fb = np.where(blob, fr, 0.0)
+    a_obs = float(fb.sum())
+    if a_obs <= 0:
+        return None, None, "no_core"
+    yy, xx = np.mgrid[0:blob.shape[0], 0:blob.shape[1]].astype(float)
+    d = ndimage.distance_transform_edt(blob)
+    py, px = np.unravel_index(np.argmax(d), d.shape)                 # 穹顶峰值像素 = 圆盘中心 (p 以峰值像素为原点)
+    cy, cx = float(py), float(px)
+    rr = np.hypot(yy - cy, xx - cx)
+    prof = sk["prof"]
+    rings = {D: free & (np.rint(dc) == D) & (rr <= len(prof) - 1) for D in (1, 2, 3)}
+    rings = {D: m for D, m in rings.items() if m.sum() >= 3}
+    if not rings:
+        return None, None, "no_ring"
+    if not any(np.median(Yl[m]) - bgv > 0 for m in rings.values()):
+        return SKIRT_RANGE[0], {"rho": None}, "skirt<=bg"
+    fc = float(fr[py, px])
+    if fc <= 0:
+        return None, None, "no_core"
+    near = blob | (dc <= 4)
+    ny, nx = np.nonzero(near)
+    n_half = float((fb >= 0.5).sum())                               # 一半以上子像素截断的像素数
+    best = None
+    rmax = float(np.sqrt(a_obs / np.pi)) + 1.0
+    grid = np.arange(0.0, min(rmax, 3.0) + 1e-9, 0.25)
+    if rmax > 3.0:
+        grid = np.concatenate([grid, np.geomspace(3.0, rmax, 10)[1:]])
+    for rho in grid:
+        if rho < 0.125:
+            pts = [(cy, cx)]
+        else:
+            sp = max(0.25, rho / 6.0)                                   # 圆盘采样间距 (大圆盘放宽, 控制计算量)
+            o = np.arange(-rho, rho + 1e-9, sp)
+            pts = [(cy + u, cx + v) for u in o for v in o if u * u + v * v <= rho * rho] or [(cy, cx)]
+        la = []
+        for m in rings.values():
+            g = _skirt_g(prof, pts, yy[m], xx[m])
+            q = np.median((Yl[m] - bgv) / np.maximum(g, 1e-9))
+            if q > 0:
+                la.append(np.log(q))
+        if not la:
+            continue
+        a = float(np.exp(np.mean(la)))
+        gs = _skirt_g(prof, pts, ny.astype(float), nx.astype(float))
+        a_pred = float((a * gs >= sk["cl"]).sum())
+        err = abs(np.log(max(a_pred, 0.5) / max(n_half, 0.5)))
+        if best is None or err < best[0]:
+            best = (err, rho, a, pts, a_pred, (max(la) - min(la)) / np.log(2.0))
+    if best is None:
+        return SKIRT_RANGE[0], {"rho": None}, "skirt<=bg"
+    err, rho, a, pts, a_pred, spread = best
+    oc = a * float(_skirt_g(prof, pts, np.array([py]), np.array([px]))[0])
+    lamp = oc - (1.0 - fc) * float(Yl[py, px])
+    if lamp <= 0:
+        return SKIRT_RANGE[0], {"rho": rho}, "skirt<=bg"
+    return float(np.log2(lamp / (fc * base))), {"rho": float(rho), "n_half": n_half, "n_pred": a_pred,
+                                                    "spread": float(spread)}, "ok"   # spread: 各 Δ 推得幅度之差 (档)
+
+
+def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, skirt_lin=None):
     """重建传感器截断的高光。
 
     每个截断区域:
@@ -446,7 +600,8 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
       亮度  在光源典型绝对亮度范围内随机 (真实值已无法得知), 由 EXIF 换算成截断点以上的档数;
             不会低于截断点
       形状  从边缘 (= 截断亮度, 保证连续) 向内部逐渐变亮的穹顶, 模拟发光体中心最亮
-      面积  只有像素里被截断的那部分子像素换成亮源 (clip_frac), 不放大细亮线的面积"""
+      面积  只有像素里被截断的那部分子像素换成亮源 (clip_frac), 不放大细亮线的面积
+    skirt_lin: 降噪前的线性 RGB; 给出时 (HIGHLIGHT_RECON = "skirt") 档数改由裙边 / 同图 PSF 推算, 见 skirt_psf"""
     mask = ndimage.binary_dilation(clip_frac > 0.25)
     lab, n = ndimage.label(mask)
     if n == 0:
@@ -454,6 +609,17 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
     out = rgb.copy()
     total = mask.size
     Y = rgb @ LUMA
+    sk = None
+    if skirt_lin is not None:
+        prof, pinfo = skirt_psf(skirt_lin, clip_frac)
+        log = {"psf": pinfo, "blocks": []}
+        if SKIRT_LOG is not None:
+            SKIRT_LOG.append(log)
+        if prof is not None:
+            core = clip_frac > 0.25
+            dc, (iy, ix) = ndimage.distance_transform_edt(~core, return_indices=True)
+            sk = {"prof": prof, "cl": pinfo["clip"], "Ylin": skirt_lin @ LUMA, "lab": lab, "clip": clip_frac, "dc": dc,
+                  "own": np.where(core, lab, 0)[iy, ix]}
     for k, sl in enumerate(ndimage.find_objects(lab), start=1):
         pad = max(4, int(0.6 * np.sqrt((sl[0].stop - sl[0].start) * (sl[1].stop - sl[1].start))))
         y0, y1 = max(sl[0].start - pad, 0), min(sl[0].stop + pad, rgb.shape[0])
@@ -487,6 +653,12 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0):
             stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
         else:
             stops = rng.uniform(*stop_range)
+        if sk is not None:            # T28: 随机数照常抽取, 回退的块与 prior 逐位相同
+            est, sD, why = (None, None, "large") if area / total >= HIGHLIGHT_PRIOR[0][0] else _skirt_block_stops(sk, k, sl, base)
+            log["blocks"].append({"area": int(area), "prior": float(stops), "est": est, "info": sD, "why": why,
+                                  "line": bool(lum_range == LINE_PRIOR[0])})
+            if est is not None:
+                stops = float(np.clip(est, *SKIRT_RANGE))
         stops = _shift_stops(stops, source_stops)
         d = ndimage.distance_transform_edt(blob)
         dome = (d / max(d.max(), 1.0)) ** 0.7

@@ -85,6 +85,11 @@ for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare", "t22_ea", "
 # T26 研究候选 t26_fwd = t22_bxyz + 光晕核散射角分布指数 cos^m 改用 engine.HALO_FORWARD (docs/tasks/T26_HALO_ANGULAR.md)
 GENERATIONS["t26_fwd"] = ("D65", GENERATIONS["t22_bxyz"][1] + ("halo_forward",), {})
 METERING["t26_fwd"] = "session"
+# T28 候选 t28_skirt = t26_fwd + 截断块档数由 RAW 裙边 / 同图近场 PSF 推算 (rawio.HIGHLIGHT_RECON = "skirt"; 回退时同 prior)
+#   (docs/tasks/T28_SHAPE_BRIGHTNESS.md); 与 t26_fwd 一样须配 FWD (engine.HALO_FORWARD) 使用
+GENERATIONS["t28_skirt"] = GENERATIONS["t26_fwd"]
+METERING["t28_skirt"] = "session"
+HIGHLIGHT_RECON["t28_skirt"] = "skirt"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
