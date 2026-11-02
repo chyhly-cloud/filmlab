@@ -16,7 +16,7 @@
 WB 参考与默认修正集是进程级的: 扫描仪档案等内部会再构造引擎、并缓存与相机 RGB 有关的结果,
 切换时必须一起改并清空这些缓存, 否则子引擎会悄悄沿用旧设置。
 """
-from . import engine, lights, materials, rawio, stocks
+from . import engine, film, lights, materials, rawio, stocks
 from .scanning import conversion, paper
 
 GENERATIONS = {
@@ -104,6 +104,19 @@ METERING["t30_base"] = "session"
 HIGHLIGHT_RECON["t30_base"] = "stops"
 RECON_COLOUR["t30_base"] = RECON_COLOUR.get("t30_stops_f", "ring")
 APERTURE_RANGE["t30_base"] = APERTURE_RANGE.get("t30_stops_f")
+# T31 候选 t31_mask = t30_base + 有色成色剂遮罩按层结构放置 (film.MASK_PLACEMENT = "layers"; docs/tasks/T31_HALO_COLOUR.md)
+GENERATIONS["t31_mask"] = GENERATIONS["t30_base"]
+METERING["t31_mask"] = "session"
+HIGHLIGHT_RECON["t31_mask"] = "stops"
+RECON_COLOUR["t31_mask"] = RECON_COLOUR["t30_base"]
+APERTURE_RANGE["t31_mask"] = APERTURE_RANGE["t30_base"]
+# 遮罩放置 (film.MASK_PLACEMENT); 未列出的代际 None (原放置)
+MASK_PLACEMENT = {"t31_mask": "layers"}
+# T31 研究基准 t31_base = t30_base + 遮罩按层结构放置 (物理放置, 光晕略红、略弱; docs/tasks/T31_HALO_COLOUR.md)
+GENERATIONS["t31_base"] = GENERATIONS["t30_base"]
+METERING["t31_base"] = "session"
+HIGHLIGHT_RECON["t31_base"] = "stops"
+MASK_PLACEMENT["t31_base"] = "layers"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
@@ -117,6 +130,7 @@ def use(name: str):
     rawio.RECON_COLOUR = RECON_COLOUR.get(name, "ring")
     rawio.APERTURE_RANGE = APERTURE_RANGE.get(name)
     rawio.METERING = METERING.get(name, "meter")
+    film.MASK_PLACEMENT = MASK_PLACEMENT.get(name)
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
     stocks.load_stock.cache_clear()

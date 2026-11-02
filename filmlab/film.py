@@ -160,6 +160,13 @@ def oblique_densities(stock: Stock, v):
 
 # 乳剂每层的散射消光密度 (550 nm, ∝ λ^-3; 卤化银颗粒散射)。决定光晕中绿层与红层之比 (T24); 默认 0.15 (未定标的原设定)
 TURBIDITY = 0.15
+# 有色成色剂遮罩在叠层中的位置 (T31, docs/tasks/T31_HALO_COLOUR.md)。None = 原放置 (逐位不变):
+#   直接曝光红层前 mask/2、到达片基前 mask、返回绿层前 mask/2、返回蓝层前 mask (绿光共经过 1.5 次)。
+# "layers" = 按 Vision3 层结构: 青成色剂的遮罩 (吸收绿、蓝绿; mask 中 ≥ MASK_SPLIT_NM 的部分) 均匀在红感层,
+#   品红成色剂的黄色遮罩 (吸收蓝; < MASK_SPLIT_NM 的部分) 均匀在绿感层。返回光先整层穿过红感层才到绿感层 (绿光共 2 次)。
+#   两者的光谱分界只影响蓝区 (蓝层光晕本来 ≈ 0), 不影响绿/红之比。由 generation 按代际设置。
+MASK_PLACEMENT = None
+MASK_SPLIT_NM = 480.0
 
 
 def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=None, turbidity_power=3.0, path=1.0):
@@ -198,6 +205,17 @@ def emulsion_stack(stock: Stock, layer_absorbance, yellow_filter, turbidity=None
     back = np.stack([absorbed(aR, A[:, 0]),
                      t(aR + mask / 2) * absorbed(aG, A[:, 1]),
                      t(aR + aG + Ay + mask) * absorbed(aB, A[:, 2])], 1)
+    if MASK_PLACEMENT == "layers" and stock.kind == "negative":
+        wm = 1.0 / (1.0 + np.exp((WAVELENGTHS - MASK_SPLIT_NM) / 10.0))
+        Mm, Mc = mask * wm, mask * (1.0 - wm)          # 绿感层的黄色遮罩, 红感层的 (偏红) 遮罩
+        direct = np.stack([t(aB + Ay + aG + Mm + Mc / 2) * absorbed(aR, A[:, 0]),
+                           t(aB + Ay + Mm / 2) * absorbed(aG, A[:, 1]),
+                           absorbed(aB, A[:, 2])], 1)
+        back = np.stack([t(Mc / 2) * absorbed(aR, A[:, 0]),
+                         t(aR + Mc + Mm / 2) * absorbed(aG, A[:, 1]),
+                         t(aR + aG + Ay + mask) * absorbed(aB, A[:, 2])], 1)
+    elif MASK_PLACEMENT is not None and MASK_PLACEMENT != "layers":
+        raise ValueError(f"unknown MASK_PLACEMENT {MASK_PLACEMENT!r}")
     return T_down, direct, back
 
 
