@@ -1,6 +1,6 @@
 """T19: 模型在夜景 RAW 上的光晕统计量, 与参考集 (t19_reference.py) 用同一测量代码。
 流程同 examples/night.py (EXIF 测光), 长边 1600 像素 (≈ 22.5 µm/像素, 与参考扫描相近), 输出按 8 位 sRGB 量化后再解码测量。
-用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24)"""
+用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25)"""
 import json, os, sys, zlib, warnings
 from pathlib import Path
 import numpy as np
@@ -13,7 +13,8 @@ def job(a):
     gen, f = a
     cache = Path(os.environ.get("CACHE", "/tmp/t19_cache")); cache.mkdir(parents=True, exist_ok=True)
     tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "") \
-        + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "")
+        + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "") \
+        + ("_remjet" if os.environ.get("REMJET") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
     if not c.exists():
@@ -37,7 +38,11 @@ def job(a):
         rgb = rawio.load_raw(f, max_size=1600)
         m, _ = rawio.film_metering(rgb, rawio.clip_luminance(f), rng=np.random.default_rng(zlib.crc32(Path(f).stem.encode())),
                                    t_original=ex[0] if ex else None)
-        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": 0}))
+        extra = {}
+        if os.environ.get("REMJET"):                     # 对照: 同一乳剂带 remjet (Vision3 500T 原片, 无片基光晕)
+            from filmlab import materials
+            extra["film"] = materials.emulsion("kodak_vision3_500t")
+        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": 0, **extra}))
         Image.fromarray((np.clip(srgb_encode(np.clip(eng.render(m), 0, 1)), 0, 1) * 255 + 0.5).astype(np.uint8)).save(c)
     import t19_halo_stats as hs
     im = np.asarray(Image.open(c).convert("RGB")) / 255.0

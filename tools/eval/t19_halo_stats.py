@@ -18,7 +18,7 @@ def px_um(shape, fmt):
     h, w = shape[:2]
     lo, hi = min(h, w), max(h, w)
     a = hi / lo
-    if fmt == "6x7":
+    if fmt in ("6x7", "6x6"):          # 中画幅: 短边 56 mm
         return 56000.0 / lo
     if 1.45 <= a <= 1.55:
         return 36000.0 / hi
