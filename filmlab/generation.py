@@ -117,6 +117,13 @@ GENERATIONS["t31_base"] = GENERATIONS["t30_base"]
 METERING["t31_base"] = "session"
 HIGHLIGHT_RECON["t31_base"] = "stops"
 MASK_PLACEMENT["t31_base"] = "layers"
+# T32 候选 t32_k5219 = t31_base + Vision3 5219 按 Kodak 原始测量 (数据手册的三种染料光谱 + 按 Kodak Status M 特性曲线
+#   重新解混的分层曲线; stocks._kodak_raw_5219, 与 next_k5219 同一修订)。默认关闭, 只代表"已有物理量取数据手册值"
+#   (docs/tasks/T32_SATURATED_RED.md)
+GENERATIONS["t32_k5219"] = ("D65", GENERATIONS["t31_base"][1], {"kodak_vision3_500t": "kodak_raw"})
+METERING["t32_k5219"] = "session"
+HIGHLIGHT_RECON["t32_k5219"] = "stops"
+MASK_PLACEMENT["t32_k5219"] = "layers"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 
