@@ -175,6 +175,14 @@ HIGHLIGHT_RECON["t39_corr"] = "measured_cond2_corr"
 MASK_PLACEMENT["t39_corr"] = "layers"
 RECON_COLOUR["t39_corr"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t39_corr"] = APERTURE_RANGE.get("t31_base")
+# T35 研究候选 t35_base = t31_base + 冲印店扫描影调的整体反差按 EPFL 灰阶楔实测 (lab_contrast: 固定光号的 s =
+#   engine.LAB_SCAN_CONTRAST, 支点为设计光源中灰; docs/tasks/T35_SCAN_TONE.md)。其余 (光晕链、灯亮度先验、遮罩、定光颜色) 同 t31_base
+GENERATIONS["t35_base"] = ("D65", GENERATIONS["t31_base"][1] + ("lab_contrast",), {})
+METERING["t35_base"] = "session"
+HIGHLIGHT_RECON["t35_base"] = "stops"
+MASK_PLACEMENT["t35_base"] = "layers"
+RECON_COLOUR["t35_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t35_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

@@ -49,6 +49,11 @@ LATD_NORMAL = -0.14
 # 只代表这家冲印店, 未经独立数据验证; 仅用于可选代际 next_lab ("lab_measured")。
 LAB_MEASURED_COLOUR = {"R": (-0.02300027899845071, 0.6458938636987954),
                        "B": (0.007245716407750681, 0.3859439484936917)}
+# T35 冲印店扫描影调的整体反差 (PrintTiming.s, 三通道同一个; 数字相纸曝光 = K − s·Dn), 仅 "lab_contrast" 时使用。
+# EPFL 灰阶楔 R1-17-18 实测 (docs/tasks/T35_SCAN_TONE.md): 每通道印放光号放开 (O1, 冲印店本来拥有的自由度) 后,
+# 中间 5–11 条的 log 输出与真实最一致的 s = 0.851 (只用 G 0.845, 全部 14 条 0.872)。负片 (Status M) 反差与 Kodak 5219
+# 数据手册一致到 ±5% (G), 偏陡在扫描映射; 只代表这家冲印店。支点 = 设计光源中灰 (固定光号下中灰的亮度不变)。
+LAB_SCAN_CONTRAST = 0.85
 
 
 @dataclass
@@ -88,6 +93,7 @@ class Params:
     #                    sRGB 蓝通道为负的真实颜色 (钠灯下的黄、灯芯旁) 不再得到 0 蓝层曝光, 截断边界不再出现黄色硬边
     #   "lab_measured"   逐帧定光 (timing="frame") 改为实测的冲印店颜色处理 (LAB_MEASURED_COLOUR, 亮度不逐帧调整),
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
+    #   "lab_contrast"   (配合 lab_measured) 固定光号的整体反差 s 用灰阶楔实测的 LAB_SCAN_CONTRAST, 不再为 1 (T35; 可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -227,7 +233,8 @@ class Engine:
             if lab_measured and not self.scanner.mono:
                 # 固定光号作参照, 逐帧只加实测的颜色偏移 (scan)
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
-                self.scanner.balance(g, p.mid_gray)
+                # T35: 冲印店扫描影调的整体反差 (灰阶楔实测); 未启用时 stretch=None, 与原来逐位相同
+                self.scanner.balance(g, p.mid_gray, stretch=LAB_SCAN_CONTRAST if "lab_contrast" in p.corrections else None)
                 self._lab_gray, self._lab_base = g, self.scanner.timing
 
     # ---- S0/S1 ----
