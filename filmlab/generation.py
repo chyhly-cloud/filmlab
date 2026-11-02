@@ -144,6 +144,14 @@ for _g in ("t36_phys", "t36_base"):
     MASK_PLACEMENT[_g] = "layers"
     RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
     APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
+# T37 研究候选 t37_base = t31_base + 截断块亮度按夜景 HDRI 实测分布抽样 (rawio.HIGHLIGHT_RECON = "measured";
+#   docs/tasks/T37_MEASURED_LAMP_STOPS.md)。其余 (定光、光晕链、遮罩、取色、光圈范围) 同 t31_base
+GENERATIONS["t37_base"] = GENERATIONS["t31_base"]
+METERING["t37_base"] = "session"
+HIGHLIGHT_RECON["t37_base"] = "measured"
+MASK_PLACEMENT["t37_base"] = "layers"
+RECON_COLOUR["t37_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t37_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

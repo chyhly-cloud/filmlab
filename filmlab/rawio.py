@@ -275,6 +275,8 @@ CLIP_DETECT = "channel_max"
 # 截断高光的重建: "prior" = 旧法 (整像素用周围颜色 × 亮度先验覆盖); "per_channel" = 保留未饱和通道的实测值 (实验, 只在 sensor 判定下可用);
 #                 "skirt" = 同 prior, 但每块高出截断的档数由 RAW 裙边 / 同图近场 PSF 推算, 给不出稳定 PSF 时回退 prior (T28 候选)
 #                 "stops" = 同 prior, 但档数与 EXIF 无关: 灯具类块在 STOPS_PRIOR 内均匀取值, 细线 / 大面积保持与灯具的相对偏移 (T30 候选)
+#                 "measured" = 同 stops, 但每块的截断区平均亮度 (flux, 档) 从夜景 HDRI 实测分布 (按类与尺寸档) 抽样,
+#                              再反解穹顶档数 (T37 候选, 见 MEASURED_FLUX)
 HIGHLIGHT_RECON = "prior"
 
 
@@ -436,6 +438,59 @@ LINE_PRIOR = ((1e2, 2e3), (0.5, 2.5))
 # 穹顶形状、颜色、截断判定、每块一次随机数抽取都与 prior 相同; 结果限制在 [0.05, MAX_STOPS]。
 STOPS_PRIOR = (6.0, 8.0)
 STOPS_LOG = None          # 诊断: 设为 list 时, 每块追加 {"area", "cls", "stops", "r_eq", "flux"} (所有模式; 不影响输出)
+
+
+# T37 候选 HIGHLIGHT_RECON = "measured" (docs/tasks/T37_MEASURED_LAMP_STOPS.md): 同一个物理量 (截断块高出截断电平多少),
+# 但取值来自测量而不是锚定在目视认可的先验: 24 张 Poly Haven 夜景 HDRI (CC0, 灯未裁切) 上的假想照片 (36×24 mm, 35 / 50 mm),
+# 截断电平按我们夜景 RAW 实测的"帧内亮度第 90 百分位 → 截断"档数 (3.71) 设定, 块的划分与分类同本模块 (tools/eval/t37_*.py)。
+# 抽样的量是 flux = 截断子像素里重建 / 截断电平 (= STOPS_LOG 的 flux), 对分辨率最稳健; 穹顶档数 s 由
+#   f 加权的 2^(s·dome) 平均 = 2^flux 反解 (_measured_stops)。每块仍只抽一次均匀随机数 u, flux = 该类、该尺寸档分布的 u 分位。
+# 尺寸档按截断子像素面积的等效半径 (胶片 µm, 长边 = 36 mm): [0, 60), [60, 150), [150, ∞)。
+# 穹顶指数 MEASURED_DOME 只在本模式生效; 其余 (颜色、截断判定、块划分与分类、source_stops 平移) 与 "stops" 相同。
+MEASURED_Q = tuple(np.round(np.linspace(0.0, 1.0, 21), 2))
+MEASURED_SIZE_UM = (60.0, 150.0)
+# {类: (尺寸档 0–60 µm 的分位表, 60–150, ≥150)}, 由 tools/eval/t37_summary.py 生成 (测量表 tools/eval/t37/hdri_blobs.tsv)。
+# 每类每档至少 100 块: 细线 ≥150 只有 23 块, 并入细线 ≥60; 大面积块按定义 ≥ 1.17 mm, 三档同用全部 245 块。
+# 灯具类中位 0.44 / 1.30 / 2.29 档, 95% 分位 2.73 / 5.16 / 7.24 档 (T30 的 U[6, 8] 对应块 flux ≈ 5–8 档)。
+MEASURED_FLUX = {
+    "lamp": (
+        (0.0, 0.025, 0.054, 0.086, 0.122, 0.161, 0.207, 0.256, 0.311, 0.37, 0.441, 0.522, 0.609, 0.724, 0.848, 1.02, 1.242, 1.548, 2.009, 2.727, 6.34),
+        (0.01, 0.181, 0.287, 0.377, 0.472, 0.565, 0.678, 0.797, 0.948, 1.118, 1.3, 1.492, 1.695, 2.036, 2.392, 2.758, 3.209, 3.791, 4.361, 5.164, 7.703),
+        (0.017, 0.339, 0.51, 0.668, 0.842, 1.051, 1.277, 1.47, 1.697, 2.019, 2.293, 2.672, 3.017, 3.46, 4.008, 4.615, 5.22, 5.842, 6.498, 7.242, 10.045),
+    ),
+    "line": (
+        (0.005, 0.052, 0.079, 0.107, 0.139, 0.176, 0.212, 0.25, 0.293, 0.331, 0.374, 0.421, 0.481, 0.547, 0.624, 0.723, 0.846, 1.02, 1.322, 1.715, 4.013),
+        (0.022, 0.092, 0.136, 0.196, 0.248, 0.298, 0.333, 0.373, 0.419, 0.481, 0.54, 0.605, 0.709, 0.803, 0.948, 1.083, 1.261, 1.476, 1.872, 2.399, 3.884),
+        (0.022, 0.094, 0.138, 0.2, 0.253, 0.3, 0.337, 0.38, 0.42, 0.478, 0.531, 0.596, 0.701, 0.792, 0.941, 1.069, 1.257, 1.468, 1.867, 2.392, 3.884),
+    ),
+    "large": (
+        (0.268, 0.735, 1.057, 1.399, 1.947, 2.299, 2.571, 2.799, 3.084, 3.519, 4.088, 4.329, 4.824, 5.319, 6.755, 7.071, 7.531, 7.962, 8.401, 8.901, 10.366),
+        (0.268, 0.735, 1.057, 1.399, 1.947, 2.299, 2.571, 2.799, 3.084, 3.519, 4.088, 4.329, 4.824, 5.319, 6.755, 7.071, 7.531, 7.962, 8.401, 8.901, 10.366),
+        (0.268, 0.735, 1.057, 1.399, 1.947, 2.299, 2.571, 2.799, 3.084, 3.519, 4.088, 4.329, 4.824, 5.319, 6.755, 7.071, 7.531, 7.962, 8.401, 8.901, 10.366),
+    ),
+}
+MEASURED_DOME = 0.7
+MEASURED_MAX_STOPS = 24.0   # 反解的安全上限 (实测 flux 的最大值远低于此), 不是先验
+
+
+def _measured_flux(cls, r_um, u):
+    """该类、该尺寸档实测 flux 分布的 u 分位 (档)。"""
+    k = int(np.searchsorted(MEASURED_SIZE_UM, r_um, side="right"))
+    return float(np.interp(u, MEASURED_Q, MEASURED_FLUX[cls][k]))
+
+
+def _measured_stops(flux, dome, f):
+    """使 f 加权的 2^(s·dome) 平均 = 2^flux 的穹顶档数 s (单调, 二分)。"""
+    w = f / max(f.sum(), 1e-12)
+    g = lambda s: float(np.dot(w, 2.0 ** (s * dome)))
+    target = 2.0 ** max(flux, 0.0)
+    lo, hi = 0.0, MEASURED_MAX_STOPS
+    if g(hi) <= target:
+        return hi
+    for _ in range(60):
+        m = 0.5 * (lo + hi)
+        lo, hi = (m, hi) if g(m) < target else (lo, m)
+    return 0.5 * (lo + hi)
 
 
 def _stops_range(lum_range):
@@ -670,6 +725,9 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
             lum_range, stop_range = LINE_PRIOR
         if HIGHLIGHT_RECON == "stops":   # T30: 与 L_clip 无关, 同样每块抽一次随机数
             stops = float(np.clip(rng.uniform(*_stops_range(lum_range)), 0.05, MAX_STOPS))
+        elif HIGHLIGHT_RECON == "measured":   # T37: 抽 flux, 穹顶档数在下面按该块的 d、f 反解
+            u = rng.uniform()
+            stops = None
         elif l_clip is not None:
             L = np.exp(rng.uniform(*np.log(lum_range)))
             stops = float(np.clip(np.log2(L / l_clip), 0.05, MAX_STOPS))
@@ -681,9 +739,16 @@ def reconstruct_highlights(rgb, clip_frac, rng, l_clip=None, source_stops=0.0, s
                                   "line": bool(lum_range == LINE_PRIOR[0])})
             if est is not None:
                 stops = float(np.clip(est, *SKIRT_RANGE))
+        if stops is None:              # T37 "measured"
+            cls = "line" if lum_range == LINE_PRIOR[0] else ("large" if area / total >= HIGHLIGHT_PRIOR[0][0] else "lamp")
+            fb = np.clip(clip_frac[y0:y1, x0:x1][blob], 0.0, 1.0)
+            r_um = float(np.sqrt(fb.sum() / np.pi)) * 36000.0 / max(rgb.shape[:2])
+            d = ndimage.distance_transform_edt(blob)
+            stops = _measured_stops(_measured_flux(cls, r_um, u), ((d / max(d.max(), 1.0)) ** MEASURED_DOME)[blob], fb)
+            stops = max(stops, 0.05)
         stops = _shift_stops(stops, source_stops)
         d = ndimage.distance_transform_edt(blob)
-        dome = (d / max(d.max(), 1.0)) ** 0.7
+        dome = (d / max(d.max(), 1.0)) ** (MEASURED_DOME if HIGHLIGHT_RECON == "measured" else 0.7)
         lum = base * 2.0 ** (stops * dome)
         region = out[y0:y1, x0:x1]
         # 下采样像素是盒式平均: 只有被截断的那部分 (f) 是被藏起来的亮源, 其余保持观测值。
