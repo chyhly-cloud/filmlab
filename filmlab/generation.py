@@ -124,6 +124,15 @@ GENERATIONS["t32_k5219"] = ("D65", GENERATIONS["t31_base"][1], {"kodak_vision3_5
 METERING["t32_k5219"] = "session"
 HIGHLIGHT_RECON["t32_k5219"] = "stops"
 MASK_PLACEMENT["t32_k5219"] = "layers"
+# T34 研究候选 t34_phys = t31_base + 光晕链的三个无自由参数物理项 (docs/tasks/T34_HALO_PHYSICS_REFIT.md):
+#   halo_oblique (T03 下行斜程) + halo_layered (T11 按层深度) + halo_return (T15 返回斜光程); 不含 halo_plate (有参数)。
+#   角分布指数 cos^m 仍由 engine.HALO_FORWARD 给出 (t19_model.py 的 FWD 可覆盖), 其余 (定光、灯亮度先验、遮罩、蓝层) 同 t31_base
+GENERATIONS["t34_phys"] = ("D65", GENERATIONS["t31_base"][1] + ("halo_oblique", "halo_layered", "halo_return"), {})
+METERING["t34_phys"] = "session"
+HIGHLIGHT_RECON["t34_phys"] = "stops"
+MASK_PLACEMENT["t34_phys"] = "layers"
+RECON_COLOUR["t34_phys"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t34_phys"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
