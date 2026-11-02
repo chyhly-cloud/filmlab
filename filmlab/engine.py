@@ -33,6 +33,9 @@ DEFAULT_CORRECTIONS = ("gray_halo", "grain_aperture")
 PLATE_REFLECTANCE = 0.2    # T15 相机压片板 (镜面) 反射率, 仅 "halo_plate" 时使用; 研究取值 (黑漆 ~0.05, 金属 ~0.5), 见 docs/tasks/T15_HALO_PHYSICS.md
 # T20 拍摄端眩光 (仅 "camera_glare" 时使用): η = 被散射的比例, r0 = 分布的核心半径 (µm, 胶片面), β = 尾部指数
 CAMERA_GLARE = {"eta": 0.0, "r0_um": 100.0, "beta": 1.5}
+# T26 散射光到达片基时的角分布指数 cos^m 的校正值 (仅 "halo_forward" 时使用, 覆盖 Variation.forward;
+# None = 不改)。见 docs/tasks/T26_HALO_ANGULAR.md
+HALO_FORWARD = None
 HALATION_MEASURED = 0.1     # 历史实验值，仅供复现；旧 halo_edge 重复解码，倍率证据撤销，见 NONNEUTRAL_CHAIN_AUDIT.md
 # 正常曝光的日光场景, 整张平均密度比灰卡低多少 (Portra 400, 39 张日光 RAW 按胶片测光模型、
 # 不加补偿曝光的中位数, 四分位距 0.11; tools/eval 的 latd 测量)
@@ -73,6 +76,7 @@ class Params:
     #   "halo_layered"   (配合 halo_oblique) 斜程衰减按层深度: 红层之上散射的光整层斜穿 (T11, 无自由参数; 可选)
     #   "camera_glare"   拍摄端 (镜头 / 柔光镜) 的眩光扩散, 不属于胶片 (T20, 参数 CAMERA_GLARE; 可选)
     #   "halo_return"    返回光按实际斜光程 1/cosθ 被各层吸收 (T15, 无自由参数; 可选)
+    #   "halo_forward"   光晕核的散射角分布指数 cos^m 改用 HALO_FORWARD (T26; 可选)
     #   "halo_plate"     穿出片基背面的光被相机压片板反射回乳剂 (T15, 反射率 PLATE_REFLECTANCE; 可选)
     #   "xyz_exposure"   人造光源的 RGB → 曝光映射在 XYZ 里做非负拟合 (T16 诊断, 未采用; 可选)
     #   "blue_xyz"       人造光源下蓝层的 RGB → 曝光映射改在 XYZ 里做非负拟合 (T16, 无参数; 可选):
@@ -159,6 +163,8 @@ class Engine:
         st = e.stock
         ref = st.reference_illuminant
         self.v = variation.sample(p.roll, p.frame, p.lab)
+        if "halo_forward" in p.corrections and HALO_FORWARD is not None:     # T26: 角分布指数改用校正值 (各卷相同)
+            self.v = replace(self.v, forward=float(HALO_FORWARD))
         # 参考光源下的测光 / 灰卡: M_ref 接收"反射率" RGB —— 在日光白平衡的输入里,
         # 该光源照亮的中性灰卡本身带着光源的颜色 (钨丝灯下是橙色的), 先乘上它再计算曝光
         from . import lights

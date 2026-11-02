@@ -82,6 +82,9 @@ GENERATIONS["t24_gl"] = ("D65", _A + ("blue_xyz", "camera_glare"), {})        # 
 GENERATIONS["t24_hkgl"] = ("D65", _A + ("blue_xyz", "halation_measured", "camera_glare"), {})   # T24 诊断: 光晕强度 + 眩光
 for _g in ("t22_edge", "t22_bxyz", "t22_ap", "t22_obl", "t22_glare", "t22_ea", "t24_hk", "t24_gl", "t24_hkgl"):
     METERING[_g] = "session"
+# T26 研究候选 t26_fwd = t22_bxyz + 光晕核散射角分布指数 cos^m 改用 engine.HALO_FORWARD (docs/tasks/T26_HALO_ANGULAR.md)
+GENERATIONS["t26_fwd"] = ("D65", GENERATIONS["t22_bxyz"][1] + ("halo_forward",), {})
+METERING["t26_fwd"] = "session"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 _active = "current"
 

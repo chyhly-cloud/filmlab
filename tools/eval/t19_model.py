@@ -1,6 +1,7 @@
 """T19: 模型在夜景 RAW 上的光晕统计量, 与参考集 (t19_reference.py) 用同一测量代码。
 流程同 examples/night.py (EXIF 测光), 长边 1600 像素 (≈ 22.5 µm/像素, 与参考扫描相近), 输出按 8 位 sRGB 量化后再解码测量。
-用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25)"""
+用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25),
+FWD (光晕核角分布指数 cos^m, engine.HALO_FORWARD, 需代际含 "halo_forward", T26), BOUNCES (多次反射次数, 临时诊断, T26)"""
 import json, os, sys, zlib, warnings
 from pathlib import Path
 import numpy as np
@@ -14,6 +15,7 @@ def job(a):
     cache = Path(os.environ.get("CACHE", "/tmp/t19_cache")); cache.mkdir(parents=True, exist_ok=True)
     tag = f"{Path(f).stem}_{gen}_{os.environ.get('STOPS', '0')}" + (f"_g{os.environ['GLARE']}" if os.environ.get("GLARE") else "") \
         + (f"_t{os.environ['TURB']}" if os.environ.get("TURB") else "") + (f"_k{os.environ['HALO_K']}" if os.environ.get("HALO_K") else "") \
+        + (f"_f{os.environ['FWD']}" if os.environ.get("FWD") else "") + (f"_b{os.environ['BOUNCES']}" if os.environ.get("BOUNCES") else "") \
         + ("_remjet" if os.environ.get("REMJET") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
@@ -30,6 +32,13 @@ def job(a):
             from filmlab import engine as _e2
             _e2.HALATION_MEASURED = float(os.environ["HALO_K"])
         rawio.SOURCE_STOPS = float(os.environ.get("STOPS", "0"))
+        if os.environ.get("FWD"):                        # 光晕核角分布指数 (T26, 仅含 "halo_forward" 的代际生效)
+            from filmlab import engine as _e3
+            _e3.HALO_FORWARD = float(os.environ["FWD"])
+        if os.environ.get("BOUNCES"):                    # 多次反射次数 (T26 临时诊断; 默认 film.multi_bounce_kernel 的 4)
+            from filmlab import film as _f2
+            _mb, _nb = _f2.multi_bounce_kernel, int(os.environ["BOUNCES"])
+            _f2.multi_bounce_kernel = lambda *a, **k: _mb(*a, **{**k, "bounces": _nb})
         if os.environ.get("GLARE"):                      # "η,r0_µm": 拍摄端眩光 (T20)
             from filmlab import engine as _eng
             eta, r0 = (float(x) for x in os.environ["GLARE"].split(","))
