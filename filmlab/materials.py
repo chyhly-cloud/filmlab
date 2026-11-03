@@ -217,3 +217,87 @@ def _emulsion_for_grain(stock_key):
     if stock_key.startswith("bw_"):
         return bw_film(sensitivity=stock_key[3:]) if stock_key[3:] in ("pan", "ortho", "blue") else bw_film()
     return emulsion(stock_key)
+
+
+# ------------------------------------------------------------- 颗粒 (T46) --
+# 跨片种通用的银盐颗粒 (docs/tasks/T46_GRAIN_GENERAL.md; 留一检验 tools/eval/t46_grain_loo.py)。
+# 每个颗粒 = 一个卤化银晶体: 位置 (涂布堆积)、尺寸 (对数正态亚群)、形态 (T 颗粒 v = a·t / 三维 v = a^1.5)、
+# 是否显影 (吸收 ≥ 4 个有效光子) 都按晶体决定; 彩色片的显影晶体在漂白前原位生成一团染料云, 黑白片保留银。
+#
+# 通用常数 (所有片种共用; 依据见文档第 3 节):
+#   乳剂结构 λ_ck: 速度点处快 / 中 / 慢亚群中位晶体吸收的有效光子数, σ_ln, 每种染料的 κ, 灰雾面积 a_f, 堆积 S0
+#     —— 取 T45 的 5219 标定 (只用它的"结构", 绝对尺寸不再来自 5219, 而由下面的 η、β 与各片自己的感光度定)
+#   η (a0 = 1 µm² 处每面积量子效率), β (量子效率随投影面积的指数) —— 多片种官方颗粒度联合定 (留一检验)
+#   T 颗粒厚度 t = 0.12 µm (Kodak T-GRAIN 公开描述的 0.1–0.2 µm 量级, T45 假设)
+#   银粒 κ_Ag = 显影银覆盖力 0.5 密度/(g/m²) × 每 µm³ AgBr 含银 3.72e-12 g = 1.86 (T45 假设)
+GRAIN_T46_ETA = 0.0248          # 留一检验的全体拟合值 (tools/eval/t46/loo.json)
+GRAIN_T46_BETA = 0.875
+GRAIN_T46_A0 = 1.0
+GRAIN_KAPPA_AG = 1.86
+GRAIN_T_UM = 0.12
+# 冲洗工艺的最后一步 (显影晶体 → 染料云 / 银丝团): 每晶体产量的变异系数 (伽马) 与扩散长度 L (µm)。
+#   没有找到单个染料云产量的显微统计; CV 0.3 为量级估计 (成色剂油滴计数的泊松起伏 + 大 T 颗粒的部分显影),
+#   L 由 EPFL 800T 扫描颗粒自相关的 1 µm 量级定 (T45 第 3.2 节); 各工艺之间没有公开的可区分数据, 取同值。
+#   kappa_scale: 每 µm³ 显影晶体的积分密度相对彩色负片 (5219 标定) 的倍数, 由该工艺官方颗粒度的族常数定 (σ ∝ √κ):
+#     E-6 5.41 (彩色显影把第一显影剩下的晶体全部显影、成色剂过量; 负片成色剂不足 + DIR 抑制, 只有理论产率的 3–4%),
+#     黑白 1.36 (κ_Ag = 1.86 × 1.36 = 2.52, 即显影银覆盖力 0.68 密度/(g/m²))。
+GRAIN_PROCESS = {
+    "C-41": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=1.0),
+    "ECN-2": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=1.0),
+    "E-6": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=5.407),
+    "BW": dict(yield_cv=0.3, cloud_L_um=0.2, kappa_scale=1.357),     # 银丝团: 覆盖力随机 (丝团疏密) + 约晶体大小的空间范围
+}
+# 每个档案的公开物理量 (感光度、设计光源、晶体形态); 未列出的按名称里的感光度、彩色 T 颗粒、档案光源推定。
+GRAIN_PHYS = {
+    "kodak_vision3_500t": dict(ei=500, illuminant="BB3200"), "kodak_vision3_200t": dict(ei=200, illuminant="BB3200"),
+    "kodak_vision3_250d": dict(ei=250, illuminant="D55"), "kodak_vision3_50d": dict(ei=50, illuminant="D55"),
+    "kodak_portra_160": dict(ei=160), "kodak_portra_400": dict(ei=400), "kodak_portra_800": dict(ei=800),
+    "kodak_ektar_100": dict(ei=100), "kodak_gold_200": dict(ei=200), "kodak_ultramax_400": dict(ei=400),
+    "fujifilm_pro_400h": dict(ei=400), "fujifilm_xtra_400": dict(ei=400), "fujifilm_c200": dict(ei=200),
+    "fujifilm_provia_100f": dict(ei=100), "fujifilm_velvia_100": dict(ei=100), "kodak_ektachrome_100": dict(ei=100),
+    "kodak_kodachrome_64": dict(ei=64, thickness_um=None),
+    "bw": dict(ei=400, thickness_um=None),        # bw_film 通用全色: 按 Tri-X 400 (传统三维晶体)
+}
+
+
+def grain_universal(eta=None, beta=None):
+    """T46 通用常数 U (filmlab.grain.derive_spec)。乳剂结构取 5219 的 T45 标定。"""
+    from . import grain
+    base = _grain_spec("kodak_vision3_500t", "negative", "Kodak Vision3 500T", "BB3200")
+    lam = grain.structure_from(base, emulsion("kodak_vision3_500t"))
+    return dict(lam=lam, eta=GRAIN_T46_ETA if eta is None else eta, beta=GRAIN_T46_BETA if beta is None else beta,
+                a0=GRAIN_T46_A0, sigma_ln=base.sigma_ln, kappa_dye=base.kappa, kappa_ag=GRAIN_KAPPA_AG,
+                fog_area=base.fog_area_um2, s0=base.packing_s0)
+
+
+def process_grain(process_name: str):
+    name = str(process_name or "")
+    for k in ("ECN-2", "C-41", "E-6"):
+        if name.startswith(k):
+            return dict(GRAIN_PROCESS[k], name=k)
+    return dict(GRAIN_PROCESS["BW"], name=name or "BW")
+
+
+def grain_spec_t46(e: Emulsion, process_name: str = None):
+    """T46 的颗粒档案: 只由该胶片的公开物理量 + 通用常数 + 冲洗工艺生成。"""
+    return _grain_spec_t46(e.stock.key, e.design, e.name, e.stock.reference_illuminant,
+                           process_name or e.native_process)
+
+
+@lru_cache(maxsize=None)
+def _grain_spec_t46(stock_key, design, name, ref_illum, process_name):
+    import re
+    from . import grain
+    e = _emulsion_for_grain(stock_key)
+    p = dict(GRAIN_PHYS["bw"] if design == "bw" else GRAIN_PHYS.get(stock_key, {}))
+    if "ei" not in p:
+        m = re.search(r"(\d{2,4})", name)
+        p["ei"] = float(m.group(1)) if m else 200.0
+    if "illuminant" not in p:
+        ri = str(ref_illum)
+        p["illuminant"] = "BB3200" if ri.startswith("BB") and float(re.sub(r"\D", "", ri) or 5500) < 4500 else "D55"
+    kind = "silver" if design == "bw" else "dye"
+    t = p.get("thickness_um", GRAIN_T_UM)
+    sp = grain.derive_spec(e, p["ei"], p["illuminant"], grain_universal(), kind=kind, thickness_um=t,
+                           process=process_grain(process_name))
+    return sp.with_(source=f"T46 通用推导 (EI {p['ei']:g}, {p['illuminant']}, {'T 颗粒' if t else '三维晶体'}, 工艺 {process_name})")

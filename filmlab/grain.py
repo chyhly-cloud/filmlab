@@ -16,6 +16,14 @@
      d 由哪些晶体、以什么离散方式组成: 每像素按 d 反求有效曝光 (晶体模型名义密度 = d), 再按光子统计得各档显影概率。
 
 不在输出端加统计噪声: 颗粒加在底片的染料 / 银量上, 之后照常经扫描仪或相纸。
+
+T46 (docs/tasks/T46_GRAIN_GENERAL.md) 在同一链条上加三项, 默认值 (0 / None) 时与 T45 逐位相同:
+  2'. 量子效率随晶体尺寸: 每 µm² 投影面积的有效光子数 Φ·(a/a0)^β (小晶体电子–空穴复合使潜影效率下降; β 为跨片种通用常数)。
+  3'. 每个显影晶体的染料 / 银产量随机 (伽马分布, 变异系数 yield_cv; 由冲洗工艺定): 每档 N 个显影晶体的总产量
+     ~ Gamma(N/cv², m·cv²), 均值 N·m 不变, 方差 N·m²·cv² (复合泊松: 每晶体方差乘以 1 + cv²)。
+  3''. 染料云 / 银丝团的空间大小随晶体尺寸: 每个亚群单独展开, 高斯 σ_k = √((ECD_k/4)² + L²)
+     (ECD/4: 显影晶体圆盘的二阶矩; L: 氧化显影剂 / 成色剂的扩散长度, 冲洗工艺参数 cloud_L_um)。
+  颗粒的位置与数目只来自卤化银晶体 (涂布堆积 → 尺寸 → 光子统计显影); 染料云只决定这一晶体的颜色、产量与边缘大小。
 """
 from dataclasses import dataclass, field, replace
 from functools import lru_cache
@@ -47,6 +55,11 @@ class GrainSpec:
     cloud_um: float = 1.0       # 染料云 / 银粒的空间高斯 σ (µm)
     sigma_ln: tuple = (SIGMA_LN, SIGMA_LN, SIGMA_LN)   # (3,) 每层晶体 ECD 的对数正态宽度
     source: str = ""
+    eta_beta: float = 0.0       # T46: 每面积量子效率 ∝ (a/a0)^β (0 = 与尺寸无关, T45)
+    eta_a0_um2: float = 1.0     # T46: β 的参考投影面积 (µm²)
+    yield_cv: float = 0.0       # T46: 每个显影晶体染料 / 银产量的变异系数 (伽马; 冲洗工艺参数)
+    cloud_L_um: float | None = None   # T46: 染料云扩散长度 (µm); None = T45 (整场统一 σ = cloud_um)
+    process: str = ""           # T46: 冲洗工艺 (只作记录)
 
     def phi(self):
         """(3,) 每层每 lux·s、每 µm² 投影面积的有效光子数。黑白全色单层吸收三个波段之和。"""
@@ -76,20 +89,26 @@ def develop_probability(spec: GrainSpec, c: int, H, a):
     """(..., Q) 面积 a 的晶体在曝光 H (lux·s) 下的显影概率 p 与灰雾概率 f。"""
     from scipy.special import gammainc
     f = 1.0 - np.exp(-a / spec.fog_area_um2[c])
-    hit = gammainc(PHOTONS_R, spec.phi()[c] * a * np.asarray(H)[..., None])
+    if spec.eta_beta:
+        a_eff = a * (a / spec.eta_a0_um2) ** spec.eta_beta    # 有效吸收截面 (T46)
+        hit = gammainc(PHOTONS_R, spec.phi()[c] * a_eff * np.asarray(H)[..., None])
+    else:
+        hit = gammainc(PHOTONS_R, spec.phi()[c] * a * np.asarray(H)[..., None])
     return 1.0 - (1.0 - f) * (1.0 - hit), f
 
 
 def layer_curves(spec: GrainSpec, c: int, H, reversal=False):
     """名义净密度 D(H) 与 48 µm 孔径 RMS 颗粒度 σ(H) (解析)。
-    每亚群: 晶体总数按涂布堆积 (方差 S0 × 期望), 尺寸独立抽取, 显影独立 (二项) →
-    方差/面积 = n [E(m²p) − E(mp)² + S0·E(mp)²]。"""
+    每亚群: 晶体总数按涂布堆积 (方差 S0 × 期望), 尺寸独立抽取, 显影独立 (二项), 每晶体产量随机 (cv) →
+    方差/面积 = n [E(m²p)(1 + cv²) − E(mp)² + S0·E(mp)²]。"""
     D = 0.0; var = 0.0
     for n, w, a, v, m in _nodes(spec, c):
         p, f = develop_probability(spec, c, H, a)
         if reversal:
             p, f = 1.0 - p, np.zeros_like(f)
         Emp = (w * m * p).sum(-1); Em2p = (w * m * m * p).sum(-1)
+        if spec.yield_cv:
+            Em2p = Em2p * (1.0 + spec.yield_cv ** 2)        # 每晶体产量随机 (复合泊松)
         D = D + n * ((w * m * (p - f)).sum(-1))
         var = var + n * (Em2p - Emp ** 2 + spec.packing_s0[c] * Emp ** 2)
     return D, np.sqrt(var / APERTURE_UM2)
@@ -111,6 +130,8 @@ def _packed_counts(Mbar, s0, shape, rng, target=8.0):
     像素内期望晶体数少 (大晶体、细像素) 时, 先在 b×b 像素的块上取数 (块内期望 ≥ target, 方差 S0·期望),
     再把块内晶体按均匀随机位置逐级二分到像素 (块内为随机位置)。这样孔径方差与渲染分辨率无关。"""
     h, w = shape
+    if Mbar <= 0:                         # 涂布量为 0 的亚群 (NNLS 可给 0): 没有晶体
+        return np.zeros(shape, np.int64)
     b = 1 if Mbar >= target else int(2 ** np.ceil(np.log2(np.sqrt(target / max(Mbar, 1e-12)))))
     H, W = -(-h // b), -(-w // b)
     mu = Mbar * b * b
@@ -152,6 +173,15 @@ def apply(e, spec: GrainSpec, st, px_um, rng, strength=1.0):
         Dmax = Dt.max()
         Heff = 10.0 ** np.interp(np.minimum(d, Dmax), Dt[order], lh[order])
         rho = np.maximum(d / Dmax, 1.0)
+        if spec.cloud_L_um is not None or spec.yield_cv:
+            fluct, floor = _layer_fluct_t46(spec, c, Heff, area, shape, rng, rev, px_um)
+            fluct *= rho * strength * getattr(st, "grain_factor", 1.0)
+            if spec.single_layer:
+                for k in range(3):
+                    tgt[..., k] = np.clip(tgt[..., k] + fluct, floor, None)
+            else:
+                tgt[..., c] = np.clip(tgt[..., c] + fluct, floor, None)
+            continue
         fluct = np.zeros(shape)
         floor = 0.0
         for n, w, a, v, m in _nodes(spec, c):
@@ -177,6 +207,42 @@ def apply(e, spec: GrainSpec, st, px_um, rng, strength=1.0):
                 tgt[..., k] = np.clip(tgt[..., k] + fluct, floor, None)
         else:
             tgt[..., c] = np.clip(tgt[..., c] + fluct, floor, None)
+
+
+def cloud_sigma_um(spec: GrainSpec, c: int):
+    """(3,) 每个亚群的染料云 / 银丝团高斯 σ (µm): 显影晶体圆盘 (σ = ECD/4) 与扩散长度 L 的卷积。"""
+    L = spec.cloud_L_um if spec.cloud_L_um is not None else spec.cloud_um
+    return np.sqrt((np.asarray(spec.ecd_um[c]) / 4.0) ** 2 + L ** 2)
+
+
+def _layer_fluct_t46(spec: GrainSpec, c, Heff, area, shape, rng, rev, px_um):
+    """T46 的一层: 晶体数 (涂布堆积) → 尺寸档 (二项) → 显影 (二项) → 每晶体产量 (伽马) → 每亚群按自己的云大小展开。"""
+    from scipy.ndimage import gaussian_filter
+    fluct = np.zeros(shape)
+    floor = 0.0
+    cv2 = spec.yield_cv ** 2
+    sig = cloud_sigma_um(spec, c)
+    for k, (n, w, a, v, m) in enumerate(_nodes(spec, c)):
+        p, f = develop_probability(spec, c, Heff, a)
+        if rev:
+            p, f = 1.0 - p, np.zeros_like(f)
+        floor -= n * float((w * m * f).sum())
+        M = _packed_counts(n * area, spec.packing_s0[c], shape, rng)
+        rest, cum = M, 0.0
+        fk = np.zeros(shape)
+        for q in range(len(w)):
+            cq = rest if q == len(w) - 1 else rng.binomial(rest, min(w[q] / max(1.0 - cum, 1e-12), 1.0))
+            rest = rest - cq; cum += w[q]
+            pq = np.clip(p[..., q], 0.0, 1.0)
+            N = rng.binomial(cq, pq)
+            if cv2 > 0:
+                Y = rng.gamma(N / cv2, m[q] * cv2)            # N 个晶体的总产量: 均值 N·m, 方差 N·m²·cv²
+            else:
+                Y = N * m[q]
+            fk += (Y - n * area * w[q] * pq * m[q]) / area
+        s = sig[k] / px_um
+        fluct += gaussian_filter(fk, s) if s > 0.3 else fk
+    return fluct, floor
 
 
 # ----------------------------------------------------------------- 档案 --
@@ -214,3 +280,82 @@ def scaled(base: GrainSpec, e, ei, illuminant, eta, kind="dye", kappa=None, thic
     t = base.thickness_um if thickness_um == "same" else thickness_um
     return fit_amounts(e, ecd, kappa if kappa is not None else base.kappa, base.fog_area_um2, base.packing_s0,
                        ei, illuminant, eta, t, single_layer=(kind == "silver"), sigma_ln=base.sigma_ln)
+
+
+# ------------------------------------------------------- T46: 跨片种通用推导 --
+SURFACE_RATIO_3D = 3.0          # 立方体表面积 / T 颗粒两面面积 (同一投影面积): 6a / 2a
+def exposure_axis(e, ei, design=None):
+    """(256, 3) 每层特性曲线横轴对应的绝对曝光 H (lux·s), 由感光度的标准定义定:
+    负片 / 黑白 (ISO 5800 / ISO 6 的简化): 每层净密度 0.1 处 H = 0.8/EI (同 T45);
+    反转片 (ISO 2240): 绿层 Dmin+0.2 与 Dmin+2.0 两点曝光的几何平均 H_m = 10/EI, 三层共用同一绝对曝光轴。"""
+    x = e.log_exposure
+    design = design or e.design
+    if design != "reversal":
+        S = e.S_nom
+        xs = np.array([np.interp(0.1, np.maximum.accumulate(S[:, c] - S[:, c].min()), x) for c in range(3)])
+        return 0.8 / ei * 10.0 ** (x[:, None] - xs[None, :])
+    D = e.stock.density_curves[:, 1]
+    pos = D - D.min()
+    dec = np.minimum.accumulate(pos[::-1])[::-1] if pos[0] < pos[-1] else np.maximum.accumulate(pos[::-1])[::-1]
+    i = np.argsort(dec)
+    x_hi = np.interp(0.2, dec[i], x[i]); x_lo = np.interp(min(2.0, 0.9 * dec.max()), dec[i], x[i])
+    xm = 0.5 * (x_hi + x_lo)
+    return np.repeat((10.0 / ei * 10.0 ** (x - xm))[:, None], 3, 1)
+
+
+def derive_spec(e, ei, illuminant, U, kind="dye", thickness_um=0.12, process=None, single_layer=None):
+    """T46: 只由该胶片的公开物理量 (感光度、设计光源、晶体形态、染料 / 银、特性曲线、冲洗工艺) 与跨片种通用常数 U
+    生成卤化银晶体群 → GrainSpec。
+
+    U: lam (3 层 × 3 亚群, 速度点处每个亚群中位晶体吸收的有效光子数; 乳剂结构常数), eta (a0 处每面积量子效率),
+       beta (量子效率随面积的指数), a0, sigma_ln (3,), kappa_dye (3,: 青 / 品红 / 黄 每 µm³ 显影晶体的积分密度),
+       kappa_ag (银粒), fog_area (3,), s0 (3,)。
+    晶体尺寸: Φ_c·η·a·(a/a0)^β·H_s = λ_ck  →  a = (λ_ck·a0^β / (Φ_c·η·H_s))^(1/(1+β))。涂布量由自己的特性曲线 (NNLS) 定。
+    process: dict(yield_cv, cloud_L_um, name) 冲洗工艺的最后一步参数。"""
+    from scipy.optimize import nnls
+    single = (kind == "silver") if single_layer is None else single_layer
+    design = e.design
+    Hx = exposure_axis(e, ei, design)
+    b = np.asarray(BAND_PHOTONS[illuminant], float)
+    # 增感染料吸附在晶体表面, 吸收面积 = 表面积: T 颗粒 ≈ 2a (两个大面), 立方体 = 6a → 同一投影面积下三维晶体多吸收 3 倍
+    eta = U["eta"] * (SURFACE_RATIO_3D if thickness_um is None else 1.0)
+    phi = eta * (np.full(3, b.sum()) if single else b)
+    beta, a0 = U["beta"], U["a0"]
+    lam = np.asarray(U["lam"], float)
+    # 速度点 H_s: 每层净密度 0.1 的曝光 (反转片取同一绝对轴上的第一显影负像净密度 0.1)
+    x = e.log_exposure; S = e.S_nom
+    Hs = np.array([10 ** np.interp(0.1, np.maximum.accumulate(S[:, c] - S[:, c].min()), np.log10(Hx[:, c]))
+                   for c in range(3)])
+    a = (lam * a0 ** beta / (phi[:, None] * Hs[:, None])) ** (1.0 / (1.0 + beta))
+    ecd = 2.0 * np.sqrt(a / np.pi)
+    pr = process or {}
+    ks = pr.get("kappa_scale", 1.0)
+    kap = (U["kappa_ag"] * ks,) * 3 if kind == "silver" else tuple(k * ks for k in U["kappa_dye"])
+    proto = GrainSpec(ecd_um=tuple(map(tuple, ecd)), amount=((1.0,) * 3,) * 3, kappa=kap,
+                      fog_area_um2=tuple(U["fog_area"]), packing_s0=tuple(U["s0"]), ei=float(ei), illuminant=illuminant,
+                      eta=eta, thickness_um=thickness_um, single_layer=single, sigma_ln=tuple(U["sigma_ln"]),
+                      eta_beta=beta, eta_a0_um2=a0, yield_cv=pr.get("yield_cv", 0.0), cloud_L_um=pr.get("cloud_L_um"),
+                      process=pr.get("name", ""))
+    amounts = []
+    for c in range(3):
+        net = np.maximum.accumulate(S[:, c] - S[:, c].min())
+        cols = []
+        for k in range(3):
+            one = proto.with_(amount=tuple(tuple(1.0 if (cc == c and kk == k) else 0.0 for kk in range(3))
+                                           for cc in range(3)))
+            cols.append(layer_curves(one, c, Hx[:, c])[0])
+        ok = (net < 0.97 * net.max()) & (net > 0.005)
+        amt, _ = nnls(np.stack(cols, 1)[ok], net[ok])
+        amounts.append(tuple(float(v) for v in amt))
+    return proto.with_(amount=tuple(amounts))
+
+
+def structure_from(spec: GrainSpec, e):
+    """一个已标定档案的乳剂结构常数: 速度点处每亚群中位晶体的有效光子数 λ_ck (= Φ_c·η·a_ck·(a/a0)^β·H_s,c)。"""
+    Hx = exposure_axis(e, spec.ei)
+    S = e.S_nom
+    Hs = np.array([10 ** np.interp(0.1, np.maximum.accumulate(S[:, c] - S[:, c].min()), np.log10(Hx[:, c]))
+                   for c in range(3)])
+    a = np.pi * (np.asarray(spec.ecd_um) / 2.0) ** 2
+    eff = (a / spec.eta_a0_um2) ** spec.eta_beta if spec.eta_beta else 1.0
+    return spec.phi()[:, None] * a * eff * Hs[:, None]

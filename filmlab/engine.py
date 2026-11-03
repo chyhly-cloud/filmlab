@@ -115,6 +115,8 @@ class Params:
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     #   "lab_contrast"   (配合 lab_measured) 固定光号的整体反差 s 用灰阶楔实测的 LAB_SCAN_CONTRAST, 不再为 1 (T35; 可选)
     #   "lab_shadow"     冲印店输出的逐通道黑位 LAB_SHADOW_BLACK (输出 = β + (1 − β)·数字相纸输出; T44, 可选)
+    #   "grain_t46"      (与 grain_silver 同用) 颗粒档案改为跨片种通用推导 (materials.grain_spec_t46: 感光度 → 晶体尺寸,
+    #                    量子效率随晶体面积, 每晶体染料 / 银产量随机, 染料云大小随晶体与冲洗工艺; T46, 可选)
     #   "grain_silver"   颗粒按银盐物理 (filmlab.grain: 晶体尺寸分布 + 光子统计显影 + 染料云 / 银粒叠加,
     #                    参数取 materials.grain_spec 的胶片档案), 取代按感光度估算的 _grain (T45, 可选)
     #   "scan_psf"       扫描仪光学点扩散 SCAN_PSF_UM (透射率上高斯; T45, 可选)
@@ -648,8 +650,9 @@ class Engine:
         if self.p.grain <= 0 or st.image_silver is None:
             return
         from . import grain
-        from .materials import grain_spec
-        spec = grain_spec(self.e)
+        from .materials import grain_spec, grain_spec_t46
+        # T46: 晶体群由该胶片的公开物理量 + 通用常数推导, 最后一步 (染料云 / 银丝团) 随机且随冲洗工艺
+        spec = grain_spec_t46(self.e, self.proc.name) if "grain_t46" in self.p.corrections else grain_spec(self.e)
         rng = np.random.default_rng(self.v.frame_seed)
         grain.apply(self.e, spec, st, self.px_um, rng, strength=self.p.grain)
 

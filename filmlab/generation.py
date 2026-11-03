@@ -233,6 +233,14 @@ HIGHLIGHT_RECON["t45_base"] = "stops"
 MASK_PLACEMENT["t45_base"] = "layers"
 RECON_COLOUR["t45_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t45_base"] = APERTURE_RANGE.get("t31_base")
+# T46 研究候选 (docs/tasks/T46_GRAIN_GENERAL.md): 颗粒档案改为跨片种通用推导 (grain_t46: 每种胶片只用自己的感光度、设计光源、
+#   晶体形态、特性曲线与冲洗工艺 + 通用常数 η、β, 留一检验; 最后一步每晶体染料 / 银产量随机, 染料云大小随晶体与工艺)。其余同 t45_base
+GENERATIONS["t46_base"] = ("D65", GENERATIONS["t45_base"][1] + ("grain_t46",), {})
+METERING["t46_base"] = "session"
+HIGHLIGHT_RECON["t46_base"] = "stops"
+MASK_PLACEMENT["t46_base"] = "layers"
+RECON_COLOUR["t46_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t46_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
