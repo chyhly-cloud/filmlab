@@ -224,6 +224,15 @@ HIGHLIGHT_RECON["t44_base"] = "stops"
 MASK_PLACEMENT["t44_base"] = "layers"
 RECON_COLOUR["t44_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t44_base"] = APERTURE_RANGE.get("t31_base")
+# T45 研究候选 (docs/tasks/T45_GRAIN.md): 颗粒按银盐物理。t45_base = t44_base + 银盐颗粒 (grain_silver: 晶体尺寸分布 +
+#   光子统计显影 + 染料云 / 银粒, 参数取 materials.grain_spec 的胶片档案; 5219 按 Kodak H-1-5219 的 RMS 颗粒度) +
+#   扫描仪光学点扩散 (scan_psf, engine.SCAN_PSF_UM: EPFL Frontier 扫描颗粒自相关实测; 16 µm/像素以下才生效)。其余同 t44_base
+GENERATIONS["t45_base"] = ("D65", GENERATIONS["t44_base"][1] + ("grain_silver", "scan_psf"), {})
+METERING["t45_base"] = "session"
+HIGHLIGHT_RECON["t45_base"] = "stops"
+MASK_PLACEMENT["t45_base"] = "layers"
+RECON_COLOUR["t45_base"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t45_base"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

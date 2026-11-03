@@ -107,7 +107,7 @@ def job(args):
     rgb = pc.load_digital(rawp, 1400)[0]
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
-    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": seed % 36, "grain": 0}))
+    eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": seed % 36, "grain": float(os.environ.get("GRAIN", "0"))}))
     tr = {}
     neg = eng.develop_negative(m, trace=tr)
     out_lin = np.clip(eng.scan(neg), 0, None)

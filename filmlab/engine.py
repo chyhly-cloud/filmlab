@@ -64,6 +64,10 @@ LAB_SCAN_CONTRAST = 0.85
 # R 0.0030 (按帧自助 95% 0.0015–0.0045), G 0.0015 (0–0.0030), B 0.0015 (0–0.0055); 留一帧时 R 0.0025–0.0040、
 # G 0.0010–0.0025、B 0.0010–0.0025。只代表这家冲印店。
 LAB_SHADOW_BLACK = (0.0030, 0.0015, 0.0015)
+# T45 冲印店扫描仪的光学点扩散 (仅 "scan_psf" 时使用): 胶片面高斯 σ (µm)。EPFL Frontier 扫描 (6.60 µm/像素) 均匀区颗粒的
+# 像素自相关 (滞后 1/2/3 像素 0.68/0.22/0.03, 3342 块中位) = 白噪声经高斯 σ 5.0 µm 再按像素方盒积分;
+# 扣去染料云 σ 1.0 µm (filmlab.grain) 得 √(5.0² − 1.0²) = 4.9 µm。只在 σ ≥ 0.3 像素 (约 16 µm/像素以下) 时生效。
+SCAN_PSF_UM = 4.9
 
 
 @dataclass
@@ -111,6 +115,9 @@ class Params:
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     #   "lab_contrast"   (配合 lab_measured) 固定光号的整体反差 s 用灰阶楔实测的 LAB_SCAN_CONTRAST, 不再为 1 (T35; 可选)
     #   "lab_shadow"     冲印店输出的逐通道黑位 LAB_SHADOW_BLACK (输出 = β + (1 − β)·数字相纸输出; T44, 可选)
+    #   "grain_silver"   颗粒按银盐物理 (filmlab.grain: 晶体尺寸分布 + 光子统计显影 + 染料云 / 银粒叠加,
+    #                    参数取 materials.grain_spec 的胶片档案), 取代按感光度估算的 _grain (T45, 可选)
+    #   "scan_psf"       扫描仪光学点扩散 SCAN_PSF_UM (透射率上高斯; T45, 可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -509,7 +516,10 @@ class Engine:
             trace['total_exposure'] = H
         st = self._develop(logH, blur_px=12.0 / self.px_um)
         self._agitation(st)
-        self._grain(st)
+        if "grain_silver" in p.corrections:              # T45: 银盐物理颗粒
+            self._grain_silver(st)
+        else:
+            self._grain(st)
         self.state = st
         return Negative(film=e, state=st, spectral=self._transmittance, log_exposure=logH,
                         light_weights=self.light_W, light_mix=getattr(self, "light_mix", None) if self.light_W is not None
@@ -560,7 +570,14 @@ class Engine:
         neg = st if isinstance(st, Negative) else Negative(self.e, st, self._transmittance)
         shape = neg.shape
         # S4a + S4b: 光学测量 → 去片基 / 印放密度 / 档案 (按块, 直接积分到扫描通道)
-        Dn = neg.measure(sc.normalized_density, chunk).reshape(-1, 3)
+        Dn = neg.measure(sc.normalized_density, chunk)
+        if "scan_psf" in self.p.corrections and Dn.ndim == 3 and SCAN_PSF_UM / self.px_um >= 0.3:
+            # T45: 扫描镜头 / 传感器的点扩散, 在透射率上 (扫描仪测的是透过的光)
+            from scipy.ndimage import gaussian_filter
+            sp = SCAN_PSF_UM / self.px_um
+            T = gaussian_filter(10.0 ** -np.nan_to_num(Dn, nan=0.0), (sp, sp, 0))
+            Dn = np.where(np.isfinite(Dn), -np.log10(np.clip(T, 1e-12, None)), Dn)
+        Dn = Dn.reshape(-1, 3)
         # S4c: 定光
         if self.p.timing == "frame" and getattr(self, "_lab_base", None) is not None:
             # 实测的冲印店颜色处理 (LAB_MEASURED_COLOUR): 固定光号 + 按整帧平均密度的偏色给颜色偏移
@@ -624,6 +641,17 @@ class Engine:
             d = np.clip(tgt[..., c], 0, None)
             sat = np.clip(1 - d / (e.halide_cap[c] * 1.05), 0.05, 1)
             tgt[..., c] = np.clip(tgt[..., c] + n * sigma * np.sqrt(d * sat), 0, None)
+
+    def _grain_silver(self, st):
+        """颗粒 (T45): 每层卤化银晶体按光子统计显影, 每个显影晶体一团染料云 (黑白: 银粒), 叠加成密度场。
+        参数取自胶片档案 (materials.grain_spec); 均值仍为显影化学给出的染料 / 银量。"""
+        if self.p.grain <= 0 or st.image_silver is None:
+            return
+        from . import grain
+        from .materials import grain_spec
+        spec = grain_spec(self.e)
+        rng = np.random.default_rng(self.v.frame_seed)
+        grain.apply(self.e, spec, st, self.px_um, rng, strength=self.p.grain)
 
     def _agitation(self, st):
         """冲洗时搅拌不均: 显影液在片面上的补充不完全均匀 → 低频 (毫米级) 的密度起伏。"""

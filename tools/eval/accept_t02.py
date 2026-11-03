@@ -64,7 +64,7 @@ def scene_job(args):
     seed = zlib.crc32(sid.encode()) % 1000
     m, _ = film_metering(rgb, rng=np.random.default_rng(seed), bias_ev=bias)
     eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": seed % 36,
-                           "grain": 0, **extra}))
+                           "grain": float(os.environ.get("GRAIN", "0")), **extra}))
     sim = srgb_encode(np.clip(eng.render(m), 0, 1))
     tf = ProjectiveTransform(Hm)
     w = warp(sim, tf.inverse, output_shape=real.shape[:2], order=1, cval=np.nan)

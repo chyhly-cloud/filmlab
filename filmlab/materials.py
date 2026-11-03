@@ -155,3 +155,65 @@ def bw_paper(base="kodak_portra_endura", grade=2.5) -> Emulsion:
     e = from_stock(st)
     return e.with_(design="paper", native_process="BW-D76", coupler_cap=np.zeros(3),
                    silver_covering=1.0)
+
+
+# ------------------------------------------------------------- 颗粒 (T45) --
+# 颗粒的银盐物理参数 (filmlab.grain; docs/tasks/T45_GRAIN.md)。通道顺序 R G B; 每层 3 个晶体亚群 (快 / 中 / 慢)。
+# 5219 (Vision3 500T): 晶体尺寸、κ、灰雾面积尺度 a_f、堆积 S0 由 Kodak H-1-5219 (2022) 的漫射 RMS 颗粒度曲线与
+#   特性曲线联合拟合 (tools/eval/t45_grain_fit.py); 涂布量由仓库的原生特性曲线 (非负最小二乘) 定。
+#   来源: https://www.kodak.com/content/products-brochures/Film/VISION3_5219_7219_Technical-data.pdf
+GRAIN_5219 = dict(
+    ecd_um=((1.808, 0.499, 0.114), (2.332, 0.583, 0.138), (3.338, 0.812, 0.214)),
+    kappa=(2.492, 2.602, 3.195), fog_area_um2=(28.35, 43.42, 21.38), packing_s0=(0.0, 0.0, 0.0),
+    ei=500.0, illuminant="BB3200", thickness_um=0.12, sigma_ln=(0.194, 0.186, 0.199))
+# 其他片种: 同一模型, 只换该片种自己的物理量 —— 感光度 EI、设计光源、有效量子效率 η (相对 5219), 晶体形态与银 / 染料。
+#   晶体尺寸按 a ∝ 1/(Φ·0.8/EI) 由 5219 的亚群结构换算, 涂布量由该片种自己的特性曲线定。
+#   η 比值: 5213 / 5203 由各自 Kodak 颗粒度曲线定 (每片种 1 个数, 见 T45 文档"通用性检验"); 黑白由 Tri-X 400 (F-4017) 的 17 定。
+#   黑白: 三维晶体 (v = a^1.5), 显影银 κ_Ag = 覆盖力 0.5 密度/(g/m²) × 每 µm³ AgBr 含银 3.72e-12 g = 1.86 (假设的典型覆盖力)。
+GRAIN_FILMS = {
+    "kodak_vision3_500t": dict(eta_ratio=1.0, source="Kodak H-1-5219 (2022) 拟合"),
+    "kodak_vision3_200t": dict(eta_ratio=0.791, ei=200.0, illuminant="BB3200",
+                               source="https://www.freestylephoto.com/static/pdf/product_pdf/kodak/KODAK_VISION3_200T_Brochure.pdf"),
+    "kodak_vision3_50d": dict(eta_ratio=0.354, ei=50.0, illuminant="D55",
+                              source="https://www.kodak.com/content/pdfs/motion/KODAK-VISION3-50D-5203-7203-brochure.pdf"),
+    "bw": dict(eta_ratio=1.136, ei=400.0, illuminant="D55", kind="silver", kappa=(1.86, 1.86, 1.86), thickness_um=None,
+               source="https://kodakprofessional.com/sites/default/files/wysiwyg/film/f4017_trix_320400.pdf (Tri-X 400: 17)"),
+}
+# 没有专门参数的片种: η 比值取已标定三者 (0.79 / 0.35 / 1.14) 的中位 0.79, 其余同上换算 (假设, 未逐一核对官方颗粒度)
+GRAIN_DEFAULT_ETA_RATIO = 0.79
+
+
+def grain_spec(e: Emulsion):
+    """该乳剂的颗粒物理参数 (filmlab.grain.GrainSpec)。按 (档案键, 设计) 缓存。"""
+    return _grain_spec(e.stock.key, e.design, e.name, e.stock.reference_illuminant)
+
+
+@lru_cache(maxsize=None)
+def _grain_spec(stock_key, design, name, ref_illum):
+    import re
+    from . import grain
+    base_e = emulsion("kodak_vision3_500t")
+    base = grain.fit_amounts(base_e, GRAIN_5219["ecd_um"], GRAIN_5219["kappa"], GRAIN_5219["fog_area_um2"],
+                             GRAIN_5219["packing_s0"], GRAIN_5219["ei"], GRAIN_5219["illuminant"], grain.ETA_REF,
+                             GRAIN_5219["thickness_um"], sigma_ln=GRAIN_5219["sigma_ln"]).with_(source=GRAIN_FILMS["kodak_vision3_500t"]["source"])
+    if stock_key == "kodak_vision3_500t":
+        return base
+    e = _emulsion_for_grain(stock_key)
+    if design == "bw":
+        p = GRAIN_FILMS["bw"]
+    elif stock_key in GRAIN_FILMS:
+        p = GRAIN_FILMS[stock_key]
+    else:
+        m = re.search(r"(\d{2,4})", name)
+        ill = "BB3200" if str(ref_illum).startswith("BB") and float(re.sub(r"\D", "", str(ref_illum)) or 5500) < 4500 else "D55"
+        p = dict(eta_ratio=GRAIN_DEFAULT_ETA_RATIO, ei=float(m.group(1)) if m else 200.0, illuminant=ill,
+                 source="默认: 5219 结构按感光度换算 (未标定)")
+    kw = {k: p[k] for k in ("kappa", "thickness_um") if k in p}
+    sp = grain.scaled(base, e, p["ei"], p["illuminant"], grain.ETA_REF * p["eta_ratio"], kind=p.get("kind", "dye"), **kw)
+    return sp.with_(source=p["source"])
+
+
+def _emulsion_for_grain(stock_key):
+    if stock_key.startswith("bw_"):
+        return bw_film(sensitivity=stock_key[3:]) if stock_key[3:] in ("pan", "ortho", "blue") else bw_film()
+    return emulsion(stock_key)

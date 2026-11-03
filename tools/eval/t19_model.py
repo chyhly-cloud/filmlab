@@ -3,7 +3,7 @@
 用法: python3 t19_model.py 输出.json 代际[,代际…] RAW…     环境变量 STOPS (rawio.SOURCE_STOPS), CACHE (成片缓存目录), TURB (乳剂散射, T24), REMJET (带 remjet 对照, T25),
 FWD (光晕核角分布指数 cos^m, engine.HALO_FORWARD, 需代际含 "halo_forward", T26), BOUNCES (多次反射次数, 临时诊断, T26),
 PLATE (压片板反射率: engine.PLATE_REFLECTANCE 与 PLATE_REFLECTANCE_LAMBERT, 需代际含 "halo_plate", T36),
-SEED (截断重建随机数种子偏移 rawio.SEED_OFFSET, 缓存名后缀 _s{SEED}, T39),
+SEED (截断重建随机数种子偏移 rawio.SEED_OFFSET, 缓存名后缀 _s{SEED}, T39), GRAIN (颗粒倍数, 默认 0; 缓存名后缀 _gr{GRAIN}, T45),
 T41 诊断 (只改扫描端, 缓存名后缀 _sb / _sf / _sh): SCANBLUR (扫描光学 MTF: 在底片透射率上做高斯模糊, σ µm 胶片面),
 SCANFLARE ("η,r0_µm": 扫描仪杂散光, 在底片透射率上按 optics.lens_glare 同一 Moffat 核), SHOULDER (Params.scan_shoulder)"""
 import json, os, sys, zlib, warnings
@@ -24,6 +24,7 @@ def job(a):
         + (f"_sb{os.environ['SCANBLUR']}" if os.environ.get("SCANBLUR") else "") \
         + (f"_sf{os.environ['SCANFLARE']}" if os.environ.get("SCANFLARE") else "") \
         + (f"_sh{os.environ['SHOULDER']}" if os.environ.get("SHOULDER") else "") \
+        + (f"_gr{os.environ['GRAIN']}" if os.environ.get("GRAIN") else "") \
         + ("_remjet" if os.environ.get("REMJET") else "")
     c = cache / f"{tag}.png"
     from PIL import Image
@@ -86,7 +87,7 @@ def job(a):
             extra["film"] = materials.emulsion("kodak_vision3_500t")
         if os.environ.get("SHOULDER"):
             extra["scan_shoulder"] = os.environ["SHOULDER"]
-        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": 0, **extra}))
+        eng = Engine(Params(**{**recipe("cinestill_800t"), "timing": "frame", "roll": None, "frame": 0, "grain": float(os.environ.get("GRAIN", "0")), **extra}))
         Image.fromarray((np.clip(srgb_encode(np.clip(eng.render(m), 0, 1)), 0, 1) * 255 + 0.5).astype(np.uint8)).save(c)
     import t19_halo_stats as hs
     im = np.asarray(Image.open(c).convert("RGB")) / 255.0
