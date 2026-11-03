@@ -204,6 +204,18 @@ HIGHLIGHT_RECON["t42_base"] = "stops"
 MASK_PLACEMENT["t42_base"] = "layers"
 RECON_COLOUR["t42_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t42_base"] = APERTURE_RANGE.get("t31_base")
+# T43 (docs/tasks/T43_HALATION_CHAIN.md): 光晕链逐项核对。片基光晕改为输运一致的表 (halo_transport: 同一叠层的已有物理量,
+#   散射不当作损失, HG g 由 Kodak 5219 MTF 定; 红层 ×1.10、绿层 ×1.31, 尾部更长)。
+#   t43_base = t31_base + 实测灯亮度 (rawio "measured_cond2", T39) + halo_transport; 其余 (定光、遮罩、蓝层、cos^4 不再参与光晕核) 同 t31_base
+#   t43_tr   = t31_base (有效亮度先验 U[6,8]) + halo_transport (消融: 只换光晕链)
+GENERATIONS["t43_base"] = ("D65", GENERATIONS["t31_base"][1] + ("halo_transport",), {})
+GENERATIONS["t43_tr"] = GENERATIONS["t43_base"]
+for _g, _hr in (("t43_base", "measured_cond2"), ("t43_tr", "stops")):
+    METERING[_g] = "session"
+    HIGHLIGHT_RECON[_g] = _hr
+    MASK_PLACEMENT[_g] = "layers"
+    RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
+    APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

@@ -95,6 +95,8 @@ class Params:
     #   "halo_plate_lambert" (配合 halo_plate) 压片板按哑光朗伯漫反射处理, 反射率 PLATE_REFLECTANCE_LAMBERT (T36; 可选)
     #   "emulsion_mtf"   乳剂正面散射按 Kodak 5219 官方 MTF: 逐层二维指数 PSF (film.EMULSION_PSF_A_UM), 取代高斯 σ=4 µm (T41; 可选)
     #   "camera_glare_t41" (配合 camera_glare) 拍摄端眩光参数用 CAMERA_GLARE_T41 (T41; 可选)
+    #   "halo_transport" 片基光晕按输运一致的表 (film.HALO_TRANSPORT_FILE: 同一叠层的 Monte Carlo, 散射不当作损失;
+    #                    取代 halation_response 的 T_down·diffuse_fraction·back 与 cos^m 核、rho; T43; 可选)
     #   "halo_layered_perlayer" (配合 halo_layered) 按层深度的 w 逐层计算: 绿层用绿层之上散射的比例, 蓝层 0 (T36; 可选)
     #   "xyz_exposure"   人造光源的 RGB → 曝光映射在 XYZ 里做非负拟合 (T16 诊断, 未采用; 可选)
     #   "blue_xyz"       人造光源下蓝层的 RGB → 曝光映射改在 XYZ 里做非负拟合 (T16, 无参数; 可选):
@@ -195,7 +197,7 @@ class Engine:
         self._ill_scene = lights.light_rgb(spectral.illuminant(scene_ill)) \
             if p.scene_illuminant not in ("raw", None) else np.ones(3)
         self.M = film.exposure_response(st, scene_ill or ref, p.lens_filter)
-        self.halo = film.halation_response(st, scene_ill or ref, p.lens_filter, self.v, self._back_reflect) \
+        self.halo = self._halation_response(st, scene_ill or ref, p.lens_filter, self.v, self._back_reflect) \
             if e.halation > 0 and p.exposure_hook is None else None
         g = self._expose_lin(np.full((1, 1, 3), GRAY), self.M_ref, compensation=False)[0, 0]
         self.log_k = _speed_point(e) - np.log10(g[1])        # 测光 (透过滤镜, 含滤镜因数)
@@ -358,8 +360,8 @@ class Engine:
     def _halo_ref(self):
         if not hasattr(self, "_halo_ref_cache"):
             st = self.e.stock
-            self._halo_ref_cache = film.halation_response(st, st.reference_illuminant, self.p.lens_filter, self.v,
-                                                          self._back_reflect)
+            self._halo_ref_cache = self._halation_response(st, st.reference_illuminant, self.p.lens_filter, self.v,
+                                                           self._back_reflect)
         return self._halo_ref_cache
 
     def _halo_oblique_densities(self):
@@ -395,8 +397,15 @@ class Engine:
         """T36: 压片板按朗伯漫反射 (需同时启用 halo_plate)。"""
         return "halo_plate" in self.p.corrections and "halo_plate_lambert" in self.p.corrections
 
+    def _halation_response(self, *a, **kw):
+        """光晕源: 默认 film.halation_response; "halo_transport" (T43) 用输运一致的表 film.halation_response_transport (同接口)。"""
+        f = film.halation_response_transport if "halo_transport" in self.p.corrections else film.halation_response
+        return f(*a, **kw)
+
     def _halo_total_multi(self):
         """每层光晕核的总量, 与 film.halation 对画面用的核一致 (红层含多次反射)。"""
+        if "halo_transport" in self.p.corrections:          # T43: 输运核 (多次往返已在表内)
+            return np.array([film.transport_total(c) for c in range(3)])
         if not hasattr(self, "_halo_total_multi_cache"):
             rho = film.bounce_retention(self.e.stock, self.v)
             densities, ws = self._halo_oblique_densities(), self._halo_oblique_ws()
@@ -407,6 +416,8 @@ class Engine:
         return self._halo_total_multi_cache
 
     def _halo_total(self):
+        if "halo_transport" in self.p.corrections:
+            return np.array([film.transport_total(c) for c in range(3)])
         if not hasattr(self, "_halo_total_cache"):
             if "halo_oblique" in self.p.corrections:
                 g, pl = self._halo_extra()
@@ -477,7 +488,9 @@ class Engine:
             H = film.emulsion_scatter(H, self.px_um)
         if trace is not None:
             trace['scattered_exposure'] = H.copy()
-        if halo_src is not None:
+        if halo_src is not None and "halo_transport" in p.corrections:     # T43: 输运一致的光晕核
+            H = np.clip(film.halation_transport(H, halo_src, self.px_um), 1e-9, None)
+        elif halo_src is not None:
             H = film.halation(H, halo_src, self.px_um, self.v, film.bounce_retention(e.stock, self.v),
                               oblique_densities=self._halo_oblique_densities(), oblique_ws=self._halo_oblique_ws(),
                               return_gains=self._halo_extra()[0], plate=self._halo_extra()[1],
@@ -528,8 +541,8 @@ class Engine:
                 method += "_bxyz"                                                 # T16: 蓝层在 XYZ 里非负映射
             H += wk[..., None] * film.expose(rgb, film.exposure_response(e.stock, spec, p.lens_filter, method))
             if src is not None:
-                src += wk[..., None] * film.halation_response(e.stock, spec, p.lens_filter, self.v,
-                                                              self._back_reflect, method)(rgb)
+                src += wk[..., None] * self._halation_response(e.stock, spec, p.lens_filter, self.v,
+                                                               self._back_reflect, method)(rgb)
         return np.clip(H, 1e-9, None), (np.clip(src, 0, None) if src is not None else None)
 
     def scan(self, st, chunk=1 << 17, trace=None):

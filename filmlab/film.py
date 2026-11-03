@@ -417,3 +417,69 @@ def emulsion_scatter_kodak(H, px_um, a_um=EMULSION_PSF_A_UM):
         x = np.pad(np.asarray(H[..., c], float), n, mode="reflect")
         out[..., c] = fftconvolve(x, k, mode="valid")
     return out
+
+
+# T43: 输运一致的片基光晕 (修正 "halo_transport", docs/tasks/T43_HALATION_CHAIN.md)。
+# 原链 (halation_response × halation_kernel) 把乳剂散射当作消光 (T_down、back、多次反射 rho = T_down²), 再独立乘 diffuse_fraction
+# 与 cos^m 角分布。tools/eval/t43_halo_transport.py 用同一叠层的已有物理量 (吸收代理、遮罩按层、黄滤光层、TURBIDITY) 做逐波长
+# Monte Carlo, 散射只改方向 (HG g = 0.85, 由 Kodak 5219 MTF 定), 菲涅耳 / 全反射边界, 记录每层 halo(λ)/direct(λ) 与径向分布。
+# 3200K 下红层光晕 / 直接曝光 0.102 (原链 0.093, ×1.10), 绿层 0.0080 (原 0.0061, ×1.31); 远红 (≥ 680 nm) 与多次往返的尾部更长。
+HALO_TRANSPORT_FILE = "halo_transport_t43.json"
+
+
+def _halo_transport_table():
+    import json
+    from functools import lru_cache
+    from pathlib import Path
+
+    @lru_cache(maxsize=1)
+    def load(name):
+        d = json.load(open(Path(__file__).resolve().parent / "data" / name))
+        lam = np.asarray(d["lam"], float)
+        ratio = np.stack([np.interp(WAVELENGTHS, lam, d["ratio"][c], left=0.0, right=d["ratio"][c][-1]) for c in "RGB"], 1)
+        return ratio, np.asarray(d["edges_um"], float), {c: np.asarray(d["profile"][c], float) for c in "RGB"}
+    return load(HALO_TRANSPORT_FILE)
+
+
+def halation_response_transport(stock: Stock, light, scene_filter, v, back_reflect: float, method="spectral"):
+    """T43: 同 halation_response 的接口与单位 (感光度标定的曝光); 光晕源 = 直接曝光的光谱权重 × 输运表的 halo/direct 比。
+    v 不参与 (表按标称叠层算; 逐卷公差不改变该表, 见文档局限)。back_reflect = 0 (remjet) 时为 0。"""
+    from . import lights
+    ratio = _halo_transport_table()[0]
+    E, F = _spec(light), _filt(scene_filter)
+    w = F[:, None] * (10.0 ** stock.log_sensitivity) * ratio * back_reflect
+    if method.startswith("linear"):
+        return lights.linear_response(E, w, white_preserving="_wp" in method, space=_space(method))
+    return lights.response_under(E, w)
+
+
+def transport_kernel(px_um, layer):
+    """T43: 层 layer (0 R / 1 G / 2 B) 的输运光晕核: 径向能量分布 (每环均匀) 按像素 3×3 子采样栅格化, 总量 = 6 mm 内的能量比例。"""
+    _, edges, prof = _halo_transport_table()
+    p = prof["RGB"[layer]]
+    inner = p[:-1]
+    dens = inner / (np.pi * (edges[1:] ** 2 - edges[:-1] ** 2))
+    n = int(np.ceil(edges[-1] / px_um))
+    sub = 3
+    g = (np.arange(-n, n + 1)[:, None] * px_um + ((np.arange(sub) - (sub - 1) / 2) / sub * px_um)[None, :]).ravel()
+    yy, xx = np.meshgrid(g, g, indexing="ij")
+    r = np.hypot(yy, xx)
+    idx = np.searchsorted(edges, r, side="right") - 1
+    val = np.where(idx < len(dens), dens[np.minimum(idx, len(dens) - 1)], 0.0)
+    k = val.reshape(2 * n + 1, sub, 2 * n + 1, sub).mean((1, 3)) * px_um ** 2
+    return k * (inner.sum() / max(k.sum(), 1e-30))
+
+
+def transport_total(layer):
+    """T43: 输运核的总量 (6 mm 内的能量比例; 与 transport_kernel 的和一致, 与像素尺度无关)。"""
+    return float(_halo_transport_table()[2]["RGB"[layer]][:-1].sum())
+
+
+def halation_transport(H, halo_source, px_um):
+    """T43: 每层光晕源与该层输运核卷积后加到曝光上。"""
+    from scipy.signal import fftconvolve
+    out = H.copy()
+    for c in range(3):
+        if halo_source[..., c].max() > 0:
+            out[..., c] += fftconvolve(halo_source[..., c], transport_kernel(px_um, c), mode="same")
+    return out
