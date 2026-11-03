@@ -216,7 +216,7 @@ for _g, _hr in (("t43_base", "measured_cond2"), ("t43_tr", "stops")):
     MASK_PLACEMENT[_g] = "layers"
     RECON_COLOUR[_g] = RECON_COLOUR.get("t31_base", "ring")
     APERTURE_RANGE[_g] = APERTURE_RANGE.get("t31_base")
-# T44 研究基准 (用户 2026-11-03 同意; docs/tasks/T44_LAB_SHADOW_TONE.md): 冲印店的暗部传递。t44_base = t31_base + 冲印店输出的逐通道黑位 (lab_shadow,
+# T44 研究基准 (2026-11-03 用户目视无差别, 负责人选定; docs/tasks/T44_LAB_SHADOW_TONE.md): 冲印店的暗部传递。t44_base = t31_base + 冲印店输出的逐通道黑位 (lab_shadow,
 #   engine.LAB_SHADOW_BLACK: EPFL 18 帧实测, 中间调定光逐帧放开后暗部的共同黑位); 其余 (定光、光晕链、灯亮度先验、遮罩、蓝层) 同 t31_base
 GENERATIONS["t44_base"] = ("D65", GENERATIONS["t31_base"][1] + ("lab_shadow",), {})
 METERING["t44_base"] = "session"
