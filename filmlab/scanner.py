@@ -99,7 +99,7 @@ class Scanner:
 
     def __init__(self, engine, scanner="frontier", profile=None, strength=0.75, stretch_max=1.25,
                  conditioning="lab", gray_balance=None, paper_white=False, shoulder="exponential",
-                 paper_channel=False):
+                 paper_channel=False, shadow_black=None):
         if shoulder not in ("exponential", "paper_only"):
             raise ValueError(f"Unknown scan shoulder: {shoulder}")
         self.shoulder = shoulder
@@ -124,6 +124,8 @@ class Scanner:
         self.gray_balance = gray_balance
         # S4e 输出调整
         self.conditioning = conditioning
+        # T44: 冲印店文件的逐通道黑位 (线性输出 β_c; None = 只有数字相纸的 OUTPUT_BLACK)
+        self.shadow_black = None if shadow_black is None else np.asarray(shadow_black, float)
 
     # ---- 兼容原接口的属性
     P = property(lambda self: self.conversion.P)
@@ -169,8 +171,12 @@ class Scanner:
 
     def _reference_print(self, Dp, k, chunk=1 << 16):
         """数字相纸的颜色 (参考印放), 再做输出调整。"""
-        out = self.digital_paper.reference_print(Dp, OUTPUT_BLACK, chunk)
-        return self._condition(out).reshape(Dp.shape)
+        out = self._condition(self.digital_paper.reference_print(Dp, OUTPUT_BLACK, chunk))
+        if self.shadow_black is not None:
+            # 冲印店文件的黑位 (T44): 在最终 (非负) 输出上, 白不变, 黑从 OUTPUT_BLACK 抬到逐通道实测值 ——
+            # 逐通道仿射, 不改变通道间与空间关系
+            out = self.shadow_black + (1.0 - self.shadow_black) * out
+        return out.reshape(Dp.shape)
 
     def _condition(self, rgb):
         if self.conditioning is None:

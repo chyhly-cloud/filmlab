@@ -15,7 +15,7 @@ BINS = [25, 50, 100, 150, 200, 300, 400, 500, 700, 1000, 1500]
 CLASSES = [(0, 25), (25, 40), (40, 60), (60, 100), (100, 150), (150, 400)]
 
 
-def lamp_profiles(im, um):
+def lamp_profiles(im, um, fname=""):
     """→ [(r_eq µm, (len(BINS),3) 超出背景的中位 RGB)], 只含暗背景灯。"""
     core = im.min(-1) >= 0.93
     if core.sum() < 3:
@@ -27,7 +27,7 @@ def lamp_profiles(im, um):
     rad = np.sqrt(ndi.sum(core, lab, np.arange(1, n + 1)) / np.pi) * um
     ring = (d > 1500) & (d < 2500)
     bg = np.stack([np.asarray(ndi.median(im[..., c], own * ring, index=np.arange(1, n + 1)), float) for c in range(3)], 1)
-    okl = np.where(np.all(np.nan_to_num(bg, nan=1) < 0.02, 1))[0] + 1
+    okl = np.where(np.all(np.nan_to_num(bg, nan=1) < hs.dark_bg_max(fname), 1))[0] + 1
     m = np.isin(own, okl) & (d <= BINS[-1]) & (im.max(-1) < 0.999)
     if not m.any():
         return []
@@ -70,7 +70,7 @@ def measure(directory, glob=None, target_um=None):
         im, um = load(ref / f, fmt, target_um)
         if im is None:
             continue
-        for r, v in lamp_profiles(im, um):
+        for r, v in lamp_profiles(im, um, f):
             out.append((f, r, v))
     return out
 

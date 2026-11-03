@@ -12,6 +12,21 @@ from scipy import ndimage
 BINS = np.array([0, 25, 50, 100, 150, 200, 300, 400, 500, 700, 1000, 1500, 2500])
 SIZES = ((0, 60), (60, 150), (150, 400))       # 灯芯等效半径 (µm)
 CORE = 0.9
+DARK_BG = 0.02       # "暗背景灯" 判据: 1.5–2.5 mm 环背景三通道中位 < DARK_BG (t24/t27/t29 等)
+
+
+def dark_bg_max(fname=""):
+    """暗背景判据的逐通道阈值。默认 DARK_BG。T44: 冲印店黑位抬升 β 是逐通道仿射 (输出 = β + (1 − β)·原输出),
+    环境变量 BG_LIFT="文件名子串:βR,βG,βB" 时, 文件名含该子串的图改用 β + (1 − β)·DARK_BG ——
+    与未抬升时同一组灯 (中位与单调映射可交换), 只用于模型渲染; 参考扫描不受影响。"""
+    import os
+    spec = os.environ.get("BG_LIFT", "")
+    if spec:
+        key, _, b = spec.partition(":")
+        if key and key in str(fname):
+            b = np.array([float(x) for x in b.split(",")])
+            return b + (1.0 - b) * DARK_BG
+    return np.full(3, DARK_BG)
 
 
 def px_um(shape, fmt):

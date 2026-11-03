@@ -27,7 +27,7 @@ for f, url, page, fmt in lines:
     rad = np.sqrt(ndi.sum(core, lab, np.arange(1, n + 1)) / np.pi) * um
     ring = (d > 1500) & (d < 2500)
     bg = np.stack([np.asarray(ndi.median(im[..., c], own * ring, index=np.arange(1, n + 1)), float) for c in range(3)], 1)
-    okl = np.where(np.all(np.nan_to_num(bg, nan=1) < 0.02, 1))[0] + 1
+    okl = np.where(np.all(np.nan_to_num(bg, nan=1) < hs.dark_bg_max(f), 1))[0] + 1
     m = np.isin(own, okl) & (d <= BINS[-1]) & (im.max(-1) < 0.999)
     if not m.any():
         continue

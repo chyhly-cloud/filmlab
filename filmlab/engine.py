@@ -58,6 +58,12 @@ LAB_MEASURED_COLOUR = {"R": (-0.02300027899845071, 0.6458938636987954),
 # 中间 5–11 条的 log 输出与真实最一致的 s = 0.851 (只用 G 0.845, 全部 14 条 0.872)。负片 (Status M) 反差与 Kodak 5219
 # 数据手册一致到 ±5% (G), 偏陡在扫描映射; 只代表这家冲印店。支点 = 设计光源中灰 (固定光号下中灰的亮度不变)。
 LAB_SCAN_CONTRAST = 0.85
+# T44 冲印店输出的暗部黑位 (逐通道, 线性输出; 仅 "lab_shadow" 时使用): 输出 = β + (1 − β)·数字相纸输出, 即这家冲印店
+# 文件的黑位比数字相纸代理 (OUTPUT_BLACK, 中性) 逐通道高 β。EPFL 18 帧已确认配对实测 (docs/tasks/T44_LAB_SHADOW_TONE.md):
+# 每帧每通道的定光只由中间调 (对齐输出 0.05–0.6) 定, β 由其余格的暗部 (对齐输出 < 0.05) 跨帧共同拟合;
+# R 0.0030 (按帧自助 95% 0.0015–0.0045), G 0.0015 (0–0.0030), B 0.0015 (0–0.0055); 留一帧时 R 0.0025–0.0040、
+# G 0.0010–0.0025、B 0.0010–0.0025。只代表这家冲印店。
+LAB_SHADOW_BLACK = (0.0030, 0.0015, 0.0015)
 
 
 @dataclass
@@ -104,6 +110,7 @@ class Params:
     #   "lab_measured"   逐帧定光 (timing="frame") 改为实测的冲印店颜色处理 (LAB_MEASURED_COLOUR, 亮度不逐帧调整),
     #                    并且不套他店拟合的输出调整; 其他定光方式不受影响 (可选, 见 docs/tasks/T07_LAB_COLOUR.md)
     #   "lab_contrast"   (配合 lab_measured) 固定光号的整体反差 s 用灰阶楔实测的 LAB_SCAN_CONTRAST, 不再为 1 (T35; 可选)
+    #   "lab_shadow"     冲印店输出的逐通道黑位 LAB_SHADOW_BLACK (输出 = β + (1 − β)·数字相纸输出; T44, 可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -233,7 +240,8 @@ class Engine:
                                    self.v.scan_strength if p.scan_color_strength is None else p.scan_color_strength,
                                    self.v.scan_stretch, None if lab_measured else p.output_conditioning,
                                    p.scan_gray_balance, paper_white="paper_white" in p.corrections, shoulder=p.scan_shoulder,
-                                   paper_channel="paper_channel" in p.corrections)
+                                   paper_channel="paper_channel" in p.corrections,
+                                   shadow_black=LAB_SHADOW_BLACK if "lab_shadow" in p.corrections else None)
             if p.scan_neutral == "film" and not self.scanner.mono:
                 g = self.scanner.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
                 self.scanner.conversion.gray0 = g - g[1]
