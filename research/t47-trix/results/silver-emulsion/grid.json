@@ -1,0 +1,49 @@
+{
+  "aperture_um": 30,
+  "coarse_um": 2.5,
+  "fine_um": 0.15625,
+  "rows": [
+    {
+      "exposure": 0.6,
+      "fine_D": 0.10599479396855467,
+      "density_abs_error": 2.2522982669470615e-06,
+      "rms_relative_error": 0.0061190682236913485,
+      "passed": true
+    },
+    {
+      "exposure": 2.0,
+      "fine_D": 0.3831566176219669,
+      "density_abs_error": 2.069311639191218e-05,
+      "rms_relative_error": 0.007141229501140822,
+      "passed": true
+    },
+    {
+      "exposure": 4.0,
+      "fine_D": 0.7102417762433472,
+      "density_abs_error": 0.00011895249000026809,
+      "rms_relative_error": 0.000992573609730707,
+      "passed": true
+    },
+    {
+      "exposure": 10.0,
+      "fine_D": 1.2412286853659202,
+      "density_abs_error": 0.0004206090928093875,
+      "rms_relative_error": -0.029048021598865992,
+      "passed": true
+    },
+    {
+      "exposure": 30.0,
+      "fine_D": 1.6613420322072305,
+      "density_abs_error": 0.0006247054640893257,
+      "rms_relative_error": -0.05599922693578119,
+      "passed": true
+    },
+    {
+      "exposure": 150.0,
+      "fine_D": 2.0734647055728224,
+      "density_abs_error": 0.000876896214516254,
+      "rms_relative_error": -0.09437097463375288,
+      "passed": false
+    }
+  ]
+}

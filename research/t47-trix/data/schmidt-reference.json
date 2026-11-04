@@ -1,0 +1,200 @@
+{
+  "base_plus_fog_D": 0.318,
+  "chart_exposure_at_net_D_0p10": 0.6512716894005303,
+  "density": [
+    {
+      "level": 1,
+      "chart_relative_log10_exposure": 0.2996103896103896,
+      "aligned_log10_exposure": -0.35166129979014066,
+      "aligned_stops": -1.1681935516574755,
+      "gross_D": 0.33253855519480524,
+      "net_D": 0.014538555194805236
+    },
+    {
+      "level": 2,
+      "chart_relative_log10_exposure": 0.45291428571428577,
+      "aligned_log10_exposure": -0.1983574036862445,
+      "aligned_stops": -0.6589290321342496,
+      "gross_D": 0.3639508928571429,
+      "net_D": 0.04595089285714288
+    },
+    {
+      "level": 3,
+      "chart_relative_log10_exposure": 0.6006593406593407,
+      "aligned_log10_exposure": -0.05061234874118958,
+      "aligned_stops": -0.16813058323159472,
+      "gross_D": 0.3996394230769231,
+      "net_D": 0.08163942307692307
+    },
+    {
+      "level": 4,
+      "chart_relative_log10_exposure": 0.7525714285714286,
+      "aligned_log10_exposure": 0.1012997391708983,
+      "aligned_stops": 0.3365104495565689,
+      "gross_D": 0.4547483766233766,
+      "net_D": 0.13674837662337658
+    },
+    {
+      "level": 5,
+      "chart_relative_log10_exposure": 0.9057142857142857,
+      "aligned_log10_exposure": 0.25444259631375543,
+      "aligned_stops": 0.8452400092307478,
+      "gross_D": 0.5325107473544973,
+      "net_D": 0.21451074735449732
+    },
+    {
+      "level": 6,
+      "chart_relative_log10_exposure": 1.0531578947368423,
+      "aligned_log10_exposure": 0.40188620533631203,
+      "aligned_stops": 1.3350370764543664,
+      "gross_D": 0.6006226503759399,
+      "net_D": 0.28262265037593987
+    },
+    {
+      "level": 7,
+      "chart_relative_log10_exposure": 1.2073684210526316,
+      "aligned_log10_exposure": 0.5560967316521014,
+      "aligned_stops": 1.8473133563501538,
+      "gross_D": 0.7124255952380952,
+      "net_D": 0.39442559523809523
+    },
+    {
+      "level": 8,
+      "chart_relative_log10_exposure": 1.3521791767554479,
+      "aligned_log10_exposure": 0.7009074873549176,
+      "aligned_stops": 2.3283642741612094,
+      "gross_D": 0.8445255750605326,
+      "net_D": 0.5265255750605327
+    },
+    {
+      "level": 9,
+      "chart_relative_log10_exposure": 1.5073684210526315,
+      "aligned_log10_exposure": 0.8560967316521012,
+      "aligned_stops": 2.843891784816362,
+      "gross_D": 0.9579613095238094,
+      "net_D": 0.6399613095238095
+    },
+    {
+      "level": 10,
+      "chart_relative_log10_exposure": 1.6599753694581283,
+      "aligned_log10_exposure": 1.008703680057598,
+      "aligned_stops": 3.3508410941996076,
+      "gross_D": 1.0685421798029557,
+      "net_D": 0.7505421798029557
+    },
+    {
+      "level": 11,
+      "chart_relative_log10_exposure": 1.8074436090225565,
+      "aligned_log10_exposure": 1.1561719196220261,
+      "aligned_stops": 3.8407199823122617,
+      "gross_D": 1.1586583646616542,
+      "net_D": 0.8406583646616541
+    },
+    {
+      "level": 12,
+      "chart_relative_log10_exposure": 1.9619387755102045,
+      "aligned_log10_exposure": 1.310667086109674,
+      "aligned_stops": 4.35394181639188,
+      "gross_D": 1.248405612244898,
+      "net_D": 0.930405612244898
+    },
+    {
+      "level": 13,
+      "chart_relative_log10_exposure": 2.1094609164420484,
+      "aligned_log10_exposure": 1.458189227041518,
+      "aligned_stops": 4.843999760971306,
+      "gross_D": 1.3380222371967656,
+      "net_D": 1.0200222371967655
+    },
+    {
+      "level": 14,
+      "chart_relative_log10_exposure": 2.261654135338346,
+      "aligned_log10_exposure": 1.6103824459378155,
+      "aligned_stops": 5.349574690674259,
+      "gross_D": 1.437872023809524,
+      "net_D": 1.1198720238095239
+    },
+    {
+      "level": 15,
+      "chart_relative_log10_exposure": 2.412197802197802,
+      "aligned_log10_exposure": 1.7609261127972715,
+      "aligned_stops": 5.849669927122049,
+      "gross_D": 1.5367445054945053,
+      "net_D": 1.2187445054945052
+    },
+    {
+      "level": 16,
+      "chart_relative_log10_exposure": 2.560676691729323,
+      "aligned_log10_exposure": 1.9094050023287927,
+      "aligned_stops": 6.342906121754486,
+      "gross_D": 1.6259398496240602,
+      "net_D": 1.3079398496240602
+    },
+    {
+      "level": 17,
+      "chart_relative_log10_exposure": 2.7116666666666664,
+      "aligned_log10_exposure": 2.060394977266136,
+      "aligned_stops": 6.844483961545186,
+      "gross_D": 1.7143063822751323,
+      "net_D": 1.3963063822751323
+    },
+    {
+      "level": 18,
+      "chart_relative_log10_exposure": 2.8606766917293234,
+      "aligned_log10_exposure": 2.209405002328793,
+      "aligned_stops": 7.339484550220695,
+      "gross_D": 1.8045112781954888,
+      "net_D": 1.4865112781954888
+    },
+    {
+      "level": 19,
+      "chart_relative_log10_exposure": 3.0147169811320755,
+      "aligned_log10_exposure": 2.363445291731545,
+      "aligned_stops": 7.851195315332278,
+      "gross_D": 1.8942680256064688,
+      "net_D": 1.5762680256064687
+    }
+  ],
+  "apertures": [
+    {
+      "aperture_um": 4.919627749576989,
+      "nominal_aperture_um": 5,
+      "published_rms_D": 0.07796029284649605,
+      "point_xy": [
+        207.3,
+        237.3
+      ]
+    },
+    {
+      "aperture_um": 9.873096446700506,
+      "nominal_aperture_um": 10,
+      "published_rms_D": 0.04876662303043459,
+      "point_xy": [
+        324.4,
+        190.9
+      ]
+    },
+    {
+      "aperture_um": 19.94500846023689,
+      "nominal_aperture_um": 20,
+      "published_rms_D": 0.027198795736953583,
+      "point_xy": [
+        562.5,
+        162.0
+      ]
+    },
+    {
+      "aperture_um": 25.190355329949238,
+      "nominal_aperture_um": 25,
+      "published_rms_D": 0.020990569110013756,
+      "point_xy": [
+        686.5,
+        168.5
+      ]
+    }
+  ],
+  "figure_sha256": [
+    "bcc4dccc1ff1de1067da04c21ce7a754d4b77328bade370cc235248ace4b4374",
+    "65954dcded40b809bd253ecb345afd3753b1893fc958bc519b06c838ddefac8d"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "source": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=8",
+  "sha256": "a3d1dde51fd2b836252eaef96546fbf1f910816b230f640904a64225b76cb9a3",
+  "process": "35 mm 400TX, D-76 large tank, 20 °C, agitation every minute, diffuse visual density",
+  "rows": [
+    {
+      "log_H_lux_s": -1.0146103896103895,
+      "gross_D_8min": 1.3376623376623376,
+      "gross_D_10min": 1.5974025974025974
+    },
+    {
+      "log_H_lux_s": -0.49512987012987014,
+      "gross_D_8min": 1.6623376623376624,
+      "gross_D_10min": 1.974025974025974
+    },
+    {
+      "log_H_lux_s": 0.008116883116883116,
+      "gross_D_8min": 1.9415584415584415,
+      "gross_D_10min": 2.25974025974026
+    },
+    {
+      "log_H_lux_s": 0.28409090909090906,
+      "gross_D_8min": 2.0714285714285716,
+      "gross_D_10min": 2.396103896103896
+    }
+  ],
+  "approximate_plot_readout": true
+}

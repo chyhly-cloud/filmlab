@@ -1,0 +1,5101 @@
+{
+  "cases": {
+    "single/0.1": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.2079522463910968,
+            "seed_se": 8.999754848871186e-05,
+            "z": -0.193586598360749
+          },
+          "point_covariance": {
+            "expected": [
+              0.006971412183840804,
+              0.002602528397570837,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.0069790481616375105,
+              0.0026114362047420644,
+              7.130172440842504e-06,
+              7.915081356468057e-06
+            ],
+            "seed_se": [
+              7.893267989088161e-06,
+              5.667035730871163e-06,
+              4.154257045563996e-06,
+              6.5846412163569135e-06
+            ],
+            "z": [
+              0.9674038442964771,
+              1.5718635975245414,
+              1.716353216143968,
+              1.2020520323576926
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.0006592085039966425,
+              0.00018685858309939812,
+              4.959547401487881e-05,
+              3.2116186464694165e-05,
+              5.063035498927982e-07
+            ],
+            "measured": [
+              0.000665071607304481,
+              0.0001868559539539549,
+              4.8978872341901295e-05,
+              3.230815267837292e-05,
+              7.309860527750234e-07
+            ],
+            "seed_se": [
+              1.942415710579161e-06,
+              1.429596575593866e-06,
+              5.396937206276474e-07,
+              6.527525515420327e-07,
+              1.3089512407808228e-07
+            ],
+            "z": [
+              3.0184595789180446,
+              -0.001839082079586191,
+              -1.1425029593830114,
+              0.2940872666453174,
+              1.71650781085013
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.0728836059570312e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 2.1204682454367685e-10,
+                  "paired_jackknife_se": 3.3343431517448242e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.4178690988539984e-09,
+                  "paired_jackknife_se": 4.883844935057933e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.9029778197676706e-08,
+                  "paired_jackknife_se": 1.3986909841309344e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.213447774541578e-08,
+                  "paired_jackknife_se": 1.3209129957149901e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 2.148689848269214e-08,
+                  "paired_jackknife_se": 7.237349618353572e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.9670980944706e-08,
+                  "paired_jackknife_se": 1.1443614307234131e-07,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -1.3857630232205764e-07,
+                  "paired_jackknife_se": 1.5864497506129566e-07,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.392879929404074e-08,
+                  "paired_jackknife_se": 2.1673450382973716e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -4.526250120329145e-05,
+                  "paired_jackknife_se": 2.3089599216501185e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.5191294094552e-05,
+                  "paired_jackknife_se": 2.5285746141267315e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 3.2186508178710938e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 1.1548367151448247e-08,
+                  "paired_jackknife_se": 5.086406527018992e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.3421571853911018e-08,
+                  "paired_jackknife_se": 5.98959014916126e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 3.360664790896806e-08,
+                  "paired_jackknife_se": 9.783982363254403e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 5.133286884451138e-08,
+                  "paired_jackknife_se": 1.639772333215269e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.1290519630335893e-09,
+                  "paired_jackknife_se": 7.498722631320827e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.706347671110336e-09,
+                  "paired_jackknife_se": 9.964951952057209e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -1.1233526842069352e-07,
+                  "paired_jackknife_se": 1.538196288175044e-07,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.830829450496736e-08,
+                  "paired_jackknife_se": 1.7093449395012922e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00041791236915666996,
+                  "paired_jackknife_se": 0.0001719972865815489,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00033825910913942714,
+                  "paired_jackknife_se": 0.00032314787178177917,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 6.4373016357421875e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.04715447072108603,
+                  "paired_jackknife_se": 0.00028281381608396395,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.07034982564951431,
+                  "paired_jackknife_se": 0.0003342586542716303,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 2.6504894057310935e-08,
+                  "paired_jackknife_se": 9.935074406968335e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.462227282646779e-08,
+                  "paired_jackknife_se": 1.6545365904376615e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 8.134685924865437e-08,
+                  "paired_jackknife_se": 6.811428982702144e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 7.014671732363809e-08,
+                  "paired_jackknife_se": 9.499565880244866e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007365374373908495,
+                  "paired_jackknife_se": 0.00045682288462414494,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.009616213852112088,
+                  "paired_jackknife_se": 0.0005098645996669599,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0016845301204386764,
+                  "paired_jackknife_se": 0.0009355593095499449,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0007420321402624719,
+                  "paired_jackknife_se": 0.0016277411440556821,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 1.1324882507324219e-06,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18410962238261164,
+                  "paired_jackknife_se": 0.0013745450269107918,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2519672419999981,
+                  "paired_jackknife_se": 0.0016316076536584093,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08143609844002875,
+                  "paired_jackknife_se": 0.002612751771289844,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10794624114410478,
+                  "paired_jackknife_se": 0.0029800635498826306,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06212377309113981,
+                  "paired_jackknife_se": 0.003205936483951248,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08254157278244978,
+                  "paired_jackknife_se": 0.004601187156169792,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -7.981666442336e-06,
+                  "paired_jackknife_se": 1.4662819810132899e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.5926286138778778e-06,
+                  "paired_jackknife_se": 1.9338761237380264e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 6.783008575439453e-05,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2615162185252303,
+                  "paired_jackknife_se": 0.0018690255749708785,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3544177809996334,
+                  "paired_jackknife_se": 0.0016412446113721296,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.1266695843114226,
+                  "paired_jackknife_se": 0.003868357339209712,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16776828490455364,
+                  "paired_jackknife_se": 0.002845896496142095,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.09691270590952472,
+                  "paired_jackknife_se": 0.003040769642127495,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12783801744730694,
+                  "paired_jackknife_se": 0.0042255461356696085,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.02595221679943649,
+                  "paired_jackknife_se": 0.008641840872429276,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.020027610472445168,
+                  "paired_jackknife_se": 0.012349623009747564,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.02653995755198605,
+            "seed_se": 1.766902491205737e-05,
+            "z": -0.3451275777633287
+          },
+          "point_covariance": {
+            "expected": [
+              0.00029065786701033505,
+              0.00010187502519830371,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.00029139223855721637,
+              0.00010243051961401793,
+              2.109019989714398e-07,
+              1.375493879171065e-07
+            ],
+            "seed_se": [
+              4.187116724677364e-07,
+              2.769798170034235e-07,
+              2.1567243581479026e-07,
+              1.8176880392030102e-07
+            ],
+            "z": [
+              1.7538836272540543,
+              2.0055411319278615,
+              0.9778811009143186,
+              0.7567271443201931
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              2.6085502593901595e-05,
+              7.382440650994641e-06,
+              1.9580366911451035e-06,
+              1.267779500205386e-06,
+              1.9976991225953676e-08
+            ],
+            "measured": [
+              2.6168113916521382e-05,
+              7.371866180054005e-06,
+              1.935564723177893e-06,
+              1.2715775795533835e-06,
+              2.1579679950368014e-08
+            ],
+            "seed_se": [
+              1.581272504428459e-07,
+              7.646805383208035e-08,
+              4.69163375620612e-08,
+              3.2523343405784725e-08,
+              4.140920191244689e-09
+            ],
+            "z": [
+              0.5224357116716385,
+              -0.1382861261757286,
+              -0.4789795865349507,
+              0.11678010162147118,
+              0.38703685422456724
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 9.5367431640625e-07,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -1.3159124900852248e-08,
+                  "paired_jackknife_se": 2.926258899402577e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.763686859010079e-09,
+                  "paired_jackknife_se": 3.770656011925879e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -6.8805248165659805e-09,
+                  "paired_jackknife_se": 1.4257970284692238e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.1062828148288304e-09,
+                  "paired_jackknife_se": 1.8287441912723537e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 3.60795977538686e-08,
+                  "paired_jackknife_se": 7.5161490311497e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.5339465798145397e-09,
+                  "paired_jackknife_se": 8.179673888032643e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 3.0793726679689826e-08,
+                  "paired_jackknife_se": 1.2332751927113303e-07,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 4.934682618085162e-08,
+                  "paired_jackknife_se": 1.3329913045198195e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.6512396282086783e-05,
+                  "paired_jackknife_se": 2.6521739201283777e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.321093085708384e-06,
+                  "paired_jackknife_se": 3.043439006994938e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 3.814697265625e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 1.006838834527457e-09,
+                  "paired_jackknife_se": 3.5019919256263755e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.3850629532186076e-09,
+                  "paired_jackknife_se": 4.454314531334223e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -2.8557240350224333e-08,
+                  "paired_jackknife_se": 1.1029839528645741e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.06151306528335e-08,
+                  "paired_jackknife_se": 1.3698645970420407e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -2.3042711849718955e-08,
+                  "paired_jackknife_se": 7.195388703910851e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.9336138357139987e-08,
+                  "paired_jackknife_se": 7.790633468074032e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 4.619669957683925e-08,
+                  "paired_jackknife_se": 7.773221735264865e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.784556668051664e-08,
+                  "paired_jackknife_se": 1.1553811372082673e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00038897625311351547,
+                  "paired_jackknife_se": 0.00022359505412819283,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00020411031758149623,
+                  "paired_jackknife_se": 0.0003467062328882285,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 9.179115295410156e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.04654460837566243,
+                  "paired_jackknife_se": 0.000270779661612871,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.07010093987149602,
+                  "paired_jackknife_se": 0.00026438181175512075,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -2.5470667797122815e-09,
+                  "paired_jackknife_se": 1.1064284911450202e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -8.425601993877763e-09,
+                  "paired_jackknife_se": 1.4937037761724195e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -1.5831005950595056e-08,
+                  "paired_jackknife_se": 6.711893958874327e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.834034118492923e-08,
+                  "paired_jackknife_se": 7.394657648972315e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007162178948883158,
+                  "paired_jackknife_se": 0.00031756417429885676,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.008637534512277667,
+                  "paired_jackknife_se": 0.00040159841298707626,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0016513705197230832,
+                  "paired_jackknife_se": 0.0015740865768570957,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0004509482233104878,
+                  "paired_jackknife_se": 0.0020984595706090054,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 7.152557373046875e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.182480040256361,
+                  "paired_jackknife_se": 0.0017713610154476724,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2490799907158383,
+                  "paired_jackknife_se": 0.001968540610894395,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.07804797089699045,
+                  "paired_jackknife_se": 0.0028779250951165526,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10311403573297273,
+                  "paired_jackknife_se": 0.0038248694664165116,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06445344001621822,
+                  "paired_jackknife_se": 0.0017818549311056913,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0823040971272413,
+                  "paired_jackknife_se": 0.00299881742992224,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.7015526960761918e-05,
+                  "paired_jackknife_se": 1.7929706899050134e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.5277049593254155e-05,
+                  "paired_jackknife_se": 1.8947158236280707e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.00010502338409423828,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.25726847091100924,
+                  "paired_jackknife_se": 0.0023628809002185086,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.34968034837521544,
+                  "paired_jackknife_se": 0.0023568549065701304,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.12337691456204447,
+                  "paired_jackknife_se": 0.004779294730647122,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16049269412244493,
+                  "paired_jackknife_se": 0.004671505019852586,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.09896336366434899,
+                  "paired_jackknife_se": 0.003263772537100677,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12740648610682426,
+                  "paired_jackknife_se": 0.004156296093637687,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.045690715354575584,
+                  "paired_jackknife_se": 0.015321367085550743,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.04793709756028164,
+                  "paired_jackknife_se": 0.016126438528676162,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "single/1": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.2074800498843291,
+            "seed_se": 0.000265455811811892,
+            "z": -1.8444456826862872
+          },
+          "point_covariance": {
+            "expected": [
+              0.07345812029234865,
+              0.02051084565337733,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.07325548957770082,
+              0.020355310364030238,
+              -4.6780600570083854e-05,
+              4.103531196212468e-05
+            ],
+            "seed_se": [
+              0.00011404559658223859,
+              7.46950520562404e-05,
+              4.615784684128783e-05,
+              5.094447697354967e-05
+            ],
+            "z": [
+              -1.7767517617543855,
+              -2.082270311961032,
+              -1.0134918279645353,
+              0.8054908873326971
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.005485612398929873,
+              0.0015438941511287782,
+              0.00040846793215716095,
+              0.0002643465293236406,
+              4.158672856814534e-06
+            ],
+            "measured": [
+              0.005426049774901741,
+              0.0015226541837797662,
+              0.00040451911510749265,
+              0.0002599667708098948,
+              4.890861710672018e-06
+            ],
+            "seed_se": [
+              2.8999448462758853e-05,
+              1.267394728995005e-05,
+              6.346387366725561e-06,
+              6.465956751407525e-06,
+              1.1207797324681427e-06
+            ],
+            "z": [
+              -2.0539226497573453,
+              -1.6758762572615795,
+              -0.6222149423736969,
+              -0.6773566050828267,
+              0.6532852376310214
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.0728836059570312e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -2.3459461040431506e-09,
+                  "paired_jackknife_se": 1.8612613632268085e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.373730349589323e-09,
+                  "paired_jackknife_se": 2.287527658361839e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 5.600218067058904e-10,
+                  "paired_jackknife_se": 7.899962323093029e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.4394369836406895e-09,
+                  "paired_jackknife_se": 8.874412234393394e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -2.392481146529235e-08,
+                  "paired_jackknife_se": 2.7373334021285538e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.372557009333036e-09,
+                  "paired_jackknife_se": 3.73797132029748e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 6.057863943809139e-08,
+                  "paired_jackknife_se": 5.882030504378903e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 4.1996420785395117e-08,
+                  "paired_jackknife_se": 6.896721781490587e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -3.1040922008340743e-06,
+                  "paired_jackknife_se": 2.2599649423759423e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 4.300039235127784e-06,
+                  "paired_jackknife_se": 2.4876888526071855e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 4.410743713378906e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 2.747495564392466e-10,
+                  "paired_jackknife_se": 1.5564956158699772e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.508419359008144e-10,
+                  "paired_jackknife_se": 2.2211051263393163e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -8.060331624371031e-09,
+                  "paired_jackknife_se": 6.961798405799675e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.2882489186516466e-08,
+                  "paired_jackknife_se": 7.56262208699411e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -4.049922841531384e-09,
+                  "paired_jackknife_se": 2.6261092860313572e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.955192617866032e-09,
+                  "paired_jackknife_se": 2.848176863828692e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 5.95616642673491e-08,
+                  "paired_jackknife_se": 5.224311710955736e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.0124239224751364e-09,
+                  "paired_jackknife_se": 5.3553743173946857e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 1.872440617423088e-05,
+                  "paired_jackknife_se": 0.00045004942209636876,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.046912260378342e-05,
+                  "paired_jackknife_se": 0.0004918067025828999,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 1.0967254638671875e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.047888512449897336,
+                  "paired_jackknife_se": 0.00023749385414077127,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.07116641245077737,
+                  "paired_jackknife_se": 0.000290305062155317,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 4.628417205054802e-09,
+                  "paired_jackknife_se": 6.968861289602101e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.8426429271301004e-09,
+                  "paired_jackknife_se": 7.787742858334028e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -2.175162494566507e-09,
+                  "paired_jackknife_se": 2.4650802700578787e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.1238152630710374e-09,
+                  "paired_jackknife_se": 3.072277231109621e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007451529022557746,
+                  "paired_jackknife_se": 0.00033033730797910955,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00939069912156798,
+                  "paired_jackknife_se": 0.0005780804880941515,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.0007215144801839823,
+                  "paired_jackknife_se": 0.0020662662771009643,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0010322282551131767,
+                  "paired_jackknife_se": 0.0020466651680564724,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 7.152557373046875e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18258274802797148,
+                  "paired_jackknife_se": 0.0017847604307630563,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.24970194113367283,
+                  "paired_jackknife_se": 0.0023706195803566855,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08194416158770523,
+                  "paired_jackknife_se": 0.0020159767501385204,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10913919917502701,
+                  "paired_jackknife_se": 0.002924449640524397,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.0667608499760578,
+                  "paired_jackknife_se": 0.002680836224118363,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08838969104801042,
+                  "paired_jackknife_se": 0.003846388619735314,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.234132408074352e-06,
+                  "paired_jackknife_se": 6.880626855105107e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.0583914078488021e-06,
+                  "paired_jackknife_se": 8.739297763018024e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.00019568204879760742,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2610683959917568,
+                  "paired_jackknife_se": 0.0020344263832737038,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.35270444233598774,
+                  "paired_jackknife_se": 0.002577963235476257,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.1302850518304841,
+                  "paired_jackknife_se": 0.002647139077947295,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.1697987521801556,
+                  "paired_jackknife_se": 0.0042484346525981315,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.09922607681565754,
+                  "paired_jackknife_se": 0.0037860223773896165,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.13461287463525495,
+                  "paired_jackknife_se": 0.005883673486379243,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.0068135114142298114,
+                  "paired_jackknife_se": 0.013703246035882431,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.002991754535508484,
+                  "paired_jackknife_se": 0.012510444320109296,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.026500175860104967,
+            "seed_se": 7.700412608456713e-05,
+            "z": -0.5958091076838562
+          },
+          "point_covariance": {
+            "expected": [
+              0.0062812010774239676,
+              0.001023232427194982,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.006264953774029597,
+              0.0010141504896704807,
+              -3.4533335126610195e-06,
+              -2.3207980023255622e-06
+            ],
+            "seed_se": [
+              3.255199416211458e-05,
+              7.501897294915673e-06,
+              2.4378677134001046e-06,
+              2.421802303228667e-06
+            ],
+            "z": [
+              -0.4991185275303407,
+              -1.2106187498270002,
+              -1.416538515883883,
+              -0.9582937464513726
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.00031148151477912136,
+              8.658650942334121e-05,
+              2.278010635518272e-05,
+              1.472660426733721e-05,
+              2.3082593687500702e-07
+            ],
+            "measured": [
+              0.00030916519039280474,
+              8.684682730917095e-05,
+              2.249076000415041e-05,
+              1.4627419561989056e-05,
+              2.2464650619780958e-07
+            ],
+            "seed_se": [
+              2.076313912422256e-06,
+              9.64724955675776e-07,
+              5.653187442301912e-07,
+              4.715567440265235e-07,
+              2.9988550097339286e-08
+            ],
+            "z": [
+              -1.11559450257421,
+              0.2698363759517191,
+              -0.5118286877720999,
+              -0.21033461318194013,
+              -0.206059668011282
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.0728836059570312e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -4.193746572234147e-09,
+                  "paired_jackknife_se": 1.2544520057139093e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.3149791517649305e-09,
+                  "paired_jackknife_se": 1.5049726859872455e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.9658052963222872e-11,
+                  "paired_jackknife_se": 4.124404738210492e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.086678662140741e-09,
+                  "paired_jackknife_se": 5.7938637164330985e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.4370633572013958e-08,
+                  "paired_jackknife_se": 1.6436744052491457e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.756951721418545e-09,
+                  "paired_jackknife_se": 2.6765093080555214e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -4.90452478629777e-09,
+                  "paired_jackknife_se": 2.9448867996114202e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 6.596898360911041e-09,
+                  "paired_jackknife_se": 2.7306441380777912e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 5.427742097330324e-06,
+                  "paired_jackknife_se": 1.9469783107524542e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 8.057578650966235e-06,
+                  "paired_jackknife_se": 2.36524306865851e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 1.0013580322265625e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 1.121177595209133e-09,
+                  "paired_jackknife_se": 9.783853039180625e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.5157806121379735e-09,
+                  "paired_jackknife_se": 1.3741059978512142e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 5.3098183627753315e-09,
+                  "paired_jackknife_se": 3.489895260526296e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.7876700120211808e-10,
+                  "paired_jackknife_se": 3.495008109708177e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 6.571512223274567e-09,
+                  "paired_jackknife_se": 1.3312095880977504e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.1454148518552643e-08,
+                  "paired_jackknife_se": 1.925391144673211e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -9.007177337316818e-09,
+                  "paired_jackknife_se": 3.189977127280183e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.2045009373528046e-08,
+                  "paired_jackknife_se": 2.8804835704190796e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.00023554522562951874,
+                  "paired_jackknife_se": 0.00045184829568437214,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0002313455860383229,
+                  "paired_jackknife_se": 0.000556961282798728,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 2.586841583251953e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.044620789998474075,
+                  "paired_jackknife_se": 0.0002633464307870083,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.06847213603364133,
+                  "paired_jackknife_se": 0.0003091395456692023,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 7.002162627500752e-09,
+                  "paired_jackknife_se": 3.379049663368962e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.760153077791983e-09,
+                  "paired_jackknife_se": 5.185001472098023e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 8.675671070434987e-09,
+                  "paired_jackknife_se": 1.3459579114926596e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.149987630266196e-09,
+                  "paired_jackknife_se": 1.978483055053296e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007545226308615094,
+                  "paired_jackknife_se": 0.0004173433115691492,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.009121723482899746,
+                  "paired_jackknife_se": 0.0004614859758000031,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.0007399577388491618,
+                  "paired_jackknife_se": 0.0024462699745462684,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0004879903098953253,
+                  "paired_jackknife_se": 0.0028074853901007696,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 7.152557373046875e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.1841198018093444,
+                  "paired_jackknife_se": 0.0016776887831930036,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2527541127887897,
+                  "paired_jackknife_se": 0.0015024658848003026,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08510323259445263,
+                  "paired_jackknife_se": 0.002451286635934832,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.11361834886846844,
+                  "paired_jackknife_se": 0.0032487275583252028,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06385272658103092,
+                  "paired_jackknife_se": 0.0025767898808100593,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08350036315485665,
+                  "paired_jackknife_se": 0.002957865349005788,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.1184780669702974e-06,
+                  "paired_jackknife_se": 4.595870936353366e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.7057495524941402e-06,
+                  "paired_jackknife_se": 5.064575513088791e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.0003750324249267578,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.25771632190346605,
+                  "paired_jackknife_se": 0.0024587094996681652,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3527282365628063,
+                  "paired_jackknife_se": 0.002494487827837869,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.12634784372718777,
+                  "paired_jackknife_se": 0.002279765140611941,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16561187412392542,
+                  "paired_jackknife_se": 0.0029042567738674836,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.0995882985520159,
+                  "paired_jackknife_se": 0.00539028163126074,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.1283138266342836,
+                  "paired_jackknife_se": 0.006276442751095686,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.014123471205205407,
+                  "paired_jackknife_se": 0.018572034544601743,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.011097360215523544,
+                  "paired_jackknife_se": 0.022661685910797605,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "single/inf": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.20785666922845786,
+            "seed_se": 0.000386536883663411,
+            "z": -0.29233816147303954
+          },
+          "point_covariance": {
+            "expected": [
+              0.1647182856068687,
+              0.03667009610407773,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.1646522886959871,
+              0.036761045344209826,
+              -1.394603044906969e-05,
+              0.00013759225638165058
+            ],
+            "seed_se": [
+              0.00022576099660433756,
+              0.00012665925627735074,
+              7.89991993342977e-05,
+              8.52352674708058e-05
+            ],
+            "z": [
+              -0.29233088033023513,
+              0.718062325685377,
+              -0.17653382017271896,
+              1.614264382155869
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.010310418398543061,
+              0.002886432543523799,
+              0.0007618344879160965,
+              0.0004928061357101168,
+              7.740608624583705e-06
+            ],
+            "measured": [
+              0.010308091447172594,
+              0.002886260395226755,
+              0.0007641685509942656,
+              0.0004887890488544276,
+              8.13741637845089e-06
+            ],
+            "seed_se": [
+              6.224932493629466e-05,
+              2.1356191510757743e-05,
+              1.6994702312465583e-05,
+              1.0110673551634445e-05,
+              1.4478224450800744e-06
+            ],
+            "z": [
+              -0.03738115028313273,
+              -0.00806081444612002,
+              0.1373406274058159,
+              -0.3973114981088332,
+              0.2740721109937201
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.4901161193847656e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -1.0018402774036872e-09,
+                  "paired_jackknife_se": 1.0084390756267062e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.323732428699543e-09,
+                  "paired_jackknife_se": 1.216096208557688e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -5.218625642733343e-09,
+                  "paired_jackknife_se": 3.8851356974606365e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.2966425124221246e-09,
+                  "paired_jackknife_se": 6.147693276514049e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.3333916637492393e-08,
+                  "paired_jackknife_se": 2.2520852136720454e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.574219060136329e-09,
+                  "paired_jackknife_se": 2.35208634411734e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -5.5158549949752e-09,
+                  "paired_jackknife_se": 3.338728945062229e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.710099599236628e-08,
+                  "paired_jackknife_se": 3.697563596586831e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 1.0153060570061712e-07,
+                  "paired_jackknife_se": 1.489851579417381e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.85398665389458e-06,
+                  "paired_jackknife_se": 1.4022860000009663e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 9.775161743164062e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 1.6124395152417037e-09,
+                  "paired_jackknife_se": 9.55989901151022e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.3915251173557408e-09,
+                  "paired_jackknife_se": 1.143098574171733e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -6.775654481927518e-09,
+                  "paired_jackknife_se": 3.9395997332725335e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.923905253117482e-09,
+                  "paired_jackknife_se": 6.08191708676285e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.0963337127023465e-08,
+                  "paired_jackknife_se": 2.3800077000181585e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.9368880277426115e-08,
+                  "paired_jackknife_se": 2.5356014133384115e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -4.0696523928573924e-10,
+                  "paired_jackknife_se": 3.588934004229682e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.9500082215628822e-08,
+                  "paired_jackknife_se": 4.365605955346253e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0001351478689570751,
+                  "paired_jackknife_se": 0.0002944629518833079,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00038585424460424456,
+                  "paired_jackknife_se": 0.0002502484763946756,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 2.300739288330078e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.05107597336862846,
+                  "paired_jackknife_se": 0.0003028411472242879,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0744005188865483,
+                  "paired_jackknife_se": 0.00030627703467738925,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -1.2307130869970706e-09,
+                  "paired_jackknife_se": 4.287871529960732e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.227944245232095e-09,
+                  "paired_jackknife_se": 5.8389016601439635e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -5.526944568678971e-09,
+                  "paired_jackknife_se": 2.1261163938306045e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.556563930144478e-09,
+                  "paired_jackknife_se": 1.995048074089635e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.0074823718225065505,
+                  "paired_jackknife_se": 0.00040804109186358856,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.009491908435792618,
+                  "paired_jackknife_se": 0.0005312451440781444,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0007260887644571223,
+                  "paired_jackknife_se": 0.0011379277578273685,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0021391839072752994,
+                  "paired_jackknife_se": 0.0013444557583270021,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 8.940696716308594e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18938431285984925,
+                  "paired_jackknife_se": 0.001185519490223649,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2550975684642772,
+                  "paired_jackknife_se": 0.0019072650501968885,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08532342360025102,
+                  "paired_jackknife_se": 0.0018039015617873193,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10704615571906373,
+                  "paired_jackknife_se": 0.0025080096718845687,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06696904140767435,
+                  "paired_jackknife_se": 0.004217494232258815,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08646745739489758,
+                  "paired_jackknife_se": 0.005669937504028899,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 6.364845633655136e-06,
+                  "paired_jackknife_se": 5.805095346838251e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 9.465159183985605e-06,
+                  "paired_jackknife_se": 7.382749476713293e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.0004430413246154785,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.26443886662018723,
+                  "paired_jackknife_se": 0.001639312667896875,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3540238834525812,
+                  "paired_jackknife_se": 0.003080347180540026,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.13023901831017637,
+                  "paired_jackknife_se": 0.002022515391842692,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.17093588248796787,
+                  "paired_jackknife_se": 0.003567887754730225,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.1004926881747803,
+                  "paired_jackknife_se": 0.0051550591608617025,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.13699797110175593,
+                  "paired_jackknife_se": 0.007606546668493,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.006721592104392382,
+                  "paired_jackknife_se": 0.014084247786982109,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.014439871084137912,
+                  "paired_jackknife_se": 0.01471521549117328,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.02649917263956465,
+            "seed_se": 0.00010730933218838848,
+            "z": -0.4368956477003609
+          },
+          "point_covariance": {
+            "expected": [
+              0.025841362550788245,
+              0.0022074955284694443,
+              0.0,
+              0.0
+            ],
+            "measured": [
+              0.025796968749650158,
+              0.002185516243520008,
+              -1.5518939395845498e-05,
+              -8.053193103125511e-06
+            ],
+            "seed_se": [
+              0.00010161205337917093,
+              2.395039040771459e-05,
+              9.012234289197307e-06,
+              6.450443663222879e-06
+            ],
+            "z": [
+              -0.43689503028177906,
+              -0.9177004873522405,
+              -1.7219857915198211,
+              -1.2484711941661761
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.000822283657277798,
+              0.0002254602004288492,
+              5.8942800428564425e-05,
+              3.8058033700767383e-05,
+              5.940307046945603e-07
+            ],
+            "measured": [
+              0.0008190396643883743,
+              0.00022481000535911925,
+              5.955652614615276e-05,
+              3.800785375432427e-05,
+              4.7576926876565645e-07
+            ],
+            "seed_se": [
+              5.061640844472962e-06,
+              2.961232481732034e-06,
+              1.0983592519819884e-06,
+              1.0091002302442813e-06,
+              8.012387723555812e-08
+            ],
+            "z": [
+              -0.6408974854401086,
+              -0.21956907258752012,
+              0.5587659196941864,
+              -0.049727415512499866,
+              -1.4759824413042844
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.430511474609375e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -6.303002564322924e-11,
+                  "paired_jackknife_se": 6.728830776567349e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.043660878887522e-10,
+                  "paired_jackknife_se": 9.309337175183555e-10,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -6.195539747899659e-09,
+                  "paired_jackknife_se": 3.0856586555468787e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.409088815217956e-09,
+                  "paired_jackknife_se": 4.34082942531302e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -5.433047345348996e-09,
+                  "paired_jackknife_se": 1.2210571129245237e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.307871808746256e-09,
+                  "paired_jackknife_se": 1.7339646595745752e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -8.165588538666668e-09,
+                  "paired_jackknife_se": 2.1131761018998218e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.75519039805161e-08,
+                  "paired_jackknife_se": 2.5569305940067612e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -6.336353720048926e-06,
+                  "paired_jackknife_se": 1.6088398335668035e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.2761352156684964e-06,
+                  "paired_jackknife_se": 2.5351088824451505e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 2.3365020751953125e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -9.520693122766488e-10,
+                  "paired_jackknife_se": 7.996904296807286e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.2341906102951725e-11,
+                  "paired_jackknife_se": 1.0216664592514898e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -4.626919292149978e-09,
+                  "paired_jackknife_se": 3.197555700831236e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.6304128854000055e-09,
+                  "paired_jackknife_se": 4.049073691615913e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -1.2178763997283681e-08,
+                  "paired_jackknife_se": 8.74179721186883e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.0672740358153021e-08,
+                  "paired_jackknife_se": 1.3664634047058154e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 5.571856531716435e-09,
+                  "paired_jackknife_se": 1.8537374151210687e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.6614559706957834e-09,
+                  "paired_jackknife_se": 2.4700868194546135e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00015224446856432206,
+                  "paired_jackknife_se": 0.00038683958023661504,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00017794836400053526,
+                  "paired_jackknife_se": 0.0005534317457249292,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 5.8770179748535156e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.05713293930513008,
+                  "paired_jackknife_se": 0.0003000865688422854,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08009216255344842,
+                  "paired_jackknife_se": 0.00037813844458029394,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -4.131645248151017e-09,
+                  "paired_jackknife_se": 3.3479193775660615e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.2965078161927295e-09,
+                  "paired_jackknife_se": 4.223556265469717e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -5.4763430457072104e-09,
+                  "paired_jackknife_se": 1.0423149105297579e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.10546371845777e-09,
+                  "paired_jackknife_se": 1.4912193179177115e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.008054455804006877,
+                  "paired_jackknife_se": 0.0004064023096303424,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.010316362778941102,
+                  "paired_jackknife_se": 0.00059814937940684,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00035143997933106963,
+                  "paired_jackknife_se": 0.001852524178904683,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0007766899321619558,
+                  "paired_jackknife_se": 0.002408841870642459,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 8.344650268554688e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2042652609483303,
+                  "paired_jackknife_se": 0.0020157925363396265,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.27108285753124706,
+                  "paired_jackknife_se": 0.002141182290548463,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.09338205857771409,
+                  "paired_jackknife_se": 0.00307858030601709,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12101856723782645,
+                  "paired_jackknife_se": 0.0036306492580502423,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06820409185000642,
+                  "paired_jackknife_se": 0.003977274306653653,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.09144212569940402,
+                  "paired_jackknife_se": 0.004173610442316978,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.6626235059824523e-06,
+                  "paired_jackknife_se": 3.411889194847102e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.652169977495177e-07,
+                  "paired_jackknife_se": 4.776027302074466e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.0008776187896728516,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.27940250138904943,
+                  "paired_jackknife_se": 0.002090813721594778,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3691323356028188,
+                  "paired_jackknife_se": 0.0035566581450390735,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.1352346488225019,
+                  "paired_jackknife_se": 0.0026627240301355217,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.17507819396890212,
+                  "paired_jackknife_se": 0.0038625570215678417,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.10382977266229743,
+                  "paired_jackknife_se": 0.005331501566001939,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.133181120265083,
+                  "paired_jackknife_se": 0.0066283777383528255,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.0007852177027434237,
+                  "paired_jackknife_se": 0.017876901110736296,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.005529920818388323,
+                  "paired_jackknife_se": 0.02383127881993549,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mixture/0.1": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.20794944639028562,
+            "seed_se": 9.242465962607783e-05,
+            "z": -0.21879788538828684
+          },
+          "point_covariance": {
+            "expected": [
+              0.0069714121838408034,
+              0.002832959143655232,
+              0.0005328293070326383,
+              0.0
+            ],
+            "measured": [
+              0.006974377214761335,
+              0.0028380029655781297,
+              0.0005356606363106059,
+              -1.044507346242035e-06
+            ],
+            "seed_se": [
+              1.0333905831751536e-05,
+              7.594290906905679e-06,
+              5.138164721483243e-06,
+              5.221532293257026e-06
+            ],
+            "z": [
+              0.28692257978791197,
+              0.664159693739285,
+              0.5510390249128121,
+              -0.20003847291931706
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.000821359149204682,
+              0.0002397007919797618,
+              6.446207276894616e-05,
+              4.184882410168438e-05,
+              6.654411048694029e-07
+            ],
+            "measured": [
+              0.0008211920030860166,
+              0.0002403371749802766,
+              6.529336289793874e-05,
+              4.2701996544286514e-05,
+              6.545760452177085e-07
+            ],
+            "seed_se": [
+              4.112544105900991e-06,
+              2.6735301458357647e-06,
+              1.3591596083452676e-06,
+              8.201430951283294e-07,
+              9.248348918392383e-08
+            ],
+            "z": [
+              -0.040642997220539524,
+              0.23803097994089312,
+              0.6116206837581363,
+              1.0402726642094549,
+              -0.1174810741632686
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 7.152557373046875e-07,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -5.778113765231296e-09,
+                  "paired_jackknife_se": 4.827046344206158e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.728584604573598e-09,
+                  "paired_jackknife_se": 6.521656705621823e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.010455363825713e-08,
+                  "paired_jackknife_se": 1.7851982921508922e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.623544597708417e-08,
+                  "paired_jackknife_se": 1.994386619657626e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.1965714641348768e-07,
+                  "paired_jackknife_se": 4.971108065597452e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.2116178749188578e-07,
+                  "paired_jackknife_se": 6.766621181028195e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 1.7638359395277803e-07,
+                  "paired_jackknife_se": 9.357126060850749e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.035358281915478e-07,
+                  "paired_jackknife_se": 1.1591050860273938e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.1846231064381882e-05,
+                  "paired_jackknife_se": 3.064412357790103e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.039280647114783e-05,
+                  "paired_jackknife_se": 3.258474631571538e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 2.8014183044433594e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 3.180544272396446e-09,
+                  "paired_jackknife_se": 3.796708989138553e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.1109249337978326e-10,
+                  "paired_jackknife_se": 5.107772397717958e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 5.798599822526285e-09,
+                  "paired_jackknife_se": 1.6836384767150394e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.9382819127500284e-08,
+                  "paired_jackknife_se": 2.3760928889439305e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 5.398312952209494e-08,
+                  "paired_jackknife_se": 6.035719615297459e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.1021625523355283e-07,
+                  "paired_jackknife_se": 7.144911049680574e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 2.2460088455744653e-07,
+                  "paired_jackknife_se": 8.155471743935133e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.4406764203833688e-07,
+                  "paired_jackknife_se": 9.79947673665865e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.649666148413221e-05,
+                  "paired_jackknife_se": 0.0003560164660352012,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0002772647563482611,
+                  "paired_jackknife_se": 0.00032081495317387446,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 6.079673767089844e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.04602733036918305,
+                  "paired_jackknife_se": 0.0002116665820858102,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.069307298215884,
+                  "paired_jackknife_se": 0.0001995412593380478,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.1798028554110829e-08,
+                  "paired_jackknife_se": 1.697952210849454e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.003556054397393e-08,
+                  "paired_jackknife_se": 1.8902715505490194e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 9.908959253124294e-08,
+                  "paired_jackknife_se": 7.493407517761358e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.8365096865480268e-07,
+                  "paired_jackknife_se": 9.28588606300925e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007183805871901705,
+                  "paired_jackknife_se": 0.0003767603443012874,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.009400186724781712,
+                  "paired_jackknife_se": 0.0005715674792987298,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0013584141603961708,
+                  "paired_jackknife_se": 0.0016268048125768638,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.00010551633477628997,
+                  "paired_jackknife_se": 0.0014505792692530081,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 6.556510925292969e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.17989599693441416,
+                  "paired_jackknife_se": 0.0013515275154822447,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.24847610740300397,
+                  "paired_jackknife_se": 0.0014560565973749157,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.07751733379169834,
+                  "paired_jackknife_se": 0.0026211422560528997,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10466121597084777,
+                  "paired_jackknife_se": 0.0041638957739661255,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06480330235089338,
+                  "paired_jackknife_se": 0.0020102967382610833,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08539028589468811,
+                  "paired_jackknife_se": 0.003402736633577752,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.2314518107524606e-05,
+                  "paired_jackknife_se": 2.431710461329195e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.700207695800373e-05,
+                  "paired_jackknife_se": 2.670954605814609e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 7.474422454833984e-05,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2529585512168585,
+                  "paired_jackknife_se": 0.0020342251363179003,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.347281867419049,
+                  "paired_jackknife_se": 0.0021179237004261236,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.11922578165368714,
+                  "paired_jackknife_se": 0.002305289926840212,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16105669656931632,
+                  "paired_jackknife_se": 0.0030810634067523564,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.09592396710676965,
+                  "paired_jackknife_se": 0.0030024519875140507,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12407451643549938,
+                  "paired_jackknife_se": 0.0045263649268894035,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.01513522641553322,
+                  "paired_jackknife_se": 0.013813793092768712,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00636043994974167,
+                  "paired_jackknife_se": 0.012701710501898337,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.026538145971499075,
+            "seed_se": 1.9208951795703816e-05,
+            "z": -0.41176886383163475
+          },
+          "point_covariance": {
+            "expected": [
+              0.0002906578670103351,
+              0.0001112723827597063,
+              2.0223530185984263e-05,
+              0.0
+            ],
+            "measured": [
+              0.00029095918748960157,
+              0.00011164167073312144,
+              2.0430369079998808e-05,
+              9.235358802661576e-08
+            ],
+            "seed_se": [
+              6.119905232764978e-07,
+              2.708191597863633e-07,
+              2.2899034443648065e-07,
+              2.274536258060034e-07
+            ],
+            "z": [
+              0.4923613484294576,
+              1.3635961861282533,
+              0.9032646966995559,
+              0.4060326042258157
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              3.2399995566143684e-05,
+              9.435505478998185e-06,
+              2.5351349567792274e-06,
+              1.6455246689746656e-06,
+              2.6150213849219964e-08
+            ],
+            "measured": [
+              3.2468034009512154e-05,
+              9.328354969293837e-06,
+              2.4724765937060983e-06,
+              1.6625220835447459e-06,
+              2.4773344490874264e-08
+            ],
+            "seed_se": [
+              1.2296738975233625e-07,
+              8.82603813447498e-08,
+              5.1157194199164434e-08,
+              3.0222699935477585e-08,
+              4.340244604945769e-09
+            ],
+            "z": [
+              0.5533047705208974,
+              -1.2140272687675489,
+              -1.2248201656484228,
+              0.5624055629168799,
+              -0.3172331247821237
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 8.344650268554688e-07,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -8.329936518336467e-09,
+                  "paired_jackknife_se": 3.316556316313813e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -9.12251230111849e-09,
+                  "paired_jackknife_se": 4.091574002614428e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -1.8852625460752392e-08,
+                  "paired_jackknife_se": 1.243445080789628e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.91756998058068e-08,
+                  "paired_jackknife_se": 1.8931185866452348e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -1.4538608872349812e-08,
+                  "paired_jackknife_se": 4.994781628149334e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.7417868924951563e-08,
+                  "paired_jackknife_se": 6.542329690700021e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 5.0271533602597174e-08,
+                  "paired_jackknife_se": 9.495192676312325e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.0866300970135967e-07,
+                  "paired_jackknife_se": 1.258122951868204e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.062016431152557e-05,
+                  "paired_jackknife_se": 3.3137277834557666e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.815179593999687e-07,
+                  "paired_jackknife_se": 3.982377403265777e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 5.0067901611328125e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -3.039530072079799e-09,
+                  "paired_jackknife_se": 2.481219263480611e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.161017613275476e-09,
+                  "paired_jackknife_se": 3.4279253566870943e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -3.708254137091416e-08,
+                  "paired_jackknife_se": 8.988071059911211e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.065713621326239e-08,
+                  "paired_jackknife_se": 1.3127939393310935e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -2.094495710203148e-08,
+                  "paired_jackknife_se": 4.3462334330825e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.7029528454060028e-08,
+                  "paired_jackknife_se": 5.3188785529399524e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 5.955133297597115e-08,
+                  "paired_jackknife_se": 9.943459674893062e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 9.167022940737013e-08,
+                  "paired_jackknife_se": 1.1768830508139326e-07,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00022151720038632305,
+                  "paired_jackknife_se": 0.0004429202163026441,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.759855202922768e-05,
+                  "paired_jackknife_se": 0.0005273257957107329,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 1.2159347534179688e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.04597818264500897,
+                  "paired_jackknife_se": 0.00024678003450629235,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.06916709388263742,
+                  "paired_jackknife_se": 0.0003047598591102548,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -1.3785128705201544e-08,
+                  "paired_jackknife_se": 8.385427090760407e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.5153916677057566e-08,
+                  "paired_jackknife_se": 1.2734749016004256e-08,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -8.62397953049765e-09,
+                  "paired_jackknife_se": 3.989913082051443e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.4253146985463445e-08,
+                  "paired_jackknife_se": 5.392188574424673e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.006985045131412959,
+                  "paired_jackknife_se": 0.00025786679515393064,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.008687010142016005,
+                  "paired_jackknife_se": 0.00038581795237325865,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0005685719194638006,
+                  "paired_jackknife_se": 0.0023713075668313818,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0008124607936939032,
+                  "paired_jackknife_se": 0.002713129646030714,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 5.960464477539062e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18102820683934295,
+                  "paired_jackknife_se": 0.0015960969615323416,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.24764696428071686,
+                  "paired_jackknife_se": 0.0013117005468283518,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.07737511956350407,
+                  "paired_jackknife_se": 0.0021758724499713134,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.10196180713067504,
+                  "paired_jackknife_se": 0.002374415882274279,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06659621321305786,
+                  "paired_jackknife_se": 0.00215672056648391,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08567187704438972,
+                  "paired_jackknife_se": 0.0033228831965447527,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.5080673266609779e-05,
+                  "paired_jackknife_se": 1.3901456394343248e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.390099844473692e-05,
+                  "paired_jackknife_se": 1.990373905170057e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.00010406970977783203,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2563920752152554,
+                  "paired_jackknife_se": 0.0027291545507001458,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.34928109124353346,
+                  "paired_jackknife_se": 0.0026804275310025444,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.12258597692169038,
+                  "paired_jackknife_se": 0.004818661895196709,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16120014373138924,
+                  "paired_jackknife_se": 0.004719571724305948,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.10303911014342704,
+                  "paired_jackknife_se": 0.002438168130551856,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.13367192092839997,
+                  "paired_jackknife_se": 0.003320158239647642,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.025688912499058136,
+                  "paired_jackknife_se": 0.018092296076085507,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.016840221574418557,
+                  "paired_jackknife_se": 0.02184095282923279,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mixture/1": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.20800261525221722,
+            "seed_se": 0.00026405761873989303,
+            "z": 0.12477027553648194
+          },
+          "point_covariance": {
+            "expected": [
+              0.07345812029234862,
+              0.022669697022506975,
+              0.003664721578771468,
+              0.0
+            ],
+            "measured": [
+              0.07350896311003961,
+              0.02273653435630595,
+              0.003697975894986667,
+              2.9039157056371475e-07
+            ],
+            "seed_se": [
+              0.0001301216774579422,
+              6.895428453360358e-05,
+              3.9753987989219845e-05,
+              4.611191288061332e-05
+            ],
+            "z": [
+              0.39073287928851824,
+              0.9692992139799927,
+              0.8365026478404265,
+              0.006297539018074506
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.006740248463067323,
+              0.0019484760668941285,
+              0.0005218312082221875,
+              0.00033850654869154427,
+              5.368311507337462e-06
+            ],
+            "measured": [
+              0.006751999731780932,
+              0.0019612246711547534,
+              0.0005250002552643234,
+              0.00034092607156105317,
+              4.429756581825206e-06
+            ],
+            "seed_se": [
+              3.0283435471055586e-05,
+              1.5971920035715005e-05,
+              9.710790941055056e-06,
+              6.9250821497876385e-06,
+              8.007472864999473e-07
+            ],
+            "z": [
+              0.3880427874453107,
+              0.7981885854748622,
+              0.32634283462307073,
+              0.3493854393601806,
+              -1.172098789887461
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.1324882507324219e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -2.427195666676596e-09,
+                  "paired_jackknife_se": 1.474448801997982e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.100812273615361e-09,
+                  "paired_jackknife_se": 2.0364852862859476e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.3590872871560578e-09,
+                  "paired_jackknife_se": 7.694960178637607e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.850463198811326e-09,
+                  "paired_jackknife_se": 8.626710121023069e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -6.613050329562498e-09,
+                  "paired_jackknife_se": 2.2855917575592792e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.9841442206191005e-08,
+                  "paired_jackknife_se": 3.3588011251729883e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -6.994733336984638e-08,
+                  "paired_jackknife_se": 3.5245240105280305e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -8.552319419319332e-08,
+                  "paired_jackknife_se": 4.8065141592038075e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 5.543469696389636e-06,
+                  "paired_jackknife_se": 1.293858601081218e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.892752858585368e-06,
+                  "paired_jackknife_se": 1.0119375648866821e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 9.953975677490234e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 4.626694583009794e-10,
+                  "paired_jackknife_se": 1.2445328045680926e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 5.522742263508462e-10,
+                  "paired_jackknife_se": 1.7917091268821284e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 7.175655625246691e-10,
+                  "paired_jackknife_se": 5.1144814376901255e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.1850207481955977e-09,
+                  "paired_jackknife_se": 5.75067791805976e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -3.139656090667131e-08,
+                  "paired_jackknife_se": 1.7642844605833074e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.69467898287246e-08,
+                  "paired_jackknife_se": 2.869889363169867e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -4.513928875127249e-08,
+                  "paired_jackknife_se": 4.613215648452186e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -6.848718370200402e-08,
+                  "paired_jackknife_se": 5.206542507277025e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.00035788299238093124,
+                  "paired_jackknife_se": 0.000198548607548398,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0005240748567236775,
+                  "paired_jackknife_se": 0.00027447618796645155,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 2.0265579223632812e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.04716034331947849,
+                  "paired_jackknife_se": 0.00029472879473026967,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.07037651450328775,
+                  "paired_jackknife_se": 0.00033681465639737575,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 4.082558957563265e-09,
+                  "paired_jackknife_se": 5.585023899596271e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.3794358988405975e-09,
+                  "paired_jackknife_se": 5.683470306788203e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -3.236642109882837e-08,
+                  "paired_jackknife_se": 1.9497633300844996e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.300495242721581e-08,
+                  "paired_jackknife_se": 3.3282485026886704e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.006988668145642141,
+                  "paired_jackknife_se": 0.00041761807121477006,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.008785892420321684,
+                  "paired_jackknife_se": 0.0005612182028724372,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.002581254879462369,
+                  "paired_jackknife_se": 0.0011395263605338884,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0036375735079765548,
+                  "paired_jackknife_se": 0.0014640619366286102,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 8.940696716308594e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18475949185241014,
+                  "paired_jackknife_se": 0.0014107821216207544,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2528319717618758,
+                  "paired_jackknife_se": 0.0018300285477010829,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08440774107280735,
+                  "paired_jackknife_se": 0.0020168105367245996,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.11117745271253343,
+                  "paired_jackknife_se": 0.0019445953518963958,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06119843172512107,
+                  "paired_jackknife_se": 0.0027217210266644214,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08092543831246923,
+                  "paired_jackknife_se": 0.0032408626787320803,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -8.54615534184866e-06,
+                  "paired_jackknife_se": 9.819630524235224e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.4196953412870528e-05,
+                  "paired_jackknife_se": 1.1361606732337352e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.00027757883071899414,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2615341673272912,
+                  "paired_jackknife_se": 0.001554553277229952,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3564589895290484,
+                  "paired_jackknife_se": 0.0029042267785388686,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.12632849536704993,
+                  "paired_jackknife_se": 0.0032483886053569725,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16776300422122936,
+                  "paired_jackknife_se": 0.004615711456854813,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.09659074886199803,
+                  "paired_jackknife_se": 0.004618629834626196,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12882484389802296,
+                  "paired_jackknife_se": 0.00611893979187197,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.02192993442186819,
+                  "paired_jackknife_se": 0.012973225983055963,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.02018620735517529,
+                  "paired_jackknife_se": 0.02035600484916274,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.026500540019107035,
+            "seed_se": 8.165462019532195e-05,
+            "z": -0.557416108720827
+          },
+          "point_covariance": {
+            "expected": [
+              0.0062812010774239676,
+              0.0011614366023812404,
+              0.00014570787957572797,
+              0.0
+            ],
+            "measured": [
+              0.006243964458786389,
+              0.0011458197177102087,
+              0.0001388299488342659,
+              -4.145349980052523e-06
+            ],
+            "seed_se": [
+              3.308279813395639e-05,
+              1.1391518406628273e-05,
+              4.458128043578089e-06,
+              2.714397253105609e-06
+            ],
+            "z": [
+              -1.1255583184591114,
+              -1.3709221293927663,
+              -1.542784476854514,
+              -1.5271714467400548
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.0003739766795505951,
+              0.0001063425228379407,
+              2.8272733491240622e-05,
+              1.8314648794002705e-05,
+              2.890766001441287e-07
+            ],
+            "measured": [
+              0.0003670599140537123,
+              0.00010541876690452605,
+              2.8712932046329424e-05,
+              1.8467384423843904e-05,
+              2.9682882931800214e-07
+            ],
+            "seed_se": [
+              3.4273891399282855e-06,
+              1.4522470856175229e-06,
+              6.739724137541705e-07,
+              5.024285154204787e-07,
+              4.5359448078755416e-08
+            ],
+            "z": [
+              -2.0180858415824643,
+              -0.6360873039878422,
+              0.6531403156945288,
+              0.30399474781676333,
+              0.17090660275260924
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.0728836059570312e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -1.7868545532095936e-09,
+                  "paired_jackknife_se": 8.528790833996359e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.4748685323316977e-09,
+                  "paired_jackknife_se": 1.1680762983336707e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -5.467415520321595e-09,
+                  "paired_jackknife_se": 2.9362249277832083e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.380943636166478e-09,
+                  "paired_jackknife_se": 2.814767582795123e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 1.5813951481646882e-08,
+                  "paired_jackknife_se": 1.2884578815971336e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.496241730514214e-08,
+                  "paired_jackknife_se": 2.4564572943964497e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 2.0600864791830986e-08,
+                  "paired_jackknife_se": 3.4917657769698523e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.874481824261977e-08,
+                  "paired_jackknife_se": 5.295916709223219e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -1.0173825972348283e-05,
+                  "paired_jackknife_se": 1.74693881299713e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.301386301335363e-06,
+                  "paired_jackknife_se": 2.2835485980182316e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 8.702278137207031e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 2.4296922251920705e-09,
+                  "paired_jackknife_se": 9.962250932330801e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.3999175979838583e-09,
+                  "paired_jackknife_se": 1.054972516577221e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -2.7297082372257364e-09,
+                  "paired_jackknife_se": 2.7927513891621948e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.5397472186151617e-09,
+                  "paired_jackknife_se": 2.7534197221248816e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -1.4687819849257266e-09,
+                  "paired_jackknife_se": 1.5221857552597617e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.106588929493228e-09,
+                  "paired_jackknife_se": 2.376401522386398e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 1.1965088253518275e-08,
+                  "paired_jackknife_se": 3.076319794840751e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.282648980944657e-08,
+                  "paired_jackknife_se": 3.982381492584535e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.00018369591266209628,
+                  "paired_jackknife_se": 0.0003137432349424505,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -8.333831497064903e-05,
+                  "paired_jackknife_se": 0.0004250602024127517,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 1.990795135498047e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.044300901513817714,
+                  "paired_jackknife_se": 0.00023943367536629517,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.06814914756312007,
+                  "paired_jackknife_se": 0.00020338528381037903,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -4.4483816630247475e-10,
+                  "paired_jackknife_se": 3.4403355149379934e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 1.588228437654493e-09,
+                  "paired_jackknife_se": 4.187508385892099e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -2.3225366074797194e-10,
+                  "paired_jackknife_se": 1.4911473082083146e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 5.112938072926454e-09,
+                  "paired_jackknife_se": 2.3438961388765762e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.007749469163690126,
+                  "paired_jackknife_se": 0.00042897516978647086,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.009673789315194803,
+                  "paired_jackknife_se": 0.0004892697865444255,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0011205038950867774,
+                  "paired_jackknife_se": 0.0014220013721556618,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0005747698024348713,
+                  "paired_jackknife_se": 0.0018705574221176593,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 8.344650268554688e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.1832152120949576,
+                  "paired_jackknife_se": 0.0021550196901129397,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.2519106689455691,
+                  "paired_jackknife_se": 0.002139270787974066,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08625253783584041,
+                  "paired_jackknife_se": 0.0022800110225130363,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.11604653275638066,
+                  "paired_jackknife_se": 0.002711852112603619,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06451954469194265,
+                  "paired_jackknife_se": 0.0027026813871494017,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08395122317980941,
+                  "paired_jackknife_se": 0.0029713899890042193,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -4.156625493800803e-06,
+                  "paired_jackknife_se": 4.934423567536346e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.36305322035102e-06,
+                  "paired_jackknife_se": 5.460586897196515e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.00030815601348876953,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2571206302002721,
+                  "paired_jackknife_se": 0.002400438937213556,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.3516191875789043,
+                  "paired_jackknife_se": 0.0024344844891532793,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.1321439490942038,
+                  "paired_jackknife_se": 0.003043635925870117,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.17304894741069987,
+                  "paired_jackknife_se": 0.0033449225521523275,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.10296854215027429,
+                  "paired_jackknife_se": 0.00482313096440254,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.13287031711783215,
+                  "paired_jackknife_se": 0.005827837821759196,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.008606252393388303,
+                  "paired_jackknife_se": 0.01625557763409305,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.006295073346544111,
+                  "paired_jackknife_se": 0.021222982161600994,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mixture/inf": {
+      "0.682": {
+        "exact": {
+          "mean": {
+            "expected": 0.20796966871036954,
+            "measured": 0.20747457876713318,
+            "seed_se": 0.00047328898752010696,
+            "z": -1.0460626726822397
+          },
+          "point_covariance": {
+            "expected": [
+              0.1647182856068687,
+              0.040992854176485016,
+              0.0059388065312395,
+              0.0
+            ],
+            "measured": [
+              0.16442912467985457,
+              0.04095761447528009,
+              0.005838038090314579,
+              -5.540969290381159e-05
+            ],
+            "seed_se": [
+              0.0002764294897079992,
+              0.00016404163772247045,
+              0.00011966613738446729,
+              9.276285875872085e-05
+            ],
+            "z": [
+              -1.0460567261458402,
+              -0.2148216860925653,
+              -0.8420798325023959,
+              -0.5973262752491703
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.0125412220500933,
+              0.0035998902673971397,
+              0.0009611030689481748,
+              0.0006230872076717605,
+              9.861546051668742e-06
+            ],
+            "measured": [
+              0.012511771535908508,
+              0.003599596550477778,
+              0.0009919857449296225,
+              0.0006199057694669882,
+              6.897483945986216e-06
+            ],
+            "seed_se": [
+              7.34525751805871e-05,
+              3.441929674386105e-05,
+              1.425349112784816e-05,
+              1.2685360088217854e-05,
+              1.226184248139764e-06
+            ],
+            "z": [
+              -0.40094597245074937,
+              -0.008533495659352913,
+              2.1666745153480163,
+              -0.2507960501434393,
+              -2.417305645688472
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.3709068298339844e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 8.213789648436887e-10,
+                  "paired_jackknife_se": 1.152389807979581e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 4.420619426070971e-11,
+                  "paired_jackknife_se": 1.5700118409173193e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -2.9091504760714315e-09,
+                  "paired_jackknife_se": 3.4899872944045924e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.982274899781089e-09,
+                  "paired_jackknife_se": 5.3531829944737185e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -3.6971629646664894e-08,
+                  "paired_jackknife_se": 1.8858831866814547e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.132696374004041e-08,
+                  "paired_jackknife_se": 2.2779540522637647e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 5.4893362966268455e-08,
+                  "paired_jackknife_se": 3.939239335657127e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.7997616608720364e-08,
+                  "paired_jackknife_se": 5.400275722823639e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 6.71228150046499e-05,
+                  "paired_jackknife_se": 2.1132794158418748e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 9.414827172560258e-05,
+                  "paired_jackknife_se": 3.500628612267621e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 1.0728836059570312e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": 2.2366464236256434e-10,
+                  "paired_jackknife_se": 1.1096548162115462e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 5.916882539480639e-10,
+                  "paired_jackknife_se": 1.4305781183976766e-09,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -7.723050643448914e-09,
+                  "paired_jackknife_se": 3.8630684709596184e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -4.41754821611795e-09,
+                  "paired_jackknife_se": 4.4835295179096625e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -4.876456538571716e-08,
+                  "paired_jackknife_se": 1.7708861782165806e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.943345127157329e-08,
+                  "paired_jackknife_se": 2.550833597999993e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": 7.357058495749413e-08,
+                  "paired_jackknife_se": 2.6320100318757383e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 7.241382737888102e-08,
+                  "paired_jackknife_se": 3.586826948008185e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.0009991242072102668,
+                  "paired_jackknife_se": 0.0004011353148250405,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.00136520065903456,
+                  "paired_jackknife_se": 0.0006909768391849378,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 2.4020671844482422e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.05162689549600952,
+                  "paired_jackknife_se": 0.00038299406746594396,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.07538838024984806,
+                  "paired_jackknife_se": 0.00038331273461255874,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -5.310801354241335e-09,
+                  "paired_jackknife_se": 3.8519005960307756e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.060020348222281e-09,
+                  "paired_jackknife_se": 5.2355516440523976e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -4.962822885978824e-08,
+                  "paired_jackknife_se": 2.1212307943888343e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.967148963836877e-08,
+                  "paired_jackknife_se": 2.8032865758696222e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.006453930811415098,
+                  "paired_jackknife_se": 0.0004673724417544063,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.008720343007003972,
+                  "paired_jackknife_se": 0.0007046328620075524,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.004115130390647259,
+                  "paired_jackknife_se": 0.0021134488253833896,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.006497042215451554,
+                  "paired_jackknife_se": 0.003247587272524996,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 5.960464477539062e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.18838321468140984,
+                  "paired_jackknife_se": 0.002229119322721939,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.25261131368886003,
+                  "paired_jackknife_se": 0.0020547994688632923,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.08794410517640816,
+                  "paired_jackknife_se": 0.001979227566815798,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.11380755678750354,
+                  "paired_jackknife_se": 0.002511775866238843,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.061819606788661385,
+                  "paired_jackknife_se": 0.0031858209258987034,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08083023592798355,
+                  "paired_jackknife_se": 0.004014839974132353,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 1.883940949487517e-05,
+                  "paired_jackknife_se": 1.0171281646392823e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.5663341140180762e-05,
+                  "paired_jackknife_se": 1.3335731221119365e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.0004134178161621094,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2645913782712077,
+                  "paired_jackknife_se": 0.002827386208789066,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.35207066459398406,
+                  "paired_jackknife_se": 0.0031594706943191123,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.13404416141948272,
+                  "paired_jackknife_se": 0.002836068473220578,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.16956018929574512,
+                  "paired_jackknife_se": 0.003666601530124882,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.0934743359541419,
+                  "paired_jackknife_se": 0.004797679559212827,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.11764226587985949,
+                  "paired_jackknife_se": 0.005134384523105127,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 0.035931878180234245,
+                  "paired_jackknife_se": 0.025321118684727376,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 0.0634518975158529,
+                  "paired_jackknife_se": 0.033510889747038454,
+                  "passed": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "1.576": {
+        "exact": {
+          "mean": {
+            "expected": 0.02654605561975539,
+            "measured": 0.02638589418851412,
+            "seed_se": 9.341347014285101e-05,
+            "z": -1.7145432130542104
+          },
+          "point_covariance": {
+            "expected": [
+              0.025841362550788245,
+              0.002584460149936728,
+              0.0002440024493761153,
+              0.0
+            ],
+            "measured": [
+              0.02568970449052077,
+              0.0025514155224845656,
+              0.0002436478184950111,
+              9.348828969919755e-07
+            ],
+            "seed_se": [
+              8.845395196221399e-05,
+              2.2454386741327777e-05,
+              1.1636064908961078e-05,
+              9.530042455058666e-06
+            ],
+            "z": [
+              -1.7145425037906699,
+              -1.4716334867139007,
+              -0.03047687374372631,
+              0.09809850285564341
+            ]
+          },
+          "aperture_T_variance": {
+            "expected": [
+              0.0009640254715125766,
+              0.0002691419702188278,
+              7.096376724553584e-05,
+              4.58958900067591e-05,
+              7.204821205537811e-07
+            ],
+            "measured": [
+              0.0009546084433780288,
+              0.00026725313939697976,
+              7.28220777583092e-05,
+              4.708458212405028e-05,
+              6.974354422241858e-07
+            ],
+            "seed_se": [
+              6.347851459916298e-06,
+              3.4475827589437804e-06,
+              2.056134447071439e-06,
+              1.1491906325338978e-06,
+              1.403945669368671e-07
+            ],
+            "z": [
+              -1.4834985024479426,
+              -0.5478710603677277,
+              0.9037884246432258,
+              1.0343733090394114,
+              -0.16415648292115867
+            ]
+          }
+        },
+        "sampling": {
+          "0.25": {
+            "max_abs_macro_delta": 1.1920928955078125e-06,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -7.439474591919293e-10,
+                  "paired_jackknife_se": 5.570485885276961e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -5.031139949096541e-10,
+                  "paired_jackknife_se": 7.917875634475606e-10,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": 1.359409695922409e-09,
+                  "paired_jackknife_se": 2.372241301133519e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 6.163352050947424e-10,
+                  "paired_jackknife_se": 3.354058811808009e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -3.6022367311261405e-09,
+                  "paired_jackknife_se": 1.0579175415937581e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 2.898263851136562e-10,
+                  "paired_jackknife_se": 1.287626247459634e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -1.35489088837204e-08,
+                  "paired_jackknife_se": 1.2691903557073394e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.685583833095251e-08,
+                  "paired_jackknife_se": 1.512341138857361e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -2.5975639707631615e-05,
+                  "paired_jackknife_se": 1.8466703546844554e-05,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.9548675922242964e-05,
+                  "paired_jackknife_se": 1.8397339574298873e-05,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "1.0": {
+            "max_abs_macro_delta": 1.895427703857422e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -2.011791622180681e-09,
+                  "paired_jackknife_se": 6.391386097918691e-10,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.427590490266084e-09,
+                  "paired_jackknife_se": 8.611982018367252e-10,
+                  "passed": true
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -2.603822712998749e-09,
+                  "paired_jackknife_se": 1.88469970616958e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -3.60150498313061e-09,
+                  "paired_jackknife_se": 3.2624703562037176e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -9.008913504082727e-09,
+                  "paired_jackknife_se": 7.990612981180641e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -1.3767975759471085e-08,
+                  "paired_jackknife_se": 1.049906969963313e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -8.871185785963576e-09,
+                  "paired_jackknife_se": 1.2984419873381186e-08,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -2.1504745539857595e-08,
+                  "paired_jackknife_se": 2.3037728480644194e-08,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.000523356371257222,
+                  "paired_jackknife_se": 0.00034077509294315087,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.00046974967351276486,
+                  "paired_jackknife_se": 0.00039403922610200745,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "2.0": {
+            "max_abs_macro_delta": 4.124641418457031e-05,
+            "apertures": {
+              "5.0": {
+                "cells_per_seed": 6561,
+                "adjacent_pairs_per_seed": 6480,
+                "d_rms": {
+                  "relative": -0.059632754360268825,
+                  "paired_jackknife_se": 0.00038068237962594225,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08258810966329877,
+                  "paired_jackknife_se": 0.00037865017758420674,
+                  "passed": false
+                }
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -3.6319136587081857e-10,
+                  "paired_jackknife_se": 2.284611003271148e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -7.878397934035775e-10,
+                  "paired_jackknife_se": 3.4291851926667034e-09,
+                  "passed": true
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": 6.231832605507748e-09,
+                  "paired_jackknife_se": 8.297590084312397e-09,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 8.013776087167912e-09,
+                  "paired_jackknife_se": 1.0951813203742353e-08,
+                  "passed": true
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.008156308479509322,
+                  "paired_jackknife_se": 0.00046026683441838104,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.01008538784756563,
+                  "paired_jackknife_se": 0.0005794187526276187,
+                  "passed": true
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.0026312814497221337,
+                  "paired_jackknife_se": 0.0012483725573646893,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.0025879854085752996,
+                  "paired_jackknife_se": 0.001484211062200447,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "6.35": {
+            "max_abs_macro_delta": 7.152557373046875e-07,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.20814682536746165,
+                  "paired_jackknife_se": 0.0018552204419121049,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.27478373557539193,
+                  "paired_jackknife_se": 0.0023568435524198975,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.09483561265040574,
+                  "paired_jackknife_se": 0.002899918930595919,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.12255686694922951,
+                  "paired_jackknife_se": 0.003491658366833156,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.06888674837400932,
+                  "paired_jackknife_se": 0.003453197224441952,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.08973234082562487,
+                  "paired_jackknife_se": 0.003573251237815248,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": 2.1938658079090345e-06,
+                  "paired_jackknife_se": 3.1625331645594032e-06,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": 3.238503420099903e-06,
+                  "paired_jackknife_se": 3.5337907854699985e-06,
+                  "passed": true
+                }
+              }
+            }
+          },
+          "8.69": {
+            "max_abs_macro_delta": 0.0011185407638549805,
+            "apertures": {
+              "5.0": {
+                "status": "below_scan_pixel"
+              },
+              "10.0": {
+                "cells_per_seed": 1600,
+                "adjacent_pairs_per_seed": 1560,
+                "d_rms": {
+                  "relative": -0.2873522517915049,
+                  "paired_jackknife_se": 0.0023772072596236382,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.37741563813352774,
+                  "paired_jackknife_se": 0.0036591041681455685,
+                  "passed": false
+                }
+              },
+              "20.0": {
+                "cells_per_seed": 400,
+                "adjacent_pairs_per_seed": 380,
+                "d_rms": {
+                  "relative": -0.14355035378443715,
+                  "paired_jackknife_se": 0.004031561356009433,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.18439555480015313,
+                  "paired_jackknife_se": 0.004717998807601864,
+                  "passed": false
+                }
+              },
+              "25.0": {
+                "cells_per_seed": 256,
+                "adjacent_pairs_per_seed": 240,
+                "d_rms": {
+                  "relative": -0.11117600008808715,
+                  "paired_jackknife_se": 0.0046261931579487095,
+                  "passed": false
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.14309332444703948,
+                  "paired_jackknife_se": 0.005043900301480597,
+                  "passed": false
+                }
+              },
+              "203.2": {
+                "cells_per_seed": 4,
+                "adjacent_pairs_per_seed": 2,
+                "d_rms": {
+                  "relative": -0.016501750445680696,
+                  "paired_jackknife_se": 0.016941841795068417,
+                  "passed": true
+                },
+                "adjacent_d_rms": {
+                  "relative": -0.015777695865242913,
+                  "paired_jackknife_se": 0.01902081175997893,
+                  "passed": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "seeds": [
+    6401,
+    6402,
+    6403,
+    6404,
+    6405,
+    6406,
+    6407,
+    6408,
+    6409,
+    6410,
+    6411,
+    6412,
+    6413,
+    6414,
+    6415,
+    6416
+  ],
+  "reference_pitch_um": 0.125,
+  "fov_um": 406.4,
+  "apertures_um": [
+    5.0,
+    10.0,
+    20.0,
+    25.0,
+    203.2
+  ],
+  "optical_sigma_um": 1.5,
+  "gates": {
+    "d_abs": 0.01,
+    "rms_relative": 0.05,
+    "pointwise_z": 2.0
+  }
+}

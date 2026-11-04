@@ -1,0 +1,13 @@
+{
+  "aperture_um": 25.16316171138506,
+  "gross_density": 1,
+  "rms_FX39": 0.02922561876012257,
+  "rms_D76": 0.020990569110013756,
+  "fx39_to_d76": 1.3923214090550886,
+  "point_xy": [
+    685.8571428571429,
+    70.6
+  ],
+  "process": "FX39 1+12, 10 min, 24 °C; D-76 stock, 9 min, 20 °C",
+  "approximate_plot_readout": true
+}

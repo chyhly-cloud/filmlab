@@ -1,0 +1,7 @@
+/sources/
+/results/full/
+/results/silver-emulsion/field-checkpoint.json
+*.png
+*.jpg
+*.jpeg
+*.pdf
