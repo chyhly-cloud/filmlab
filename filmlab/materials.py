@@ -214,8 +214,8 @@ def _grain_spec(stock_key, design, name, ref_illum):
 
 
 def _emulsion_for_grain(stock_key):
-    if stock_key == TRIX_KEY:                 # T47 Tri-X 400 (特性曲线由晶体模型算出, 没有档案文件)
-        return trix_film()
+    if stock_key in BW_SILVER_FILMS:          # T47 / T47b 黑白片 (特性曲线由晶体模型算出, 没有档案文件)
+        return bw_silver_film(stock_key)
     if stock_key.startswith("bw_"):
         return bw_film(sensitivity=stock_key[3:]) if stock_key[3:] in ("pan", "ortho", "blue") else bw_film()
     return emulsion(stock_key)
@@ -317,6 +317,8 @@ GRAIN_T47_MICRO_GEOMETRY = "diffuse"
 # 三维晶体 (传统立方 / 八面体) 的有效量子效率相对 T46 通用值 (η × 3 表面吸收) 的倍数 —— T47 标定量:
 #   由 Schmidt Tri-X / D-76 显微颗粒的 20 / 25 µm 平台定 (tools/eval/t47_trix.py → tools/eval/t47/calib.json)。
 #   T46 已指出三维晶体按通用 β 推出的晶体偏大 (Tri-X 颗粒偏粗 1.31 倍); 这里只修正这一个已有物理量。
+#   T47b (tools/eval/t47b_bw_loo.py): 这个修正属于显式银粒模型 (T46 的 η 是在染料云 / κ 模型下定的), 对 T 颗粒同样适用
+#   (grain.silver_structure 的 scale_tgrain=True); 只乘三维时 T 颗粒片偏粗 1.5–1.9 倍, 两者都乘时 T-Max / Delta 为 0.90–1.14。
 GRAIN_T47_ETA3D_SCALE = 6.608337
 # Schmidt 的 Tri-X 400 / D-76 原液 20 °C 9 min 特性曲线 (tools/eval/t47/schmidt_density_19.csv; 漫射密度计 —— 几何检验):
 #   (净 D 0.10 处为零点的 log10 相对曝光, 净 D); 片基 + 灰雾 0.318。来源 https://www.bernhard-w-schmidt.de/en/einzeln-trix
@@ -340,6 +342,36 @@ TRIX_SPECTRAL = (
      2.362, 2.383, 2.401, 2.419, 2.432, 2.444, 2.452, 2.454, 2.446, 2.429, 2.403, 2.384, 2.380, 2.375, 2.392, 2.410,
      2.414, 2.392, 2.330, 2.189, 1.932, 1.000, 0.720, 0.430, 0.000))
 TRIX_KEY = "kodak_trix_400"
+# T47b: 其他黑白片 (Schmidt 同一显微镜 / 同一 D-76 原液 20 °C 的曲线, tools/eval/t47/schmidt_bw_d76.csv;
+#   (净 D 0.10 处为零点的 log10 相对曝光, 净 D)。T-Max 100 9 min EI 200、T-Max 400 11 min EI 640 (Schmidt 实测有效感光度)。
+#   来源 https://www.bernhard-w-schmidt.de/en/einzeln-tmx 、https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+TMX_D76_CURVE = (
+    (
+     -0.3334, -0.0334, 0.1166, 0.4166, 0.5666, 0.7166, 0.8666, 1.0166, 1.1666, 1.4666, 1.6166, 1.7666, 1.9166,
+     2.0666),
+    (
+     0.0000, 0.0869, 0.1457, 0.3952, 0.5129, 0.6362, 0.7651, 0.9053, 1.0258, 1.2220, 1.3257, 1.4070, 1.4994,
+     1.5891))
+TMY_D76_CURVE = (
+    (
+     -0.2769, -0.1269, 0.0231, 0.1731, 0.3231, 0.4731, 0.6231, 0.7731, 0.9231, 1.0731, 1.2231, 1.3731, 1.5231,
+     1.6731, 1.8231, 1.9731, 2.1231, 2.2731, 2.4231),
+    (
+     0.0000, 0.0336, 0.1121, 0.2017, 0.2998, 0.3895, 0.4736, 0.6221, 0.7258, 0.8295, 0.9529, 1.0762, 1.2079,
+     1.3649, 1.5218, 1.6900, 1.8469, 2.0123, 2.2141))
+# 每种黑白片的显式银粒档案: 感光度 (与所用曲线一致)、晶体形态 (T 颗粒厚度 / None = 三维)、D-76 曲线、片基 + 灰雾。
+#   光谱感光度都取 Tri-X 的 F-4017 全色曲线 (T-Max / Plus-X 的光谱未数字化; T-Max 数据册写明蓝光感光度略低, 未计入)。
+#   Plus-X 125: 没有 D-76 曲线 (Schmidt 未测, Kodak 官方曲线为 HC-110), 曲线形状借 Tri-X D-76、感光度 125 —— 假设。
+BW_SILVER_FILMS = {
+    TRIX_KEY: dict(name="Kodak Tri-X 400", ei=400.0, thickness_um=None, curve="TRIX_D76_CURVE", gross_fog=0.318,
+                   source="Tri-X 400: Schmidt D-76 曲线 + T47 标定"),
+    "kodak_tmax_100": dict(name="Kodak T-Max 100", ei=200.0, thickness_um=GRAIN_T_UM, curve="TMX_D76_CURVE", gross_fog=0.2186,
+                           source="T-Max 100 (T-GRAIN): Schmidt D-76 9 min 曲线 (EI 200)"),
+    "kodak_tmax_400": dict(name="Kodak T-Max 400", ei=640.0, thickness_um=GRAIN_T_UM, curve="TMY_D76_CURVE", gross_fog=0.2607,
+                           source="T-Max 400 (T-GRAIN): Schmidt D-76 11 min 曲线 (EI 640)"),
+    "kodak_plusx_125": dict(name="Kodak Plus-X 125", ei=125.0, thickness_um=None, curve="TRIX_D76_CURVE", gross_fog=0.318,
+                            source="Plus-X 125 (三维): 曲线形状借 Tri-X D-76 (假设), EI 125"),
+}
 
 
 def silver_spec(e: Emulsion, process_name: str = None):
@@ -353,10 +385,11 @@ def _silver_spec(stock_key, design, process_name):
     from . import grain
     U = grain_universal()
     eta = GRAIN_T47_ETA3D_SCALE
-    if stock_key == TRIX_KEY:
-        x, net = map(np.asarray, TRIX_D76_CURVE)
-        return grain.silver_derive(400.0, U, eta, 0.8 / 400.0 * 10.0 ** x, net, TRIX_GROSS_FOG, GRAIN_T47_MORPH,
-                                   process=str(process_name), source="Tri-X 400: Schmidt D-76 曲线 + T47 标定")
+    if stock_key in BW_SILVER_FILMS:
+        f = BW_SILVER_FILMS[stock_key]
+        x, net = map(np.asarray, globals()[f["curve"]])
+        return grain.silver_derive(f["ei"], U, eta, 0.8 / f["ei"] * 10.0 ** x, net, f["gross_fog"], GRAIN_T47_MORPH,
+                                   process=str(process_name), source=f["source"], thickness_um=f["thickness_um"])
     e = _emulsion_for_grain(stock_key)
     ei = float(GRAIN_PHYS["bw"]["ei"])
     H = grain.exposure_axis(e, ei)[:, 1]
@@ -376,15 +409,20 @@ def silver_fog_offset(e: Emulsion, spec):
 def trix_film() -> Emulsion:
     """Kodak Tri-X 400 (400TX) 黑白负片 (T47): 特性曲线由显式银粒的同一晶体模型算出 (漫射密度, 绝对 log10 lux·s 横轴),
     光谱感光度取 Kodak F-4017 (全色)。片基密度 = Schmidt 的片基 + 灰雾 − 模型灰雾。"""
-    return _trix_film()
+    return bw_silver_film(TRIX_KEY)
+
+
+def bw_silver_film(key: str) -> Emulsion:
+    """BW_SILVER_FILMS 里的黑白片 (T47b): 特性曲线由显式银粒的晶体模型算出, 其余同 trix_film。"""
+    return _bw_silver_film(key)
 
 
 @lru_cache(maxsize=None)
-def _trix_film():
+def _bw_silver_film(key):
     from . import grain
     from .stocks import WAVELENGTHS
     base = load_stock("kodak_portra_400")
-    spec = _silver_spec(TRIX_KEY, "bw", "BW-D76")
+    spec = _silver_spec(key, "bw", "BW-D76")
     x = np.linspace(-4.5, 1.5, 256)
     D = grain.silver_curve(spec, x, "diffuse")
     lam, ls = map(np.asarray, TRIX_SPECTRAL)
@@ -394,7 +432,7 @@ def _trix_film():
     d55 = illuminant("D55")
     ref = bw_film().stock.log_sensitivity[:, 1]
     logS = np.where(logS > -9, logS + np.log10((d55 * 10.0 ** ref).sum() / (d55 * 10.0 ** logS).sum()), logS)
-    st = base.with_(key=TRIX_KEY, name="Kodak Tri-X 400", bw=True, kind="negative",
+    st = base.with_(key=key, name=BW_SILVER_FILMS[key]["name"], bw=True, kind="negative",
                     log_sensitivity=np.repeat(logS[:, None], 3, 1),
                     dye_density=np.full((81, 3), 1.0 / 3.0),
                     base_density=np.full(81, spec.base_density),

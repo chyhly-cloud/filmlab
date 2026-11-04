@@ -202,3 +202,51 @@ def test_t47_frame_timing_ignores_grain():
         e.render(img)
         t.append(e.scanner.timing)
     assert np.allclose(t[0].K, t[1].K) and np.allclose(t[0].s, t[1].s)
+
+
+# ------------------------------------------------------------------ T47b --
+def test_tgrain_volume_and_surface():
+    """T 颗粒: 每晶体银 = 3.72e-12 × a·t; 有效量子效率的表面系数 1 (三维 3), T47 的 η 修正对两者相同。"""
+    sp = SPEC.with_(thickness_um=0.12)
+    b = grain.silver_bins(sp)
+    assert np.allclose(b["m"], grain.AGBR_AG_G_UM3 * b["a"] * 0.12)
+    U = materials.grain_universal()
+    _, _, e3, _ = grain.silver_structure(400, U, 2.0)
+    _, _, et, _ = grain.silver_structure(400, U, 2.0, thickness_um=0.12)
+    _, _, et1, _ = grain.silver_structure(400, U, 2.0, thickness_um=0.12, scale_tgrain=False)
+    assert np.isclose(e3, 3 * et) and np.isclose(et, 2 * et1)
+
+
+@pytest.mark.parametrize("key", ["kodak_tmax_100", "kodak_tmax_400"])
+def test_bw_silver_films_reproduce_schmidt_curves(key):
+    """T-Max 100 / 400: 晶体模型 (漫射) 复现 Schmidt 的 D-76 曲线 |ΔD| ≤ 0.10, 银量上限高于最高一级。"""
+    e = materials.bw_silver_film(key)
+    sp = materials.silver_spec(e)
+    f = materials.BW_SILVER_FILMS[key]
+    x, net = map(np.asarray, getattr(materials, f["curve"]))
+    H = 0.8 / f["ei"] * 10 ** x
+    model = grain.silver_density(sp, H) - grain.silver_density(sp, 0.0)
+    assert np.max(np.abs(model - net)) <= 0.10
+    assert grain.silver_budget(sp)["D_max"] - grain.silver_density(sp, 0.0) > net.max()
+    assert sp.thickness_um == materials.GRAIN_T_UM and np.allclose(e.S_nom[:, 1], grain.silver_curve(sp, e.log_exposure))
+
+
+def test_t47b_loo_not_worse_than_t46():
+    """T47b 留一 (tools/eval/t47b_bw_loo.py 的结果): 同口径 (D-76) 的官方值与 Schmidt 同仪器留出片, |log 误差| 中位不大于 T46。"""
+    R = json.loads((EVAL / "t47b_loo.json").read_text())
+    med = lambda v: float(np.median(np.abs(np.log(v))))
+    J = [a for a in R["official"] if a["judged"]]
+    assert {a["key"] for a in J} == {"tmax100", "tmax400"}
+    assert med([a["t47_ratio"] for a in J]) <= med([a["t46_loo_ratio"] for a in J])
+    H = [b for b in R["schmidt"] if b["role"] != "标定"]
+    assert med([b["t47_ratio"] for b in H]) <= med([b["t46_ratio"] for b in H])
+
+
+def test_tmax_engine_grain_is_mean_preserving():
+    generation.use("t47_bw")
+    img = np.full((48, 48, 3), 0.18)
+    kw = {**recipe("kodak_tmax_400"), "timing": "frame", "roll": None, "frame": 0, "frame_width_mm": 0.45}
+    a = Engine(Params(**{**kw, "grain": 0})).develop_negative(img).state.silver
+    b = Engine(Params(**{**kw, "grain": 1.0})).develop_negative(img).state.silver
+    c = slice(6, -6)
+    assert abs(a[c, c].mean() - b[c, c].mean()) < 0.01 and b[..., 1].std() > 0.005

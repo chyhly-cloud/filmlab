@@ -6,7 +6,7 @@
 import numpy as np
 
 from .chemistry import PROCESSES
-from .materials import aged, bw_film, emulsion, trix_film, without_remjet
+from .materials import BW_SILVER_FILMS, aged, bw_film, bw_silver_film, emulsion, trix_film, without_remjet
 from .stocks import WAVELENGTHS
 
 
@@ -69,6 +69,9 @@ def recipe(name: str) -> dict:
     if name == "kodak_trix_400":
         # Kodak Tri-X 400 / D-76 (T47): 特性曲线由显式银粒的晶体模型算出, 光谱感光度取 Kodak F-4017
         return dict(film=trix_film())
+    if name in BW_SILVER_FILMS:
+        # T47b: T-Max 100 / 400 (T 颗粒)、Plus-X 125 (三维), D-76; 同一显式银粒模型 (materials.BW_SILVER_FILMS)
+        return dict(film=bw_silver_film(name))
     if name.startswith("bw_"):
         # bw_pan, bw_pan_red, bw_ortho, bw_pan_rodinal ...
         parts = name.split("_")[1:]

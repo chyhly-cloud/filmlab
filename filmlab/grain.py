@@ -401,6 +401,7 @@ class SilverSpec:
     shapes: int = 6             # 每档随机丝团形状数
     cluster_mu: float = 0.0     # Thomas 团簇: 每团平均晶体数 (0 = 泊松)
     cluster_um: float = 0.0     # Thomas 团簇: 晶体相对团中心的高斯 σ (µm)
+    thickness_um: float | None = None   # T47b: T 颗粒厚度 (体积 a·t); None = 三维晶体 (体积 a^1.5)
     process: str = ""
     source: str = ""
 
@@ -417,7 +418,7 @@ def silver_bins(spec: SilverSpec):
     w = np.exp(-0.5 * x * x); w /= w.sum()
     ecd = np.asarray(spec.ecd_um, float)[:, None] * np.exp(np.asarray(spec.sigma_ln, float)[:, None] * x[None])
     a = np.pi * ecd ** 2 / 4.0
-    m = AGBR_AG_G_UM3 * a ** 1.5
+    m = AGBR_AG_G_UM3 * (a ** 1.5 if spec.thickness_um is None else a * spec.thickness_um)
     n_k = np.asarray(spec.coat_g_m2, float) * 1e-12 / (m * w[None]).sum(1)
     return dict(ecd=ecd, a=a, m=m, V=m / AG_G_UM3, w=np.broadcast_to(w, a.shape), n=n_k[:, None] * w[None])
 
@@ -840,25 +841,30 @@ def silver_granularity(spec: SilverSpec, H, sides_um, psf_um=0.0, geometry="diff
     return np.sqrt(window_variance(C, h, sides_um, psf_um, adjacent)) / (ET * np.log(10))
 
 
-def silver_structure(ei, U, eta_scale, illuminant="D55"):
-    """T46 通用乳剂结构 (单层黑白取中间层: λ_k, σ_ln, a_f) + 三维晶体的有效量子效率 η_3D = η × 3 (表面吸收) × eta_scale。
-    晶体中位投影面积 a_k = (λ_k a0^β / (φ H_s))^(1/(1+β)), H_s = 0.8/EI。返回 (ecd (K,), sigma_ln (K,), eta_3D, a_f)。"""
+def silver_structure(ei, U, eta_scale, illuminant="D55", thickness_um=None, scale_tgrain=True):
+    """T46 通用乳剂结构 (单层黑白取中间层: λ_k, σ_ln, a_f) + 有效量子效率 η × 表面系数 × eta_scale。
+    表面系数: 三维晶体 3 (六面吸附 / T 颗粒两面), T 颗粒 1 (thickness_um 不为 None, 体积 a·t; T47b)。
+    eta_scale: T47 对 T46 η 的修正 (显式银粒模型下的有效量子效率; Schmidt Tri-X 标定)。T47b 检验它对三维与 T 颗粒都适用
+    (scale_tgrain=False 只用于对照: T 颗粒不乘, 即 T47 原文"只修正三维晶体"的读法)。
+    晶体中位投影面积 a_k = (λ_k a0^β / (φ H_s))^(1/(1+β)), H_s = 0.8/EI。返回 (ecd (K,), sigma_ln (K,), eta, a_f)。"""
     lam = np.asarray(U["lam"], float)[1]
-    eta = U["eta"] * SURFACE_RATIO_3D * eta_scale
+    eta = U["eta"] * (SURFACE_RATIO_3D * eta_scale if thickness_um is None else (eta_scale if scale_tgrain else 1.0))
     phi = eta * float(np.sum(BAND_PHOTONS[illuminant]))
     a = (lam * U["a0"] ** U["beta"] / (phi * 0.8 / ei)) ** (1.0 / (1.0 + U["beta"]))
     return 2.0 * np.sqrt(a / np.pi), np.full(3, float(U["sigma_ln"][1])), eta, float(U["fog_area"][1])
 
 
-def silver_derive(ei, U, eta_scale, H, netD, gross_fog, morph, illuminant="D55", geometry="diffuse", process="", source=""):
+def silver_derive(ei, U, eta_scale, H, netD, gross_fog, morph, illuminant="D55", geometry="diffuse", process="", source="",
+                  thickness_um=None, scale_tgrain=True):
     """T47 档案: 晶体结构 (silver_structure) + 每亚群涂布银量 (g/m²) 由该胶片自己的特性曲线 (净密度 netD 对曝光 H,
     lux·s; 收集几何 geometry) 非负最小二乘; 片基密度 = 总灰雾 gross_fog − 模型灰雾。morph: spread, filament_um,
     callier_q 等 (SilverSpec 字段)。"""
     from scipy.optimize import nnls
-    ecd, sig, eta, af = silver_structure(ei, U, eta_scale, illuminant)
+    ecd, sig, eta, af = silver_structure(ei, U, eta_scale, illuminant, thickness_um, scale_tgrain)
     proto = SilverSpec(ecd_um=tuple(map(float, ecd)), sigma_ln=tuple(map(float, sig)), coat_g_m2=(1.0, 1.0, 1.0),
                        ei=float(ei), eta=float(eta), beta=float(U["beta"]), a0_um2=float(U["a0"]), fog_area_um2=af,
-                       base_density=0.0, illuminant=illuminant, process=process, source=source, **morph)
+                       base_density=0.0, illuminant=illuminant, process=process, source=source,
+                       thickness_um=thickness_um, **morph)
     H = np.asarray(H, float)
     cols = []
     for k in range(3):

@@ -1,0 +1,94 @@
+# T47b 数字化: Bernhard W. Schmidt 各片种页 Density curve 图的紫色 Kodak D-76 原液 20 °C 标记 (只存 URL 与读数); 被遮挡、非单调的标记已去掉
+# 片基+灰雾 = 低曝光段 (E <= 0.6) 读数的中位 (不大于最小读数); EI_eff / gamma / D-76 时间取各页表格; RMS_D 与 structure_um (a_k 列) 取 methodgrain 页结果表 (D-76 行)
+# 同一显微镜、同一估计器、同一显影液: 与 Tri-X / D-76 (schmidt_density_19.csv, RMS_D 13.0) 可直接比较
+film,page,schmidt_D76_min,EI_eff,gamma,RMS_D,structure_um,E,gross_D,net_D
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,0.60,0.2186,0.0000
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,0.90,0.3055,0.0869
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.05,0.3643,0.1457
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.35,0.6138,0.3952
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.50,0.7315,0.5129
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.65,0.8548,0.6362
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.80,0.9837,0.7651
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,1.95,1.1239,0.9053
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,2.10,1.2444,1.0258
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,2.40,1.4406,1.2220
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,2.55,1.5443,1.3257
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,2.70,1.6256,1.4070
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,2.85,1.7180,1.4994
+T-Max 100 (TMX),https://www.bernhard-w-schmidt.de/en/einzeln-tmx,9,200,0.65,7.9,4.1,3.00,1.8077,1.5891
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.15,0.2607,0.0000
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.30,0.2943,0.0336
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.45,0.3728,0.1121
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.60,0.4624,0.2017
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.75,0.5605,0.2998
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,0.90,0.6502,0.3895
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.05,0.7343,0.4736
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.20,0.8828,0.6221
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.35,0.9865,0.7258
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.50,1.0902,0.8295
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.65,1.2136,0.9529
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.80,1.3369,1.0762
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,1.95,1.4686,1.2079
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.10,1.6256,1.3649
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.25,1.7825,1.5218
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.40,1.9507,1.6900
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.55,2.1076,1.8469
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.70,2.2730,2.0123
+T-Max 400 (TMY),https://www.bernhard-w-schmidt.de/en/einzeln-tmy,11,640,0.62,12.9,5.3,2.85,2.4748,2.2141
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,0.45,0.2971,0.0000
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,0.60,0.3083,0.0112
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,0.75,0.3700,0.0729
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,0.90,0.3952,0.0981
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.05,0.4400,0.1429
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.20,0.4961,0.1990
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.35,0.5970,0.2999
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.50,0.6867,0.3896
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.65,0.7763,0.4792
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.80,0.8772,0.5801
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,1.95,1.0090,0.7119
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.10,1.1435,0.8464
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.25,1.2920,0.9949
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.40,1.4490,1.1519
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.55,1.6228,1.3257
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.70,1.7993,1.5022
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,2.85,2.0039,1.7068
+Delta 100,https://www.bernhard-w-schmidt.de/en/einzeln-d100,9,200,0.62,8.7,4.1,3.00,2.2113,1.9142
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.15,0.3587,0.0000
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.30,0.3868,0.0281
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.45,0.4260,0.0673
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.60,0.4765,0.1178
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.75,0.5437,0.1850
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,0.90,0.6082,0.2495
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.05,0.6754,0.3167
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.20,0.7539,0.3952
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.35,0.8548,0.4961
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.50,0.9445,0.5858
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.65,1.0566,0.6979
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.80,1.1687,0.8100
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,1.95,1.2808,0.9221
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,2.10,1.3957,1.0370
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,2.25,1.4966,1.1379
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,2.55,1.7405,1.3818
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,2.70,1.8498,1.4911
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,2.85,1.9619,1.6032
+Delta 400,https://www.bernhard-w-schmidt.de/en/einzeln-d400,8,500,0.47,9.9,4.2,3.00,2.0964,1.7377
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.15,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.30,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.45,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.60,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.75,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,0.90,0.2607,0.0000
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.05,0.2691,0.0084
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.20,0.2719,0.0112
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.35,0.2943,0.0336
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.50,0.3251,0.0644
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.65,0.3812,0.1205
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.80,0.4428,0.1821
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,1.95,0.5325,0.2718
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.10,0.6334,0.3727
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.25,0.7483,0.4876
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.40,0.8660,0.6053
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.55,0.9893,0.7286
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.70,1.1099,0.8492
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,2.85,1.2108,0.9501
+Pan F+,https://www.bernhard-w-schmidt.de/en/einzeln-panf,8,40,0.62,8.8,4.2,3.00,1.3313,1.0706
