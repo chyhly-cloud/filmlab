@@ -214,6 +214,8 @@ def _grain_spec(stock_key, design, name, ref_illum):
 
 
 def _emulsion_for_grain(stock_key):
+    if stock_key == TRIX_KEY:                 # T47 Tri-X 400 (特性曲线由晶体模型算出, 没有档案文件)
+        return trix_film()
     if stock_key.startswith("bw_"):
         return bw_film(sensitivity=stock_key[3:]) if stock_key[3:] in ("pan", "ortho", "blue") else bw_film()
     return emulsion(stock_key)
@@ -301,3 +303,101 @@ def _grain_spec_t46(stock_key, design, name, ref_illum, process_name):
     sp = grain.derive_spec(e, p["ei"], p["illuminant"], grain_universal(), kind=kind, thickness_um=t,
                            process=process_grain(process_name))
     return sp.with_(source=f"T46 通用推导 (EI {p['ei']:g}, {p['illuminant']}, {'T 颗粒' if t else '三维晶体'}, 工艺 {process_name})")
+
+
+# ------------------------------------------------------------- 颗粒 (T47) --
+# 显式银粒 (filmlab.grain.SilverSpec / render_silver; docs/tasks/T47_TRIX_SILVER_GRAIN.md)。黑白片通用。
+# 显影后银粒形态 (显影工艺参数; 先验, 未逐片实测):
+#   spread      银丝团投影面积 / 晶体投影面积 = 4 (丝团直径约为晶体的 2 倍: 化学显影的银丝从显影中心长出、伸出晶体轮廓)
+#   filament_um 银丝直径 0.04 µm (电镜下化学显影银丝为数十纳米量级); 银质量守恒决定丝长, 丝团的不透明度由此算出
+#   callier_q   漫射 / 镜面收集的密度比 Q = 1.4 (粗颗粒黑白负片的经典范围 1.3–1.5; https://en.wikipedia.org/wiki/Callier_effect)
+GRAIN_T47_MORPH = dict(spread=4.0, filament_um=0.04, filaments=4, persistence=0.5, callier_q=1.4)
+# Schmidt 显微镜颗粒的收集几何 (页面未写明; 假设): 漫射。依据见 T47 文档第 4 节 (镜面口径与 Kodak 48 µm 官方值矛盾)。
+GRAIN_T47_MICRO_GEOMETRY = "diffuse"
+# 三维晶体 (传统立方 / 八面体) 的有效量子效率相对 T46 通用值 (η × 3 表面吸收) 的倍数 —— T47 标定量:
+#   由 Schmidt Tri-X / D-76 显微颗粒的 20 / 25 µm 平台定 (tools/eval/t47_trix.py → tools/eval/t47/calib.json)。
+#   T46 已指出三维晶体按通用 β 推出的晶体偏大 (Tri-X 颗粒偏粗 1.31 倍); 这里只修正这一个已有物理量。
+GRAIN_T47_ETA3D_SCALE = 6.608337
+# Schmidt 的 Tri-X 400 / D-76 原液 20 °C 9 min 特性曲线 (tools/eval/t47/schmidt_density_19.csv; 漫射密度计 —— 几何检验):
+#   (净 D 0.10 处为零点的 log10 相对曝光, 净 D); 片基 + 灰雾 0.318。来源 https://www.bernhard-w-schmidt.de/en/einzeln-trix
+TRIX_D76_CURVE = (
+    (
+     -0.351661, -0.198357, -0.050612, 0.101300, 0.254443, 0.401886, 0.556097, 0.700907, 0.856097, 1.008704,
+     1.156172, 1.310667, 1.458189, 1.610382, 1.760926, 1.909405, 2.060395, 2.209405, 2.363445),
+    (
+     0.014539, 0.045951, 0.081639, 0.136748, 0.214511, 0.282623, 0.394426, 0.526526, 0.639961, 0.750542, 0.840658,
+     0.930406, 1.020022, 1.119872, 1.218745, 1.307940, 1.396306, 1.486511, 1.576268))
+TRIX_GROSS_FOG = 0.318
+# Kodak F-4017 第 7 页光谱感光度 (D = 1.0 > 灰雾, log 1/(erg/cm²); tools/eval/t47/kodak_f4017_p7_spectral.csv), 全色
+TRIX_SPECTRAL = (
+    (300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 355, 360, 365, 370, 375, 380, 385, 390, 395, 400, 405, 410,
+     415, 420, 425, 430, 435, 440, 445, 450, 455, 460, 465, 470, 475, 480, 485, 490, 495, 500, 505, 510, 515, 520, 525,
+     530, 535, 540, 545, 550, 555, 560, 565, 570, 575, 580, 585, 590, 595, 600, 605, 610, 615, 620, 625, 630, 635, 640,
+     650, 655, 660, 667),
+    (2.508, 2.508, 2.525, 2.546, 2.568, 2.592, 2.616, 2.638, 2.657, 2.673, 2.684, 2.694, 2.698, 2.703, 2.708, 2.711,
+     2.711, 2.710, 2.708, 2.703, 2.698, 2.692, 2.687, 2.679, 2.671, 2.660, 2.648, 2.632, 2.616, 2.597, 2.574, 2.551,
+     2.522, 2.484, 2.448, 2.405, 2.360, 2.319, 2.281, 2.251, 2.238, 2.224, 2.232, 2.248, 2.270, 2.292, 2.317, 2.340,
+     2.362, 2.383, 2.401, 2.419, 2.432, 2.444, 2.452, 2.454, 2.446, 2.429, 2.403, 2.384, 2.380, 2.375, 2.392, 2.410,
+     2.414, 2.392, 2.330, 2.189, 1.932, 1.000, 0.720, 0.430, 0.000))
+TRIX_KEY = "kodak_trix_400"
+
+
+def silver_spec(e: Emulsion, process_name: str = None):
+    """T47 黑白片的显式银粒档案 (filmlab.grain.SilverSpec)。Tri-X 400: 晶体由 T46 通用结构 + 三维 η 标定量, 涂布银量由
+    Schmidt D-76 曲线 (漫射) 定; 其他黑白片: 同一组常数, 涂布银量由该片自己的特性曲线定 (感光度按 GRAIN_PHYS)。"""
+    return _silver_spec(e.stock.key, e.design, process_name or e.native_process)
+
+
+@lru_cache(maxsize=None)
+def _silver_spec(stock_key, design, process_name):
+    from . import grain
+    U = grain_universal()
+    eta = GRAIN_T47_ETA3D_SCALE
+    if stock_key == TRIX_KEY:
+        x, net = map(np.asarray, TRIX_D76_CURVE)
+        return grain.silver_derive(400.0, U, eta, 0.8 / 400.0 * 10.0 ** x, net, TRIX_GROSS_FOG, GRAIN_T47_MORPH,
+                                   process=str(process_name), source="Tri-X 400: Schmidt D-76 曲线 + T47 标定")
+    e = _emulsion_for_grain(stock_key)
+    ei = float(GRAIN_PHYS["bw"]["ei"])
+    H = grain.exposure_axis(e, ei)[:, 1]
+    S = e.S_nom[:, 1]
+    net = np.maximum.accumulate(S - S.min())
+    ok = net < 0.97 * net.max()
+    return grain.silver_derive(ei, U, eta, H[ok], net[ok], float(S.min()), GRAIN_T47_MORPH, process=str(process_name),
+                               source=f"T47 通用推导 (EI {ei:g}, 三维晶体, 自己的特性曲线)")
+
+
+def silver_fog_offset(e: Emulsion, spec):
+    """显影化学的银密度 (S_nom, 含曲线的灰雾) 与晶体模型银层密度之差中与曝光无关的部分 (非颗粒的中性灰雾, 不显式渲染)。"""
+    from . import grain
+    return float(e.S_nom[:, 1].min() - grain.silver_density(spec, 0.0))
+
+
+def trix_film() -> Emulsion:
+    """Kodak Tri-X 400 (400TX) 黑白负片 (T47): 特性曲线由显式银粒的同一晶体模型算出 (漫射密度, 绝对 log10 lux·s 横轴),
+    光谱感光度取 Kodak F-4017 (全色)。片基密度 = Schmidt 的片基 + 灰雾 − 模型灰雾。"""
+    return _trix_film()
+
+
+@lru_cache(maxsize=None)
+def _trix_film():
+    from . import grain
+    from .stocks import WAVELENGTHS
+    base = load_stock("kodak_portra_400")
+    spec = _silver_spec(TRIX_KEY, "bw", "BW-D76")
+    x = np.linspace(-4.5, 1.5, 256)
+    D = grain.silver_curve(spec, x, "diffuse")
+    lam, ls = map(np.asarray, TRIX_SPECTRAL)
+    logS = np.where(WAVELENGTHS <= lam.max(), np.interp(WAVELENGTHS, lam, ls), -10.0)
+    # 绝对尺度与仓库其他档案一致 (测光按包装感光度另行定标; 只有光谱形状起作用): D55 下的总响应与通用全色片相同
+    from .spectral import illuminant
+    d55 = illuminant("D55")
+    ref = bw_film().stock.log_sensitivity[:, 1]
+    logS = np.where(logS > -9, logS + np.log10((d55 * 10.0 ** ref).sum() / (d55 * 10.0 ** logS).sum()), logS)
+    st = base.with_(key=TRIX_KEY, name="Kodak Tri-X 400", bw=True, kind="negative",
+                    log_sensitivity=np.repeat(logS[:, None], 3, 1),
+                    dye_density=np.full((81, 3), 1.0 / 3.0),
+                    base_density=np.full(81, spec.base_density),
+                    log_exposure=x, density_curves=np.repeat(D[:, None], 3, 1),
+                    reference_illuminant="D55", target_print=None)
+    return from_stock(st)

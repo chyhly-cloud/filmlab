@@ -6,7 +6,7 @@
 import numpy as np
 
 from .chemistry import PROCESSES
-from .materials import aged, bw_film, emulsion, without_remjet
+from .materials import aged, bw_film, emulsion, trix_film, without_remjet
 from .stocks import WAVELENGTHS
 
 
@@ -66,6 +66,9 @@ def recipe(name: str) -> dict:
         #   4. 用 C-41 而非 ECN-2 冲洗 → 显影程度升高 (τ 由公开资料不可辨识, 冻结在 [1.0, 1.3], 见 chemistry.py)
         return dict(film=without_remjet(emulsion("kodak_vision3_500t"), "CineStill 800T"),
                     process="C-41", paper="kodak_portra_endura", exposure_ev=-np.log2(800 / 500))
+    if name == "kodak_trix_400":
+        # Kodak Tri-X 400 / D-76 (T47): 特性曲线由显式银粒的晶体模型算出, 光谱感光度取 Kodak F-4017
+        return dict(film=trix_film())
     if name.startswith("bw_"):
         # bw_pan, bw_pan_red, bw_ortho, bw_pan_rodinal ...
         parts = name.split("_")[1:]

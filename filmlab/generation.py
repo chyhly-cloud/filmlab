@@ -241,6 +241,15 @@ HIGHLIGHT_RECON["t46_base"] = "stops"
 MASK_PLACEMENT["t46_base"] = "layers"
 RECON_COLOUR["t46_base"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t46_base"] = APERTURE_RANGE.get("t31_base")
+# T47 研究候选 (docs/tasks/T47_TRIX_SILVER_GRAIN.md): 黑白片的显式银粒 (grain_t47: 每颗卤化银晶体在连续坐标中撒下、按光子统计
+#   显影、原位生成银丝团, 透射率按 exp(−Στ) 在透射率域积分到像素; 平均密度由同一晶体模型给出)。彩色片不受影响; 其余同 t46_base。
+#   基准片为 Kodak Tri-X 400 / D-76 (recipes "kodak_trix_400")。
+GENERATIONS["t47_bw"] = ("D65", GENERATIONS["t46_base"][1] + ("grain_t47",), {})
+METERING["t47_bw"] = "session"
+HIGHLIGHT_RECON["t47_bw"] = "stops"
+MASK_PLACEMENT["t47_bw"] = "layers"
+RECON_COLOUR["t47_bw"] = RECON_COLOUR.get("t31_base", "ring")
+APERTURE_RANGE["t47_bw"] = APERTURE_RANGE.get("t31_base")
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

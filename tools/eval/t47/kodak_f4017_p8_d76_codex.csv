@@ -1,0 +1,7 @@
+# 来源: codex/t47-trix@3f3bc80 research/t47-trix/data/kodak-f4017-p8-d76.csv
+# 原始: https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=8 (400TX 35 mm, D-76 大罐, 20 °C, 每分钟搅动, diffuse visual); 8 / 10 min 各 4 个读点, 总 D
+log_H_lux_s,gross_D_8min,gross_D_10min
+-1.0146103896103895,1.3376623376623376,1.5974025974025974
+-0.49512987012987014,1.6623376623376624,1.974025974025974
+0.008116883116883116,1.9415584415584415,2.25974025974026
+0.28409090909090906,2.0714285714285716,2.396103896103896

@@ -1,0 +1,8 @@
+# 来源: codex/t47-trix@3f3bc80 research/t47-trix/data/schmidt-granularity.csv
+# 原始: https://www.bernhard-w-schmidt.de/en/methodgrain 图 4 第二条 (TriX-D76), 纵轴 RMS*sqrt(a), 横轴方孔边长; 总 D 约 1 (净 0.682)
+# corrected_RMS_D 已除以 sqrt(2) (相邻方孔差); sigma2_A 用实读边长 digitized_side_um 计算。显微镜 250x, 约 1.5 um 分辨率, 0.25 um/像素, 1500x1500 像素视场
+nominal_aperture_um,digitized_side_um,corrected_RMS_D,sigma2_A_um2_D2,plot_x_px,plot_y_px
+5,4.919627749576989,0.07796029284649605,0.14709957184926306,207.3,237.3
+10,9.873096446700506,0.04876662303043459,0.23182065287766032,324.4,190.9
+20,19.94500846023689,0.027198795736953583,0.29428477941534803,562.5,162.0
+25,25.190355329949238,0.020990569110013756,0.2795870259884016,686.5,168.5

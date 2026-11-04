@@ -1,0 +1,11 @@
+# 原始: https://www.bernhard-w-schmidt.de/en/methodgrain 结果表 (Table.png) 与 https://www.bernhard-w-schmidt.de/en/einzeln-trix 颗粒显微图标注 (TriX_grain.png); 只录 Tri-X 各显影液
+# structure_um = 表中 a_k 列 (单位 um, 即结构尺度的边长); RMS_D = Schmidt 换算到 48 um 圆孔的 RMS x 1000
+developer,iso_table,structure_um,RMS_D
+D76,250,5.7,13.0
+FX39,400,6.2,17.4
+XTOL,400,5.9,11.6
+Rodinal,500,6.8,20.5
+Wehner/Alpha,400,6.0,13.9
+SD2525,500,7.3,17.7
+Atomal,400,5.4,10.2
+Microphen,400,5.6,11.1

@@ -117,6 +117,8 @@ class Params:
     #   "lab_shadow"     冲印店输出的逐通道黑位 LAB_SHADOW_BLACK (输出 = β + (1 − β)·数字相纸输出; T44, 可选)
     #   "grain_t46"      (与 grain_silver 同用) 颗粒档案改为跨片种通用推导 (materials.grain_spec_t46: 感光度 → 晶体尺寸,
     #                    量子效率随晶体面积, 每晶体染料 / 银产量随机, 染料云大小随晶体与冲洗工艺; T46, 可选)
+    #   "grain_t47"      (与 grain_silver 同用) 黑白片改为显式银粒 (filmlab.grain.render_silver: 晶体在连续坐标撒下、
+    #                    按曝光显影、原位生成银丝团, exp(−Στ) 在透射率域积分到像素; 档案 materials.silver_spec; T47, 可选)
     #   "grain_silver"   颗粒按银盐物理 (filmlab.grain: 晶体尺寸分布 + 光子统计显影 + 染料云 / 银粒叠加,
     #                    参数取 materials.grain_spec 的胶片档案), 取代按感光度估算的 _grain (T45, 可选)
     #   "scan_psf"       扫描仪光学点扩散 SCAN_PSF_UM (透射率上高斯; T45, 可选)
@@ -573,13 +575,7 @@ class Engine:
         shape = neg.shape
         # S4a + S4b: 光学测量 → 去片基 / 印放密度 / 档案 (按块, 直接积分到扫描通道)
         Dn = neg.measure(sc.normalized_density, chunk)
-        if "scan_psf" in self.p.corrections and Dn.ndim == 3 and SCAN_PSF_UM / self.px_um >= 0.3:
-            # T45: 扫描镜头 / 传感器的点扩散, 在透射率上 (扫描仪测的是透过的光)
-            from scipy.ndimage import gaussian_filter
-            sp = SCAN_PSF_UM / self.px_um
-            T = gaussian_filter(10.0 ** -np.nan_to_num(Dn, nan=0.0), (sp, sp, 0))
-            Dn = np.where(np.isfinite(Dn), -np.log10(np.clip(T, 1e-12, None)), Dn)
-        Dn = Dn.reshape(-1, 3)
+        Dn = self._scan_psf(Dn).reshape(-1, 3)
         # S4c: 定光
         if self.p.timing == "frame" and getattr(self, "_lab_base", None) is not None:
             # 实测的冲印店颜色处理 (LAB_MEASURED_COLOUR): 固定光号 + 按整帧平均密度的偏色给颜色偏移
@@ -595,12 +591,32 @@ class Engine:
             gray = sc.normalized_density(self._transmittance(self._gray_state(actual_light=False)))[0]
             # 数码冲印机按整张底片的平均密度 (密度直方图) 定亮度; 夜景底片大部分接近片基, 平均密度很低
             # → 冲印店提亮, 但有上限。按"正常场景印成正常"标定, 正常场景的平均密度比灰卡低 LATD_NORMAL。
-            sc.balance_frame(Dn, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
+            Dt = Dn
+            pre = getattr(neg.state, "prescan_silver", None)
+            if pre is not None:
+                # T47: 冲印店按低分辨率预扫的密度直方图定光 (颗粒在预扫里平均掉); 显式银粒在 8.69 µm 像素上
+                # 的逐像素起伏会拉宽直方图两端、改变自动反差, 所以定光用显影化学给出的无颗粒银密度
+                from .chemistry import FilmState
+                s0 = neg.state
+                ps = FilmState(latent=None, halide=s0.halide, silver=pre, dye=s0.dye, coupler=None, remjet=s0.remjet,
+                               dye_agent=s0.dye_agent)
+                Dt = self._scan_psf(Negative(self.e, ps, self._transmittance).measure(sc.normalized_density, chunk))
+                Dt = Dt.reshape(-1, 3)
+            sc.balance_frame(Dt, gray, self.p.mid_gray, density_limit=self.v.latd_limit, latd_normal=LATD_NORMAL)
         if trace is not None:
             trace["Dn"] = Dn.reshape(*shape, 3).copy()
             trace["timing"] = sc.timing
         # S4d + S4e: 数字相纸 → 输出调整
         return sc.to_rgb(Dn).reshape(*shape, 3)
+
+    def _scan_psf(self, Dn):
+        if "scan_psf" in self.p.corrections and Dn.ndim == 3 and SCAN_PSF_UM / self.px_um >= 0.3:
+            # T45: 扫描镜头 / 传感器的点扩散, 在透射率上 (扫描仪测的是透过的光)
+            from scipy.ndimage import gaussian_filter
+            sp = SCAN_PSF_UM / self.px_um
+            T = gaussian_filter(10.0 ** -np.nan_to_num(Dn, nan=0.0), (sp, sp, 0))
+            Dn = np.where(np.isfinite(Dn), -np.log10(np.clip(T, 1e-12, None)), Dn)
+        return Dn
 
     def render_xyz(self, rgb_lin):
         p, e = self.p, self.e
@@ -651,6 +667,16 @@ class Engine:
             return
         from . import grain
         from .materials import grain_spec, grain_spec_t46
+        if "grain_t47" in self.p.corrections and self.e.design == "bw":
+            # T47: 黑白片的显式银粒 (晶体在连续坐标中撒下、按曝光显影、原位生成银丝团, 透射率域积分到像素)
+            from .materials import silver_spec, silver_fog_offset
+            sp = silver_spec(self.e, self.proc.name)
+            off = silver_fog_offset(self.e, sp)
+            st.prescan_silver = st.silver.copy()             # 冲印店预扫 (定光) 看到的无颗粒密度, 见 scan()
+            st.silver -= off
+            grain.apply_silver(self.e, sp, st, self.px_um, self.v.frame_seed, strength=self.p.grain)
+            st.silver += off
+            return
         # T46: 晶体群由该胶片的公开物理量 + 通用常数推导, 最后一步 (染料云 / 银丝团) 随机且随冲洗工艺
         spec = grain_spec_t46(self.e, self.proc.name) if "grain_t46" in self.p.corrections else grain_spec(self.e)
         rng = np.random.default_rng(self.v.frame_seed)
