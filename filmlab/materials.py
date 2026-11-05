@@ -378,7 +378,16 @@ BW_SILVER_FILMS = {
 # 每种黑白片自己的光谱感光度与 D-76 类特性曲线 (filmlab/data/bw_t48.json; 数字化读数 tools/eval/t48/, 来源 URL 逐条;
 # docs/tasks/T48_BW_SPECTRAL_CURVES.md)。按代际选用: generation.use 设 BW_PROFILE_SET ("t47" = T47b 的档案, 现有代际逐位不变;
 # "t48" = 本表)。T47 里没有的片种 (Ilford、Acros) 两种设置下都用本表。
+# "t49" (T49b, docs/tasks/T49_BW_FILTERS.md): 同 "t48", 但 T-Max 100 与 Ilford 片的光谱按滤镜系数检验修正
+# (filmlab/data/bw_t49_spectra.json); 曲线与晶体档案不变。
 BW_PROFILE_SET = "t47"
+
+
+@lru_cache(maxsize=None)
+def bw_t49_spectra():
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).parent / "data" / "bw_t49_spectra.json").read_text())["films"]
 
 
 @lru_cache(maxsize=None)
@@ -392,6 +401,12 @@ def bw_film_def(key, profile_set=None):
     """黑白片档案的定义: dict(name, ei, thickness_um, curve (x, net), gross_fog, spectral (lam, logS), source)。
     x = 以净 D 0.10 为零点的 log10 相对曝光 (绝对曝光由官方感光度定: 净 D 0.10 处 H = 0.8/EI)。"""
     ps = BW_PROFILE_SET if profile_set is None else profile_set
+    if ps == "t49":
+        d = bw_film_def(key, "t48")
+        if key in bw_t49_spectra():
+            sp = bw_t49_spectra()[key]
+            d = dict(d, spectral=(sp["lam"], sp["logS"]), source=d["source"] + "; 光谱 T49b")
+        return d
     t48 = bw_t48_data()
     if key in BW_SILVER_FILMS and (ps != "t48" or key not in t48):
         f = BW_SILVER_FILMS[key]
@@ -409,10 +424,17 @@ def bw_film_def(key, profile_set=None):
 
 def bw_profile_key(key):
     """档案缓存的键: 片种 + 选用的数据集 (Tri-X 在两种设置下相同)。"""
+    if BW_PROFILE_SET == "t49" and key in bw_t49_spectra():
+        return "t49"
     t48 = bw_t48_data()
-    if key in t48 and (BW_PROFILE_SET == "t48" or key not in BW_SILVER_FILMS):
+    if key in t48 and (BW_PROFILE_SET in ("t48", "t49") or key not in BW_SILVER_FILMS):
         return "t48" if key != TRIX_KEY else "t47"
     return "t47"
+
+
+def _curve_set(profile_set):
+    """晶体 / 银档案只取决于特性曲线: T49b 只改光谱, 曲线同 t48。"""
+    return "t48" if profile_set == "t49" else profile_set
 
 
 def silver_spec(e: Emulsion, process_name: str = None):
@@ -421,7 +443,7 @@ def silver_spec(e: Emulsion, process_name: str = None):
     T48: 有档案的黑白片按 bw_film_def (BW_PROFILE_SET)。"""
     k = e.stock.key
     if k in BW_SILVER_FILMS or k in bw_t48_data():
-        return _silver_spec(k, e.design, process_name or e.native_process, bw_profile_key(k))
+        return _silver_spec(k, e.design, process_name or e.native_process, _curve_set(bw_profile_key(k)))
     return _silver_spec(k, e.design, process_name or e.native_process)
 
 
@@ -467,7 +489,7 @@ def _bw_silver_film(key, profile_set="t47"):
     from . import grain
     from .stocks import WAVELENGTHS
     base = load_stock("kodak_portra_400")
-    spec = _silver_spec(key, "bw", "BW-D76", profile_set)
+    spec = _silver_spec(key, "bw", "BW-D76", _curve_set(profile_set))
     f = bw_film_def(key, profile_set)
     x = np.linspace(-4.5, 1.5, 256)
     D = grain.silver_curve(spec, x, "diffuse")

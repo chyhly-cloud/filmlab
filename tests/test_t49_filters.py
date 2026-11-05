@@ -119,3 +119,66 @@ def test_filter_factor_validation_regression():
                 assert 0.5 < err < 0.8
             else:
                 assert abs(err) < 1 / 3, (film, k, err)
+
+
+# ---------------------------------------------------------------- T49b --
+def test_t49b_generation_and_profile_set():
+    from filmlab import materials
+    assert generation.GENERATIONS["t49_bw"] == generation.GENERATIONS["t48_bw"]
+    assert generation.BW_PROFILES["t49_bw"] == "t49" and generation.BW_PROFILES["t48_bw"] == "t48"
+    generation.use("t49_bw")
+    assert materials.BW_PROFILE_SET == "t49"
+    generation.use("t48_bw")
+    assert materials.BW_PROFILE_SET == "t48"
+
+
+def test_t49b_only_tmax100_and_ilford_change():
+    import json
+    from filmlab import materials
+    films = json.loads((ROOT / "filmlab/data/bw_t49_spectra.json").read_text())["films"]
+    assert sorted(films) == sorted(["kodak_tmax_100", "ilford_hp5_plus", "ilford_fp4_plus", "ilford_delta_100",
+                                    "ilford_delta_400", "ilford_pan_f_plus"])
+    S = {}
+    for g in ("t48_bw", "t49_bw"):
+        generation.use(g)
+        S[g] = {k: materials.bw_silver_film(k).stock.log_sensitivity.copy() for k in
+                ("kodak_trix_400", "kodak_tmax_100", "kodak_tmax_400", "kodak_plusx_125", "fuji_acros_100", "ilford_hp5_plus")}
+        S[g + "_spec"] = materials._silver_spec("ilford_hp5_plus", "bw", "BW-D76", materials._curve_set(materials.bw_profile_key("ilford_hp5_plus")))
+    for k in ("kodak_trix_400", "kodak_tmax_400", "kodak_plusx_125", "fuji_acros_100"):
+        assert np.array_equal(S["t48_bw"][k], S["t49_bw"][k])
+    for k in ("kodak_tmax_100", "ilford_hp5_plus"):
+        assert not np.array_equal(S["t48_bw"][k], S["t49_bw"][k])
+    # 曲线与晶体 / 银档案不变 (只改光谱): 同一个缓存对象
+    assert S["t48_bw_spec"] is S["t49_bw_spec"]
+
+
+def test_t49b_ilford_single_wedge_constant():
+    import csv, json
+    d = json.loads((ROOT / "filmlab/data/bw_t49_spectra.json").read_text())
+    k = d["ilford_wedge_constant"]["k"]
+    assert 2.5 < k < 3.5
+    raw = {}
+    for r in csv.DictReader(l for l in open(ROOT / "tools/eval/t48/bw_spectral_raw.csv") if not l.startswith("#")):
+        raw.setdefault(r["film"], {})[float(r["wavelength_nm"])] = float(r["raw_value"])
+    planck = lambda l: 1 / ((l * 1e-9) ** 5 * (np.exp(1.4388e-2 / (l * 1e-9 * 2850.0)) - 1))
+    for f in ("ilford_hp5_plus", "ilford_fp4_plus", "ilford_delta_100", "ilford_delta_400", "ilford_pan_f_plus"):
+        sp = d["films"][f]
+        lam = np.array(sp["lam"]); v = np.array([raw[f][l] for l in lam])
+        ls = k * v - np.log10(planck(lam))
+        assert np.allclose(np.array(sp["logS"]), ls - ls.max(), atol=1e-4)      # 同一个 k, 不按片选读法
+        assert sp["predicted"] == (f not in ("ilford_hp5_plus", "ilford_fp4_plus"))
+    assert d["films"]["kodak_tmax_100"]["definition"].startswith("log10 1/(erg/cm²) 达到 D-min+0.3")
+
+
+def test_t49b_filter_factor_check_improves():
+    sys.path.insert(0, str(ROOT / "tools" / "eval"))
+    import t49_filter_factors as T
+    pub = T.published()["daylight"]
+    E = T.spec("D55")
+    def rms(gen, films):
+        e = [np.log2(T.factor(T.sensitivity(f, gen), E, k) / p) for f in films for k, p in pub[f].items()]
+        return float(np.sqrt(np.mean(np.square(e))))
+    films = [f for f in T.FILMS if f in pub]
+    assert rms("t49_bw", films) < rms("t48_bw", films) - 0.1           # 0.59 → 0.42 档
+    assert rms("t49_bw", ["kodak_tmax_100"]) < rms("t48_bw", ["kodak_tmax_100"])
+    assert rms("t49_bw", ["ilford_hp5_plus", "ilford_fp4_plus"]) == pytest.approx(0.643, abs=0.01)

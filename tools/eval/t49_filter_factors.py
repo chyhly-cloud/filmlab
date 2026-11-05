@@ -3,7 +3,7 @@
 E = 光源光谱, S = 该片在模型里的光谱感光度 (配方渲染用的同一档案, T48), T = Wratten 透过率 (filmlab/data/wratten_filters.json)。
 与数据表公布的系数比较 (tools/eval/t49/filter_factors_published.csv), 误差 = log2(模型 / 公布) 档。
 
-用法: python3 tools/eval/t49_filter_factors.py [输出.json]
+用法: python3 tools/eval/t49_filter_factors.py [输出.json] [代际, 默认 t48_bw; T49b 修正后 t49_bw]
 """
 import csv, json, sys
 from pathlib import Path
@@ -27,8 +27,8 @@ def spec(name):
     return _blackbody(float(name[2:])) if name.startswith("BB") else illuminant(name)
 
 
-def sensitivity(film):
-    generation.use("t48_bw")
+def sensitivity(film, gen="t48_bw"):
+    generation.use(gen)
     r = recipe(film)["film"]
     e = r if not isinstance(r, str) else materials.emulsion(r)
     return 10.0 ** e.stock.log_sensitivity[:, 1]
@@ -60,9 +60,10 @@ def ilford_variant(film, planck=True, k=1.0):
     return np.where(WAVELENGTHS <= lam.max(), 10.0 ** ls, 0.0)
 
 
-def main(out=None):
+def main(out=None, gen="t48_bw"):
     pub = published()
-    S = {f: sensitivity(f) for f in FILMS}
+    S = {f: sensitivity(f, gen) for f in FILMS}
+    print("代际", gen)
     res = dict(model={}, errors={})
     for light, names in LIGHTS.items():
         for name in names:
@@ -94,4 +95,4 @@ def main(out=None):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else None)
+    main(sys.argv[1] if len(sys.argv) > 1 else None, sys.argv[2] if len(sys.argv) > 2 else "t48_bw")

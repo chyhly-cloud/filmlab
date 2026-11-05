@@ -31,7 +31,7 @@ def _csv(name):
 def test_generation_is_t46_base_plus_grain_t47():
     assert generation.GENERATIONS["t47_bw"] == ("D65", generation.GENERATIONS["t46_base"][1] + ("grain_t47",), {})
     for g, (_, corr, _) in generation.GENERATIONS.items():
-        if g not in ("t47_bw", "t48_bw"):          # t48_bw = t47_bw + 黑白片 T48 档案 (materials.BW_PROFILE_SET)
+        if g not in ("t47_bw", "t48_bw", "t49_bw"):          # t48_bw / t49_bw = t47_bw + 黑白片 T48 / T49b 档案 (materials.BW_PROFILE_SET)
             assert "grain_t47" not in corr, g
 
 

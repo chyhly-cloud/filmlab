@@ -256,7 +256,13 @@ GENERATIONS["t48_bw"] = GENERATIONS["t47_bw"]
 for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
     if "t47_bw" in _d:
         _d["t48_bw"] = _d["t47_bw"]
-BW_PROFILES = {"t48_bw": "t48"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
+# T49b 研究候选 (docs/tasks/T49_BW_FILTERS.md "T49b"): 同 t48_bw, T-Max 100 与 Ilford 片的光谱按滤镜系数检验修正
+#   (materials.bw_t49_spectra: T-Max 100 改用 D-min + 0.3 曲线; Ilford 楔形光谱图扣 2850K 光源、楔常数由 HP5 / FP4 联合确定)。
+GENERATIONS["t49_bw"] = GENERATIONS["t48_bw"]
+for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
+    if "t48_bw" in _d:
+        _d["t49_bw"] = _d["t48_bw"]
+BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
