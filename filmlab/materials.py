@@ -214,7 +214,7 @@ def _grain_spec(stock_key, design, name, ref_illum):
 
 
 def _emulsion_for_grain(stock_key):
-    if stock_key in BW_SILVER_FILMS:          # T47 / T47b 黑白片 (特性曲线由晶体模型算出, 没有档案文件)
+    if stock_key in BW_SILVER_FILMS or stock_key in bw_t48_data():   # T47 / T47b / T48 黑白片 (曲线由晶体模型算出)
         return bw_silver_film(stock_key)
     if stock_key.startswith("bw_"):
         return bw_film(sensitivity=stock_key[3:]) if stock_key[3:] in ("pan", "ortho", "blue") else bw_film()
@@ -374,20 +374,65 @@ BW_SILVER_FILMS = {
 }
 
 
-def silver_spec(e: Emulsion, process_name: str = None):
-    """T47 黑白片的显式银粒档案 (filmlab.grain.SilverSpec)。Tri-X 400: 晶体由 T46 通用结构 + 三维 η 标定量, 涂布银量由
-    Schmidt D-76 曲线 (漫射) 定; 其他黑白片: 同一组常数, 涂布银量由该片自己的特性曲线定 (感光度按 GRAIN_PHYS)。"""
-    return _silver_spec(e.stock.key, e.design, process_name or e.native_process)
+# ------------------------------------------------------------- 黑白片 (T48) --
+# 每种黑白片自己的光谱感光度与 D-76 类特性曲线 (filmlab/data/bw_t48.json; 数字化读数 tools/eval/t48/, 来源 URL 逐条;
+# docs/tasks/T48_BW_SPECTRAL_CURVES.md)。按代际选用: generation.use 设 BW_PROFILE_SET ("t47" = T47b 的档案, 现有代际逐位不变;
+# "t48" = 本表)。T47 里没有的片种 (Ilford、Acros) 两种设置下都用本表。
+BW_PROFILE_SET = "t47"
 
 
 @lru_cache(maxsize=None)
-def _silver_spec(stock_key, design, process_name):
+def bw_t48_data():
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).parent / "data" / "bw_t48.json").read_text())
+
+
+def bw_film_def(key, profile_set=None):
+    """黑白片档案的定义: dict(name, ei, thickness_um, curve (x, net), gross_fog, spectral (lam, logS), source)。
+    x = 以净 D 0.10 为零点的 log10 相对曝光 (绝对曝光由官方感光度定: 净 D 0.10 处 H = 0.8/EI)。"""
+    ps = BW_PROFILE_SET if profile_set is None else profile_set
+    t48 = bw_t48_data()
+    if key in BW_SILVER_FILMS and (ps != "t48" or key not in t48):
+        f = BW_SILVER_FILMS[key]
+        return dict(name=f["name"], ei=f["ei"], thickness_um=f["thickness_um"], curve=globals()[f["curve"]],
+                    gross_fog=f["gross_fog"], spectral=TRIX_SPECTRAL, source=f["source"])
+    d = t48[key]
+    c = d["curve"]
+    if c is None:                     # Tri-X: 曲线沿用 T47 (Schmidt D-76 9 min)
+        curve, fog, src = TRIX_D76_CURVE, TRIX_GROSS_FOG, "Tri-X 400: Schmidt D-76 曲线 + T47 标定"
+    else:
+        curve, fog, src = (c["x"], c["net"]), c["gross_fog"], f"T48: {d['name']}; 曲线 {c['process']}"
+    return dict(name=d["name"], ei=float(d["ei"]), thickness_um=d["thickness"], curve=curve, gross_fog=fog,
+                spectral=(d["spectral"]["lam"], d["spectral"]["logS"]), source=src)
+
+
+def bw_profile_key(key):
+    """档案缓存的键: 片种 + 选用的数据集 (Tri-X 在两种设置下相同)。"""
+    t48 = bw_t48_data()
+    if key in t48 and (BW_PROFILE_SET == "t48" or key not in BW_SILVER_FILMS):
+        return "t48" if key != TRIX_KEY else "t47"
+    return "t47"
+
+
+def silver_spec(e: Emulsion, process_name: str = None):
+    """T47 黑白片的显式银粒档案 (filmlab.grain.SilverSpec)。Tri-X 400: 晶体由 T46 通用结构 + 三维 η 标定量, 涂布银量由
+    Schmidt D-76 曲线 (漫射) 定; 其他黑白片: 同一组常数, 涂布银量由该片自己的特性曲线定 (感光度按 GRAIN_PHYS)。
+    T48: 有档案的黑白片按 bw_film_def (BW_PROFILE_SET)。"""
+    k = e.stock.key
+    if k in BW_SILVER_FILMS or k in bw_t48_data():
+        return _silver_spec(k, e.design, process_name or e.native_process, bw_profile_key(k))
+    return _silver_spec(k, e.design, process_name or e.native_process)
+
+
+@lru_cache(maxsize=None)
+def _silver_spec(stock_key, design, process_name, profile_set="t47"):
     from . import grain
     U = grain_universal()
     eta = GRAIN_T47_ETA3D_SCALE
-    if stock_key in BW_SILVER_FILMS:
-        f = BW_SILVER_FILMS[stock_key]
-        x, net = map(np.asarray, globals()[f["curve"]])
+    if stock_key in BW_SILVER_FILMS or stock_key in bw_t48_data():
+        f = bw_film_def(stock_key, profile_set)
+        x, net = map(np.asarray, f["curve"])
         return grain.silver_derive(f["ei"], U, eta, 0.8 / f["ei"] * 10.0 ** x, net, f["gross_fog"], GRAIN_T47_MORPH,
                                    process=str(process_name), source=f["source"], thickness_um=f["thickness_um"])
     e = _emulsion_for_grain(stock_key)
@@ -413,26 +458,27 @@ def trix_film() -> Emulsion:
 
 
 def bw_silver_film(key: str) -> Emulsion:
-    """BW_SILVER_FILMS 里的黑白片 (T47b): 特性曲线由显式银粒的晶体模型算出, 其余同 trix_film。"""
-    return _bw_silver_film(key)
+    """有档案的黑白片 (T47b BW_SILVER_FILMS; T48 bw_t48.json): 特性曲线由显式银粒的晶体模型算出, 光谱感光度取该片档案。"""
+    return _bw_silver_film(key, bw_profile_key(key))
 
 
 @lru_cache(maxsize=None)
-def _bw_silver_film(key):
+def _bw_silver_film(key, profile_set="t47"):
     from . import grain
     from .stocks import WAVELENGTHS
     base = load_stock("kodak_portra_400")
-    spec = _silver_spec(key, "bw", "BW-D76")
+    spec = _silver_spec(key, "bw", "BW-D76", profile_set)
+    f = bw_film_def(key, profile_set)
     x = np.linspace(-4.5, 1.5, 256)
     D = grain.silver_curve(spec, x, "diffuse")
-    lam, ls = map(np.asarray, TRIX_SPECTRAL)
+    lam, ls = map(np.asarray, f["spectral"])
     logS = np.where(WAVELENGTHS <= lam.max(), np.interp(WAVELENGTHS, lam, ls), -10.0)
     # 绝对尺度与仓库其他档案一致 (测光按包装感光度另行定标; 只有光谱形状起作用): D55 下的总响应与通用全色片相同
     from .spectral import illuminant
     d55 = illuminant("D55")
     ref = bw_film().stock.log_sensitivity[:, 1]
     logS = np.where(logS > -9, logS + np.log10((d55 * 10.0 ** ref).sum() / (d55 * 10.0 ** logS).sum()), logS)
-    st = base.with_(key=key, name=BW_SILVER_FILMS[key]["name"], bw=True, kind="negative",
+    st = base.with_(key=key, name=f["name"], bw=True, kind="negative",
                     log_sensitivity=np.repeat(logS[:, None], 3, 1),
                     dye_density=np.full((81, 3), 1.0 / 3.0),
                     base_density=np.full(81, spec.base_density),

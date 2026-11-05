@@ -1,0 +1,14 @@
+{
+ "kodak_tmax_100": "https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf (p.8: spectral D-76; characteristic curves D-76 small tank 20 C 6/7.5/10 min)",
+ "kodak_tmax_400": "https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf (p.7 spectral; p.8 D-76 small tank 20 C 6/8/11 min)",
+ "kodak_trix_400": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf (p.7 spectral; T47 curve = Schmidt D-76)",
+ "kodak_plusx_125": "https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf (no spectral curve; p.8 HC-110 (B) 5/8/12/16 min, no D-76)",
+ "ilford_hp5_plus": "https://125px.com/docs/film/ilford/HP5-Plus_201811.pdf (p.1 wedge spectrogram 2850K; p.5 ILFOTEC HC 1+31 6.5 min)",
+ "ilford_fp4_plus": "https://125px.com/docs/film/ilford/FP4-Plus_201811.pdf (p.1; p.5 ILFOTEC HC 1+31 8 min)",
+ "ilford_delta_100": "https://125px.com/docs/film/ilford/Delta-100_201811.pdf (p.1; p.4 ID-11 stock 8.5 min 20 C)",
+ "ilford_delta_400": "https://125px.com/docs/film/ilford/Delta-400_201811.pdf (p.1; p.6 ID-11 stock 8 min 24 C)",
+ "ilford_pan_f_plus": "https://125px.com/docs/film/ilford/Pan-F-Plus_201812.pdf (p.1 spectral; curve: Schmidt D-76 https://www.bernhard-w-schmidt.de/en/einzeln-panf)",
+ "fuji_acros_100": "https://125px.com/docs/film/fuji/NeopanAcros100.pdf (p.4 spectrogram to daylight 5400K; p.5 D-76 20 C small tank 4/7/10 min)",
+ "ilford_index": "https://125px.com/techdocs/ilford",
+ "ilford_official_hp5": "https://ilfordphoto.com/amfile/file/download/file/1903/product/691"
+}

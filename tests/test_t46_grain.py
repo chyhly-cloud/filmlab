@@ -42,7 +42,7 @@ def _analytic(sp, c, d0):
 def test_generation_is_t45_base_plus_grain_t46():
     assert generation.GENERATIONS["t46_base"] == ("D65", generation.GENERATIONS["t45_base"][1] + ("grain_t46",), {})
     for g, (_, corr, _) in generation.GENERATIONS.items():
-        if g not in ("t46_base", "t47_bw"):          # t47_bw = t46_base + grain_t47 (T47)
+        if g not in ("t46_base", "t47_bw", "t48_bw"):          # t47_bw = t46_base + grain_t47 (T47)
             assert "grain_t46" not in corr, g
 
 

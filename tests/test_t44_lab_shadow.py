@@ -26,7 +26,7 @@ def test_generation_is_t31_base_plus_lab_shadow():
     assert (rawio.METERING, rawio.HIGHLIGHT_RECON, rawio.RECON_COLOUR, rawio.APERTURE_RANGE, film.MASK_PLACEMENT,
             rawio.STOPS_PRIOR) == ("session", "stops", "ring", None, "layers", (6.0, 8.0))
     for g, (_, corr, _) in generation.GENERATIONS.items():
-        if g not in ("t44_base", "t45_base", "t46_base", "t47_bw"):   # t45/t46_base、t47_bw = t44_base + 颗粒 (T45 / T46 / T47)
+        if g not in ("t44_base", "t45_base", "t46_base", "t47_bw", "t48_bw"):   # t45/t46_base、t47_bw = t44_base + 颗粒 (T45 / T46 / T47)
             assert "lab_shadow" not in corr, g
 
 

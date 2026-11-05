@@ -250,6 +250,13 @@ HIGHLIGHT_RECON["t47_bw"] = "stops"
 MASK_PLACEMENT["t47_bw"] = "layers"
 RECON_COLOUR["t47_bw"] = RECON_COLOUR.get("t31_base", "ring")
 APERTURE_RANGE["t47_bw"] = APERTURE_RANGE.get("t31_base")
+# T48 研究候选 (docs/tasks/T48_BW_SPECTRAL_CURVES.md): 黑白片各自的光谱感光度与 D-76 类特性曲线 (materials.bw_t48_data;
+#   官方感光度)。颗粒路径同 t47_bw; Tri-X 不变。T-Max / Plus-X 在 t47_bw 下仍用 T47b 的档案 (逐位不变)。
+GENERATIONS["t48_bw"] = GENERATIONS["t47_bw"]
+for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
+    if "t47_bw" in _d:
+        _d["t48_bw"] = _d["t47_bw"]
+BW_PROFILES = {"t48_bw": "t48"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
@@ -269,6 +276,7 @@ def use(name: str):
     engine.DEFAULT_CORRECTIONS = corr
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
     materials.DIR_AMOUNT.clear(); materials.DIR_AMOUNT.update(DIR_AMOUNT.get(name, {}))
+    materials.BW_PROFILE_SET = BW_PROFILES.get(name, "t47")
     stocks.load_stock.cache_clear()
     materials.emulsion.cache_clear()
     # 依赖相机 RGB 或默认修正的缓存
