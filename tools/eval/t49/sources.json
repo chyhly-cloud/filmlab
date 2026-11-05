@@ -1,0 +1,50 @@
+{
+ "wratten": {
+  "document": "KODAK WRATTEN Filters for Scientific and Technical Use, 22nd ed., Eastman Kodak 1965",
+  "url": "https://www.pacificrimcamera.com/rl/03844/03844.pdf",
+  "pages": {
+   "8": 29,
+   "11": 30,
+   "12": 30,
+   "15": 31,
+   "21": 32,
+   "25": 33,
+   "47": 40,
+   "58": 45
+  }
+ },
+ "factors": {
+  "kodak_trix_400": {
+   "document": "F-4017 (2016) Filter Corrections",
+   "url": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1"
+  },
+  "kodak_tmax_100": {
+   "document": "F-4016 Filter Corrections",
+   "url": "https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3"
+  },
+  "kodak_tmax_400": {
+   "document": "F-4043 Filter Corrections",
+   "url": "https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2"
+  },
+  "kodak_plusx_125": {
+   "document": "F-8 Filter Corrections",
+   "url": "https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf"
+  },
+  "fuji_acros_100": {
+   "document": "Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25)",
+   "url": "https://125px.com/docs/film/fuji/NeopanAcros100.pdf"
+  },
+  "ilford_hp5_plus": {
+   "document": "HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",
+   "url": "https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf"
+  },
+  "ilford_fp4_plus": {
+   "document": "FP4 Plus negative motion picture film 事实表 (同上)",
+   "url": "https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf"
+  },
+  "kodak_panchromatic_class": {
+   "document": "Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47)",
+   "url": "https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19"
+  }
+ }
+}

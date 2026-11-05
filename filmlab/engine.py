@@ -82,6 +82,9 @@ class Params:
     # "raw" = RAW 日光白平衡下视为中性的光源 (lights.WB_REFERENCE: current 为 D55, next 为 LibRaw 实际的 D65)
     scene_illuminant: str | None = "raw"
     lens_filter: np.ndarray | None = None      # (81,) 镜头前滤镜光谱透射率
+    # 带滤镜时的曝光补偿 (T49): None = 测光透过滤镜 (理想 TTL, 测光表与胶片光谱一致; 原有行为);
+    # 数值 = 摄影师的做法: 不带滤镜测光, 再把曝光增加这个倍数 (数据表公布的滤镜系数, recipes.filter_factor)
+    filter_factor: float | None = None
     # 场景照明: auto = 估计每个区域的光源类别 (日光 / 白炽 / 钠灯 / 荧光 / LED / 金卤),
     # 用真实光源光谱计算胶片曝光 (lights.py); None = 整个场景按 scene_illuminant 一种光源
     scene_lights: str | None = "auto"
@@ -219,6 +222,13 @@ class Engine:
             if e.halation > 0 and p.exposure_hook is None else None
         g = self._expose_lin(np.full((1, 1, 3), GRAY), self.M_ref, compensation=False)[0, 0]
         self.log_k = _speed_point(e) - np.log10(g[1])        # 测光 (透过滤镜, 含滤镜因数)
+        if p.filter_factor is not None:
+            # T49 摄影师的做法: 测光读数不含滤镜 (外置测光表, 或取下滤镜读数), 拍摄时按公布的滤镜系数 F 增加曝光
+            # (开大光圈 / 放慢快门 log2 F 档)。与透过滤镜测光的差别 = 公布系数与该片实际系数之比。
+            _m_open = film.exposure_response(st, ref, None)
+            g0 = self._expose_lin(np.full((1, 1, 3), GRAY), lambda rgb: _m_open(np.asarray(rgb) * _ill_ref),
+                                  compensation=False)[0, 0]
+            self.log_k = _speed_point(e) - np.log10(g0[1]) + np.log10(float(p.filter_factor))
         self.layer_cal = np.zeros(3)
         if e.design == "reversal" and isinstance(p.film, str):
             # 有 S0 扩展 (如红外层映射) 时, 它和滤镜一起构成一种独立的乳剂, 需要整体校准

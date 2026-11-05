@@ -3,6 +3,10 @@
 这里不包含任何"调色"——每个配方只是在描述一个真实存在的组合:
 哪种胶片、在什么光下用什么滤镜拍、送进哪种冲洗流程、印在哪种相纸上。
 """
+import json
+from functools import lru_cache
+from pathlib import Path
+
 import numpy as np
 
 from .chemistry import PROCESSES
@@ -24,7 +28,56 @@ def lens_filter(kind: str) -> np.ndarray:
         "85": lambda: 1.0 - 0.45 / (1.0 + np.exp((WAVELENGTHS - 520) / 25)),   # 灯光片日光下用
         "80a": lambda: 1.0 - 0.7 / (1.0 + np.exp(-(WAVELENGTHS - 560) / 30)),  # 日光片灯光下用
     }
-    return table[kind]() if kind in table else np.ones(81)
+    if kind in table:                     # 原有的近似曲线 (bw_pan_yellow 等配方用), 保持不变
+        return table[kind]()
+    num = wratten_number(kind)
+    if num is not None:
+        return wratten(num)
+    return np.ones(81)
+
+
+# T49: Kodak Wratten 滤镜的实测光谱透过率 (filmlab/data/wratten_filters.json; 读自 Kodak Wratten Filters 1965 的表)
+WRATTEN_ALIASES = {"k2": "8", "x1": "11", "g": "15", "a": "25"}
+
+
+@lru_cache(maxsize=None)
+def wratten_data() -> dict:
+    return json.loads((Path(__file__).parent / "data" / "wratten_filters.json").read_text())
+
+
+def wratten_number(kind) -> str | None:
+    """'25' / 'w25' / 'wratten_25' / 'A' → '25'; 不是数据里的 Wratten 滤镜时返回 None。"""
+    k = str(kind).lower()
+    for p in ("wratten_", "wratten", "w"):
+        if k.startswith(p) and k[len(p):] in wratten_data()["filters"]:
+            k = k[len(p):]
+            break
+    k = WRATTEN_ALIASES.get(k, k)
+    return k if k in wratten_data()["filters"] else None
+
+
+def wratten(number) -> np.ndarray:
+    """Wratten 滤镜在 81 点波长上的透过率。表外: 短于首个读数为 0, 长于 700 nm 保持 700 nm 的值。"""
+    f = wratten_data()["filters"][str(number)]
+    lam, t = np.asarray(f["lam"], float), np.asarray(f["T"], float)
+    return np.where(WAVELENGTHS < lam[0], 0.0, np.interp(WAVELENGTHS, lam, t))
+
+
+# 胶片数据表没有给出某个滤镜的系数时: 先用 Kodak 全色片的通用系数 (Wratten Filters 1965, p.17), 仍没有的
+# (No. 21 橙、No. 47 蓝) 用给出了该系数的各片的中位数 (日光: No. 21 = HP5 2.6 / FP4 3 / Acros 4 → 3;
+# No. 47 = Tri-X 6 / T-Max 100 8 / T-Max 400 10 / Plus-X 6 → 7)。见 docs/tasks/T49_BW_FILTERS.md。
+def filter_factor(film: str, number, light: str = "daylight") -> tuple[float, str]:
+    """摄影师用的滤镜系数 (曝光倍数) 与它的出处: 该片数据表 → Kodak 全色片通用表 → 其他片的中位数。"""
+    num = wratten_number(number)
+    fac = wratten_data()["factors"][light]
+    if film in fac and num in fac[film]:
+        return float(fac[film][num]), film
+    if num in fac["kodak_panchromatic_class"]:
+        return float(fac["kodak_panchromatic_class"][num]), "kodak_panchromatic_class"
+    vals = [d[num] for f, d in fac.items() if num in d]
+    if not vals:
+        raise KeyError(f"没有 Wratten {number} 在{light}下的滤镜系数")
+    return float(np.median(vals)), "median"
 
 
 # ------------------------------------------- S0 扩展: 近红外估算 --
@@ -49,6 +102,17 @@ def near_infrared_estimate(strength=1.0):
 # --------------------------------------------------------------- 配方 --
 def recipe(name: str) -> dict:
     """返回 engine.Params 的关键字参数。"""
+    if "+w" in name:
+        # T49 黑白滤镜: "<配方>+w<Wratten 号>", 例 "kodak_trix_400+w25"。滤镜加在镜头前的光谱上 (与片种无关);
+        # 曝光按摄影师的做法补偿: 不带滤镜测光, 再乘该片数据表公布的滤镜系数 (filter_factor)。
+        base, num = name.rsplit("+w", 1)
+        if wratten_number(num) is None:
+            raise KeyError(f"未知的 Wratten 滤镜: {num}")
+        kw = dict(recipe(base))
+        film = kw["film"] if isinstance(kw["film"], str) else base
+        kw["lens_filter"] = wratten(wratten_number(num))
+        kw["filter_factor"] = filter_factor(film, num)[0]
+        return kw
     if name == "cinestill_800t_reference":
         # 物理参考 (docs/ARCHITECTURE.md): 同一张 CineStill 800T 底片, 扫描时按胶片在设计光源 (3200K) 下的中灰
         # 一次定光、不做逐帧自动校色 (操作员变量), 不做输出调整 (冲印店风格)。用来检验胶片物理与扫描硬件。

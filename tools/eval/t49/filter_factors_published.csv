@@ -1,0 +1,83 @@
+# 各片数据表公布的 Wratten 滤镜系数 (曝光倍数); light = daylight / tungsten。只存 URL 与读数。
+film,filter,light,factor,document,source
+kodak_trix_400,8,daylight,2,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,11,daylight,4,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,12,daylight,2.5,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,15,daylight,2.5,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,25,daylight,8,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,47,daylight,6,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,58,daylight,6,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_tmax_100,8,daylight,1.5,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,11,daylight,3,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,12,daylight,2,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,15,daylight,2,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,25,daylight,8,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,47,daylight,8,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,58,daylight,6,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_400,8,daylight,1.6,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,11,daylight,4,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,12,daylight,2,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,15,daylight,2,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,25,daylight,8,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,47,daylight,10,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,58,daylight,6,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_plusx_125,8,daylight,2,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,11,daylight,4,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,15,daylight,2.5,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,25,daylight,6,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,47,daylight,6,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,58,daylight,8,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+fuji_acros_100,8,daylight,2,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+fuji_acros_100,21,daylight,4,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+fuji_acros_100,25,daylight,8,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+ilford_hp5_plus,8,daylight,1.7,"HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf
+ilford_hp5_plus,12,daylight,2.0,"HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf
+ilford_hp5_plus,15,daylight,2.0,"HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf
+ilford_hp5_plus,21,daylight,2.6,"HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf
+ilford_hp5_plus,25,daylight,4.0,"HP5 Plus negative motion picture film 事实表 (与 HP5 Plus 静物片同乳剂, 假设); 静物片数据表不给系数",https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf
+ilford_fp4_plus,8,daylight,2.0,FP4 Plus negative motion picture film 事实表 (同上),https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf
+ilford_fp4_plus,12,daylight,2.0,FP4 Plus negative motion picture film 事实表 (同上),https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf
+ilford_fp4_plus,15,daylight,2.0,FP4 Plus negative motion picture film 事实表 (同上),https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf
+ilford_fp4_plus,21,daylight,3.0,FP4 Plus negative motion picture film 事实表 (同上),https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf
+ilford_fp4_plus,25,daylight,6.0,FP4 Plus negative motion picture film 事实表 (同上),https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf
+kodak_panchromatic_class,8,daylight,2,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,11,daylight,4,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,12,daylight,2,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,15,daylight,3,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,25,daylight,8,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,58,daylight,8,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_trix_400,8,tungsten,1.5,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,11,tungsten,3,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,15,tungsten,1.5,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,25,tungsten,5,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,47,tungsten,12,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_trix_400,58,tungsten,6,F-4017 (2016) Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=1
+kodak_tmax_100,8,tungsten,1.2,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,11,tungsten,3,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,12,tungsten,1.2,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,15,tungsten,1.5,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,25,tungsten,4,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,47,tungsten,25,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_100,58,tungsten,6,F-4016 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf#page=3
+kodak_tmax_400,8,tungsten,1.3,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,11,tungsten,3,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,12,tungsten,1.3,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,15,tungsten,1.3,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,25,tungsten,4,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,47,tungsten,20,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_tmax_400,58,tungsten,6,F-4043 Filter Corrections,https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf#page=2
+kodak_plusx_125,8,tungsten,1.5,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,11,tungsten,4,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,15,tungsten,1.5,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,25,tungsten,4,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,47,tungsten,12,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+kodak_plusx_125,58,tungsten,8,F-8 Filter Corrections,https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf
+fuji_acros_100,8,tungsten,1.5,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+fuji_acros_100,21,tungsten,3,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+fuji_acros_100,25,tungsten,6,Neopan 100 Acros 数据表 Filter Recommendations (Fuji SC-48 / SC-56 / SC-60 = Wratten 8 / 21 / 25),https://125px.com/docs/film/fuji/NeopanAcros100.pdf
+kodak_panchromatic_class,8,tungsten,1.5,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,11,tungsten,3,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,12,tungsten,1.5,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,15,tungsten,2,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,25,tungsten,6,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
+kodak_panchromatic_class,58,tungsten,8,Kodak Wratten Filters (1965) p.17 全色片通用系数 (Sunlight / Tungsten; 47B 非 47),https://www.pacificrimcamera.com/rl/03844/03844.pdf#page=19
