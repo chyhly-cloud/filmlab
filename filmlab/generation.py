@@ -262,7 +262,13 @@ GENERATIONS["t49_bw"] = GENERATIONS["t48_bw"]
 for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
     if "t48_bw" in _d:
         _d["t49_bw"] = _d["t48_bw"]
-BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
+# T50 研究候选 (docs/tasks/T50_BW_DEVELOPERS.md): 同 t49_bw; 另允许显影液配方 "<片>@<显影液>" (materials.bw_developer:
+#   显影阈值光子数 r 与显影晶体成团, filmlab/data/bw_t50_developers.json)。不带显影液的配方与 t49_bw 逐位相同。
+GENERATIONS["t50_bw"] = GENERATIONS["t49_bw"]
+for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
+    if "t49_bw" in _d:
+        _d["t50_bw"] = _d["t49_bw"]
+BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49", "t50_bw": "t50"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}

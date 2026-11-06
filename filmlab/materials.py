@@ -383,6 +383,35 @@ BW_SILVER_FILMS = {
 BW_PROFILE_SET = "t47"
 
 
+# "t50" (T50, docs/tasks/T50_BW_DEVELOPERS.md): 同 "t49"; 另允许显影液变体 (档案键 "<片>@<显影液>", 见 bw_developer):
+# 片 (晶体、涂布银) 不变, 显影液给出显影阈值光子数 r 与显影晶体成团 (感染显影 / 银聚集)。
+@lru_cache(maxsize=None)
+def bw_t50_developers():
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).parent / "data" / "bw_t50_developers.json").read_text())
+
+
+def bw_developer(key):
+    """档案键 "<片>@<显影液>" → (片, 显影液, SilverSpec 的修改 dict); 无 "@" 时 (片, None, {})。
+    显影液 "<名>" 或推冲 "<名>_ei<EI>" (bw_t50_developers.json 的 push)。"""
+    if "@" not in key:
+        return key, None, {}
+    film, dev = key.split("@", 1)
+    d = bw_t50_developers()
+    if dev in d["developers"]:
+        c = d["developers"][dev]
+        r = d["photons_r"].get(film, {}).get(dev, 4.0)
+    else:
+        pu = d["push"][film][dev]
+        c = d["developers"][pu["developer"]]
+        r = pu["photons_r"]
+    mod = dict(photons_r=float(r))
+    if c["cluster_mu"] > 0:
+        mod.update(cluster_mu=float(c["cluster_mu"]), cluster_um=float(c["cluster_um"]), cluster_mode="developed")
+    return film, dev, mod
+
+
 @lru_cache(maxsize=None)
 def bw_t49_spectra():
     import json
@@ -401,6 +430,7 @@ def bw_film_def(key, profile_set=None):
     """黑白片档案的定义: dict(name, ei, thickness_um, curve (x, net), gross_fog, spectral (lam, logS), source)。
     x = 以净 D 0.10 为零点的 log10 相对曝光 (绝对曝光由官方感光度定: 净 D 0.10 处 H = 0.8/EI)。"""
     ps = BW_PROFILE_SET if profile_set is None else profile_set
+    ps = "t49" if ps == "t50" else ps
     if ps == "t49":
         d = bw_film_def(key, "t48")
         if key in bw_t49_spectra():
@@ -424,10 +454,11 @@ def bw_film_def(key, profile_set=None):
 
 def bw_profile_key(key):
     """档案缓存的键: 片种 + 选用的数据集 (Tri-X 在两种设置下相同)。"""
-    if BW_PROFILE_SET == "t49" and key in bw_t49_spectra():
+    ps = "t49" if BW_PROFILE_SET == "t50" else BW_PROFILE_SET
+    if ps == "t49" and key in bw_t49_spectra():
         return "t49"
     t48 = bw_t48_data()
-    if key in t48 and (BW_PROFILE_SET in ("t48", "t49") or key not in BW_SILVER_FILMS):
+    if key in t48 and (ps in ("t48", "t49") or key not in BW_SILVER_FILMS):
         return "t48" if key != TRIX_KEY else "t47"
     return "t47"
 
@@ -442,6 +473,9 @@ def silver_spec(e: Emulsion, process_name: str = None):
     Schmidt D-76 曲线 (漫射) 定; 其他黑白片: 同一组常数, 涂布银量由该片自己的特性曲线定 (感光度按 GRAIN_PHYS)。
     T48: 有档案的黑白片按 bw_film_def (BW_PROFILE_SET)。"""
     k = e.stock.key
+    film, dev, mod = bw_developer(k)
+    if dev is not None:                   # T50: 同一片 (D-76 档案的晶体与涂布银), 显影液只改 r 与成团
+        return _silver_spec(film, e.design, "BW-D76", _curve_set(bw_profile_key(film))).with_(**mod)
     if k in BW_SILVER_FILMS or k in bw_t48_data():
         return _silver_spec(k, e.design, process_name or e.native_process, _curve_set(bw_profile_key(k)))
     return _silver_spec(k, e.design, process_name or e.native_process)
@@ -481,7 +515,10 @@ def trix_film() -> Emulsion:
 
 def bw_silver_film(key: str) -> Emulsion:
     """有档案的黑白片 (T47b BW_SILVER_FILMS; T48 bw_t48.json): 特性曲线由显式银粒的晶体模型算出, 光谱感光度取该片档案。"""
-    return _bw_silver_film(key, bw_profile_key(key))
+    film, dev, _ = bw_developer(key)
+    if dev is not None and BW_PROFILE_SET != "t50":
+        raise KeyError(f"显影液变体 {key} 只在 t50_bw 代际下可用")
+    return _bw_silver_film(key, bw_profile_key(film))
 
 
 @lru_cache(maxsize=None)
@@ -489,8 +526,11 @@ def _bw_silver_film(key, profile_set="t47"):
     from . import grain
     from .stocks import WAVELENGTHS
     base = load_stock("kodak_portra_400")
-    spec = _silver_spec(key, "bw", "BW-D76", _curve_set(profile_set))
-    f = bw_film_def(key, profile_set)
+    film, dev, mod = bw_developer(key)
+    spec = _silver_spec(film, "bw", "BW-D76", _curve_set(profile_set)).with_(**mod)
+    f = bw_film_def(film, profile_set)
+    if dev is not None:
+        f = dict(f, name=f"{f['name']} ({dev})")
     x = np.linspace(-4.5, 1.5, 256)
     D = grain.silver_curve(spec, x, "diffuse")
     lam, ls = map(np.asarray, f["spectral"])

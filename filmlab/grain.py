@@ -401,6 +401,9 @@ class SilverSpec:
     shapes: int = 6             # 每档随机丝团形状数
     cluster_mu: float = 0.0     # Thomas 团簇: 每团平均晶体数 (0 = 泊松)
     cluster_um: float = 0.0     # Thomas 团簇: 晶体相对团中心的高斯 σ (µm)
+    # 团簇的含义: "crystal" = 晶体在乳剂里成团、各自独立显影 (T47 的对照); "developed" = 显影晶体成团 (T50: 感染显影 /
+    # 银聚集, 由显影液决定; cluster_mu = 每团平均显影晶体数, 团中心密度 = 显影晶体密度 / cluster_mu)
+    cluster_mode: str = "crystal"
     thickness_um: float | None = None   # T47b: T 颗粒厚度 (体积 a·t); None = 三维晶体 (体积 a^1.5)
     process: str = ""
     source: str = ""
@@ -507,7 +510,55 @@ def silver_density(spec: SilverSpec, H, geometry="diffuse"):
     b = silver_bins(spec)
     A = silver_library(spec)["A_spec"] * silver_gain(spec, geometry)
     p = silver_develop(spec, H, b["a"])
-    return np.log10(np.e) * (b["n"] * p * A).sum((-1, -2))
+    S = (b["n"] * p * A).sum((-1, -2))
+    if spec.cluster_mu > 0:                       # T50: Thomas 团簇 (簇内重叠浪费覆盖, 密度低于泊松)
+        S = _cluster_mean_exponent(spec, S, _cluster_N(spec, b, p))
+    return np.log10(np.e) * S
+
+
+# ------------------------------------------------------------------ T50: Thomas 团簇的闭式解 --
+# 显影晶体 = Neyman–Scott / Thomas 过程: 团中心泊松 (密度 ρ = n_tot/μ), 每团 Poisson(μ) 颗晶体, 相对团中心各向同性高斯 σ,
+# 每颗按尺寸档比例取尺寸、独立显影 (与 _cluster_row 的显式渲染相同)。布尔足迹 (银丝团, 覆盖率 g·cov) 远小于 σ 时
+# (点足迹近似), 由聚类过程的概率生成泛函:
+#   E[T] = exp(−ρ ∫ (1 − e^{−Φ(c)}) dc),  Φ(c) = m k(c),  m = μ/N · S (每团期望覆盖面积), S = Σ n p g A, ρ = N/μ
+#        = exp(−ρ 2πσ² Ein(x)),  x = m / (2πσ²),  Ein(x) = E1(x) + ln x + γ
+#   N = 晶体总数 n_tot (cluster_mode "crystal": 团内晶体独立显影) 或显影晶体密度 Σ n p (cluster_mode "developed": 团由显影晶体
+#   组成, 感染显影 / 银聚集; T50 用这一种)。两种情形的概率生成泛函形式相同, 只是 ρ、m 的含义不同。
+#   E[T(0) T(r)] / E[T]² = exp(X1(r) + X2(r)):
+#     X1 = s · Σ λ g² γ(r)            单颗晶体自身的重叠 (同泊松项), s = ∫ k e^{−2Φ} = (1 − e^{−2x}) / (2x)
+#     X2 = ρ (u ⋆ u)(r), u(c) = 1 − e^{−Φ(c)} = 1 − exp(−x e^{−|c|²/2σ²})   同一团内不同晶体的交叉项
+# μ → 0 时 x → 0、s → 1、X2 → 0, 回到泊松布尔模型。见 docs/tasks/T50_BW_DEVELOPERS.md。
+def _ein(x):
+    from scipy.special import exp1
+    x = np.asarray(x, float)
+    xs = np.maximum(x, 1e-12)
+    return np.where(x < 1e-6, x - x * x / 4, exp1(xs) + np.log(xs) + np.euler_gamma)
+
+
+def _cluster_N(spec: SilverSpec, b, p):
+    """团中心密度 × μ: crystal 模式为晶体总数, developed 模式为显影晶体密度 (随 H)。"""
+    if spec.cluster_mode == "developed":
+        return np.maximum((b["n"] * p).sum((-1, -2)), 1e-30)
+    return float(b["n"].sum())
+
+
+def _cluster_sig2(spec: SilverSpec, b=None):
+    """有效团簇方差: σ² + 足迹的空间方差 (丝团半径 R² = spread·a/π, 圆盘每轴方差 R²/4; 按足迹面积加权)。
+    点足迹近似在 σ 与足迹同量级时偏差变大 (单元测试), 用高斯近似足迹修正。"""
+    b = silver_bins(spec) if b is None else b
+    R2 = spec.spread * b["a"] / np.pi
+    w = b["n"] * silver_library(spec)["A_spec"]          # 按足迹面积加权 (重叠由面积决定)
+    return spec.cluster_um ** 2 + float((w * R2 / 4).sum() / w.sum())
+
+
+def _cluster_x(spec: SilverSpec, S, N):
+    return spec.cluster_mu * np.asarray(S, float) / (np.asarray(N, float) * 2 * np.pi * _cluster_sig2(spec))
+
+
+def _cluster_mean_exponent(spec: SilverSpec, S, N):
+    """−ln E[T] (团簇) = ρ 2πσ² Ein(x) = S · Ein(x)/x。"""
+    x = _cluster_x(spec, S, N)
+    return np.asarray(S, float) * np.where(x < 1e-9, 1.0, _ein(x) / np.maximum(x, 1e-300))
 
 
 def silver_budget(spec: SilverSpec, geometry="diffuse"):
@@ -701,6 +752,10 @@ def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, 
     h = H.shape[0]
     n = b["n"].ravel(); ntot = n.sum()
     mu, sc = spec.cluster_mu, spec.cluster_um
+    if spec.cluster_mode == "developed":
+        _cluster_row_developed(spec, H, b, explicit, taus, tB, rng, r, r0, nr, w, sub, cs, nphase, px_um, delta, dB, M,
+                               Wb, bufA, bufB)
+        return
     Np = rng.poisson(ntot / mu * px_um * px_um, w)
     P = int(Np.sum())
     if P == 0:
@@ -727,6 +782,47 @@ def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, 
                      taus[kk, qq], nphase)
     selB = ~explicit[k, q]
     if selB.any():                                   # tB: 每粒 τ (粗格内覆盖率)
+        by = np.floor(yy[selB] / dB).astype(np.int64) - r0 * cs; bx = np.floor(xx[selB] / dB).astype(np.int64)
+        okB = (by >= 0) & (by < nr * cs) & (bx >= 0) & (bx < w * cs)
+        np.add.at(bufB, (by[okB], bx[okB]), tB[k[selB][okB], q[selB][okB]])
+
+
+def _cluster_row_developed(spec, H, b, explicit, taus, tB, rng, r, r0, nr, w, sub, cs, nphase, px_um, delta, dB, M,
+                           Wb, bufA, bufB):
+    """T50 显影晶体成团 (感染显影 / 银聚集): 团中心 ~ 泊松 (每 µm² Σ n p(H)/μ, H 取团中心所在像素), 每团 Poisson(μ) 颗
+    显影晶体 (尺寸按 n p(H) 的比例), 相对团中心各向同性高斯 σ; 全部显影 (闭式解 _cluster_covariance 的同一过程)。"""
+    h = H.shape[0]
+    mu, sc = spec.cluster_mu, spec.cluster_um
+    lam = (b["n"][None] * silver_develop(spec, H[r], b["a"])).reshape(w, -1)       # (w, K·B) 每 µm²
+    L = lam.sum(1)
+    Np = rng.poisson(L / mu * px_um * px_um)
+    P = int(Np.sum())
+    if P == 0:
+        return
+    pix = np.repeat(np.arange(w), Np)
+    cx = (pix + rng.random(P)) * px_um
+    cy = (r + rng.random(P)) * px_um
+    nd = rng.poisson(mu, P)
+    D = int(nd.sum())
+    if D == 0:
+        return
+    par = np.repeat(np.arange(P), nd)
+    yy = cy[par] + sc * rng.standard_normal(D)
+    xx = cx[par] + sc * rng.standard_normal(D)
+    cum = np.cumsum(lam, 1) / np.maximum(L[:, None], 1e-300)
+    cls = np.minimum((cum[pix[par]] < rng.random(D)[:, None]).sum(1), lam.shape[1] - 1)
+    iy = np.floor(yy / px_um).astype(np.int64); ix = np.floor(xx / px_um).astype(np.int64)
+    ok = (iy >= 0) & (iy < h) & (ix >= 0) & (ix < w)
+    yy, xx, cls = yy[ok], xx[ok], cls[ok]
+    k, q = np.unravel_index(cls, b["a"].shape)
+    fy = yy / delta - r0 * sub; fx = xx / delta
+    for kk, qq in zip(*np.nonzero(explicit)):
+        sel = (k == kk) & (q == qq)
+        if sel.any():
+            _deposit(bufA, bufA.size // Wb, Wb, M, fy[sel], fx[sel], rng.integers(0, spec.shapes, int(sel.sum())),
+                     taus[kk, qq], nphase)
+    selB = ~explicit[k, q]
+    if selB.any():
         by = np.floor(yy[selB] / dB).astype(np.int64) - r0 * cs; bx = np.floor(xx[selB] / dB).astype(np.int64)
         okB = (by >= 0) & (by < nr * cs) & (bx >= 0) & (bx < w * cs)
         np.add.at(bufB, (by[okB], bx[okB]), tB[k[selB][okB], q[selB][okB]])
@@ -804,7 +900,41 @@ def silver_covariance(spec: SilverSpec, H, geometry="diffuse"):
     lam = b["n"] * silver_develop(spec, H, b["a"])
     X = np.tensordot(lam, gam, axes=([0, 1], [0, 1])) * g * g
     ET = 10.0 ** -float(silver_density(spec, H, geometry))
+    if spec.cluster_mu > 0:
+        return _cluster_covariance(spec, H, geometry, X, h, ET)
     return ET, ET * ET * np.expm1(X), h
+
+
+def _cluster_covariance(spec, H, geometry, X, h, ET, hc=0.1):
+    """T50: Thomas 团簇的协方差 (见 _ein 上方的推导), 放在间距 hc (µm) 的居中网格上 (window_variance 本来也块平均到 ~0.1 µm)。"""
+    A = silver_library(spec)["A_spec"] * silver_gain(spec, geometry)
+    b = silver_bins(spec)
+    p = silver_develop(spec, H, b["a"])
+    S = float((b["n"] * p * A).sum())
+    N = float(_cluster_N(spec, b, p))
+    x = float(_cluster_x(spec, S, N))
+    s = 1.0 if x < 1e-9 else -np.expm1(-2 * x) / (2 * x)
+    sig, rho = np.sqrt(_cluster_sig2(spec, b)), N / spec.cluster_mu
+    # 短程项: expm1(s X) 先块平均到 hc
+    f = max(1, int(round(hc / h)))
+    C1 = np.expm1(s * X)
+    n0 = C1.shape[0]; c0 = n0 // 2
+    lo = (c0 - f // 2) % f; m = (n0 - lo) // f
+    C1 = C1[lo:lo + m * f, lo:lo + m * f].reshape(m, f, m, f).mean((1, 3))
+    hc = h * f
+    # 长程项: X2 = ρ (u ⋆ u), FFT
+    half = max(m // 2 + 1, int(np.ceil(6 * sig / hc)))
+    n = 2 * half + 1
+    xs = (np.arange(n) - half) * hc
+    R2 = xs[:, None] ** 2 + xs[None, :] ** 2
+    u = -np.expm1(-x * np.exp(-R2 / (2 * sig * sig)))
+    F = np.fft.rfft2(u, (2 * n, 2 * n))
+    ac = np.fft.irfft2(F * F, (2 * n, 2 * n))          # u 对称: u ⋆ u = u * u
+    X2 = rho * hc * hc * ac[half:half + n, half:half + n]
+    out = np.expm1(X2)
+    o = half - m // 2
+    out[o:o + m, o:o + m] += C1 * np.exp(X2[o:o + m, o:o + m])
+    return ET, ET * ET * out, hc
 
 
 def window_variance(cov, h, sides_um, psf_um=0.0, adjacent=True):
@@ -866,11 +996,33 @@ def silver_derive(ei, U, eta_scale, H, netD, gross_fog, morph, illuminant="D55",
                        base_density=0.0, illuminant=illuminant, process=process, source=source,
                        thickness_um=thickness_um, **morph)
     H = np.asarray(H, float)
+    pois = proto.with_(cluster_mu=0.0)
     cols = []
     for k in range(3):
-        one = proto.with_(coat_g_m2=tuple(1.0 if j == k else 0.0 for j in range(3)))
+        one = pois.with_(coat_g_m2=tuple(1.0 if j == k else 0.0 for j in range(3)))
         cols.append(silver_density(one, H, geometry) - silver_density(one, 0.0, geometry))
     coat, _ = nnls(np.stack(cols, 1), np.asarray(netD, float))
+    if proto.cluster_mu > 0:
+        # T50 团簇: 密度对涂布银非线性 (簇内重叠)。目标曲线映射回泊松等效的光学厚度 S_P 再拟合 (映射依赖总晶体数, 迭代)
+        ln10 = np.log(10.0)
+        b0 = None
+        for _ in range(30):
+            sp = proto.with_(coat_g_m2=tuple(float(c) for c in coat))
+            b0 = silver_bins(sp)
+            A0 = silver_library(sp)["A_spec"] * silver_gain(sp, geometry)
+            def phi(Hx):                          # S_cl / S_P = Ein(x)/x, x 由当前涂布的显影晶体平均足迹定
+                pp = silver_develop(sp, Hx, b0["a"])
+                Sx = (b0["n"] * pp * A0).sum((-1, -2)); Nx = _cluster_N(sp, b0, pp)
+                return _cluster_mean_exponent(sp, Sx, Nx) / np.maximum(Sx, 1e-300), Sx
+            f0, S0 = phi(0.0)
+            Scl = float(f0 * S0) + ln10 * np.asarray(netD, float)
+            fH, _ = phi(H)
+            SP = Scl / fH
+            new, _ = nnls(np.stack(cols, 1), (SP - float(S0)) / ln10)
+            if np.max(np.abs(new - coat)) < 1e-6 * max(1.0, float(np.max(coat))):
+                coat = new
+                break
+            coat = new
     sp = proto.with_(coat_g_m2=tuple(float(c) for c in coat))
     fog = float(silver_density(sp, 0.0, geometry))
     return sp.with_(base_density=float(gross_fog - fog))

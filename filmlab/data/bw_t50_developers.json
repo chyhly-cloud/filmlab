@@ -1,0 +1,74 @@
+{
+ "note": "T50 (docs/tasks/T50_BW_DEVELOPERS.md): 显影液档案。团簇 (显影晶体成团, grain.SilverSpec cluster_mode='developed') 每种显影液共用; 显影阈值光子数 r 每 片 × 显影液 由 Schmidt 该组合的曲线定 (tools/eval/t50_developers.py); 曲线读不到的组合用 4 (= D-76)。",
+ "developers": {
+  "d76": {
+   "cluster_mu": 0.0,
+   "cluster_um": 0.0,
+   "note": "参照: 泊松 (T47), 不团聚"
+  },
+  "xtol": {
+   "cluster_mu": 0.0,
+   "cluster_um": 0.0,
+   "note": "Schmidt 6 种片共同拟合 (tools/eval/t50_developers.py)"
+  },
+  "rodinal": {
+   "cluster_mu": 2.0,
+   "cluster_um": 1.0,
+   "note": "Schmidt 6 种片共同拟合 (tools/eval/t50_developers.py)"
+  },
+  "fx39": {
+   "cluster_mu": 0.5,
+   "cluster_um": 1.5,
+   "note": "Schmidt 6 种片共同拟合 (tools/eval/t50_developers.py)"
+  }
+ },
+ "photons_r": {
+  "kodak_trix_400": {
+   "d76": 4.0,
+   "xtol": 3.562,
+   "rodinal": 4.0,
+   "fx39": 3.237
+  },
+  "kodak_tmax_100": {
+   "d76": 4.0,
+   "xtol": 4.194,
+   "rodinal": 5.837,
+   "fx39": 5.213
+  },
+  "kodak_tmax_400": {
+   "d76": 4.0,
+   "xtol": 5.685,
+   "rodinal": 4.936,
+   "fx39": 6.097
+  },
+  "ilford_delta_100": {
+   "d76": 4.0,
+   "xtol": 5.402,
+   "rodinal": 4.001,
+   "fx39": 5.659
+  },
+  "ilford_delta_400": {
+   "d76": 4.0,
+   "xtol": 4.92,
+   "rodinal": 5.114,
+   "fx39": 3.594
+  },
+  "ilford_pan_f_plus": {
+   "d76": 4.0,
+   "xtol": 3.633,
+   "rodinal": 4.74,
+   "fx39": 4.46
+  }
+ },
+ "push": {
+  "kodak_trix_400": {
+   "d76_ei1600": {
+    "developer": "d76",
+    "photons_r": 1.451,
+    "exposure_ev": -2.0,
+    "criterion": "EI 1600 的标准曝光 (11.38 × 0.8/EI) 得到 EI 400 正常显影 (r = 4) 时的净密度",
+    "verified": false
+   }
+  }
+ }
+}

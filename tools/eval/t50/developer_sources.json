@@ -1,0 +1,19 @@
+{
+ "rodinal": {
+  "sds_2024": "https://ntphotoworks.com/wp-content/uploads/2024/10/Rodinal_MSDS_EN.pdf",
+  "sds_2014": "https://www.freestylephoto.com/static/pdf/msds/adox/58420_4_MSDS_EN.pdf",
+  "readings": "4-aminophenol 3-5 % w/w (2024; 2014: 1-5 %), KOH 1-3 % (2014: 2-5 %), KBr 1-3 %; pH >13 (2024), 14 (2014, 25 °C); 亚硫酸盐未列出 (非危险成分不必申报)"
+ },
+ "fx39": {
+  "note": "Crawley 未公布 FX-39 配方 (卖给 Paterson; Crawley 称最接近的公开配方是 FX-37, BJP 1996-03-27)",
+  "source": "https://www.photrio.com/forum/threads/what-is-fx-39-anyway.13310"
+ },
+ "xtol": {
+  "note": "Kodak 不公布配方; 论坛按专利转述: 亚硫酸钠 85 g/L + 偏亚硫酸钠 3.5 g, 异抗坏血酸钠 12 g, Dimezone S 0.2 g, 偏硼酸钠 4 g, DTPA 1 g — 待核专利原文",
+  "source": "https://www.photrio.com/forum/threads/will-the-real-mytol-please-stand-up.84293"
+ },
+ "trix_push": {
+  "source": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf",
+  "readings": "EI 1600 小罐 20 °C: HC-110 (B) 6, D-76 9.5, D-76 1:1 13.25, XTOL 9.75, XTOL 1:1 13.25 min; 无推冲曲线, 无推冲颗粒"
+ }
+}
