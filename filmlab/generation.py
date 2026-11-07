@@ -268,7 +268,19 @@ GENERATIONS["t50_bw"] = GENERATIONS["t49_bw"]
 for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
     if "t49_bw" in _d:
         _d["t50_bw"] = _d["t49_bw"]
-BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49", "t50_bw": "t50"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
+# T51 研究候选 (docs/tasks/T51_LAB_SCANNER_SPATIAL.md): 冲印店扫描的空间传递 (scan_spatial: 扫描光学 σ、传感器孔径、
+#   冲印店软件的亮度 USM 与色度降噪; 每家冲印店一组实测器件参数, filmlab.scanning.spatial.LABS)。其余同底下的代际。
+#   t51_base = t46_base + scan_spatial, 默认 EPFL 的 Frontier (800T 的测量来源);
+#   t51_bw   = t50_bw + scan_spatial, 默认 Richard Photo Lab 的 Noritsu (黑白片的测量来源; 彩色片也可用 Params.scan_spatial 指定)。
+GENERATIONS["t51_base"] = ("D65", GENERATIONS["t46_base"][1] + ("scan_spatial",), {})
+GENERATIONS["t51_bw"] = ("D65", GENERATIONS["t50_bw"][1] + ("scan_spatial",), {})
+for _g, _b in (("t51_base", "t46_base"), ("t51_bw", "t50_bw")):
+    for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
+        if _b in _d:
+            _d[_g] = _d[_b]
+# 未指定 Params.scan_spatial 时用哪一家 (engine.SCAN_SPATIAL_LAB); 未列出的代际 None (按扫描仪型号)
+SCAN_SPATIAL = {"t51_base": "frontier_epfl", "t51_bw": "noritsu_rpl"}
+BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49", "t50_bw": "t50", "t51_bw": "t50"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
@@ -286,6 +298,7 @@ def use(name: str):
     rawio.METERING = METERING.get(name, "meter")
     film.MASK_PLACEMENT = MASK_PLACEMENT.get(name)
     engine.DEFAULT_CORRECTIONS = corr
+    engine.SCAN_SPATIAL_LAB = SCAN_SPATIAL.get(name)
     stocks.REVISIONS.clear(); stocks.REVISIONS.update(revisions)
     materials.DIR_AMOUNT.clear(); materials.DIR_AMOUNT.update(DIR_AMOUNT.get(name, {}))
     materials.BW_PROFILE_SET = BW_PROFILES.get(name, "t47")

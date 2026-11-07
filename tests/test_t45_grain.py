@@ -50,7 +50,7 @@ def _analytic(sp, c, d0):
 def test_generation_is_t44_base_plus_grain():
     assert generation.GENERATIONS["t45_base"] == ("D65", generation.GENERATIONS["t44_base"][1] + ("grain_silver", "scan_psf"), {})
     for g, (_, corr, _) in generation.GENERATIONS.items():
-        if g not in ("t45_base", "t46_base", "t47_bw", "t48_bw", "t49_bw", "t50_bw"):   # t46_base = t45_base + grain_t46 (T46); t47_bw = t46_base + grain_t47 (T47)
+        if g not in ("t45_base", "t46_base", "t47_bw", "t48_bw", "t49_bw", "t50_bw", "t51_base", "t51_bw"):   # t46_base = t45_base + grain_t46 (T46); t47_bw = t46_base + grain_t47 (T47)
             assert "grain_silver" not in corr and "scan_psf" not in corr, g
 
 

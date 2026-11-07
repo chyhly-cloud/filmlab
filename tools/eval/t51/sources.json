@@ -1,0 +1,21 @@
+{
+  "note": "T51 只存 URL 与测量; 第三方扫描 (图像) 不进仓库, 下载在 scratchpad, 用完删除。",
+  "epfl_800t": {
+    "what": "EPFL CineStill 800T 冲印店扫描 (Fujifilm Frontier, 8 位未压缩 TIFF, 5456 x 3649, 6.60 µm/像素)",
+    "manifest": "tools/eval/epfl_800t_manifest.csv (download_epfl.py, SHA256 校验)",
+    "frames_used": ["R1-00-1", "R1-03-4", "R1-05-6", "R1-07-8", "R1-17-18", "R1-18-19", "R1-19-20", "R1-20-21"],
+    "source": "https://github.com/cs-413-cinestill/800t-emulation"
+  },
+  "rpl": {
+    "what": "Richard Photo Lab 胶片 / 曝光对比 (Noritsu, EXIF 'NORITSU KOKI' / 'EZ Controller'; 645, 2048 x 2796 JPEG)",
+    "zip": "https://gfs-na.richardphotolab.com/zips/Richards-Film-Stock-And-Exposure-Comparisons.zip",
+    "page": "https://richardphotolab.com/blogs/post/find-your-film-stock-and-exposure-comparisons",
+    "films": ["Fuji Pro 400H", "Kodak Portra 400", "Kodak Portra 800", "Kodak Portra 160", "Kodak Ektar 100", "Kodak Tri-X 400", "Ilford HP5 Plus", "Ilford Delta 3200"]
+  },
+  "scan_sizes": [
+    {"scanner": "Noritsu HS-1800", "claim": "35 mm 最大 4492 x 6774 (约 30 MP); 645 最大 4824 x 3533; 120 中等分辨率扫描 2048 x 2796", "url": "https://luckybox.substack.com/p/mini-deep-dive-the-noritsu-hs-1800"},
+    {"scanner": "Noritsu HS-1800", "claim": "冲印店的尺寸档: 35 mm 标准 / Pro 约 3000 x 2000, XL 约 6500 x 4250; 6x4.5 约 4700 x 3450", "url": "https://statefilm.helpscoutdocs.com/article/10-scan-sizes"},
+    {"scanner": "Fujifilm Frontier SP-3000", "claim": "Super CCD Honeycomb 面阵 + 像素移位, 定焦镜头, LED 光源; 某冲印店的 35 mm 高分辨率全幅 5400 x 3600", "url": "https://manualshive.com/en/manual/fujifilm/sp-3000/2343489?page=46"},
+    {"scanner": "Fujifilm Frontier SP-3000", "claim": "35 mm L 尺寸约 3089 x 2048 (任务说明给出; 本次未找到厂商表格)", "url": null}
+  ]
+}

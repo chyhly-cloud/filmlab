@@ -68,6 +68,11 @@ LAB_SHADOW_BLACK = (0.0030, 0.0015, 0.0015)
 # 像素自相关 (滞后 1/2/3 像素 0.68/0.22/0.03, 3342 块中位) = 白噪声经高斯 σ 5.0 µm 再按像素方盒积分;
 # 扣去染料云 σ 1.0 µm (filmlab.grain) 得 √(5.0² − 1.0²) = 4.9 µm。只在 σ ≥ 0.3 像素 (约 16 µm/像素以下) 时生效。
 SCAN_PSF_UM = 4.9
+# T51 冲印店扫描的空间传递 (仅 "scan_spatial" 时使用; docs/tasks/T51_LAB_SCANNER_SPATIAL.md): 扫描光学 σ、传感器孔径、
+# 冲印店软件的亮度 USM 与色度降噪, 每家冲印店一组实测器件参数 (filmlab.scanning.spatial.LABS)。
+# 用哪一家: Params.scan_spatial; 为 None 时用本常量 (由 generation.use 按代际设置); 再为 None 时按扫描仪型号 (SCAN_SPATIAL_BY_SCANNER)。
+SCAN_SPATIAL_LAB = None
+SCAN_SPATIAL_BY_SCANNER = {"frontier": "frontier_epfl", "frontier_neutral": "frontier_epfl", "noritsu": "noritsu_rpl"}
 
 
 @dataclass
@@ -125,6 +130,8 @@ class Params:
     #   "grain_silver"   颗粒按银盐物理 (filmlab.grain: 晶体尺寸分布 + 光子统计显影 + 染料云 / 银粒叠加,
     #                    参数取 materials.grain_spec 的胶片档案), 取代按感光度估算的 _grain (T45, 可选)
     #   "scan_psf"       扫描仪光学点扩散 SCAN_PSF_UM (透射率上高斯; T45, 可选)
+    #   "scan_spatial"   冲印店扫描的空间传递 (T51, 可选): 扫描光学 σ 改用该冲印店的实测值, 传感器孔径, 冲印店软件的亮度 USM
+    #                    与色度降噪 (filmlab.scanning.spatial; 哪一家见 Params.scan_spatial / SCAN_SPATIAL_LAB)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -157,6 +164,8 @@ class Params:
     # 实验扫描影调: paper_only 只移除额外指数肩部, 保留同一定光和数字相纸。
     # 非实测扫描响应, 不改变默认或 next; 不保证高光/颜色改善。
     scan_shoulder: str = "exponential"
+    # T51 冲印店扫描的空间传递用哪一家的实测参数 (scanning.spatial.LABS 的键; 仅 "scan_spatial" 时使用); None = engine 默认
+    scan_spatial: str | None = None
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
@@ -617,9 +626,32 @@ class Engine:
             trace["Dn"] = Dn.reshape(*shape, 3).copy()
             trace["timing"] = sc.timing
         # S4d + S4e: 数字相纸 → 输出调整
-        return sc.to_rgb(Dn).reshape(*shape, 3)
+        out = sc.to_rgb(Dn).reshape(*shape, 3)
+        lab = self.scan_spatial_lab()
+        if lab is not None and out.ndim == 3:
+            # S4f (T51): 传感器孔径 + 冲印店软件的亮度 USM / 色度降噪
+            from .scanning import spatial
+            out = spatial.apply(out, lab, self.px_um, mono=sc.mono)
+        return out
+
+    def scan_spatial_lab(self):
+        """T51: 启用 "scan_spatial" 时该冲印店的空间传递 (scanning.spatial.LabSpatial), 否则 None。"""
+        if "scan_spatial" not in self.p.corrections:
+            return None
+        from .scanning import spatial
+        name = self.p.scan_spatial or SCAN_SPATIAL_LAB or SCAN_SPATIAL_BY_SCANNER.get(self.p.scanner)
+        return spatial.LABS[name]
 
     def _scan_psf(self, Dn):
+        lab = self.scan_spatial_lab()
+        if lab is not None:
+            # T51: 扫描光学点扩散用该冲印店的实测 σ (输出像素; 透射率上高斯)
+            if Dn.ndim == 3 and lab.optics_px >= 0.1:
+                from scipy.ndimage import gaussian_filter
+                sp = lab.optics_px
+                T = gaussian_filter(10.0 ** -np.nan_to_num(Dn, nan=0.0), (sp, sp, 0))
+                Dn = np.where(np.isfinite(Dn), -np.log10(np.clip(T, 1e-12, None)), Dn)
+            return Dn
         if "scan_psf" in self.p.corrections and Dn.ndim == 3 and SCAN_PSF_UM / self.px_um >= 0.3:
             # T45: 扫描镜头 / 传感器的点扩散, 在透射率上 (扫描仪测的是透过的光)
             from scipy.ndimage import gaussian_filter
