@@ -111,8 +111,8 @@ def silver_case(key, quick):
         seeds = (1,) if quick else (1, 2)
         Ds, sx, rex, sak, sdk = [], [], [], [], []
         for sd in seeds:
-            # 整个视场一块渲染 (rows_per_task = N): 像素小于银丝团时, 按 16 行分块会在块边界行丢掉块上方晶体伸进来的部分
-            # (渲染器 _stamp_entries 的缓冲区边界; 12 µm 整帧像素上不出现, 见 T53 文档第 3.1 节)
+            # 整个视场一块渲染 (rows_per_task = N)。T53 时按 16 行分块会在块边界行丢掉块上方晶体伸进来的部分
+            # (_stamp_entries 的缓冲区纵向留白只有 M); T53b 留白改为 2M 后分块与整块逐位相同, 这里保持整块以复现 validate.json
             T = grain.render_silver(sp, np.full((N, N), H0), PX, seed=1000 * sd + int(10 * k), sub=4, count_sub=4,
                                     workers=1, rows_per_task=N)
             T = T[TRIM:-TRIM, TRIM:-TRIM]

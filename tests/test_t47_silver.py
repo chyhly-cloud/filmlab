@@ -90,6 +90,17 @@ def test_render_blocks_are_deterministic():
     assert np.array_equal(a, b) and np.array_equal(b, c)
 
 
+@pytest.mark.parametrize("k", [1.0, 2.0])
+def test_render_blocks_keep_grains_from_neighbour_rows_at_fine_pixels(k):
+    """像素小于银丝团 (0.5 µm, 微元 0.125 µm) 时, 中心在块外、足迹伸进块内的晶体也要计入: 按 16 行分块与整块
+    一次渲染逐位相同 (缓冲区纵向留白 2M; 修正前块边界行丢晶体, 整场平均低 0.3% (k = 1) … 1.4% (k = 2))。"""
+    sp = grain.scale_silver(SPEC, k)
+    H = np.full((48, 40), 0.02) * np.linspace(0.5, 2, 40)[None]
+    one = grain.render_silver(sp, H, 0.5, 7, sub=4, count_sub=4, rows_per_task=48)
+    blk = grain.render_silver(sp, H, 0.5, 7, sub=4, count_sub=4, rows_per_task=16)
+    assert np.array_equal(one, blk)
+
+
 def test_closed_form_aperture_variance_matches_simulation():
     """显微视场 (0.25 µm 像素, 微元 0.125 µm, PSF 1 µm): 5 / 10 / 25 µm 孔径的透射率方差 = 闭式解 (泊松布尔模型协方差
     ⊛ 方孔 ⊛ PSF)。"""

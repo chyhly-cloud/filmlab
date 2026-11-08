@@ -1,0 +1,1191 @@
+{
+ "summary": {
+  "n": 234,
+  "n_equal": 174,
+  "n_changed": 60
+ },
+ "cases": {
+  "current__kodak_portra_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "current__kodak_portra_400__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "current__kodak_vision3_500t__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "current__kodak_vision3_500t__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "next__kodak_portra_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "next__kodak_portra_400__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "next__kodak_vision3_500t__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "next__kodak_vision3_500t__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t46_base__kodak_portra_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t46_base__kodak_portra_400__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t46_base__kodak_vision3_500t__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t46_base__kodak_vision3_500t__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8468424479166666,
+   "frac_px_code8_changed": 0.058064778645833336,
+   "max_abs_dcode": 2.0472836069503444,
+   "mean_dcode": 0.059238259229373424,
+   "mean_dcode_block_edge_rows": 0.14506945839263166,
+   "mean_dcode_interior_rows": 0.046976659348907955,
+   "frac_changed_px_on_block_edge_rows": 0.11863348068422064,
+   "rel_mean_linear": 0.0007134675979614258
+  },
+  "t47_bw__bw_pan__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3177897135416667,
+   "frac_px_code8_changed": 0.0028483072916666665,
+   "max_abs_dcode": 0.5603670806175387,
+   "mean_dcode": 0.0029964656118296683,
+   "mean_dcode_block_edge_rows": 0.01494622444002628,
+   "mean_dcode_interior_rows": 0.0012893572078015807,
+   "frac_changed_px_on_block_edge_rows": 0.24891165172855315,
+   "rel_mean_linear": 3.6597251892089844e-05
+  },
+  "t47_bw__bw_pan__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__bw_pan__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8009440104166666,
+   "frac_px_code8_changed": 0.026407877604166668,
+   "max_abs_dcode": 0.6798116306094215,
+   "mean_dcode": 0.02497114632099175,
+   "mean_dcode_block_edge_rows": 0.06218434096608708,
+   "mean_dcode_interior_rows": 0.019654975657406707,
+   "frac_changed_px_on_block_edge_rows": 0.1198943304206462,
+   "rel_mean_linear": 0.00028395652770996094
+  },
+  "t47_bw__kodak_plusx_125__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.20011393229166666,
+   "frac_px_code8_changed": 0.0003662109375,
+   "max_abs_dcode": 0.05577172181676815,
+   "mean_dcode": 0.0002626270599442706,
+   "mean_dcode_block_edge_rows": 0.001310086845406768,
+   "mean_dcode_interior_rows": 0.00011298994773534243,
+   "frac_changed_px_on_block_edge_rows": 0.29015860105734037,
+   "rel_mean_linear": 2.86102294921875e-06
+  },
+  "t47_bw__kodak_plusx_125__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_plusx_125__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_tmax_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_tmax_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8852132161458334,
+   "frac_px_code8_changed": 0.10701497395833333,
+   "max_abs_dcode": 2.519032246986839,
+   "mean_dcode": 0.11577773486139552,
+   "mean_dcode_block_edge_rows": 0.2801907450817667,
+   "mean_dcode_interior_rows": 0.09229016197277105,
+   "frac_changed_px_on_block_edge_rows": 0.1179958630199954,
+   "rel_mean_linear": 0.0010794401168823242
+  },
+  "t47_bw__kodak_tmax_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_tmax_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.4431559244791667,
+   "frac_px_code8_changed": 0.010416666666666666,
+   "max_abs_dcode": 1.0124533170641143,
+   "mean_dcode": 0.011312292500395003,
+   "mean_dcode_block_edge_rows": 0.05562601920720587,
+   "mean_dcode_interior_rows": 0.004981760113707735,
+   "frac_changed_px_on_block_edge_rows": 0.22569093747130659,
+   "rel_mean_linear": 0.00010669231414794922
+  },
+  "t47_bw__kodak_tmax_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_tmax_400__fw2__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.0445556640625,
+   "frac_px_code8_changed": 0.0,
+   "max_abs_dcode": 0.10175343199898634,
+   "mean_dcode": 6.584893471066782e-05,
+   "mean_dcode_block_edge_rows": 0.00048223860542667734,
+   "mean_dcode_interior_rows": 6.364696036952169e-06,
+   "frac_changed_px_on_block_edge_rows": 0.645662100456621,
+   "rel_mean_linear": 5.960464477539062e-07
+  },
+  "t47_bw__kodak_tmax_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8294677734375,
+   "frac_px_code8_changed": 0.055379231770833336,
+   "max_abs_dcode": 2.4184424614135054,
+   "mean_dcode": 0.05882240377447162,
+   "mean_dcode_block_edge_rows": 0.14488497952779802,
+   "mean_dcode_interior_rows": 0.04652775009542499,
+   "frac_changed_px_on_block_edge_rows": 0.11945057640421879,
+   "rel_mean_linear": 0.0006406307220458984
+  },
+  "t47_bw__kodak_trix_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3387451171875,
+   "frac_px_code8_changed": 0.0037841796875,
+   "max_abs_dcode": 0.6074314773096035,
+   "mean_dcode": 0.003569689692418503,
+   "mean_dcode_block_edge_rows": 0.017577117679308453,
+   "mean_dcode_interior_rows": 0.001568628551434224,
+   "frac_changed_px_on_block_edge_rows": 0.24204204204204205,
+   "rel_mean_linear": 3.540515899658203e-05
+  },
+  "t47_bw__kodak_trix_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t47_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8486328125,
+   "frac_px_code8_changed": 0.0455322265625,
+   "max_abs_dcode": 1.6593286633384992,
+   "mean_dcode": 0.044438224148159934,
+   "mean_dcode_block_edge_rows": 0.1102639999166009,
+   "mean_dcode_interior_rows": 0.03503454189552552,
+   "frac_changed_px_on_block_edge_rows": 0.11986958189489835,
+   "rel_mean_linear": 0.00047600269317626953
+  },
+  "t48_bw__ilford_hp5_plus__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3199869791666667,
+   "frac_px_code8_changed": 0.0034586588541666665,
+   "max_abs_dcode": 0.7364724711340074,
+   "mean_dcode": 0.003367002892156162,
+   "mean_dcode_block_edge_rows": 0.016073099748720194,
+   "mean_dcode_interior_rows": 0.0015518461983612991,
+   "frac_changed_px_on_block_edge_rows": 0.25025432349949134,
+   "rel_mean_linear": 3.314018249511719e-05
+  },
+  "t48_bw__ilford_hp5_plus__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__ilford_hp5_plus__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8544921875,
+   "frac_px_code8_changed": 0.054280598958333336,
+   "max_abs_dcode": 1.496852320070417,
+   "mean_dcode": 0.053603793696543174,
+   "mean_dcode_block_edge_rows": 0.1322007437860074,
+   "mean_dcode_interior_rows": 0.04237565796947686,
+   "frac_changed_px_on_block_edge_rows": 0.11857142857142858,
+   "rel_mean_linear": 0.0005242824554443359
+  },
+  "t48_bw__kodak_tmax_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.4310302734375,
+   "frac_px_code8_changed": 0.010701497395833334,
+   "max_abs_dcode": 0.7756270704699091,
+   "mean_dcode": 0.010092487329873818,
+   "mean_dcode_block_edge_rows": 0.049794127014350875,
+   "mean_dcode_interior_rows": 0.0044208245178056675,
+   "frac_changed_px_on_block_edge_rows": 0.21929576135183612,
+   "rel_mean_linear": 9.72747802734375e-05
+  },
+  "t48_bw__kodak_tmax_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8294677734375,
+   "frac_px_code8_changed": 0.055379231770833336,
+   "max_abs_dcode": 2.4184424614135054,
+   "mean_dcode": 0.05882240377447162,
+   "mean_dcode_block_edge_rows": 0.14488497952779802,
+   "mean_dcode_interior_rows": 0.04652775009542499,
+   "frac_changed_px_on_block_edge_rows": 0.11945057640421879,
+   "rel_mean_linear": 0.0006406307220458984
+  },
+  "t48_bw__kodak_trix_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3387451171875,
+   "frac_px_code8_changed": 0.0037841796875,
+   "max_abs_dcode": 0.6074314773096035,
+   "mean_dcode": 0.003569689692418503,
+   "mean_dcode_block_edge_rows": 0.017577117679308453,
+   "mean_dcode_interior_rows": 0.001568628551434224,
+   "frac_changed_px_on_block_edge_rows": 0.24204204204204205,
+   "rel_mean_linear": 3.540515899658203e-05
+  },
+  "t48_bw__kodak_trix_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t48_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8349202473958334,
+   "frac_px_code8_changed": 0.0521240234375,
+   "max_abs_dcode": 1.4451293691179785,
+   "mean_dcode": 0.05046597175958515,
+   "mean_dcode_block_edge_rows": 0.12465120260733298,
+   "mean_dcode_interior_rows": 0.03986808163847831,
+   "frac_changed_px_on_block_edge_rows": 0.11940153028900044,
+   "rel_mean_linear": 0.0005143880844116211
+  },
+  "t49_bw__ilford_hp5_plus__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3157145182291667,
+   "frac_px_code8_changed": 0.0028483072916666665,
+   "max_abs_dcode": 0.8326587750181034,
+   "mean_dcode": 0.0031019653330440766,
+   "mean_dcode_block_edge_rows": 0.01536634950106533,
+   "mean_dcode_interior_rows": 0.0013499104518981831,
+   "frac_changed_px_on_block_edge_rows": 0.25544528934141,
+   "rel_mean_linear": 2.8848648071289062e-05
+  },
+  "t49_bw__ilford_hp5_plus__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__ilford_hp5_plus__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8544921875,
+   "frac_px_code8_changed": 0.054280598958333336,
+   "max_abs_dcode": 1.496852320070417,
+   "mean_dcode": 0.053603793696543174,
+   "mean_dcode_block_edge_rows": 0.1322007437860074,
+   "mean_dcode_interior_rows": 0.04237565796947686,
+   "frac_changed_px_on_block_edge_rows": 0.11857142857142858,
+   "rel_mean_linear": 0.0005242824554443359
+  },
+  "t49_bw__kodak_tmax_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.4310302734375,
+   "frac_px_code8_changed": 0.010701497395833334,
+   "max_abs_dcode": 0.7756270704699091,
+   "mean_dcode": 0.010092487329873818,
+   "mean_dcode_block_edge_rows": 0.049794127014350875,
+   "mean_dcode_interior_rows": 0.0044208245178056675,
+   "frac_changed_px_on_block_edge_rows": 0.21929576135183612,
+   "rel_mean_linear": 9.72747802734375e-05
+  },
+  "t49_bw__kodak_tmax_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8294677734375,
+   "frac_px_code8_changed": 0.055379231770833336,
+   "max_abs_dcode": 2.4184424614135054,
+   "mean_dcode": 0.05882240377447162,
+   "mean_dcode_block_edge_rows": 0.14488497952779802,
+   "mean_dcode_interior_rows": 0.04652775009542499,
+   "frac_changed_px_on_block_edge_rows": 0.11945057640421879,
+   "rel_mean_linear": 0.0006406307220458984
+  },
+  "t49_bw__kodak_trix_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3387451171875,
+   "frac_px_code8_changed": 0.0037841796875,
+   "max_abs_dcode": 0.6074314773096035,
+   "mean_dcode": 0.003569689692418503,
+   "mean_dcode_block_edge_rows": 0.017577117679308453,
+   "mean_dcode_interior_rows": 0.001568628551434224,
+   "frac_changed_px_on_block_edge_rows": 0.24204204204204205,
+   "rel_mean_linear": 3.540515899658203e-05
+  },
+  "t49_bw__kodak_trix_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t49_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8349202473958334,
+   "frac_px_code8_changed": 0.0521240234375,
+   "max_abs_dcode": 1.4451293691179785,
+   "mean_dcode": 0.05046597175958515,
+   "mean_dcode_block_edge_rows": 0.12465120260733298,
+   "mean_dcode_interior_rows": 0.03986808163847831,
+   "frac_changed_px_on_block_edge_rows": 0.11940153028900044,
+   "rel_mean_linear": 0.0005143880844116211
+  },
+  "t50_bw__ilford_hp5_plus__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3157145182291667,
+   "frac_px_code8_changed": 0.0028483072916666665,
+   "max_abs_dcode": 0.8326587750181034,
+   "mean_dcode": 0.0031019653330440766,
+   "mean_dcode_block_edge_rows": 0.01536634950106533,
+   "mean_dcode_interior_rows": 0.0013499104518981831,
+   "frac_changed_px_on_block_edge_rows": 0.25544528934141,
+   "rel_mean_linear": 2.8848648071289062e-05
+  },
+  "t50_bw__ilford_hp5_plus__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__ilford_hp5_plus__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8019612630208334,
+   "frac_px_code8_changed": 0.0185546875,
+   "max_abs_dcode": 0.6490090354283495,
+   "mean_dcode": 0.01891907737736991,
+   "mean_dcode_block_edge_rows": 0.04655112722890179,
+   "mean_dcode_interior_rows": 0.014971641684293924,
+   "frac_changed_px_on_block_edge_rows": 0.1192348673194987,
+   "rel_mean_linear": 0.00020051002502441406
+  },
+  "t50_bw__kodak_plusx_125__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.20711263020833334,
+   "frac_px_code8_changed": 0.00016276041666666666,
+   "max_abs_dcode": 0.07149617516534335,
+   "mean_dcode": 0.0002430201517816305,
+   "mean_dcode_block_edge_rows": 0.001216764299782279,
+   "mean_dcode_interior_rows": 0.000103913844924395,
+   "frac_changed_px_on_block_edge_rows": 0.28919449901768174,
+   "rel_mean_linear": 2.2649765014648438e-06
+  },
+  "t50_bw__kodak_plusx_125__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_plusx_125__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8705647786458334,
+   "frac_px_code8_changed": 0.047932942708333336,
+   "max_abs_dcode": 0.7905819548645638,
+   "mean_dcode": 0.04768458088915365,
+   "mean_dcode_block_edge_rows": 0.11451520687749339,
+   "mean_dcode_interior_rows": 0.03813734860510511,
+   "frac_changed_px_on_block_edge_rows": 0.1191867258705305,
+   "rel_mean_linear": 0.0005232095718383789
+  },
+  "t50_bw__kodak_tmax_100__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.2621256510416667,
+   "frac_px_code8_changed": 0.0005696614583333334,
+   "max_abs_dcode": 0.15893200201301738,
+   "mean_dcode": 0.0008153716041761149,
+   "mean_dcode_block_edge_rows": 0.004024940657904634,
+   "mean_dcode_interior_rows": 0.000356861739357755,
+   "frac_changed_px_on_block_edge_rows": 0.2665321328779882,
+   "rel_mean_linear": 8.58306884765625e-06
+  },
+  "t50_bw__kodak_tmax_100__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_100__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8544921875,
+   "frac_px_code8_changed": 0.054280598958333336,
+   "max_abs_dcode": 1.496852320070417,
+   "mean_dcode": 0.053603793696543174,
+   "mean_dcode_block_edge_rows": 0.1322007437860074,
+   "mean_dcode_interior_rows": 0.04237565796947686,
+   "frac_changed_px_on_block_edge_rows": 0.11857142857142858,
+   "rel_mean_linear": 0.0005242824554443359
+  },
+  "t50_bw__kodak_tmax_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.4310302734375,
+   "frac_px_code8_changed": 0.010701497395833334,
+   "max_abs_dcode": 0.7756270704699091,
+   "mean_dcode": 0.010092487329873818,
+   "mean_dcode_block_edge_rows": 0.049794127014350875,
+   "mean_dcode_interior_rows": 0.0044208245178056675,
+   "frac_changed_px_on_block_edge_rows": 0.21929576135183612,
+   "rel_mean_linear": 9.72747802734375e-05
+  },
+  "t50_bw__kodak_tmax_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.830810546875,
+   "frac_px_code8_changed": 0.0548095703125,
+   "max_abs_dcode": 2.184643956156549,
+   "mean_dcode": 0.05637683930890199,
+   "mean_dcode_block_edge_rows": 0.13769817918812802,
+   "mean_dcode_interior_rows": 0.044759505040441114,
+   "frac_changed_px_on_block_edge_rows": 0.11935547066314037,
+   "rel_mean_linear": 0.0005624294281005859
+  },
+  "t50_bw__kodak_trix_400+w25__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3171793619791667,
+   "frac_px_code8_changed": 0.003946940104166667,
+   "max_abs_dcode": 0.595428122078772,
+   "mean_dcode": 0.0030773751918051883,
+   "mean_dcode_block_edge_rows": 0.015054145752930147,
+   "mean_dcode_interior_rows": 0.001366407968787337,
+   "frac_changed_px_on_block_edge_rows": 0.2477228992944195,
+   "rel_mean_linear": 3.2067298889160156e-05
+  },
+  "t50_bw__kodak_trix_400+w25__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400+w25__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8158365885416666,
+   "frac_px_code8_changed": 0.045654296875,
+   "max_abs_dcode": 1.402283210944617,
+   "mean_dcode": 0.048198319658387084,
+   "mean_dcode_block_edge_rows": 0.11628607485999953,
+   "mean_dcode_interior_rows": 0.03847149748672816,
+   "frac_changed_px_on_block_edge_rows": 0.11880299251870324,
+   "rel_mean_linear": 0.0005016326904296875
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3382568359375,
+   "frac_px_code8_changed": 0.0030110677083333335,
+   "max_abs_dcode": 0.7569074888474177,
+   "mean_dcode": 0.003092557298643224,
+   "mean_dcode_block_edge_rows": 0.01538916453698913,
+   "mean_dcode_interior_rows": 0.0013358991217366657,
+   "frac_changed_px_on_block_edge_rows": 0.24936845904005775,
+   "rel_mean_linear": 3.790855407714844e-05
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@rodinal__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@xtol__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@xtol__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8039957682291666,
+   "frac_px_code8_changed": 0.050984700520833336,
+   "max_abs_dcode": 1.7241179102684754,
+   "mean_dcode": 0.0526693378400467,
+   "mean_dcode_block_edge_rows": 0.12689842763295503,
+   "mean_dcode_interior_rows": 0.04206518215534552,
+   "frac_changed_px_on_block_edge_rows": 0.11797155726504378,
+   "rel_mean_linear": 0.0005564689636230469
+  },
+  "t50_bw__kodak_trix_400@xtol__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@xtol__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3404134114583333,
+   "frac_px_code8_changed": 0.005167643229166667,
+   "max_abs_dcode": 1.0514495438267062,
+   "mean_dcode": 0.00480703681915135,
+   "mean_dcode_block_edge_rows": 0.023476090565879442,
+   "mean_dcode_interior_rows": 0.002140029141047337,
+   "frac_changed_px_on_block_edge_rows": 0.24575663399474063,
+   "rel_mean_linear": 5.3763389587402344e-05
+  },
+  "t50_bw__kodak_trix_400@xtol__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400@xtol__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.8294677734375,
+   "frac_px_code8_changed": 0.055379231770833336,
+   "max_abs_dcode": 2.4184424614135054,
+   "mean_dcode": 0.05882240377447162,
+   "mean_dcode_block_edge_rows": 0.14488497952779802,
+   "mean_dcode_interior_rows": 0.04652775009542499,
+   "frac_changed_px_on_block_edge_rows": 0.11945057640421879,
+   "rel_mean_linear": 0.0006406307220458984
+  },
+  "t50_bw__kodak_trix_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3387451171875,
+   "frac_px_code8_changed": 0.0037841796875,
+   "max_abs_dcode": 0.6074314773096035,
+   "mean_dcode": 0.003569689692418503,
+   "mean_dcode_block_edge_rows": 0.017577117679308453,
+   "mean_dcode_interior_rows": 0.001568628551434224,
+   "frac_changed_px_on_block_edge_rows": 0.24204204204204205,
+   "rel_mean_linear": 3.540515899658203e-05
+  },
+  "t50_bw__kodak_trix_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t50_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_base__kodak_portra_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_base__kodak_portra_400__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_base__kodak_vision3_500t__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_base__kodak_vision3_500t__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5628662109375,
+   "frac_px_code8_changed": 0.048380533854166664,
+   "max_abs_dcode": 4.717294458331949,
+   "mean_dcode": 0.04897964624785243,
+   "mean_dcode_block_edge_rows": 0.12658612482571413,
+   "mean_dcode_interior_rows": 0.03789300645101505,
+   "frac_changed_px_on_block_edge_rows": 0.16843779368177547,
+   "rel_mean_linear": 0.00048410892486572266
+  },
+  "t51_bw__ilford_hp5_plus__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.2425537109375,
+   "frac_px_code8_changed": 0.00439453125,
+   "max_abs_dcode": 2.248613379399245,
+   "mean_dcode": 0.003309362858714141,
+   "mean_dcode_block_edge_rows": 0.021622619998034557,
+   "mean_dcode_interior_rows": 0.0006931832673826527,
+   "frac_changed_px_on_block_edge_rows": 0.3095118268746855,
+   "rel_mean_linear": 3.0994415283203125e-05
+  },
+  "t51_bw__ilford_hp5_plus__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.531494140625,
+   "frac_px_code8_changed": 0.017740885416666668,
+   "max_abs_dcode": 1.308984401635783,
+   "mean_dcode": 0.016428318935509074,
+   "mean_dcode_block_edge_rows": 0.042746816729935015,
+   "mean_dcode_interior_rows": 0.012668533536305367,
+   "frac_changed_px_on_block_edge_rows": 0.17340376665135507,
+   "rel_mean_linear": 0.00016927719116210938
+  },
+  "t51_bw__kodak_plusx_125__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.15059407552083334,
+   "frac_px_code8_changed": 0.0003662109375,
+   "max_abs_dcode": 0.2829266985416794,
+   "mean_dcode": 0.00024388663297236153,
+   "mean_dcode_block_edge_rows": 0.0016922950734067025,
+   "mean_dcode_interior_rows": 3.69711414817414e-05,
+   "frac_changed_px_on_block_edge_rows": 0.3485544447446636,
+   "rel_mean_linear": 2.2649765014648438e-06
+  },
+  "t51_bw__kodak_plusx_125__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_plusx_125__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400+g2__fw0.384__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400+g2__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400+g2__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400__fw0.384__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_portra_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.6177571614583334,
+   "frac_px_code8_changed": 0.0450439453125,
+   "max_abs_dcode": 1.7562737342901524,
+   "mean_dcode": 0.043110535839050744,
+   "mean_dcode_block_edge_rows": 0.11219429771923776,
+   "mean_dcode_interior_rows": 0.03324142699902403,
+   "frac_changed_px_on_block_edge_rows": 0.1630219997365301,
+   "rel_mean_linear": 0.0004667043685913086
+  },
+  "t51_bw__kodak_tmax_100__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.19856770833333334,
+   "frac_px_code8_changed": 0.0010579427083333333,
+   "max_abs_dcode": 0.40935571922759095,
+   "mean_dcode": 0.0007638641536748904,
+   "mean_dcode_block_edge_rows": 0.005307801033584042,
+   "mean_dcode_interior_rows": 0.00011473031368786872,
+   "frac_changed_px_on_block_edge_rows": 0.31864754098360654,
+   "rel_mean_linear": 8.344650268554688e-06
+  },
+  "t51_bw__kodak_tmax_100__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_100__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5901692708333334,
+   "frac_px_code8_changed": 0.055419921875,
+   "max_abs_dcode": 2.360473932902238,
+   "mean_dcode": 0.05348127494988583,
+   "mean_dcode_block_edge_rows": 0.14204859145853999,
+   "mean_dcode_interior_rows": 0.040828801162935247,
+   "frac_changed_px_on_block_edge_rows": 0.16540264754550468,
+   "rel_mean_linear": 0.0005089044570922852
+  },
+  "t51_bw__kodak_tmax_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3651529947916667,
+   "frac_px_code8_changed": 0.013224283854166666,
+   "max_abs_dcode": 1.8778087560194194,
+   "mean_dcode": 0.009595581406366028,
+   "mean_dcode_block_edge_rows": 0.06496364138279885,
+   "mean_dcode_interior_rows": 0.0016858585525899102,
+   "frac_changed_px_on_block_edge_rows": 0.2576331624693559,
+   "rel_mean_linear": 9.250640869140625e-05
+  },
+  "t51_bw__kodak_tmax_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+fhalf__fw0.384__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+fhalf__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+fhalf__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+g0.5__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.4383951822916667,
+   "frac_px_code8_changed": 0.0030924479166666665,
+   "max_abs_dcode": 0.2966205812059357,
+   "mean_dcode": 0.0023621581500183745,
+   "mean_dcode_block_edge_rows": 0.006223435320878779,
+   "mean_dcode_interior_rows": 0.001810547125609745,
+   "frac_changed_px_on_block_edge_rows": 0.19593465750881753,
+   "rel_mean_linear": 2.6345252990722656e-05
+  },
+  "t51_bw__kodak_trix_400+g0.5__fw0.9__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+g0.5__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+g2__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5556233723958334,
+   "frac_px_code8_changed": 0.12943522135416666,
+   "max_abs_dcode": 11.117938106043482,
+   "mean_dcode": 0.1923308447058638,
+   "mean_dcode_block_edge_rows": 0.5100249251240101,
+   "mean_dcode_interior_rows": 0.14694597607470009,
+   "frac_changed_px_on_block_edge_rows": 0.1608202123764189,
+   "rel_mean_linear": 0.002155303955078125
+  },
+  "t51_bw__kodak_trix_400+g2__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3551025390625,
+   "frac_px_code8_changed": 0.0245361328125,
+   "max_abs_dcode": 17.484609901659255,
+   "mean_dcode": 0.029109980925048528,
+   "mean_dcode_block_edge_rows": 0.20211076146099904,
+   "mean_dcode_interior_rows": 0.004395583705627018,
+   "frac_changed_px_on_block_edge_rows": 0.2579351438065773,
+   "rel_mean_linear": 0.00031363964080810547
+  },
+  "t51_bw__kodak_trix_400+g2__fw2__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.10506184895833333,
+   "frac_px_code8_changed": 0.001953125,
+   "max_abs_dcode": 4.199167810559146,
+   "mean_dcode": 0.0010363872188638593,
+   "mean_dcode_block_edge_rows": 0.009902354983326962,
+   "mean_dcode_interior_rows": -0.00023017960463086987,
+   "frac_changed_px_on_block_edge_rows": 0.378001549186677,
+   "rel_mean_linear": 1.0609626770019531e-05
+  },
+  "t51_bw__kodak_trix_400+g3__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5675862630208334,
+   "frac_px_code8_changed": 0.14990234375,
+   "max_abs_dcode": 39.64654406708446,
+   "mean_dcode": 0.29851912910592265,
+   "mean_dcode_block_edge_rows": 0.7643664311248125,
+   "mean_dcode_interior_rows": 0.2319695145317955,
+   "frac_changed_px_on_block_edge_rows": 0.16051329844433293,
+   "rel_mean_linear": 0.0031337738037109375
+  },
+  "t51_bw__kodak_trix_400+g3__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.3599039713541667,
+   "frac_px_code8_changed": 0.051025390625,
+   "max_abs_dcode": 28.891044394468423,
+   "mean_dcode": 0.09337054680271217,
+   "mean_dcode_block_edge_rows": 0.6324535849554586,
+   "mean_dcode_interior_rows": 0.016358684209462716,
+   "frac_changed_px_on_block_edge_rows": 0.23866591294516676,
+   "rel_mean_linear": 0.0010902881622314453
+  },
+  "t51_bw__kodak_trix_400+g3__fw2__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.286865234375,
+   "frac_px_code8_changed": 0.012654622395833334,
+   "max_abs_dcode": 20.124815765808293,
+   "mean_dcode": 0.012839415137508048,
+   "mean_dcode_block_edge_rows": 0.12233230129338918,
+   "mean_dcode_interior_rows": -0.002802425741903542,
+   "frac_changed_px_on_block_edge_rows": 0.30113475177304966,
+   "rel_mean_linear": 0.0001329183578491211
+  },
+  "t51_bw__kodak_trix_400+w25__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+w25__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5620930989583334,
+   "frac_px_code8_changed": 0.049967447916666664,
+   "max_abs_dcode": 3.6866593354910577,
+   "mean_dcode": 0.04944757765177665,
+   "mean_dcode_block_edge_rows": 0.1279442898541198,
+   "mean_dcode_interior_rows": 0.03823376162287049,
+   "frac_changed_px_on_block_edge_rows": 0.16881424641667872,
+   "rel_mean_linear": 0.00048530101776123047
+  },
+  "t51_bw__kodak_trix_400+w25__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+w25__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.249267578125,
+   "frac_px_code8_changed": 0.0038248697916666665,
+   "max_abs_dcode": 1.41776500277453,
+   "mean_dcode": 0.002918765814848736,
+   "mean_dcode_block_edge_rows": 0.02013568314764695,
+   "mean_dcode_interior_rows": 0.0004592061958775625,
+   "frac_changed_px_on_block_edge_rows": 0.30035912504080964,
+   "rel_mean_linear": 2.944469451904297e-05
+  },
+  "t51_bw__kodak_trix_400+w25__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+w25__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+w25__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+w25__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5547281901041666,
+   "frac_px_code8_changed": 0.047566731770833336,
+   "max_abs_dcode": 6.8387052444643395,
+   "mean_dcode": 0.04750989748628263,
+   "mean_dcode_block_edge_rows": 0.12477948708217734,
+   "mean_dcode_interior_rows": 0.03647138468686909,
+   "frac_changed_px_on_block_edge_rows": 0.16936844421624,
+   "rel_mean_linear": 0.0004674196243286133
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.2662760416666667,
+   "frac_px_code8_changed": 0.0048828125,
+   "max_abs_dcode": 1.7236983887192423,
+   "mean_dcode": 0.0031510657553068208,
+   "mean_dcode_block_edge_rows": 0.02208931961834248,
+   "mean_dcode_interior_rows": 0.0004456009177302984,
+   "frac_changed_px_on_block_edge_rows": 0.2996638141809291,
+   "rel_mean_linear": 3.814697265625e-05
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@xtol__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@xtol__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5428873697916666,
+   "frac_px_code8_changed": 0.04736328125,
+   "max_abs_dcode": 2.5266672018857967,
+   "mean_dcode": 0.04398246920943074,
+   "mean_dcode_block_edge_rows": 0.11608678441833586,
+   "mean_dcode_interior_rows": 0.03368185275101573,
+   "frac_changed_px_on_block_edge_rows": 0.1666916504272223,
+   "rel_mean_linear": 0.0004734992980957031
+  },
+  "t51_bw__kodak_trix_400@xtol__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@xtol__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.26904296875,
+   "frac_px_code8_changed": 0.006510416666666667,
+   "max_abs_dcode": 2.792414698528809,
+   "mean_dcode": 0.004694412586224551,
+   "mean_dcode_block_edge_rows": 0.031371021279424295,
+   "mean_dcode_interior_rows": 0.000883468487196017,
+   "frac_changed_px_on_block_edge_rows": 0.2929522081064731,
+   "rel_mean_linear": 5.1140785217285156e-05
+  },
+  "t51_bw__kodak_trix_400@xtol__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400@xtol__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw0.384__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw0.384__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.5686848958333334,
+   "frac_px_code8_changed": 0.056681315104166664,
+   "max_abs_dcode": 2.6942416474241497,
+   "mean_dcode": 0.05359192317136324,
+   "mean_dcode_block_edge_rows": 0.13906148448834796,
+   "mean_dcode_interior_rows": 0.04138198584036542,
+   "frac_changed_px_on_block_edge_rows": 0.1657842014882656,
+   "rel_mean_linear": 0.0005668401718139648
+  },
+  "t51_bw__kodak_trix_400__fw0.9__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw0.9__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.2664388020833333,
+   "frac_px_code8_changed": 0.004597981770833333,
+   "max_abs_dcode": 1.5798992549589457,
+   "mean_dcode": 0.0031395748795826546,
+   "mean_dcode_block_edge_rows": 0.020249760438385844,
+   "mean_dcode_interior_rows": 0.000695262656896485,
+   "frac_changed_px_on_block_edge_rows": 0.2906230910201588,
+   "rel_mean_linear": 3.159046173095703e-05
+  },
+  "t51_bw__kodak_trix_400__fw2__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw2__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw36__g0": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  }
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "summary": {
+  "n": 8,
+  "n_equal": 6,
+  "n_changed": 2
+ },
+ "cases": {
+  "t50_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__ilford_hp5_plus__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_tmax_400__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+fhalf__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400+g2__fw36__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.24073970061913844,
+   "frac_px_code8_changed": 0.0015981347475116905,
+   "max_abs_dcode": 4.317848886912643,
+   "mean_dcode": 0.0008354155989690337,
+   "mean_dcode_block_edge_rows": 0.007981636344585298,
+   "mean_dcode_interior_rows": -0.0001877840889997919,
+   "frac_changed_px_on_block_edge_rows": 0.3689743388016093,
+   "rel_mean_linear": 8.58306884765625e-06
+  },
+  "t51_bw__kodak_trix_400+g3__fw36__g1": {
+   "bitwise_equal": false,
+   "frac_px_changed": 0.2318949358656182,
+   "frac_px_code8_changed": 0.004821181326575929,
+   "max_abs_dcode": 30.449136076029212,
+   "mean_dcode": 0.0038694226223850003,
+   "mean_dcode_block_edge_rows": 0.03685113579525416,
+   "mean_dcode_interior_rows": -0.0008529166151565385,
+   "frac_changed_px_on_block_edge_rows": 0.34973135446495146,
+   "rel_mean_linear": 3.898143768310547e-05
+  },
+  "t51_bw__kodak_trix_400@rodinal__fw36__g1": {
+   "bitwise_equal": true
+  },
+  "t51_bw__kodak_trix_400__fw36__g1": {
+   "bitwise_equal": true
+  }
+ }
+}
