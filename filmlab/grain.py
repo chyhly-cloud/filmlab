@@ -666,7 +666,10 @@ def _render_rows(spec, H, px_um, seed, geometry, sub, count_sub, nphase, r0, r1,
     if margin_rows is None:
         margin_rows = int(np.ceil((M / sub) + (4 * spec.cluster_um / px_um if clus else 0))) + 1
     nr = r1 - r0
-    Hb, Wb = nr * sub + 2 * M, w * sub + 2 * M
+    # 缓冲区留白: 横向 M (晶体只在视场内的像素列生成, 中心 ≥ 0, 丝团不会越出); 纵向 MY = 2M —— 块上下的边缘行
+    # 也生成晶体, 中心在块外最远约一个丝团、足迹仍伸进块内的晶体必须整颗放得下 (丝团窗口 ≤ 2M − 2, 见 _stamp_entries)
+    MY = 2 * M
+    Hb, Wb = nr * sub + 2 * MY, w * sub + 2 * M
     bufA = np.zeros(Hb * Wb, np.float64)
     bufB = np.zeros((nr * cs, w * cs), np.float64)
     area = px_um * px_um
@@ -678,7 +681,7 @@ def _render_rows(spec, H, px_um, seed, geometry, sub, count_sub, nphase, r0, r1,
         p = silver_develop(spec, H[r], b["a"])                         # (w, K, B)
         if clus:
             _cluster_row(spec, H, b, p, explicit, taus, -np.log(bB), rng, r, r0, nr, w, sub, cs, nphase, px_um, delta,
-                         dB, M, Wb, bufA, bufB)
+                         dB, M, Wb, bufA, bufB, MY)
             continue
         if r0 <= r < r1:                                               # 粗格计数 (只在本像素行内)
             for k, qq in groupsB:
@@ -702,7 +705,7 @@ def _render_rows(spec, H, px_um, seed, geometry, sub, count_sub, nphase, r0, r1,
             fy = (r - r0 + rng.random(G)) * sub
             fx = (x + rng.random(G)) * sub
             sh = rng.integers(0, spec.shapes, G)
-            ii, vv = _stamp_entries(fy, fx, sh, taus[k, q], nphase, M, Hb, Wb)
+            ii, vv = _stamp_entries(fy, fx, sh, taus[k, q], nphase, M, Hb, Wb, MY)
             idx.append(ii); val.append(vv)
         if idx:
             idx = np.concatenate(idx); val = np.concatenate(val)
@@ -710,7 +713,7 @@ def _render_rows(spec, H, px_um, seed, geometry, sub, count_sub, nphase, r0, r1,
             hi = int(idx.max()) + 1 if idx.size else 0
             if hi > lo:
                 bufA[lo:hi] += np.bincount(idx - lo, weights=val, minlength=hi - lo)
-    TA = np.exp(-bufA.reshape(Hb, Wb)[M:M + nr * sub, M:M + w * sub])
+    TA = np.exp(-bufA.reshape(Hb, Wb)[MY:MY + nr * sub, M:M + w * sub])
     T = TA * np.repeat(np.repeat(np.exp(-bufB), sub // cs, 0), sub // cs, 1)
     if psf_um > 0:
         from scipy.ndimage import gaussian_filter
@@ -718,36 +721,39 @@ def _render_rows(spec, H, px_um, seed, geometry, sub, count_sub, nphase, r0, r1,
     return T.reshape(nr, sub, w, sub).mean((1, 3))
 
 
-def _stamp_entries(fy, fx, s, tau_entry, nphase, M, Hb, Wb):
-    """显式银粒: 按 (形状, 亚格相位) 取丝团的微元 τ → (缓冲区展平下标, τ)。fy, fx: 晶体中心的微元坐标 (连续)。"""
+def _stamp_entries(fy, fx, s, tau_entry, nphase, M, Hb, Wb, MY=None):
+    """显式银粒: 按 (形状, 亚格相位) 取丝团的微元 τ → (缓冲区展平下标, τ)。fy, fx: 晶体中心的微元坐标 (连续)。
+    缓冲区横向留白 M、纵向留白 MY (默认 M)。丝团窗口不能整个放进缓冲区的晶体丢掉; MY = 2M 时, 足迹与块内任一行
+    重叠的晶体都放得下 (窗口高 ≤ 2M − 2), 丢掉的只有足迹完全在块外的晶体。"""
+    MY = M if MY is None else MY
     oy, tau = tau_entry
     hh = tau.shape[-1]
     cy = np.floor(fy).astype(np.int64); cx = np.floor(fx).astype(np.int64)
     py = np.minimum(((fy - cy) * nphase).astype(np.int64), nphase - 1)
     px = np.minimum(((fx - cx) * nphase).astype(np.int64), nphase - 1)
-    ok = (cy + oy + M >= 0) & (cy + oy + hh + M <= Hb) & (cx + oy + M >= 0) & (cx + oy + hh + M <= Wb)
+    ok = (cy + oy + MY >= 0) & (cy + oy + hh + MY <= Hb) & (cx + oy + M >= 0) & (cx + oy + hh + M <= Wb)
     if not ok.all():
         cy, cx, py, px, s = cy[ok], cx[ok], py[ok], px[ok], s[ok]
     ar = np.arange(hh)
     offs = (ar[:, None] * Wb + ar[None, :]).ravel()
-    base = (cy + oy + M) * Wb + (cx + oy + M)
+    base = (cy + oy + MY) * Wb + (cx + oy + M)
     flat = tau.reshape(-1, hh * hh)
     val = flat[(py * nphase + px) * tau.shape[2] + s]
     return (base[:, None] + offs[None, :]).ravel(), val.ravel().astype(np.float64)
 
 
-def _deposit(buf, Hb, Wb, M, fy, fx, s, tau_entry, nphase):
+def _deposit(buf, Hb, Wb, M, fy, fx, s, tau_entry, nphase, MY=None):
     """把显式银粒的 τ 累加到 buf (展平)。"""
     step = 1 << 18
     for i in range(0, len(fy), step):
-        ii, vv = _stamp_entries(fy[i:i + step], fx[i:i + step], s[i:i + step], tau_entry, nphase, M, Hb, Wb)
+        ii, vv = _stamp_entries(fy[i:i + step], fx[i:i + step], s[i:i + step], tau_entry, nphase, M, Hb, Wb, MY)
         if ii.size:
             lo = int(ii.min()); hi = int(ii.max()) + 1
             buf[lo:hi] += np.bincount(ii - lo, weights=vv, minlength=hi - lo)
 
 
 def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, cs, nphase, px_um, delta, dB, M,
-                 Wb, bufA, bufB):
+                 Wb, bufA, bufB, MY=None):
     """Thomas 团簇: 本像素行的团中心 (泊松, 每 µm² n_tot/μ 个), 每团 Poisson(μ) 个晶体, 相对团中心高斯 σ 偏移;
     晶体按各档数目比例取尺寸, 在它实际所在像素的曝光下独立显影。显式档按丝团沉积, 粗格档计入所在粗格。"""
     h = H.shape[0]
@@ -755,7 +761,7 @@ def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, 
     mu, sc = spec.cluster_mu, spec.cluster_um
     if spec.cluster_mode == "developed":
         _cluster_row_developed(spec, H, b, explicit, taus, tB, rng, r, r0, nr, w, sub, cs, nphase, px_um, delta, dB, M,
-                               Wb, bufA, bufB)
+                               Wb, bufA, bufB, MY)
         return
     Np = rng.poisson(ntot / mu * px_um * px_um, w)
     P = int(Np.sum())
@@ -780,7 +786,7 @@ def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, 
         sel = (k == kk) & (q == qq)
         if sel.any():
             _deposit(bufA, bufA.size // Wb, Wb, M, fy[sel], fx[sel], rng.integers(0, spec.shapes, int(sel.sum())),
-                     taus[kk, qq], nphase)
+                     taus[kk, qq], nphase, MY)
     selB = ~explicit[k, q]
     if selB.any():                                   # tB: 每粒 τ (粗格内覆盖率)
         by = np.floor(yy[selB] / dB).astype(np.int64) - r0 * cs; bx = np.floor(xx[selB] / dB).astype(np.int64)
@@ -789,7 +795,7 @@ def _cluster_row(spec, H, b, p_row, explicit, taus, tB, rng, r, r0, nr, w, sub, 
 
 
 def _cluster_row_developed(spec, H, b, explicit, taus, tB, rng, r, r0, nr, w, sub, cs, nphase, px_um, delta, dB, M,
-                           Wb, bufA, bufB):
+                           Wb, bufA, bufB, MY=None):
     """T50 显影晶体成团 (感染显影 / 银聚集): 团中心 ~ 泊松 (每 µm² Σ n p(H)/μ, H 取团中心所在像素), 每团 Poisson(μ) 颗
     显影晶体 (尺寸按 n p(H) 的比例), 相对团中心各向同性高斯 σ; 全部显影 (闭式解 _cluster_covariance 的同一过程)。"""
     h = H.shape[0]
@@ -821,7 +827,7 @@ def _cluster_row_developed(spec, H, b, explicit, taus, tB, rng, r, r0, nr, w, su
         sel = (k == kk) & (q == qq)
         if sel.any():
             _deposit(bufA, bufA.size // Wb, Wb, M, fy[sel], fx[sel], rng.integers(0, spec.shapes, int(sel.sum())),
-                     taus[kk, qq], nphase)
+                     taus[kk, qq], nphase, MY)
     selB = ~explicit[k, q]
     if selB.any():
         by = np.floor(yy[selB] / dB).astype(np.int64) - r0 * cs; bx = np.floor(xx[selB] / dB).astype(np.int64)
