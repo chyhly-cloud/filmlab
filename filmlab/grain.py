@@ -407,6 +407,7 @@ class SilverSpec:
     thickness_um: float | None = None   # T47b: T 颗粒厚度 (体积 a·t); None = 三维晶体 (体积 a^1.5)
     process: str = ""
     source: str = ""
+    fine_um: float = _FINE_UM   # T53: 银丝团几何的参考栅格 (µm); 颗粒粗细 k 的三维晶体按 k 缩放 (几何整体放大), 见 scale_silver
 
     def with_(self, **kw):
         return replace(self, **kw)
@@ -434,11 +435,10 @@ def silver_develop(spec: SilverSpec, H, a):
     return 1.0 - (1.0 - f) * (1.0 - gammainc(spec.photons_r, lam))
 
 
-def _ball_mask(V, ecd, R, w, nf, persist, rng):
-    """一颗显影晶体的银丝团 (投影不透明的并集, 参考栅格 _FINE_UM)。返回 (bool 掩膜, 半宽 µm)。
+def _ball_mask(V, ecd, R, w, nf, persist, rng, d=_FINE_UM):
+    """一颗显影晶体的银丝团 (投影不透明的并集, 参考栅格 d, 默认 _FINE_UM)。返回 (bool 掩膜, 半宽 µm)。
     nf 根丝从晶体投影内的显影中心出发, 每步 w/2, 方向角随机扩散 (持续长度 persist·R), 碰到半径 R 的边界折回;
     丝的总长 = 银体积 / 丝截面 (质量守恒)。"""
-    d = _FINE_UM
     half = R + w
     n = int(np.ceil(2 * half / d)) + 1
     mask = np.zeros((n, n), bool)
@@ -492,9 +492,10 @@ def _silver_library(spec: SilverSpec):
         row = []
         for q in range(B):
             R = np.sqrt(spec.spread * b["a"][k, q] / np.pi)
-            lst = [_ball_mask(b["V"][k, q], b["ecd"][k, q], R, spec.filament_um, spec.filaments, spec.persistence, rng)
+            lst = [_ball_mask(b["V"][k, q], b["ecd"][k, q], R, spec.filament_um, spec.filaments, spec.persistence, rng,
+                              spec.fine_um)
                    for _ in range(spec.shapes)]
-            A[k, q] = np.mean([m.sum() for m, _ in lst]) * _FINE_UM ** 2
+            A[k, q] = np.mean([m.sum() for m, _ in lst]) * spec.fine_um ** 2
             row.append(lst)
         masks.append(row)
     return dict(masks=masks, A_spec=A)
@@ -607,7 +608,7 @@ def _silver_stamps(spec: SilverSpec, delta_um: float, nphase: int = 4):
             j0s, j1s = [], []
             for py in range(nphase):
                 ph = (py + 0.5) / nphase * delta_um
-                j0, W = _overlap_weights(n, _FINE_UM, ph - half, delta_um)
+                j0, W = _overlap_weights(n, spec.fine_um, ph - half, delta_um)
                 per[py] = (j0, W)
                 j0s.append(j0); j1s.append(j0 + W.shape[0])
             o = min(j0s); size = max(j1s) - o
@@ -869,7 +870,10 @@ def _silver_autocorr(spec: SilverSpec, h_um=0.02):
 def _silver_autocorr_g(spec: SilverSpec, h_um=0.02):
     """每档银丝团不透明投影的自相关 γ(r) = ∫ m(u) m(u + r) du (形状平均, µm²), 统一放在间距 h_um 的居中网格。"""
     lib = silver_library(spec)
-    f = int(round(h_um / _FINE_UM))
+    fine = spec.fine_um
+    f = max(1, int(round(h_um / fine)))
+    if fine != _FINE_UM:                  # T53: 放大的几何 (参考栅格 ≠ 0.01 µm), 网格取栅格的整数倍
+        h_um = f * fine
     big = max(m.shape[0] for row in lib["masks"] for lst in row for m, _ in lst)
     n = 2 * big // f + 3
     n += (n + 1) % 2
@@ -883,7 +887,7 @@ def _silver_autocorr_g(spec: SilverSpec, h_um=0.02):
                 ac = np.fft.fftshift(np.fft.irfft2(F * np.conj(F), (2 * s, 2 * s)))   # 中心在 (s, s)
                 c = ac[: 2 * s // f * f, : 2 * s // f * f].reshape(2 * s // f, f, 2 * s // f, f).sum((1, 3))
                 acc = acc + c
-            acc = acc / len(lst) * _FINE_UM ** 4 / h_um ** 2      # 每 h² 格的平均 γ (µm²)
+            acc = acc / len(lst) * fine ** 4 / h_um ** 2          # 每 h² 格的平均 γ (µm²)
             c0 = (s // f)                                          # 中心格
             m = acc.shape[0]
             o = n // 2 - c0
@@ -1026,6 +1030,65 @@ def silver_derive(ei, U, eta_scale, H, netD, gross_fog, morph, illuminant="D55",
     sp = proto.with_(coat_g_m2=tuple(float(c) for c in coat))
     fog = float(silver_density(sp, 0.0, geometry))
     return sp.with_(base_density=float(gross_fog - fog))
+
+
+# ================================================================== T53 ==
+# 颗粒粗细 k (docs/tasks/T53_GRAIN_COARSENESS.md): 同一胶片的一个假想乳剂, 每个线性颗粒尺寸都乘 k ——
+#   晶体 ECD (T 颗粒: 投影面积 ×k², 厚度 0.12 µm 不变)、显影银丝团 / 染料云的大小、显影液成团半径 σ。
+# 守恒量 = 每个亚群全部显影时的投影遮光截面 Σ n·g·A (泊松布尔模型的指数; 染料: 积分密度 Σ n·m), 即每颗显影晶体的
+#   投影足迹放大 k 倍、不透明度轮廓不变, 每 µm² 的晶体数 n ∝ k⁻²。于是:
+#   · 平均密度 (特性曲线) 不变: E[T] = exp(−Σ n p g A) 中 n·A 与 p 都不变;
+#   · 透射率协方差是 k = 1 的空间放大 Cov_k(r) = Cov_1(r/k), 所以颗粒结构 ×k, Selwyn σ√A ∝ k;
+#   · 银量: 三维晶体每颗银 ∝ k³, 涂布银 ∝ k (k = 1 的覆盖力 ∝ 1/√a, Farnell & Solman 1970; 保持银量不变时密度 ∝ 1/k,
+#     特性曲线不能不变); T 颗粒每颗银 ∝ k², 涂布银约不变 (由覆盖截面守恒算出, 见 scale_silver)。
+#   · 银丝团: 丝径 ∝ 晶体平均厚度 v/a (三维 ∝ k, T 颗粒不变), 丝团的填充率不变; 三维晶体的丝团就是 k = 1 的丝团整体放大
+#     (同一随机序列, 参考栅格 ×k), T 颗粒的丝团按新尺寸重新生成。
+#   · 感光度 (唯一的非物理假设): 真实的大晶体捕获更多光子, 按本模型的 λ = φ·a·(a/a0)^β·H 会快 k^(2(1+β)) 倍;
+#     这里每颗晶体在每个曝光下的有效光子数保持不变 (η ×k⁻², a0 ×k², 灰雾面积 a_f ×k²), 感光度由用户另设 (EI)。
+GRAIN_SCALE_RANGE = (0.5, 3.0)
+
+
+def check_grain_scale(k):
+    k = float(k)
+    lo, hi = GRAIN_SCALE_RANGE
+    if not (np.isfinite(k) and lo <= k <= hi):
+        raise ValueError(f"颗粒粗细 grain_scale = {k:g} 超出范围 [{lo:g}, {hi:g}]")
+    return k
+
+
+def _subpop_cover(spec: SilverSpec):
+    """(K,) 每个亚群全部显影时的投影遮光截面 Σ_q n_q·A_q (每 µm², 不含收集几何 g)。"""
+    return (silver_bins(spec)["n"] * silver_library(spec)["A_spec"]).sum(1)
+
+
+def scale_silver(spec: SilverSpec, k):
+    """T53: 颗粒粗细 k 的显式银粒档案 (见上方说明)。k = 1 原样返回。"""
+    k = check_grain_scale(k)
+    if k == 1.0:
+        return spec
+    g3 = spec.thickness_um is None                    # 三维晶体: 丝径与参考栅格 ×k (丝团整体放大)
+    sc = spec.with_(ecd_um=tuple(float(e) * k for e in spec.ecd_um), fog_area_um2=spec.fog_area_um2 * k * k,
+                    a0_um2=spec.a0_um2 * k * k, eta=spec.eta / (k * k), cluster_um=spec.cluster_um * k,
+                    filament_um=spec.filament_um * (k if g3 else 1.0), fine_um=spec.fine_um * (k if g3 else 1.0),
+                    source=(spec.source + f"; 颗粒粗细 ×{k:g}").lstrip("; "))
+    c1, ck = _subpop_cover(spec), _subpop_cover(sc)
+    coat = np.asarray(spec.coat_g_m2, float) * np.where(ck > 0, c1 / np.maximum(ck, 1e-300), 0.0)
+    return sc.with_(coat_g_m2=tuple(float(c) for c in coat))
+
+
+def scale_grain(spec: GrainSpec, k):
+    """T53: 颗粒粗细 k 的染料云 / κ 银量档案 (T45 / T46 路径)。每亚群全部显影的密度 (amount) 不变; 每晶体积分密度
+    m = κ·v 须 ∝ k² (投影足迹 ×k², 不透明度不变): T 颗粒 v ∝ k² 自然成立 (染料量守恒); 三维晶体 v ∝ k³, κ ×1/k
+    (银: 覆盖力 ∝ 1/√a)。云的扩散长度 L (或 T45 的整场 σ) ×k。k = 1 原样返回。"""
+    k = check_grain_scale(k)
+    if k == 1.0:
+        return spec
+    kap = tuple(float(x) / k for x in spec.kappa) if spec.thickness_um is None else spec.kappa
+    return spec.with_(ecd_um=tuple(tuple(float(e) * k for e in row) for row in spec.ecd_um),
+                      fog_area_um2=tuple(float(f) * k * k for f in spec.fog_area_um2), eta=spec.eta / (k * k),
+                      eta_a0_um2=spec.eta_a0_um2 * k * k, kappa=kap, cloud_um=spec.cloud_um * k,
+                      cloud_L_um=None if spec.cloud_L_um is None else spec.cloud_L_um * k,
+                      source=(spec.source + f"; 颗粒粗细 ×{k:g}").lstrip("; "))
 
 
 def silver_curve(spec: SilverSpec, logH, geometry="diffuse"):

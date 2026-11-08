@@ -103,16 +103,37 @@ def near_infrared_estimate(strength=1.0):
 # --------------------------------------------------------------- 配方 --
 def recipe(name: str) -> dict:
     """返回 engine.Params 的关键字参数。"""
-    if "+w" in name:
-        # T49 黑白滤镜: "<配方>+w<Wratten 号>", 例 "kodak_trix_400+w25"。滤镜加在镜头前的光谱上 (与片种无关);
-        # 曝光按摄影师的做法补偿: 不带滤镜测光, 再乘该片数据表公布的滤镜系数 (filter_factor)。
-        base, num = name.rsplit("+w", 1)
-        if wratten_number(num) is None:
-            raise KeyError(f"未知的 Wratten 滤镜: {num}")
+    if "+" in name:
+        # 配方后缀 (可叠加, 按顺序): "<配方>+w<Wratten 号>" 滤镜 (T49)、"+g<k>" 颗粒粗细 (T53)、"+f<画幅>" 画幅 (T53)。
+        # 例 "kodak_trix_400+w25"、"kodak_trix_400+g1.5"、"kodak_trix_400@rodinal+w25+g2"、"kodak_trix_400+fhalf"。
+        base, *mods = name.split("+")
         kw = dict(recipe(base))
-        film = kw["film"] if isinstance(kw["film"], str) else base
-        kw["lens_filter"] = wratten(wratten_number(num))
-        kw["filter_factor"] = filter_factor(film, num)[0]
+        for mod in mods:
+            tag, val = mod[:1], mod[1:]
+            if tag == "w":
+                # T49 黑白滤镜: 滤镜加在镜头前的光谱上 (与片种无关); 曝光按摄影师的做法补偿: 不带滤镜测光,
+                # 再乘该片数据表公布的滤镜系数 (filter_factor)。
+                if wratten_number(val) is None:
+                    raise KeyError(f"未知的 Wratten 滤镜: {val}")
+                film = kw["film"] if isinstance(kw["film"], str) else base
+                kw["lens_filter"] = wratten(wratten_number(val))
+                kw["filter_factor"] = filter_factor(film, val)[0]
+            elif tag == "g":
+                # T53 颗粒粗细 k: 同一胶片的假想乳剂, 每个线性颗粒尺寸 ×k (engine.Params.grain_scale; 范围 0.5–3)
+                from .grain import check_grain_scale
+                try:
+                    k = float(val)
+                except ValueError:
+                    raise ValueError(f"颗粒粗细后缀须为 +g<数>, 例 +g1.5: {mod!r}") from None
+                kw["grain_scale"] = check_grain_scale(k)
+            elif tag == "f":
+                # T53 画幅 (engine.FILM_FORMATS 的键, 例 +fhalf、+f110、+f645): 每个输出像素对应的胶片面积
+                from .engine import FILM_FORMATS
+                if val not in FILM_FORMATS:
+                    raise KeyError(f"未知画幅 {val!r}; 可选 {', '.join(FILM_FORMATS)}")
+                kw["film_format"] = val
+            else:
+                raise KeyError(f"未知的配方后缀 +{mod}")
         return kw
     if name == "cinestill_800t_reference":
         # 物理参考 (docs/ARCHITECTURE.md): 同一张 CineStill 800T 底片, 扫描时按胶片在设计光源 (3200K) 下的中灰

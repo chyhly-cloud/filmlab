@@ -73,6 +73,13 @@ SCAN_PSF_UM = 4.9
 # 用哪一家: Params.scan_spatial; 为 None 时用本常量 (由 generation.use 按代际设置); 再为 None 时按扫描仪型号 (SCAN_SPATIAL_BY_SCANNER)。
 SCAN_SPATIAL_LAB = None
 SCAN_SPATIAL_BY_SCANNER = {"frontier": "frontier_epfl", "frontier_neutral": "frontier_epfl", "noritsu": "noritsu_rpl"}
+# T53 画幅 (Params.film_format; 默认 None = 用 Params.frame_width_mm): 名义画面尺寸 (长边, 短边) mm。
+#   输入图像按"长边对长边"放在画面上 (长宽比不同时 = 画面里最大的同长宽比裁切; 要整幅画面先用 crop_to_format)。
+#   冲印店的传感器孔径按同一输出像素数换算 (T52 3.1 的假设: 冲印店对各画幅输出与 35 mm 相近的像素数)。
+FILM_FORMATS = {
+    "35mm": (36.0, 24.0), "half": (24.0, 18.0), "110": (17.0, 13.0), "126": (26.5, 26.5), "aps_c": (25.1, 16.7),
+    "645": (56.0, 41.5), "6x6": (56.0, 56.0), "6x7": (69.5, 56.0), "6x9": (84.0, 56.0), "4x5": (121.0, 97.0),
+}
 
 
 @dataclass
@@ -135,6 +142,9 @@ class Params:
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
+    # T53 画幅 (FILM_FORMATS 的键, 例 "half"、"110"、"645"): 设定时取代 frame_width_mm (= 画幅长边), 冲印店孔径按画幅换算;
+    # None = 不改 (默认)。颗粒随画幅的变化只来自每个输出像素对应的胶片面积 (放大倍率), 是"真实"的变粗方式之一。
+    film_format: str | None = None
     exposure_hook: object = None               # (rgb, H) -> H, 例: 红外伪彩的近红外估算
     # ---- S2 冲洗
     process: str | Process | None = None       # None = 原生工艺
@@ -168,10 +178,27 @@ class Params:
     scan_spatial: str | None = None
     # ---- 颗粒
     grain: float = 1.0                         # 颗粒倍数 (1 = 按感光度估算)
+    # T53 颗粒粗细 k (docs/tasks/T53_GRAIN_COARSENESS.md): 同一胶片的假想乳剂, 每个线性颗粒尺寸 ×k (晶体、银丝团 / 染料云、
+    # 显影液成团半径); 投影遮光截面守恒 → 特性曲线不变, 颗粒结构 ×k, Selwyn σ√A ∝ k。感光度不随 k (唯一的非物理假设)。
+    # 范围 grain.GRAIN_SCALE_RANGE (0.5–3); 只在银盐颗粒路径 ("grain_silver", t45_base 及以后) 上定义。1 = 不改。
+    grain_scale: float = 1.0
     # ---- 物理随机性 (variation.py): 哪一卷胶片 / 哪一次冲洗 / 第几张。roll=None 为标称值
     roll: int | None = 0
     lab: int | None = None
     frame: int = 0
+
+
+def crop_to_format(img, fmt):
+    """T53: 把输入图像居中裁切到画幅 fmt (FILM_FORMATS) 的长宽比 (长边方向不变, 不重采样), 使它对应整幅画面。"""
+    L, S = FILM_FORMATS[fmt]
+    h, w = img.shape[:2]
+    a = L / S
+    if h >= w:
+        hh, ww = (h, int(round(h / a))) if h / w <= a else (int(round(w * a)), w)
+    else:
+        ww, hh = (w, int(round(w / a))) if w / h <= a else (int(round(h * a)), h)
+    y0, x0 = (h - hh) // 2, (w - ww) // 2
+    return img[y0:y0 + hh, x0:x0 + ww]
 
 
 def _resolve(x, default=None):
@@ -209,6 +236,13 @@ def _speed_point(e: Emulsion):
 class Engine:
     def __init__(self, p: Params):
         self.p = p
+        if p.grain_scale != 1.0:                         # T53
+            from .grain import check_grain_scale
+            check_grain_scale(p.grain_scale)
+            if "grain_silver" not in p.corrections:
+                raise ValueError("grain_scale 只在银盐颗粒路径 (修正 grain_silver, t45_base 及以后的代际) 上定义")
+        if p.film_format is not None and p.film_format not in FILM_FORMATS:
+            raise KeyError(f"未知画幅 {p.film_format!r}; 可选 {', '.join(FILM_FORMATS)}")
         self.e = e = _resolve(p.film)
         self.proc = _process(e, p)
         st = e.stock
@@ -502,7 +536,7 @@ class Engine:
         p, e = self.p, self.e
         self.light_W = None
         h, w = rgb_lin.shape[:2]
-        self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
+        self.px_um = self.frame_long_mm() * 1000.0 / max(h, w)
         if "camera_glare" in p.corrections:              # T20: 拍摄端 (镜头 / 柔光镜) 眩光, 不属于胶片; 参数 CAMERA_GLARE
             from .optics import lens_glare
             rgb_lin = lens_glare(rgb_lin, self.px_um, **(CAMERA_GLARE_T41 if "camera_glare_t41" in p.corrections
@@ -634,13 +668,24 @@ class Engine:
             out = spatial.apply(out, lab, self.px_um, mono=sc.mono)
         return out
 
+    def frame_long_mm(self):
+        """底片画面长边 (mm): Params.film_format 设定时取画幅 (T53), 否则 Params.frame_width_mm。"""
+        if self.p.film_format is None:
+            return self.p.frame_width_mm
+        return FILM_FORMATS[self.p.film_format][0]
+
     def scan_spatial_lab(self):
-        """T51: 启用 "scan_spatial" 时该冲印店的空间传递 (scanning.spatial.LabSpatial), 否则 None。"""
+        """T51: 启用 "scan_spatial" 时该冲印店的空间传递 (scanning.spatial.LabSpatial), 否则 None。
+        T53: 设了 Params.film_format 时, 传感器孔径 (冲印店 35 mm 的像素间距) 按画幅长边 / 36 mm 换算 (同一输出像素数)。"""
         if "scan_spatial" not in self.p.corrections:
             return None
         from .scanning import spatial
         name = self.p.scan_spatial or SCAN_SPATIAL_LAB or SCAN_SPATIAL_BY_SCANNER.get(self.p.scanner)
-        return spatial.LABS[name]
+        lab = spatial.LABS[name]
+        L = self.frame_long_mm()
+        if self.p.film_format is not None and L != 36.0:
+            lab = replace(lab, pitch_um=lab.pitch_um * L / 36.0, name=f"{lab.name} ({self.p.film_format})")
+        return lab
 
     def _scan_psf(self, Dn):
         lab = self.scan_spatial_lab()
@@ -663,7 +708,7 @@ class Engine:
     def render_xyz(self, rgb_lin):
         p, e = self.p, self.e
         h, w = rgb_lin.shape[:2]
-        self.px_um = p.frame_width_mm * 1000.0 / max(h, w)
+        self.px_um = self.frame_long_mm() * 1000.0 / max(h, w)
         if self.paper is not None and p.timing == "frame":
             # 自动冲印机测整张底片的平均密度 (LATD), 以此定光
             lin = np.clip(rgb_lin.reshape(-1, 3), 1e-4, None)
@@ -713,6 +758,8 @@ class Engine:
             # T47: 黑白片的显式银粒 (晶体在连续坐标中撒下、按曝光显影、原位生成银丝团, 透射率域积分到像素)
             from .materials import silver_spec, silver_fog_offset
             sp = silver_spec(self.e, self.proc.name)
+            if self.p.grain_scale != 1.0:                # T53 颗粒粗细 (晶体、银丝团、成团半径 ×k; 投影遮光截面守恒)
+                sp = grain.scale_silver(sp, self.p.grain_scale)
             off = silver_fog_offset(self.e, sp)
             st.prescan_silver = st.silver.copy()             # 冲印店预扫 (定光) 看到的无颗粒密度, 见 scan()
             st.silver -= off
@@ -721,6 +768,8 @@ class Engine:
             return
         # T46: 晶体群由该胶片的公开物理量 + 通用常数推导, 最后一步 (染料云 / 银丝团) 随机且随冲洗工艺
         spec = grain_spec_t46(self.e, self.proc.name) if "grain_t46" in self.p.corrections else grain_spec(self.e)
+        if self.p.grain_scale != 1.0:                    # T53 颗粒粗细 (晶体、染料云 ×k; 每亚群密度守恒)
+            spec = grain.scale_grain(spec, self.p.grain_scale)
         rng = np.random.default_rng(self.v.frame_seed)
         grain.apply(self.e, spec, st, self.px_um, rng, strength=self.p.grain)
 
