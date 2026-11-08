@@ -1,0 +1,18 @@
+{
+  "note": "T52 只存 URL 与测量; RPL 扫描 (图像) 不进仓库, 下载在 scratchpad, 测量后已删除。",
+  "rpl": {
+    "zip": "https://gfs-na.richardphotolab.com/zips/Richards-Film-Stock-And-Exposure-Comparisons.zip",
+    "page": "https://richardphotolab.com/blogs/post/find-your-film-stock-and-exposure-comparisons",
+    "fetched": "2026-11-08",
+    "sha256": "584a0261bafc028f5845ab1fb69d0060e9ffacb90b8165b651007c76d7d153a0",
+    "content_length": 245270383,
+    "last_modified": "Thu, 11 Dec 2025 05:50:56 GMT",
+    "used": ["6_KODAK400TX/*.jpg (7)", "7_ILFORDHP5PLUS/*.jpg (7)", "8_ILFORDDELTA3200PRO/*.jpg (7)"],
+    "format": "645, 2048 x 2796 灰度 JPEG (Noritsu), 约 20 µm/像素 (T51)"
+  },
+  "visibility": {
+    "csf": "Barten, P. G. J. (1999). Contrast Sensitivity of the Human Eye and Its Effects on Image Quality. SPIE Press. 实现: colour-science 0.4.7, colour.contrast.contrast_sensitivity_function_Barten1999 (标准观察者默认常数), pupil_diameter_Barten1999, retinal_illuminance_Barten1999, sigma_Barten1999",
+    "colour_docs": "https://colour.readthedocs.io/en/v0.4.4/generated/colour.contrast.contrast_sensitivity_function_Barten1999.html",
+    "viewing_assumption": "手机 460 ppi, 1:1 显示, 30 cm (94.9 像素/度), 白 300 cd/m², 视场 = 图像长边视角 (12.7°)"
+  }
+}
