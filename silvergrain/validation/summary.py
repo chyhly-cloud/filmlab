@@ -84,6 +84,15 @@ def summarize(rep):
         e = r["edges"]["train"]
         L.append(f"  直边 (训练片 {e['n']} 条, 输送方向): 本链 + kx {e['chain_sep3_kx']['cost'] * 1e4:.3f}e-4, T51 USM {e['t51_usm']['cost'] * 1e4:.3f}e-4, "
                  f"不锐化 {e['none_t51_box']['cost'] * 1e4:.3f}e-4")
+    if "filmside" in rep:
+        r = rep["filmside"]
+        for f, v in r["film_side"].items():
+            L.append(f"T55f 胶片侧 σ_48,D 真实 / 模型 ({f}, 配准, 本帧斜率): "
+                     + ", ".join(f"D {x['D']:.1f}: {x['ratio_s48']:.2f}" for x in v["rows"])
+                     + "; 超额方差 (×1e-6) " + ", ".join(f"{x['excess_var_s48']:.0f}" for x in v["rows"]))
+        L.append("T55f 尾巴 (每像素密度偏度 / 峰度, 显式 | closed_form): "
+                 + "; ".join(f"{t['gauge']} {t['px_um']:g} µm EV{t['ev']:+d}: {t['explicit']['D_skew']:+.2f}/{t['explicit']['D_kurt']:+.2f} | "
+                             f"{t['closed_form']['D_skew']:+.2f}/{t['closed_form']['D_kurt']:+.2f}" for t in r["tails"]))
     if "labtone" in rep:
         r = rep["labtone"]
         for key in ("kodak_trix_400@xtol", "ilford_hp5_plus@d76"):

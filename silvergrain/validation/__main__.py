@@ -9,6 +9,7 @@
   fastpath  黑白快速路径 (closed_form) 对显式银粒
   realscan  真实扫描的记录值 (T51b / T52 / T54-RPL / T51 谱形): 同码值、胶片侧、谱形 (不下载)
   scanner_fit T55e: Noritsu HS-1800 的线阵 CCD 采样链 (2D 颗粒谱 + 行列方差调制 + 直边; 彩色训练 → 彩色留出 → 黑白跨片种)
+  filmside  T55f: 原生网格上显式 vs closed_form 的尾巴; 配准得到的胶片侧 σ_D(D) 对模型
   labtone   T55b: 冲印店实测影调 (rpl_noritsu) 下 grain / full 模式的同码值颗粒, 对 Tri-X、HP5+ 与 RPL 彩负 5 种
 结果写到 silvergrain/validation/results/report.json (或给定路径); 断点续跑: 已有的项不重算 (--redo 重算)。"""
 import json
@@ -16,7 +17,7 @@ import sys
 import time
 from pathlib import Path
 
-ORDER = ("t47", "t47b", "t53", "t50", "fastpath", "scanner_fit", "realscan", "labtone", "t46")
+ORDER = ("t47", "t47b", "t53", "t50", "fastpath", "scanner_fit", "filmside", "realscan", "labtone", "t46")
 
 
 def _default(o):
@@ -66,6 +67,9 @@ def main(argv):
             r = run()
         elif name == "scanner_fit":
             from .scanner_fit import run
+            r = run()
+        elif name == "filmside":
+            from .filmside import run
             r = run()
         elif name == "labtone":
             from .realscan import lab_compare
