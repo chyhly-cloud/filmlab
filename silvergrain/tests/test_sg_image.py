@@ -136,3 +136,39 @@ def test_lab_tone_data():
     assert d["bw"]["frames"] == 14 and d["zip"].startswith("https://") and len(c["slope_q25"]) == len(c["u"])
     i = int(np.argmin(np.abs(np.asarray(c["code"]) - 118)))
     assert c["slope_q25"][i] < c["slope_median"][i] < c["slope_q75"][i]
+
+
+def test_grain_mode_equals_full_mode_fluctuation():
+    """T55d: grain 模式每个像素的相对亮度起伏 = full 模式同一像素的相对起伏 (同一底片、同一冲印店影调与定光; 不加冲印店扫描时严格)。"""
+    from silvergrain.image import srgb_decode
+    from silvergrain.labtone import tone
+    img = np.zeros((96, 192, 3)); img[:, :64] = (0.45, 0.08, 0.06); img[:, 64:128] = (0.07, 0.10, 0.40); img[:, 128:] = 0.18
+    g = sg.apply_to_image(img, "kodak_trix_400", seed=5, scanner=None)
+    f = sg.apply_to_image(img, "kodak_trix_400", seed=5, scanner=None, mode="full", keep_render=True)
+    (T,) = tone("rpl_noritsu", "bw")
+    Dm = f.render.mean.reshape(96, 192)
+    base = srgb_decode(T.code_of(Dm - Dm.mean()) / 255)
+    L = np.array([0.2126, 0.7152, 0.0722])
+    for sl in (np.s_[8:88, 8:56], np.s_[8:88, 72:120], np.s_[8:88, 136:184]):
+        rg = np.log(np.clip(g.linear[sl] @ L, 1e-9, None) / (img[sl] @ L))
+        rf = np.log(np.clip(f.linear[sl][..., 0], 1e-9, None) / base[sl])
+        assert rg.std() == pytest.approx(rf.std(), rel=0.01)
+
+
+def test_wratten_changes_bw_grain_density():
+    """红滤镜 (Wratten 25): 蓝色区域的底片变薄 (颗粒随之), 红色区域变厚; 中性灰基本不变 (按中性灰补偿)。"""
+    img = np.zeros((64, 192, 3)); img[:, :64] = (0.07, 0.10, 0.40); img[:, 64:128] = (0.45, 0.08, 0.06); img[:, 128:] = 0.18
+    a = sg.apply_to_image(img, "kodak_trix_400", seed=1, keep_render=True).render.mean.reshape(64, 192)
+    b = sg.apply_to_image(img, "kodak_trix_400", seed=1, filter="25", keep_render=True).render.mean.reshape(64, 192)
+    assert b[:, :64].mean() < a[:, :64].mean() - 0.05
+    assert b[:, 64:128].mean() > a[:, 64:128].mean() + 0.05
+    assert abs(b[:, 128:].mean() - a[:, 128:].mean()) < 0.01
+
+
+def test_neutral_grey_matches_t55c():
+    """18% 中性灰: 该片的曝光密度 = 由照片码值反推的密度 (T55c), 颗粒强度相同 (不同的 H 给不同的随机实现, 比较统计量)。"""
+    g = np.full((256, 256, 3), 0.18)
+    a = sg.apply_to_image(g, "kodak_trix_400", format=256 * 12 / 1000, seed=3, grain_density="photo").linear[..., 1]
+    b = sg.apply_to_image(g, "kodak_trix_400", format=256 * 12 / 1000, seed=3).linear[..., 1]
+    assert np.log(b / 0.18).std() == pytest.approx(np.log(a / 0.18).std(), rel=0.03)
+    assert b.mean() == pytest.approx(a.mean(), rel=0.01)

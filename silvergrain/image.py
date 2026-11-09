@@ -13,15 +13,20 @@
         定光 timing="auto" (默认): 冲印店在无颗粒密度上自动定光 (同 filmlab T47 的预扫), 整帧平均密度 → 码值 118;
         彩色片每通道各自定光 (= 冲印店的自动色彩平衡)。timing="fixed": 测光中灰的密度 → 码值 118 (曝光补偿可见)。
         反转片: 正片透射率 10^−(D − D_min) (没有冲印店影调)。
-  4b. mode="grain" (只加颗粒, 默认): 保留照片的影调与颜色。把照片看成该片底片经这家冲印店扫描的结果:
-        照片码值 c → u = T⁻¹(c) → 底片密度 D = D_ref + u (D_ref = 该片在测光中灰的平均密度, 照片中灰 118 对齐它)
-        → 该片特性曲线的反函数 → 曝光 H → 在 H 处渲染颗粒, δ = D_px − D̄ → 输出码值 T(u + δ)。
-        照片按显示出来的样子处理: 线性值 > 1 (HDR 输入) 截到 1 (显示为白)。
-        黑白: 用照片的线性亮度 Y (BT.709) 的码值; 银粒是中性密度调制: 三通道乘同一个透射率因子 k = Y'/Y, 色相、色度不变。
-          亮的颗粒 = 该处底片密度低于平均 (显影晶体少于平均), 在正像上比平均亮; 正像最亮只能到片基 (输出 1.0):
-          k 不超过 1 / 该像素最亮的通道, 三通道一起限制 (不逐通道截断, 没有带色的亮点)。
-        彩色负片: 每通道走该通道的影调, 每层染料颗粒进对应通道。反转片: v' = v·10^−δ (透射率)。
-        平均: 二阶 (影调曲率) 偏移按同一底片密度的系综扣除 (_mean_fix), 只剩物理的 −log⟨T⟩ 经影调的传递 g(u + E[δ])。
+  4b. mode="grain" (只加颗粒, 默认): 输出仍是这张照片 (影调、颜色), 只加物理颗粒。T55d 起的定义 (grain_density="film"):
+        · 底片: 与 full 模式同一张底片 —— 该片自己的光谱曝光 H (步骤 2: RGB → 光谱 → 该片光谱感光度, 可选 Wratten 滤镜,
+          18% 灰 = 10/EI × 2^EV) → 该片的特性曲线 → 平均密度 D̄ 与逐像素颗粒密度 D_px, δ = D_px − D̄。
+        · 颗粒强度 = "这张底片在这家冲印店印出来, 这一点会显示的起伏": 冲印店定光 (timing, 与 full 模式同一约定: 默认整帧
+          无颗粒平均密度 → 码值 118) 给出锚点 m, 这一点印成码值 T(D̄ − m); 颗粒让它变成 T(D̄ − m + δ)。
+          相对亮度因子 f = lin(T(D̄ − m + δ)) / lin(T(D̄ − m)) (二阶平均偏移按同一 u 的系综扣除, 只剩 −log⟨T⟩)。
+        · 输出 = 照片 × f: 黑白 = 中性因子 (T55c 的保色相方法: 三通道同一 f, 某通道会超过正像白时把色度向白收);
+          彩色负片 = 每层自己的 f_c 乘到对应通道 (每层的曝光来自该层光谱感光度, 同一原理); 反转片 f = 10^−δ。
+        · 与 full 模式一致: full 模式在这一点输出 lin(T(D̄ − m + δ)), 它对无颗粒值 lin(T(D̄ − m)) 的相对起伏就是 f; grain 模式把
+          同一个 f 乘到照片上。所以两种模式同一像素的相对亮度起伏相同 (不加冲印店扫描时严格相等; 加 Noritsu 时 USM 的作用域
+          不同, 差 ≤ 3%), 区别只在底下的图: full 是这张底片的印片, grain 是照片本身。
+        · 照片的码值不再参与密度 (T55b/c 用照片亮度的码值经冲印店影调反推密度: grain_density="photo", 只为对照)。
+          所以蓝色背景按全色片对蓝光的实际曝光决定颗粒, 加滤镜 (例如 Wratten 25) 会改变底片各处的密度与颗粒, 照片影调不变。
+        照片按显示出来的样子处理: 线性值 > 1 (HDR 输入) 截到 1; 全黑的像素保持黑 (相对因子作用于 0)。
   5. 冲印店扫描 (可选, scanner="noritsu_rpl" / "frontier_epfl"; T51 实测): 光学高斯 σ (输出像素, 透射率上)、传感器孔径
      (冲印店像素间距按画幅长边 / 36 换算, 比渲染像素大 1.2 倍以上时加方盒)、亮度 USM、色度降噪 (彩色)。
      mode="grain" 时只作用于颗粒部分 (照片本身已有自己的成像与锐化): 光学与孔径作用于 δ, USM / 色度降噪作用于编码后的
@@ -460,6 +465,19 @@ def _mean_fix(y1, b, delta, g):
     return y1 / np.where(R > 0, R, 1.0)[gidx].reshape(y1.shape)
 
 
+def lab_anchor(ex, Dm, timing="auto"):
+    """冲印店定光: 每层底片密度的锚点 m (该密度印成码值 118)。timing "auto": 无颗粒密度的整帧平均 (冲印店自动定光,
+    同 filmlab T47 的预扫; 彩色每层各自, 即自动色彩平衡); "fixed": 测光中灰 (H = 10/EI) 的平均密度。full 与 grain 模式共用。"""
+    em = ex.emulsion
+    layers = Dm.shape[-1]
+    if timing == "auto":
+        return Dm.reshape(-1, layers).mean(0)
+    if timing == "fixed":
+        Hg = ex.info["H_grey_lux_s"]
+        return np.atleast_1d(em.mean_density(Hg if em.film.is_bw else np.full(3, Hg)))
+    raise ValueError("timing: 'auto' / 'fixed'")
+
+
 def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto", scanner_key=None):
     """T55b 的步骤 4–5 (冲印店实测影调)。返回 (线性输出, 信息)。见模块说明。"""
     from .labtone import tone
@@ -484,12 +502,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
             info["scan"] = dict(kind="reversal_transmittance", D_min=Dmin.tolist())
         else:
             T = tone(lab, "bw" if f.is_bw else "colour")
-            if timing == "auto":                                         # 冲印店自动定光: 无颗粒密度的整帧平均 → 码值 118
-                m = Dm.reshape(-1, layers).mean(0)
-            elif timing == "fixed":                                      # 固定定光: 测光中灰的密度 → 码值 118
-                m = np.atleast_1d(em.mean_density(ex.info["H_grey_lux_s"] if f.is_bw else np.full(3, ex.info["H_grey_lux_s"])))
-            else:
-                raise ValueError("timing: 'auto' / 'fixed'")
+            m = lab_anchor(ex, Dm, timing)
             code = np.stack([T[c].code_of(D[..., c] - m[c]) for c in range(layers)], -1)
             out = dec(code)
             info["scan"] = dict(kind="lab_tone", timing=timing, D_anchor=np.asarray(m).tolist())
@@ -506,8 +519,17 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
     delta = D - Dm
     if sc is not None:
         delta = np.stack([_box(_gauss(delta[..., c], sc.optics_px), lab_px) for c in range(layers)], -1)
+    film_density = aux is None                                           # T55d: 底片密度来自该片自己的光谱曝光 (expose)
+    if film_density and not reversal:
+        T = tone(lab, "bw" if f.is_bw else "colour")
+        m = lab_anchor(ex, Dm, timing)
+        aux = dict(kind="film", tones=T, u=Dm - m[None, None, :], base=np.clip(rgb, 0.0, 1.0) @ LUMA_709 if f.is_bw else None,
+                   anchor=np.asarray(m).tolist())
+        info["grain_density"] = "film"; info["anchor_D"] = aux["anchor"]; info["timing"] = timing
+    elif not reversal:
+        info["grain_density"] = "photo"
     if reversal:
-        Dmin = np.asarray(aux["D_min"])
+        Dmin = em.curve.density_curves.min(0) if film_density else np.asarray(aux["D_min"])
         b = Dm                                                           # 正片: v = 10^−(D − D_min), 斜率 −1 (透射率本身)
         o = np.empty_like(rgb)
         for c in range(3):
@@ -543,7 +565,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
             if over.any():
                 t = np.clip((1.0 - Yp[over]) / np.maximum(mx[over] - Yp[over], EPS), 0.0, 1.0)
                 o[over] = Yp[over][:, None] + t[:, None] * (o[over] - Yp[over][:, None])
-            dark = aux["base"][..., 0] <= EPS                            # 全黑像素: 中性的颗粒亮度
+            dark = (aux["base"][..., 0] <= EPS) if aux["kind"] == "bw" else np.zeros(Yl.shape, bool)   # T55c: 全黑像素的中性颗粒
             if dark.any():
                 yv = dec(T[0].code_of(aux["u"][..., 0] + delta[..., 0]))
                 o[dark] = np.minimum(yv[dark], 1.0)[:, None]
@@ -561,14 +583,17 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
 
 def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0, format="35mm", output_px=None,
                    mode="grain", exposure_ev=0.0, metering="fixed", filter=None, filter_compensate=True, scanner="auto",
-                   lab="rpl_noritsu", timing="auto", seed=0, method="auto", encoding="auto", workers=1, keep_render=False):
+                   lab="rpl_noritsu", timing="auto", grain_density="film", seed=0, method="auto", encoding="auto", workers=1,
+                   keep_render=False):
     """给照片加银盐颗粒。返回 GrainImage (linear, info)。参数:
     image: 路径或数组 (整数 = sRGB 编码; 浮点 = 线性, encoding="srgb" 时先解码)。
     film / developer: 胶片与显影液 (films.films() / films.developers(); None = 原生冲洗)。grain_scale: 颗粒粗细 k (0.5–3)。
     format: 画幅 ("35mm", "half", "110", "645", "6x7", … 或长边 mm)。output_px: 输出长边像素 (None = 原尺寸)。
     mode: "grain" (只加颗粒, 默认) / "full" (整卷胶片: 该片的影调 + 颗粒)。exposure_ev: 曝光补偿 (档)。
     lab: 冲印店影调 (实测, data/lab_tone.json): "rpl_noritsu" (默认); None = T55 的旧做法 (场景线性 + 直线反转, 只为对照)。
-    timing: full 模式的冲印店定光: "auto" (无颗粒密度的整帧平均 → 中灰码值) / "fixed" (测光中灰 → 中灰码值)。
+    grain_density: grain 模式的底片密度来源: "film" (默认, T55d: 该片自己的光谱曝光, 与 full 模式同一底片) /
+                   "photo" (T55b/c: 由照片码值经冲印店影调反推, 只为对照)。
+    timing: full 与 grain 模式的冲印店定光: "auto" (无颗粒密度的整帧平均 → 中灰码值) / "fixed" (测光中灰 → 中灰码值)。
     metering: "fixed" (线性值 0.18 = 中灰) / "average" (图像的对数平均亮度 = 中灰, 相机平均测光)。
     filter: Wratten 号 ("8", "11", "15", "25", "47", "58" …; 黑白常用; 只影响 full 模式的曝光); filter_compensate: 按中性灰补偿。
     scanner: "auto" (默认: 与 lab 同一家冲印店 —— rpl_noritsu → "noritsu_rpl" 的空间传递; lab=None 时不加) / None (不加) /
@@ -580,8 +605,10 @@ def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0
     ex = expose(image, film, developer, grain_scale, format, output_px, exposure_ev, metering, filter, filter_compensate, encoding)
     aux = None
     H = ex.H
-    if lab is not None and mode == "grain":
+    if lab is not None and mode == "grain" and grain_density == "photo":     # T55b/c 的做法 (只为对照)
         H, aux = lab_grain_exposure(ex, lab)
+    elif grain_density not in ("film", "photo"):
+        raise ValueError("grain_density: 'film' / 'photo'")
     t1 = time.time()
     rr = render(ex.emulsion, exposure=H, px_um=ex.px_um, seed=seed, method=method, workers=workers)
     t2 = time.time()

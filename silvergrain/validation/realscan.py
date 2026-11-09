@@ -178,12 +178,13 @@ COLOUR_RPL = (("kodak_portra_400", "2_KODAKPORTRA400"), ("kodak_portra_160", "4_
 
 def lab_rows(film, dev, mode="grain", n=N, seed=1):
     """grain 模式 (T55b, 冲印店影调 rpl_noritsu, Noritsu 空间传递) 的均匀照片 18% × 2^EV: 原尺寸 / 手机尺寸的颗粒量。
-    full 模式用 timing="fixed" (均匀照片在自动定光下都落到同一码值)。"""
+    两种模式都用 timing="fixed" (均匀照片在自动定光下都落到同一码值)。T55d 起 grain 模式的底片密度来自该片的光谱曝光。"""
     import silvergrain as sg
     rows = []
     for ev in LAB_EVS:
         img = np.full((n, n, 3), GREY * 2.0 ** ev)
-        kw = dict(timing="fixed", exposure_ev=ev) if mode == "full" else {}
+        # 均匀照片代表"正常测光的一帧里的这一块": 定光固定在测光中灰 (自动定光会把每一块单色帧都印到中灰)
+        kw = dict(timing="fixed", exposure_ev=ev) if mode == "full" else dict(timing="fixed")
         if mode == "full":
             img = np.full((n, n, 3), GREY)
         r = sg.apply_to_image(img, film, dev, format=n * PX / 1000.0, mode=mode, scanner="noritsu_rpl", seed=seed,
