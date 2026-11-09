@@ -8,13 +8,15 @@
   t53       颗粒粗细 k 的标度律 (T53, 闭式)                      — 与 data/t53_reference.json
   fastpath  黑白快速路径 (closed_form) 对显式银粒
   realscan  真实扫描的记录值 (T51b / T52 / T54-RPL / T51 谱形): 同码值、胶片侧、谱形 (不下载)
+  scanner_fit T55c: 按 silvergrain 的扫描传递重新拟合 Noritsu 光学 σ_o (T51 的方法; 直边 → 颗粒、留出片、跨片种)
+  labtone   T55b: 冲印店实测影调 (rpl_noritsu) 下 grain / full 模式的同码值颗粒, 对 Tri-X、HP5+ 与 RPL 彩负 5 种
 结果写到 silvergrain/validation/results/report.json (或给定路径); 断点续跑: 已有的项不重算 (--redo 重算)。"""
 import json
 import sys
 import time
 from pathlib import Path
 
-ORDER = ("t47", "t47b", "t53", "t50", "fastpath", "realscan", "t46")
+ORDER = ("t47", "t47b", "t53", "t50", "fastpath", "scanner_fit", "realscan", "labtone", "t46")
 
 
 def _default(o):
@@ -62,6 +64,12 @@ def main(argv):
         elif name == "realscan":
             from .realscan import run
             r = run()
+        elif name == "scanner_fit":
+            from .scanner_fit import run
+            r = run()
+        elif name == "labtone":
+            from .realscan import lab_compare
+            r = lab_compare()
         r = json.loads(json.dumps(r, default=_default))
         r["_seconds"] = round(time.time() - t, 1)
         rep[name] = r

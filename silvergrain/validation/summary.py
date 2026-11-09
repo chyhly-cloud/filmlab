@@ -73,4 +73,22 @@ def summarize(rep):
         if "portra400" in r:
             c = [x for x in r["portra400"]["compare"] if x["mode"] == "full"]
             L.append("真实 RPL Portra 400 同码值 σ_48 (真实/silvergrain full): " + ", ".join(f"{x['code']:.0f}: {x['ratio']:.2f}" for x in c))
+    if "scanner_fit" in rep:
+        r = rep["scanner_fit"]
+        e = r["edge(train)→grain(hold)"]
+        L.append(f"T55c Noritsu 光学重拟合 (silvergrain 的传递): 直边 → 颗粒 (留出片) σ_o = {r['sigma_o_um']:g} µm (RMS {e['rms']:.4f}; "
+                 f"不锐化 {r['colour_hold_no_usm']['rms']:.3f}); 白噪声底占 40 µm 盒方差 {e['noise_var_share_box40']:.2f} (σ_o 与之简并); "
+                 + "; ".join(f"{k.split('_', 2)[-1]} 谱形 RMS {v['at_colour_sigma_o']['rms']:.3f}" for k, v in r.items() if k.startswith("bw_holdout")))
+    if "labtone" in rep:
+        r = rep["labtone"]
+        for key in ("kodak_trix_400@xtol", "ilford_hp5_plus@d76"):
+            for mode in ("grain", "full"):
+                c = r[key][mode]["compare"]
+                L.append(f"T55b 冲印店影调 {key} {mode}: 同码值 σ_48 真实/silvergrain "
+                         + ", ".join(f"{x['code']:.0f}: {x['ratio_s48']:.2f}" for x in c["t51b"])
+                         + " (filmlab " + ", ".join(f"{x['filmlab_ratio_s48']:.2f}" for x in c["t51b"]) + "); σ_px 原尺寸 / 手机 "
+                         + ", ".join(f"{x['scale'][0]}{x['code']:.0f}: {x['ratio_px']:.2f}" for x in c["t52"]))
+        for key, v in r.items():
+            if key.endswith("@C-41"):
+                L.append(f"T55b {key} grain: 同码值 σ_48 真实/silvergrain " + ", ".join(f"{x['code']:.0f}: {x['ratio']:.2f}" for x in v["grain"]["compare"]))
     return "\n".join(L)

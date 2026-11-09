@@ -15,13 +15,14 @@
   "noritsu_rpl": {
    "name": "Noritsu HS-1800 (Richard Photo Lab, JPEG)",
    "pitch_um": 12.0,
-   "optics_px": 0.35,
+   "optics_px": 0.45,
    "usm_sigma_px": 0.68,
    "usm_amount": 1.03,
    "usm_threshold": 0.0,
    "chroma_sigma_px": 0.0,
    "chroma_threshold": 0.0,
-   "source": "T51: tools/eval/t51/fit.json noritsu"
+   "source": "T55c: silvergrain/validation/scanner_fit.py —— 按 silvergrain 自己的扫描传递 (输出像素网格上的连续高斯 MTF) 重新拟合 T51 的颗粒谱: USM 取 T51 直边 (a 1.032, σ_u 0.683 像素); 直边 → 颗粒 (留出片 Portra 800 / Ektar 100) 定 σ_o = 9 µm = 0.45 像素 (20 µm), 谱形 RMS 0.0765 (不锐化 0.227); 跨片种留出 Tri-X 0.129、HP5+ 0.068。注意: 谱形拟合里 σ_o 与扫描仪白噪声底 N 简并 (留出片 N 占 40 µm 盒方差 58%), 谱形不能单独定 σ_o; 最清晰直边的总模糊 11 µm 为上限。T51 原值 0.35 像素 (7 µm) 是按 细像素上的连续高斯 + 像素方盒积分定的 (tools/eval/t51/fit.json); filmlab 引擎在输出像素上用离散核执行, 近乎恒等。",
+   "optics_px_t51": 0.35
   }
  }
 }

@@ -46,13 +46,21 @@ def test_inputs_8bit_16bit_mono():
     assert m.linear.ndim == 2
 
 
-def test_full_mode_grey_and_tone():
+def test_full_mode_lab_tone_and_timing():
     grey = np.full((64, 64, 3), 0.18)
     r = sg.apply_to_image(grey, "kodak_trix_400", mode="full", seed=1)
-    assert r.linear.mean() == pytest.approx(0.18, rel=0.06)        # 中灰对齐 (+ 物理的 −log⟨T⟩)
-    lo = sg.apply_to_image(grey * 2 ** -2, "kodak_trix_400", mode="full", seed=1).linear.mean()
-    hi = sg.apply_to_image(grey * 2 ** 2, "kodak_trix_400", mode="full", seed=1).linear.mean()
-    assert lo < 0.18 / 3 and hi > 0.18 * 3                       # 影调跟着该片的曲线
+    assert r.linear.mean() == pytest.approx(0.18, rel=0.06)        # 自动定光: 整帧平均密度 → 码值 118
+    lo = sg.apply_to_image(grey, "kodak_trix_400", mode="full", timing="fixed", exposure_ev=-2, seed=1).linear.mean()
+    hi = sg.apply_to_image(grey, "kodak_trix_400", mode="full", timing="fixed", exposure_ev=2, seed=1).linear.mean()
+    assert lo < 0.18 / 3 and hi > 0.18 * 2                       # 固定定光: 影调跟着该片的曲线与冲印店影调
+    au = sg.apply_to_image(grey, "kodak_trix_400", mode="full", exposure_ev=2, seed=1).linear.mean()
+    assert au == pytest.approx(0.18, rel=0.06)                   # 自动定光补偿曝光
+
+
+def test_legacy_lab_none_still_available():
+    grey = np.full((64, 64, 3), 0.18)
+    r = sg.apply_to_image(grey, "kodak_trix_400", mode="full", lab=None, seed=1)
+    assert r.linear.mean() == pytest.approx(0.18, rel=0.06) and "scan" in r.info
 
 
 def test_exposure_metering_and_filter():
@@ -77,11 +85,54 @@ def test_scanner_and_output_px_and_seed():
 
 
 def test_grain_mode_coarse_positive_and_mean():
-    """k = 3: 输出恒为正 (指数形式, 无截断黑点); 平均 = 照片 × 10^(E[δ]/γ) (只剩物理的 −log⟨T⟩)。"""
+    """k = 3: 输出恒为正, 不超过 1; 平均 = 照片经 −log⟨T⟩ 的物理偏移 g(u + E[δ]) / g(u) (冲印店影调传递), 别无其他偏移。"""
+    from silvergrain.image import srgb_decode, srgb_encode
+    from silvergrain.labtone import tone
     g = np.full((256, 384, 3), 0.18)
     r = sg.apply_to_image(g, "kodak_trix_400", grain_scale=3.0, format=384 * 12 / 1000, seed=2, method="closed_form",
-                          keep_render=True)
-    assert r.linear.min() > 0.0
-    dmean = float((r.render.density - r.render.mean).mean())
-    gam = r.info["slopes"][0]["gamma_grey"]
-    assert r.linear.mean() / 0.18 == pytest.approx(10 ** (dmean / gam), rel=0.01)
+                          keep_render=True, scanner=None)              # 只看颗粒与影调 (冲印店 USM 另会把少数像素推到 0)
+    assert r.linear.min() > 0.0 and r.linear.max() <= 1.0
+    (T,) = tone("rpl_noritsu", "bw")
+    u = T.u_of(255 * srgb_encode(0.18))
+    Ed = float((r.render.density - r.render.mean).mean())
+    want = srgb_decode(T.code_of(u + Ed) / 255) / 0.18
+    assert r.linear.mean() / 0.18 == pytest.approx(want, rel=0.01)
+
+
+def test_bw_grain_on_colour_is_neutral_density():
+    """黑白银粒在彩色照片上是中性密度: 色相 (色度方向) 严格不变, 不超过 1; 超过正像白的像素只把色度向白收 (亮度 = 颗粒的亮度),
+    不截断亮的颗粒 (T55c)。"""
+    rng = np.random.default_rng(0)
+    img = np.stack([np.full((96, 128), 0.95), np.full((96, 128), 0.55), np.full((96, 128), 0.25)], -1) * rng.uniform(0.7, 1.0, (96, 128, 1))
+    for sc in (None, "noritsu_rpl"):
+        r = sg.apply_to_image(img, "kodak_trix_400", grain_scale=3.0, seed=4, scanner=sc)
+        o = r.linear
+        assert o.max() <= 1.0 + 1e-12
+        L = np.array([0.2126, 0.7152, 0.0722])
+        c, c0 = o - (o @ L)[..., None], img - (img @ L)[..., None]
+        ok = np.linalg.norm(c, axis=-1) > 1e-3
+        cos = (c * c0).sum(-1)[ok] / np.linalg.norm(c, axis=-1)[ok] / np.linalg.norm(c0, axis=-1)[ok]
+        assert cos.min() > 1 - 1e-9
+        assert o[..., 1].std() > 0.01 and 0.0 <= r.info["desaturated_fraction"] <= 1.0
+
+
+def test_default_scanner_follows_lab():
+    g = np.full((64, 64, 3), 0.18)
+    assert sg.apply_to_image(g, "kodak_trix_400", seed=1).info["scanner"].startswith("Noritsu")
+    assert sg.apply_to_image(g, "kodak_trix_400", seed=1, scanner=None).info["scanner"] is None
+    assert sg.apply_to_image(g, "kodak_trix_400", seed=1, lab=None).info.get("scanner") is None
+
+
+def test_lab_tone_data():
+    from silvergrain.labtone import tone
+    from silvergrain import database as db
+    (T,) = tone("rpl_noritsu", "bw")
+    assert np.all(np.diff(T.code) > 0) and T.code_of(0.0) == pytest.approx(118.0)
+    assert 250 < float(T.slope(0.0)) < 360                       # 中灰处 dCode/dD (T51b RPL 实测 275–302 的量级)
+    R, G, B = tone("rpl_noritsu", "colour")
+    assert all(np.all(np.diff(c.code) > 0) for c in (R, G, B))
+    d = db.load_json("lab_tone.json")["rpl_noritsu"]
+    c = d["bw"]["curve"]
+    assert d["bw"]["frames"] == 14 and d["zip"].startswith("https://") and len(c["slope_q25"]) == len(c["u"])
+    i = int(np.argmin(np.abs(np.asarray(c["code"]) - 118)))
+    assert c["slope_q25"][i] < c["slope_median"][i] < c["slope_q75"][i]

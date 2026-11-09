@@ -167,3 +167,74 @@ def colour_case():
                 sg = float(np.interp(b["code"], c[o], v[o]))
                 cmp.append(dict(mode=mode, code=b["code"], real=b["real"], sg=sg, ratio=b["real"] / sg, filmlab_ratio=b["ratio"]))
     return dict(rows=rows, compare=cmp)
+
+
+# ------------------------------------------------------------------ T55b: 冲印店实测影调 --
+LAB_EVS = (-3, -2, -1, 0, 1, 2)
+COLOUR_RPL = (("kodak_portra_400", "2_KODAKPORTRA400"), ("kodak_portra_160", "4_KODAKPORTRA160"),
+              ("kodak_portra_800", "3_KODAKPORTRA800"), ("kodak_ektar_100", "5_KODAKEKTAR100"),
+              ("fujifilm_pro_400h", "1_FUJIPRO400H"))
+
+
+def lab_rows(film, dev, mode="grain", n=N, seed=1):
+    """grain 模式 (T55b, 冲印店影调 rpl_noritsu, Noritsu 空间传递) 的均匀照片 18% × 2^EV: 原尺寸 / 手机尺寸的颗粒量。
+    full 模式用 timing="fixed" (均匀照片在自动定光下都落到同一码值)。"""
+    import silvergrain as sg
+    rows = []
+    for ev in LAB_EVS:
+        img = np.full((n, n, 3), GREY * 2.0 ** ev)
+        kw = dict(timing="fixed", exposure_ev=ev) if mode == "full" else {}
+        if mode == "full":
+            img = np.full((n, n, 3), GREY)
+        r = sg.apply_to_image(img, film, dev, format=n * PX / 1000.0, mode=mode, scanner="noritsu_rpl", seed=seed,
+                              method="explicit", **kw)
+        Y = M.to_code(r.linear)
+        rows.append(dict(ev=ev, native=M.median_stats(M.tiles(Y, PX, synthetic=True)),
+                         phone=M.median_stats(M.tiles(M.phone(Y, PHONE_FACTOR), PX * PHONE_FACTOR, synthetic=True, border=4)),
+                         slope=r.info.get("slope_code_per_D")))
+    return rows
+
+
+def _at(rows, scale, q, code):
+    c = np.array([r[scale]["code"] for r in rows]); v = np.array([r[scale][q] for r in rows]); o = np.argsort(c)
+    return float(np.interp(code, c[o], v[o])) if c.min() <= code <= c.max() else None
+
+
+def lab_compare(log=print):
+    ref = load("realscan_reference.json")
+    out = {}
+    for (film, dev, label, rkey) in CASES:
+        res = {}
+        for mode in ("grain", "full"):
+            rows = lab_rows(film, dev, mode)
+            cmp = dict(t51b=[], t52=[])
+            for b in ref["t51b_same_code"]["films"][label]:
+                s48 = _at(rows, "native", "s48", b["code"]); spx = _at(rows, "native", "s_px", b["code"])
+                if s48 is not None:
+                    cmp["t51b"].append(dict(code=b["code"], real_s48=b["real"]["s48"], sg_s48=s48, ratio_s48=b["real"]["s48"] / s48,
+                                            real_s_px=b["real"]["s_px"], sg_s_px=spx, ratio_px=b["real"]["s_px"] / spx,
+                                            filmlab_ratio_s48=b["real"]["s48"] / b["filmlab_model"]["s48"]))
+            for a in ref["t52_anchor"]["rows"]:
+                if a["film"] != rkey:
+                    continue
+                spx = _at(rows, a["scale"], "s_px", a["code"])
+                if spx is not None:
+                    cmp["t52"].append(dict(scale=a["scale"], code=a["code"], real_px=a["real_px"], sg_px=spx,
+                                           ratio_px=a["real_px"] / spx, filmlab_ratio_px=a["ratio_px"]))
+            res[mode] = dict(rows=rows, compare=cmp)
+        out[f"{film}@{dev}"] = res
+        log(f"  realscan lab {film}@{dev}")
+    rpl = load("realscan_reference.json")
+    import json
+    from pathlib import Path
+    col = json.loads((Path(__file__).resolve().parent / "data" / "realscan_colour_reference.json").read_text(encoding="utf-8"))
+    for film, rkey in COLOUR_RPL:
+        rows = lab_rows(film, None, "grain")
+        cmp = []
+        for b in col["films"][rkey]["same_code"]:
+            s48 = _at(rows, "native", "s48", b["code"])
+            if s48 is not None:
+                cmp.append(dict(code=b["code"], real=b["real"], sg=s48, ratio=b["real"] / s48, filmlab_ratio=b["ratio"]))
+        out[f"{film}@C-41"] = dict(grain=dict(rows=rows, compare=cmp))
+        log(f"  realscan lab {film}")
+    return out

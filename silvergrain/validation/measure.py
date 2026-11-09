@@ -92,3 +92,43 @@ def spectrum(Do, n=64, border=8):
             F = np.fft.fft2(r * w) / n
             Ps.append([np.mean(np.abs(F[mm]) ** 2) for mm in m])
     return fc, np.mean(Ps, 0)
+
+
+SHAPE_BINS = ((20, 70), (70, 120), (120, 170), (170, 220))
+
+
+def shape_tiles(Y, synthetic=False, lo=12, hi=250, flat=1.6, border=8):
+    """分布形状用的均匀块 (T52 的判据: 块平均码值 lo–hi, 截断像素 ≤ 5%, 平坦判据; 不按块内最小 / 最大值排除,
+    否则会系统地去掉含黑点 / 白点的块)。返回 [(块平均码值, 去平面残差 (T×T), 原码值块)]。"""
+    out = []
+    H, W = Y.shape
+    for y in range(border, H - T + 1 - border, T):
+        for x in range(border, W - T + 1 - border, T):
+            t = np.asarray(Y[y:y + T, x:x + T], float)
+            if not synthetic:
+                if not lo <= t.mean() <= hi or ((t <= 0) | (t >= 255)).mean() > 0.05:
+                    continue
+            r = detrend(t)
+            if not synthetic and boxmean(r, 4).var() > flat * boxmean(r, 2).var() / 4.0:
+                continue
+            out.append((float(t.mean()), r, t))
+    return out
+
+
+def shape_stats(tiles, bins=SHAPE_BINS, min_tiles=5):
+    """每个码值档: 各块残差按块自身的标准差归一 (z) 后合并 → 偏度、超额峰度、|z| > 3 的比例; 码值 0 / 255 的像素比例。
+    (正态: 偏度 0, 超额峰度 0, |z| > 3 为 0.27%)"""
+    out = []
+    for a, b in bins:
+        sel = [(r, t) for c, r, t in tiles if a <= c < b]
+        if len(sel) < min_tiles:
+            out.append(dict(bin=[a, b], n_tiles=len(sel)))
+            continue
+        z = np.concatenate([(r / max(r.std(), 1e-9)).ravel() for r, _ in sel])
+        raw = np.concatenate([t.ravel() for _, t in sel])
+        out.append(dict(bin=[a, b], n_tiles=len(sel), code=float(np.median([t.mean() for _, t in sel])),
+                        sigma=float(np.median([r.std() for r, _ in sel])),
+                        skew=float(np.mean(z ** 3)), ex_kurt=float(np.mean(z ** 4) - 3.0),
+                        beyond3=float(np.mean(np.abs(z) > 3)), below3=float(np.mean(z < -3)), above3=float(np.mean(z > 3)),
+                        at0=float(np.mean(raw <= 0.5)), at255=float(np.mean(raw >= 254.5))))
+    return out
