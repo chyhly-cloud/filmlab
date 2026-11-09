@@ -1,0 +1,624 @@
+{
+ "_note": "真实扫描的颗粒测量 (只存测量与 URL; 图像不进仓库, 测试也不下载)。silvergrain 的 realscan 检验与它们比较; 数值摘自 filmlab tools/eval/t51/、t52/、t54/ 与 docs/tasks/T51 13.2 节、T52 4.1 节、T54 5 节。码值 = 8 位亮度; σ 已扣 8 位量化方差 1/12。",
+ "rpl": {
+  "what": "Richard Photo Lab 胶片 / 曝光对比 (Noritsu, EXIF 'NORITSU KOKI' / 'EZ Controller'; 645, 2048 x 2796 JPEG)",
+  "zip": "https://gfs-na.richardphotolab.com/zips/Richards-Film-Stock-And-Exposure-Comparisons.zip",
+  "page": "https://richardphotolab.com/blogs/post/find-your-film-stock-and-exposure-comparisons",
+  "sha256": "584a0261bafc028f5845ab1fb69d0060e9ffacb90b8165b651007c76d7d153a0",
+  "developer_bw": "https://help.richardphotolab.com/kb/film/what-kind-of-chemistry-developer-does-richard-use (黑白: Kodak XTOL)",
+  "format": "645, 2048 x 2796 JPEG (Noritsu HS-1800), 约 20 µm/像素",
+  "scanner_model": "noritsu_rpl (T51)"
+ },
+ "t51b_same_code": {
+  "method": "32 × 32 像素均匀块, 去平面; σ_px 像素级, σ_hp 减 σ = 1 像素高斯, σ_48 = 2 × 2 盒 (40 µm) × 40/42.5; 每档 7 帧中位。 真实斜率 dCode/dD 由同一底片的翻拍 (Neg Sequence) 配准得到 (±15% 密度标度不确定)。",
+  "films": {
+   "Tri-X 400 (RPL: XTOL)": [
+    {
+     "code_bin": [
+      40,
+      80
+     ],
+     "code": 68,
+     "real": {
+      "s_px": 10.2,
+      "s_hp": 9.0,
+      "s48": 4.45
+     },
+     "real_slope": 275,
+     "real_slope_iqr": [
+      270,
+      327
+     ],
+     "filmlab_model": {
+      "s_px": 10.7,
+      "s_hp": 9.7,
+      "s48": 4.33
+     },
+     "filmlab_slope": 300
+    },
+    {
+     "code_bin": [
+      80,
+      120
+     ],
+     "code": 99,
+     "real": {
+      "s_px": 11.4,
+      "s_hp": 10.1,
+      "s48": 5.0
+     },
+     "real_slope": 302,
+     "real_slope_iqr": [
+      295,
+      331
+     ],
+     "filmlab_model": {
+      "s_px": 12.3,
+      "s_hp": 11.2,
+      "s48": 4.98
+     },
+     "filmlab_slope": 333
+    },
+    {
+     "code_bin": [
+      120,
+      160
+     ],
+     "code": 138,
+     "real": {
+      "s_px": 10.9,
+      "s_hp": 9.6,
+      "s48": 5.02
+     },
+     "real_slope": 302,
+     "real_slope_iqr": [
+      291,
+      316
+     ],
+     "filmlab_model": {
+      "s_px": 12.3,
+      "s_hp": 11.2,
+      "s48": 4.99
+     },
+     "filmlab_slope": 325
+    },
+    {
+     "code_bin": [
+      160,
+      200
+     ],
+     "code": 184,
+     "real": {
+      "s_px": 7.9,
+      "s_hp": 6.8,
+      "s48": 3.74
+     },
+     "real_slope": 242,
+     "real_slope_iqr": [
+      230,
+      253
+     ],
+     "filmlab_model": {
+      "s_px": 10.3,
+      "s_hp": 9.3,
+      "s48": 4.15
+     },
+     "filmlab_slope": 263
+    }
+   ],
+   "HP5 Plus (filmlab 模型: D-76)": [
+    {
+     "code_bin": [
+      40,
+      80
+     ],
+     "code": 68,
+     "real": {
+      "s_px": 10.2,
+      "s_hp": 9.2,
+      "s48": 4.37
+     },
+     "real_slope": 249,
+     "real_slope_iqr": [
+      235,
+      282
+     ],
+     "filmlab_model": {
+      "s_px": 10.4,
+      "s_hp": 9.5,
+      "s48": 4.19
+     },
+     "filmlab_slope": 305
+    },
+    {
+     "code_bin": [
+      80,
+      120
+     ],
+     "code": 101,
+     "real": {
+      "s_px": 12.3,
+      "s_hp": 11.2,
+      "s48": 5.45
+     },
+     "real_slope": 267,
+     "real_slope_iqr": [
+      251,
+      310
+     ],
+     "filmlab_model": {
+      "s_px": 12.0,
+      "s_hp": 10.9,
+      "s48": 4.86
+     },
+     "filmlab_slope": 338
+    },
+    {
+     "code_bin": [
+      120,
+      160
+     ],
+     "code": 137,
+     "real": {
+      "s_px": 11.8,
+      "s_hp": 10.4,
+      "s48": 5.26
+     },
+     "real_slope": 261,
+     "real_slope_iqr": [
+      246,
+      293
+     ],
+     "filmlab_model": {
+      "s_px": 11.9,
+      "s_hp": 10.8,
+      "s48": 4.81
+     },
+     "filmlab_slope": 327
+    },
+    {
+     "code_bin": [
+      160,
+      200
+     ],
+     "code": 184,
+     "real": {
+      "s_px": 9.4,
+      "s_hp": 8.3,
+      "s48": 4.18
+     },
+     "real_slope": 197,
+     "real_slope_iqr": [
+      191,
+      208
+     ],
+     "filmlab_model": {
+      "s_px": 9.7,
+      "s_hp": 8.8,
+      "s48": 3.94
+     },
+     "filmlab_slope": 262
+    }
+   ]
+  },
+  "conclusion": "同码值 σ_48 真实/模型: Tri-X 0.90–1.03, HP5+ 1.04–1.12; 胶片侧 Tri-X 0.98–1.12, HP5+ 1.3–1.4 (×斜率 0.8 相抵)"
+ },
+ "t52_anchor": {
+  "method": "同 T51b 的块; 手机尺寸 = 编码后的整张 Lanczos 缩到长边 1200 (645 扫描缩 2.33 倍, 每手机像素 46.7 µm 胶片), 块另要求覆盖的原尺寸区域全是均匀块",
+  "rows": [
+   {
+    "film": "6_KODAK400TX",
+    "scale": "native",
+    "range": [
+     80,
+     120
+    ],
+    "n_frames": 7,
+    "code": 98.82421875,
+    "real_px": 11.464405835966282,
+    "real_hp": 10.222023863201077,
+    "R_phone_frames_median": null,
+    "model_px": 12.304293605015802,
+    "model_hp": 11.209208489221373,
+    "ratio_px": 0.9317402692091854,
+    "ratio_hp": 0.9119309247419601
+   },
+   {
+    "film": "6_KODAK400TX",
+    "scale": "native",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 7,
+    "code": 138.42919921875,
+    "real_px": 10.887316748214127,
+    "real_hp": 9.574887491077213,
+    "R_phone_frames_median": null,
+    "model_px": 12.357947307489761,
+    "model_hp": 11.251973362298525,
+    "ratio_px": 0.8809971815963051,
+    "ratio_hp": 0.8509518448701054
+   },
+   {
+    "film": "6_KODAK400TX",
+    "scale": "native",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 183.794921875,
+    "real_px": 7.854455793678937,
+    "real_hp": 6.818013114236285,
+    "R_phone_frames_median": null,
+    "model_px": 10.251071762713385,
+    "model_hp": 9.329527809739215,
+    "ratio_px": 0.7662082536821417,
+    "ratio_hp": 0.7307993773402843
+   },
+   {
+    "film": "6_KODAK400TX",
+    "scale": "phone",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 6,
+    "code": 147.64892578125,
+    "real_px": 3.5924038656787016,
+    "real_hp": 2.957697378787918,
+    "R_phone_frames_median": 5.594659730981737,
+    "model_px": 3.500537531788505,
+    "model_hp": 3.05956727274245,
+    "ratio_px": 1.0262434934794886,
+    "ratio_hp": 0.966704476524479
+   },
+   {
+    "film": "6_KODAK400TX",
+    "scale": "phone",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 184.2353515625,
+    "real_px": 2.9509648740086467,
+    "real_hp": 2.5279875692004725,
+    "R_phone_frames_median": 6.042903300975782,
+    "model_px": 2.969253170583201,
+    "model_hp": 2.5973272501734237,
+    "ratio_px": 0.9938407756011717,
+    "ratio_hp": 0.9733034483936048
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "native",
+    "range": [
+     80,
+     120
+    ],
+    "n_frames": 7,
+    "code": 101.00390625,
+    "real_px": 12.837786517722016,
+    "real_hp": 11.551821176639148,
+    "R_phone_frames_median": null,
+    "model_px": 12.009504511868629,
+    "model_hp": 10.941835136211804,
+    "ratio_px": 1.068968874197501,
+    "ratio_hp": 1.0557480562294899
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "native",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 7,
+    "code": 136.455078125,
+    "real_px": 11.82009545700134,
+    "real_hp": 10.431224619017048,
+    "R_phone_frames_median": null,
+    "model_px": 11.894258453874166,
+    "model_hp": 10.831497640009212,
+    "ratio_px": 0.993764807015046,
+    "ratio_hp": 0.9630454592434529
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "native",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 183.837890625,
+    "real_px": 9.395182640395543,
+    "real_hp": 8.308254304509399,
+    "R_phone_frames_median": null,
+    "model_px": 9.738828941972832,
+    "model_hp": 8.865617930116516,
+    "ratio_px": 0.9647137963275824,
+    "ratio_hp": 0.9371320047851655
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "phone",
+    "range": [
+     80,
+     120
+    ],
+    "n_frames": 3,
+    "code": 102.3232421875,
+    "real_px": 3.4310898592103425,
+    "real_hp": 2.8319559619258476,
+    "R_phone_frames_median": 6.000168338340506,
+    "model_px": 3.508138382959983,
+    "model_hp": 3.0706569503977104,
+    "ratio_px": 0.9780372051102981,
+    "ratio_hp": 0.9222638698077471
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "phone",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 6,
+    "code": 146.8583984375,
+    "real_px": 3.7939529142937882,
+    "real_hp": 3.1485549311308123,
+    "R_phone_frames_median": 6.49356862348387,
+    "model_px": 3.3566344927898486,
+    "model_hp": 2.931982811841112,
+    "ratio_px": 1.130284790448085,
+    "ratio_hp": 1.0738654123124636
+   },
+   {
+    "film": "7_ILFORDHP5PLUS",
+    "scale": "phone",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 180.65625,
+    "real_px": 3.1825486643777956,
+    "real_hp": 2.7139692193105196,
+    "R_phone_frames_median": 6.000168338340506,
+    "model_px": 2.8960554051400935,
+    "model_hp": 2.528899908764341,
+    "ratio_px": 1.0989253377988615,
+    "ratio_hp": 1.073181745906506
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "native",
+    "range": [
+     80,
+     120
+    ],
+    "n_frames": 7,
+    "code": 98.6337890625,
+    "real_px": 25.39171875647542,
+    "real_hp": 22.399094450183995,
+    "R_phone_frames_median": null
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "native",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 7,
+    "code": 142.6142578125,
+    "real_px": 20.282795727350635,
+    "real_hp": 17.493081244811215,
+    "R_phone_frames_median": null
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "native",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 181.4052734375,
+    "real_px": 25.552581962246045,
+    "real_hp": 23.128141310297146,
+    "R_phone_frames_median": null
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "phone",
+    "range": [
+     80,
+     120
+    ],
+    "n_frames": 7,
+    "code": 98.4638671875,
+    "real_px": 8.766263839795817,
+    "real_hp": 7.702996244440332,
+    "R_phone_frames_median": 11.434223927404904
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "phone",
+    "range": [
+     120,
+     160
+    ],
+    "n_frames": 7,
+    "code": 148.89404296875,
+    "real_px": 6.8996572977037145,
+    "real_hp": 6.021358098183275,
+    "R_phone_frames_median": 11.434223927404904
+   },
+   {
+    "film": "8_ILFORDDELTA3200PRO",
+    "scale": "phone",
+    "range": [
+     160,
+     200
+    ],
+    "n_frames": 7,
+    "code": 178.529296875,
+    "real_px": 7.39895272864435,
+    "real_hp": 6.491640175496034,
+    "R_phone_frames_median": 11.434223927404904
+   }
+  ]
+ },
+ "t54_rpl_portra400": {
+  "method": "σ_48 亮度 (BT.601 码值), 同码值各帧合并; 真实 / filmlab 模型",
+  "same_code": [
+   {
+    "code": 55.2,
+    "frames": 6,
+    "tiles": 122,
+    "real": 3.37,
+    "model": 3.16,
+    "ratio": 1.06
+   },
+   {
+    "code": 70.8,
+    "frames": 6,
+    "tiles": 412,
+    "real": 5.61,
+    "model": 3.45,
+    "ratio": 1.63
+   },
+   {
+    "code": 92.5,
+    "frames": 6,
+    "tiles": 640,
+    "real": 5.83,
+    "model": 3.69,
+    "ratio": 1.58
+   },
+   {
+    "code": 108.7,
+    "frames": 6,
+    "tiles": 831,
+    "real": 5.9,
+    "model": 3.86,
+    "ratio": 1.53
+   },
+   {
+    "code": 127.6,
+    "frames": 6,
+    "tiles": 551,
+    "real": 5.22,
+    "model": 3.75,
+    "ratio": 1.39
+   },
+   {
+    "code": 148.2,
+    "frames": 6,
+    "tiles": 410,
+    "real": 3.99,
+    "model": 3.46,
+    "ratio": 1.15
+   },
+   {
+    "code": 173.7,
+    "frames": 6,
+    "tiles": 546,
+    "real": 2.81,
+    "model": 3.09,
+    "ratio": 0.91
+   },
+   {
+    "code": 187.3,
+    "frames": 6,
+    "tiles": 463,
+    "real": 2.56,
+    "model": 2.88,
+    "ratio": 0.89
+   },
+   {
+    "code": 212.1,
+    "frames": 6,
+    "tiles": 759,
+    "real": 2.09,
+    "model": 2.45,
+    "ratio": 0.85
+   },
+   {
+    "code": 228.9,
+    "frames": 6,
+    "tiles": 1780,
+    "real": 1.5,
+    "model": 1.8,
+    "ratio": 0.84
+   }
+  ],
+  "conclusion": "亮部 (码值 ≥ 130) 胶片侧 ≈ 1 (中位 0.98); 暗部 1.3–2.2 随输出码值不随底片密度 (未归因); 留出 Portra 160 / 800、Ektar 100、Pro 400H 亮部胶片侧 1.02–1.11"
+ },
+ "t54_epfl_800t": {
+  "conclusion": "EPFL CineStill 800T (Frontier) 亮度颗粒约为模型的 2.7 倍, 集中在胶片侧 (2.4–2.8); 只出现在 EPFL / CineStill 800T, 未修正",
+  "source": "https://github.com/cs-413-cinestill/800t-emulation"
+ },
+ "t51_spectrum_rpl_bw": {
+  "method": "64 × 64 像素均匀块, 输出密度 Do = −log10(线性) 的径向功率谱 (16 档, 0–0.5 周/像素; G 通道), 各帧中位",
+  "fc": [
+   0.015625,
+   0.046875,
+   0.078125,
+   0.109375,
+   0.140625,
+   0.171875,
+   0.203125,
+   0.234375,
+   0.265625,
+   0.296875,
+   0.328125,
+   0.359375,
+   0.390625,
+   0.421875,
+   0.453125,
+   0.484375
+  ],
+  "tri_x": [
+   0.03684020782565147,
+   0.008777097362854666,
+   0.004468106506376627,
+   0.004624181737627583,
+   0.0049352168642314755,
+   0.005328735284012731,
+   0.005190249544672284,
+   0.004990520563997088,
+   0.0053730809390434495,
+   0.005333233442209684,
+   0.005683390569093911,
+   0.006184400112047512,
+   0.006073367972758771,
+   0.0060603665658527485,
+   0.006244530775433016,
+   0.006552816497378983
+  ],
+  "hp5": [
+   0.028382431411557333,
+   0.008192652861680555,
+   0.005133818155363499,
+   0.005395298528009292,
+   0.005699082614739683,
+   0.005259058990943622,
+   0.005086701069187927,
+   0.005101839019116018,
+   0.004867541698723189,
+   0.004793603552430175,
+   0.005233549935505419,
+   0.004956986479424463,
+   0.0049817957685108,
+   0.005041270197025175,
+   0.005357599007048031,
+   0.005340148297994981
+  ],
+  "conclusion": "真实亮度谱从 0.1 到 0.5 周/像素上升 (Tri-X 约 ×1.5): 胶片侧在 20 µm 像素上是白的, 上升只能来自 Noritsu 的 USM (a 1.03, σ 0.68 像素)"
+ }
+}

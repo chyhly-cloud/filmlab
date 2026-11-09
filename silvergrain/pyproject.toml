@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "silvergrain"
+version = "0.1.0"
+description = "银盐颗粒的第一性原理模型: 卤化银晶体、光子统计显影、显式银丝团 / 染料云、闭式颗粒度; 给任意照片加颗粒"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "见仓库 LICENSE; data/colour_films.json 为 CC BY-SA 4.0 (spektrafilm)" }
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+
+[project.optional-dependencies]
+image = ["pillow>=9", "imageio>=2.20"]
+test = ["pytest>=7", "pillow>=9"]
+
+[project.scripts]
+silvergrain-apply = "silvergrain.examples.apply_grain:main"
+
+# 本目录就是包本身 (扁平布局: silvergrain/__init__.py 在仓库根), 移到独立仓库时不用改动
+[tool.setuptools]
+package-dir = { "silvergrain" = "." }
+packages = ["silvergrain", "silvergrain.validation", "silvergrain.examples", "silvergrain.tests"]
+
+[tool.setuptools.package-data]
+silvergrain = ["data/*.json", "data/*.tsv", "data/*.npz", "data/kodak_gran/*.json", "README.md"]
+"silvergrain.validation" = ["data/*.json", "data/*.csv", "results/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: 运行较久的检验 (全网格留一等)"]

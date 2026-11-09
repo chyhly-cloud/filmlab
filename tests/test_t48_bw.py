@@ -1,4 +1,4 @@
-"""T48: 黑白片各自的光谱感光度与 D-76 类特性曲线 (filmlab/data/bw_t48.json; 代际 t48_bw; docs/tasks/T48_BW_SPECTRAL_CURVES.md)。"""
+"""T48: 黑白片各自的光谱感光度与 D-76 类特性曲线 (silvergrain/data/bw_t48.json, T55 前在 filmlab/data/; 代际 t48_bw; docs/tasks/T48_BW_SPECTRAL_CURVES.md)。"""
 import numpy as np
 import pytest
 

@@ -135,7 +135,7 @@ def test_t49b_generation_and_profile_set():
 def test_t49b_only_tmax100_and_ilford_change():
     import json
     from filmlab import materials
-    films = json.loads((ROOT / "filmlab/data/bw_t49_spectra.json").read_text())["films"]
+    films = json.loads((ROOT / "silvergrain/data/bw_t49_spectra.json").read_text())["films"]
     assert sorted(films) == sorted(["kodak_tmax_100", "ilford_hp5_plus", "ilford_fp4_plus", "ilford_delta_100",
                                     "ilford_delta_400", "ilford_pan_f_plus"])
     S = {}
@@ -154,7 +154,7 @@ def test_t49b_only_tmax100_and_ilford_change():
 
 def test_t49b_ilford_single_wedge_constant():
     import csv, json
-    d = json.loads((ROOT / "filmlab/data/bw_t49_spectra.json").read_text())
+    d = json.loads((ROOT / "silvergrain/data/bw_t49_spectra.json").read_text())
     k = d["ilford_wedge_constant"]["k"]
     assert 2.5 < k < 3.5
     raw = {}

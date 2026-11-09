@@ -14,6 +14,8 @@ from functools import lru_cache
 
 import numpy as np
 
+from silvergrain import database as _sgdb
+
 from .stocks import Stock, load_stock
 
 # 银的光学覆盖力 (每单位染料当量的银产生的中性密度)。彩色胶片的银颗粒细, 取 0.6 (估计值)
@@ -162,10 +164,7 @@ def bw_paper(base="kodak_portra_endura", grade=2.5) -> Emulsion:
 # 5219 (Vision3 500T): 晶体尺寸、κ、灰雾面积尺度 a_f、堆积 S0 由 Kodak H-1-5219 (2022) 的漫射 RMS 颗粒度曲线与
 #   特性曲线联合拟合 (tools/eval/t45_grain_fit.py); 涂布量由仓库的原生特性曲线 (非负最小二乘) 定。
 #   来源: https://www.kodak.com/content/products-brochures/Film/VISION3_5219_7219_Technical-data.pdf
-GRAIN_5219 = dict(
-    ecd_um=((1.808, 0.499, 0.114), (2.332, 0.583, 0.138), (3.338, 0.812, 0.214)),
-    kappa=(2.492, 2.602, 3.195), fog_area_um2=(28.35, 43.42, 21.38), packing_s0=(0.0, 0.0, 0.0),
-    ei=500.0, illuminant="BB3200", thickness_um=0.12, sigma_ln=(0.194, 0.186, 0.199))
+GRAIN_5219 = _sgdb.grain_5219()          # silvergrain/data/universal.json (t45_5219)
 # 其他片种: 同一模型, 只换该片种自己的物理量 —— 感光度 EI、设计光源、有效量子效率 η (相对 5219), 晶体形态与银 / 染料。
 #   晶体尺寸按 a ∝ 1/(Φ·0.8/EI) 由 5219 的亚群结构换算, 涂布量由该片种自己的特性曲线定。
 #   η 比值: 5213 / 5203 由各自 Kodak 颗粒度曲线定 (每片种 1 个数, 见 T45 文档"通用性检验"); 黑白由 Tri-X 400 (F-4017) 的 17 定。
@@ -232,23 +231,19 @@ def _emulsion_for_grain(stock_key):
 #   η (a0 = 1 µm² 处每面积量子效率), β (量子效率随投影面积的指数) —— 多片种官方颗粒度联合定 (留一检验)
 #   T 颗粒厚度 t = 0.12 µm (Kodak T-GRAIN 公开描述的 0.1–0.2 µm 量级, T45 假设)
 #   银粒 κ_Ag = 显影银覆盖力 0.5 密度/(g/m²) × 每 µm³ AgBr 含银 3.72e-12 g = 1.86 (T45 假设)
-GRAIN_T46_ETA = 0.0248          # 留一检验的全体拟合值 (tools/eval/t46/loo.json)
-GRAIN_T46_BETA = 0.875
-GRAIN_T46_A0 = 1.0
-GRAIN_KAPPA_AG = 1.86
-GRAIN_T_UM = 0.12
+# 数值在 silvergrain/data/universal.json ("t46"; T55 起单一来源, 与 T54 的字面值逐位相同)
+GRAIN_T46_ETA = _sgdb.universal()["t46"]["eta"]          # 0.0248: 留一检验的全体拟合值 (tools/eval/t46/loo.json)
+GRAIN_T46_BETA = _sgdb.universal()["t46"]["beta"]        # 0.875
+GRAIN_T46_A0 = _sgdb.universal()["t46"]["a0_um2"]        # 1.0
+GRAIN_KAPPA_AG = _sgdb.universal()["t46"]["kappa_ag"]    # 1.86
+GRAIN_T_UM = _sgdb.universal()["t46"]["tgrain_thickness_um"]   # 0.12
 # 冲洗工艺的最后一步 (显影晶体 → 染料云 / 银丝团): 每晶体产量的变异系数 (伽马) 与扩散长度 L (µm)。
 #   没有找到单个染料云产量的显微统计; CV 0.3 为量级估计 (成色剂油滴计数的泊松起伏 + 大 T 颗粒的部分显影),
 #   L 由 EPFL 800T 扫描颗粒自相关的 1 µm 量级定 (T45 第 3.2 节); 各工艺之间没有公开的可区分数据, 取同值。
 #   kappa_scale: 每 µm³ 显影晶体的积分密度相对彩色负片 (5219 标定) 的倍数, 由该工艺官方颗粒度的族常数定 (σ ∝ √κ):
 #     E-6 5.41 (彩色显影把第一显影剩下的晶体全部显影、成色剂过量; 负片成色剂不足 + DIR 抑制, 只有理论产率的 3–4%),
 #     黑白 1.36 (κ_Ag = 1.86 × 1.36 = 2.52, 即显影银覆盖力 0.68 密度/(g/m²))。
-GRAIN_PROCESS = {
-    "C-41": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=1.0),
-    "ECN-2": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=1.0),
-    "E-6": dict(yield_cv=0.3, cloud_L_um=1.0, kappa_scale=5.407),
-    "BW": dict(yield_cv=0.3, cloud_L_um=0.2, kappa_scale=1.357),     # 银丝团: 覆盖力随机 (丝团疏密) + 约晶体大小的空间范围
-}
+GRAIN_PROCESS = _sgdb.process_params()   # silvergrain/data/universal.json (process): C-41 / ECN-2 / E-6 / BW
 # 每个档案的公开物理量 (感光度、设计光源、晶体形态); 未列出的按名称里的感光度、彩色 T 颗粒、档案光源推定。
 GRAIN_PHYS = {
     "kodak_vision3_500t": dict(ei=500, illuminant="BB3200"), "kodak_vision3_200t": dict(ei=200, illuminant="BB3200"),
@@ -311,36 +306,19 @@ def _grain_spec_t46(stock_key, design, name, ref_illum, process_name):
 #   spread      银丝团投影面积 / 晶体投影面积 = 4 (丝团直径约为晶体的 2 倍: 化学显影的银丝从显影中心长出、伸出晶体轮廓)
 #   filament_um 银丝直径 0.04 µm (电镜下化学显影银丝为数十纳米量级); 银质量守恒决定丝长, 丝团的不透明度由此算出
 #   callier_q   漫射 / 镜面收集的密度比 Q = 1.4 (粗颗粒黑白负片的经典范围 1.3–1.5; https://en.wikipedia.org/wiki/Callier_effect)
-GRAIN_T47_MORPH = dict(spread=4.0, filament_um=0.04, filaments=4, persistence=0.5, callier_q=1.4)
+GRAIN_T47_MORPH = _sgdb.t47_morph()      # spread 4, filament 0.04 µm, 4 根丝, persistence 0.5, Callier Q 1.4 (universal.json t47)
 # Schmidt 显微镜颗粒的收集几何 (页面未写明; 假设): 漫射。依据见 T47 文档第 4 节 (镜面口径与 Kodak 48 µm 官方值矛盾)。
-GRAIN_T47_MICRO_GEOMETRY = "diffuse"
+GRAIN_T47_MICRO_GEOMETRY = _sgdb.universal()["t47"]["micro_geometry"]   # "diffuse"
 # 三维晶体 (传统立方 / 八面体) 的有效量子效率相对 T46 通用值 (η × 3 表面吸收) 的倍数 —— T47 标定量:
 #   由 Schmidt Tri-X / D-76 显微颗粒的 20 / 25 µm 平台定 (tools/eval/t47_trix.py → tools/eval/t47/calib.json)。
 #   T46 已指出三维晶体按通用 β 推出的晶体偏大 (Tri-X 颗粒偏粗 1.31 倍); 这里只修正这一个已有物理量。
 #   T47b (tools/eval/t47b_bw_loo.py): 这个修正属于显式银粒模型 (T46 的 η 是在染料云 / κ 模型下定的), 对 T 颗粒同样适用
 #   (grain.silver_structure 的 scale_tgrain=True); 只乘三维时 T 颗粒片偏粗 1.5–1.9 倍, 两者都乘时 T-Max / Delta 为 0.90–1.14。
-GRAIN_T47_ETA3D_SCALE = 6.608337
+GRAIN_T47_ETA3D_SCALE = _sgdb.universal()["t47"]["eta3d_scale"]   # 6.608337
 # Schmidt 的 Tri-X 400 / D-76 原液 20 °C 9 min 特性曲线 (tools/eval/t47/schmidt_density_19.csv; 漫射密度计 —— 几何检验):
 #   (净 D 0.10 处为零点的 log10 相对曝光, 净 D); 片基 + 灰雾 0.318。来源 https://www.bernhard-w-schmidt.de/en/einzeln-trix
-TRIX_D76_CURVE = (
-    (
-     -0.351661, -0.198357, -0.050612, 0.101300, 0.254443, 0.401886, 0.556097, 0.700907, 0.856097, 1.008704,
-     1.156172, 1.310667, 1.458189, 1.610382, 1.760926, 1.909405, 2.060395, 2.209405, 2.363445),
-    (
-     0.014539, 0.045951, 0.081639, 0.136748, 0.214511, 0.282623, 0.394426, 0.526526, 0.639961, 0.750542, 0.840658,
-     0.930406, 1.020022, 1.119872, 1.218745, 1.307940, 1.396306, 1.486511, 1.576268))
-TRIX_GROSS_FOG = 0.318
-# Kodak F-4017 第 7 页光谱感光度 (D = 1.0 > 灰雾, log 1/(erg/cm²); tools/eval/t47/kodak_f4017_p7_spectral.csv), 全色
-TRIX_SPECTRAL = (
-    (300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 355, 360, 365, 370, 375, 380, 385, 390, 395, 400, 405, 410,
-     415, 420, 425, 430, 435, 440, 445, 450, 455, 460, 465, 470, 475, 480, 485, 490, 495, 500, 505, 510, 515, 520, 525,
-     530, 535, 540, 545, 550, 555, 560, 565, 570, 575, 580, 585, 590, 595, 600, 605, 610, 615, 620, 625, 630, 635, 640,
-     650, 655, 660, 667),
-    (2.508, 2.508, 2.525, 2.546, 2.568, 2.592, 2.616, 2.638, 2.657, 2.673, 2.684, 2.694, 2.698, 2.703, 2.708, 2.711,
-     2.711, 2.710, 2.708, 2.703, 2.698, 2.692, 2.687, 2.679, 2.671, 2.660, 2.648, 2.632, 2.616, 2.597, 2.574, 2.551,
-     2.522, 2.484, 2.448, 2.405, 2.360, 2.319, 2.281, 2.251, 2.238, 2.224, 2.232, 2.248, 2.270, 2.292, 2.317, 2.340,
-     2.362, 2.383, 2.401, 2.419, 2.432, 2.444, 2.452, 2.454, 2.446, 2.429, 2.403, 2.384, 2.380, 2.375, 2.392, 2.410,
-     2.414, 2.392, 2.330, 2.189, 1.932, 1.000, 0.720, 0.430, 0.000))
+TRIX_D76_CURVE, TRIX_GROSS_FOG, TRIX_SPECTRAL = _sgdb.trix_t47()   # silvergrain/data/universal.json (trix_t47); 片基 + 灰雾 0.318
+# Kodak F-4017 第 7 页光谱感光度 (D = 1.0 > 灰雾, log 1/(erg/cm²); tools/eval/t47/kodak_f4017_p7_spectral.csv), 全色: TRIX_SPECTRAL (见上)
 TRIX_KEY = "kodak_trix_400"
 # T47b: 其他黑白片 (Schmidt 同一显微镜 / 同一 D-76 原液 20 °C 的曲线, tools/eval/t47/schmidt_bw_d76.csv;
 #   (净 D 0.10 处为零点的 log10 相对曝光, 净 D)。T-Max 100 9 min EI 200、T-Max 400 11 min EI 640 (Schmidt 实测有效感光度)。
@@ -375,11 +353,11 @@ BW_SILVER_FILMS = {
 
 
 # ------------------------------------------------------------- 黑白片 (T48) --
-# 每种黑白片自己的光谱感光度与 D-76 类特性曲线 (filmlab/data/bw_t48.json; 数字化读数 tools/eval/t48/, 来源 URL 逐条;
+# 每种黑白片自己的光谱感光度与 D-76 类特性曲线 (silvergrain/data/bw_t48.json, T55 前为 filmlab/data/; 数字化读数 tools/eval/t48/, 来源 URL 逐条;
 # docs/tasks/T48_BW_SPECTRAL_CURVES.md)。按代际选用: generation.use 设 BW_PROFILE_SET ("t47" = T47b 的档案, 现有代际逐位不变;
 # "t48" = 本表)。T47 里没有的片种 (Ilford、Acros) 两种设置下都用本表。
 # "t49" (T49b, docs/tasks/T49_BW_FILTERS.md): 同 "t48", 但 T-Max 100 与 Ilford 片的光谱按滤镜系数检验修正
-# (filmlab/data/bw_t49_spectra.json); 曲线与晶体档案不变。
+# (silvergrain/data/bw_t49_spectra.json); 曲线与晶体档案不变。
 BW_PROFILE_SET = "t47"
 
 
@@ -387,9 +365,7 @@ BW_PROFILE_SET = "t47"
 # 片 (晶体、涂布银) 不变, 显影液给出显影阈值光子数 r 与显影晶体成团 (感染显影 / 银聚集)。
 @lru_cache(maxsize=None)
 def bw_t50_developers():
-    import json
-    from pathlib import Path
-    return json.loads((Path(__file__).parent / "data" / "bw_t50_developers.json").read_text())
+    return _sgdb.bw_t50_developers()          # silvergrain/data/bw_t50_developers.json (T55 起)
 
 
 def bw_developer(key):
@@ -414,16 +390,12 @@ def bw_developer(key):
 
 @lru_cache(maxsize=None)
 def bw_t49_spectra():
-    import json
-    from pathlib import Path
-    return json.loads((Path(__file__).parent / "data" / "bw_t49_spectra.json").read_text())["films"]
+    return _sgdb.bw_t49_spectra()             # silvergrain/data/bw_t49_spectra.json (T55 起)
 
 
 @lru_cache(maxsize=None)
 def bw_t48_data():
-    import json
-    from pathlib import Path
-    return json.loads((Path(__file__).parent / "data" / "bw_t48.json").read_text())
+    return _sgdb.bw_t48()                     # silvergrain/data/bw_t48.json (T55 起)
 
 
 def bw_film_def(key, profile_set=None):

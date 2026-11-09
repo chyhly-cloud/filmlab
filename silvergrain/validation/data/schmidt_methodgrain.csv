@@ -1,0 +1,44 @@
+# Schmidt methodgrain 结果表 (Table.png, 目读): RMS_D = 48 µm 圆孔等效 RMS×1000, 测于均匀曝光的平均密度 D = 1 (总密度, 同 T47 口径);
+# a_k = 可见结构尺度 (µm); iso_table = D1-ISO (使标准曝光落在雾上 D = 1, 随曲线陡度调整; 由 swkurve 页定义与 Tri-X D-76 250 vs 400、γ 0.56 推断)
+film,developer,iso_table,a_k_um,RMS_D,source
+SPUR Ultra R800,SPUR Nanotec,16,3.4,4.2,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,XTOL,200,4.6,6.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,Wehner/Alpha,200,3.8,7.4,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,SD2525,100,4.2,7.5,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,Atomal,125,5.3,7.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,FX39,200,3.8,7.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,D76,200,4.1,7.9,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,XTOL,50,4.6,7.9,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,XTOL,160,4.6,8.3,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,D76,200,4.1,8.7,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,Rodinal,250,3.7,8.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,SD2525,40,5.2,8.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,D76,40,4.2,8.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,Wehner/Alpha,50,5.9,9.0,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax100,SD2525,250,4.6,9.2,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,FX39,125,4.0,9.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,FX39,40,4.7,9.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,D76,500,4.2,9.9,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,XTOL,500,4.6,10.0,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,Atomal,400,5.4,10.2,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,XTOL,800,5.0,10.5,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,Wehner/Alpha,125,4.3,10.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+PanF,Rodinal,40,4.9,11.1,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,Microphen,400,5.6,11.1,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,Wehner/Alpha,500,4.4,11.3,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,XTOL,400,5.9,11.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,D76,640,5.3,12.9,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,D76,250,5.7,13.0,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,Wehner/Alpha,500,5.6,13.6,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta100,Rodinal,125,5.7,13.7,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,Wehner/Alpha,400,6.0,13.9,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,SD2525,640,5.4,14.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,FX39,640,5.7,15.7,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,SD2525,500,5.3,16.1,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,FX39,250,6.2,16.7,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,Rodinal,640,5.9,16.8,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,FX39,400,6.2,17.4,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,SD2525,500,7.3,17.7,https://www.bernhard-w-schmidt.de/en/methodgrain
+Delta400,Rodinal,500,6.5,20.0,https://www.bernhard-w-schmidt.de/en/methodgrain
+TriX,Rodinal,500,6.8,20.5,https://www.bernhard-w-schmidt.de/en/methodgrain
+Tmax400,Shadowmax 19/z,1250,7.6,22.2,https://www.bernhard-w-schmidt.de/en/methodgrain

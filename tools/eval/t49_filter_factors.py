@@ -1,6 +1,6 @@
 """T49 独立检验: 滤镜系数 = 中性灰在无滤镜 / 有滤镜时的有效曝光之比 (Kodak Wratten Filters 1965 p.16 的定义:
 匹配同一密度所需的曝光倍数; 滤镜不改变特性曲线形状, 所以就是 Σ E·S / Σ E·S·T)。
-E = 光源光谱, S = 该片在模型里的光谱感光度 (配方渲染用的同一档案, T48), T = Wratten 透过率 (filmlab/data/wratten_filters.json)。
+E = 光源光谱, S = 该片在模型里的光谱感光度 (配方渲染用的同一档案, T48), T = Wratten 透过率 (silvergrain/data/wratten_filters.json; T55 前在 filmlab/data/)。
 与数据表公布的系数比较 (tools/eval/t49/filter_factors_published.csv), 误差 = log2(模型 / 公布) 档。
 
 用法: python3 tools/eval/t49_filter_factors.py [输出.json] [代际, 默认 t48_bw; T49b 修正后 t49_bw]

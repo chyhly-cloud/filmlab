@@ -76,10 +76,7 @@ SCAN_SPATIAL_BY_SCANNER = {"frontier": "frontier_epfl", "frontier_neutral": "fro
 # T53 画幅 (Params.film_format; 默认 None = 用 Params.frame_width_mm): 名义画面尺寸 (长边, 短边) mm。
 #   输入图像按"长边对长边"放在画面上 (长宽比不同时 = 画面里最大的同长宽比裁切; 要整幅画面先用 crop_to_format)。
 #   冲印店的传感器孔径按同一输出像素数换算 (T52 3.1 的假设: 冲印店对各画幅输出与 35 mm 相近的像素数)。
-FILM_FORMATS = {
-    "35mm": (36.0, 24.0), "half": (24.0, 18.0), "110": (17.0, 13.0), "126": (26.5, 26.5), "aps_c": (25.1, 16.7),
-    "645": (56.0, 41.5), "6x6": (56.0, 56.0), "6x7": (69.5, 56.0), "6x9": (84.0, 56.0), "4x5": (121.0, 97.0),
-}
+from silvergrain.formats import FILM_FORMATS  # noqa: E402  (T55: 画幅表在 silvergrain/formats.py, 数值不变)
 
 
 @dataclass
@@ -188,17 +185,7 @@ class Params:
     frame: int = 0
 
 
-def crop_to_format(img, fmt):
-    """T53: 把输入图像居中裁切到画幅 fmt (FILM_FORMATS) 的长宽比 (长边方向不变, 不重采样), 使它对应整幅画面。"""
-    L, S = FILM_FORMATS[fmt]
-    h, w = img.shape[:2]
-    a = L / S
-    if h >= w:
-        hh, ww = (h, int(round(h / a))) if h / w <= a else (int(round(w * a)), w)
-    else:
-        ww, hh = (w, int(round(w / a))) if w / h <= a else (int(round(h * a)), h)
-    y0, x0 = (h - hh) // 2, (w - ww) // 2
-    return img[y0:y0 + hh, x0:x0 + ww]
+from silvergrain.formats import crop_to_format  # noqa: E402,F401  (T53; T55 起在 silvergrain/formats.py)
 
 
 def _resolve(x, default=None):

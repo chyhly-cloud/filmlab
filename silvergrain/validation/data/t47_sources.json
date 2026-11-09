@@ -1,0 +1,28 @@
+{
+ "schmidt_method": "https://www.bernhard-w-schmidt.de/en/methodgrain",
+ "schmidt_trix": "https://www.bernhard-w-schmidt.de/en/einzeln-trix",
+ "kodak_f4017": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf#page=8",
+ "schmidt_density_figure": "https://images.squarespace-cdn.com/content/v1/5f550d0c9dad03362307b29c/dd69fffd-0bc5-4ecb-9ede-d737ccfef62d/TriX_SK.png",
+ "schmidt_grain_micrographs": "https://images.squarespace-cdn.com/content/v1/5f550d0c9dad03362307b29c/8a02a8d4-e94d-419b-b76c-70d705e04d08/TriX_grain.png",
+ "schmidt_fig4": "https://images.squarespace-cdn.com/content/v1/5f550d0c9dad03362307b29c/43fea1b4-e8d1-4303-9469-e68d374cd9ad/RMS_vier_comb.png",
+ "schmidt_table": "https://images.squarespace-cdn.com/content/v1/5f550d0c9dad03362307b29c/88c977f2-b127-4953-ac29-092364073274/Table.png",
+ "codex_handoff": "codex/t47-trix@3f3bc802622d21c08daa6c0991a91067612a00a0 research/t47-trix/",
+ "farnell_solman_1970": "https://www.tandfonline.com/doi/abs/10.1080/00223638.1970.11737534",
+ "callier_effect": "https://en.wikipedia.org/wiki/Callier_effect",
+ "silver_coating_forum": "https://photrio.com/forum/threads/silver-content-of-bw-film-in-g-cm2.80776",
+ "schmidt_microscope": "250x, approx. 1.5 um resolution, RAW, 1520x1520 px analysed (0.25 um/px); Fig. 1 simulation uses PSF sigma 1.5 um",
+ "t47b_official_developers": {
+  "trix400/trix320 (F-4017 Image structure: HC-110 Dilution B, 20 C)": "https://business.kodakmoments.com/sites/default/files/files/products/f4017_TriX.pdf",
+  "plusx125 (F-8: HC-110 Dilution B, CI 0.56)": "https://125px.com/docs/film/kodak/f8-Plus-X_Pan.pdf",
+  "tmax100 (F-4016: D-76, 20 C)": "https://business.kodakmoments.com/sites/default/files/files/products/f4016_tmax_100.pdf",
+  "tmax400 (F-4043: D-76, 20 C)": "https://business.kodakmoments.com/sites/default/files/files/products/f4043_tmax_400.pdf",
+  "acros100 (Microfine)": "https://125px.com/docs/film/fuji/NeopanAcros100.pdf"
+ },
+ "t47b_schmidt_pages": [
+  "https://www.bernhard-w-schmidt.de/en/einzeln-tmx",
+  "https://www.bernhard-w-schmidt.de/en/einzeln-tmy",
+  "https://www.bernhard-w-schmidt.de/en/einzeln-d100",
+  "https://www.bernhard-w-schmidt.de/en/einzeln-d400",
+  "https://www.bernhard-w-schmidt.de/en/einzeln-panf"
+ ]
+}

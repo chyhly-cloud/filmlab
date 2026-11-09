@@ -37,13 +37,14 @@ def lens_filter(kind: str) -> np.ndarray:
     return np.ones(81)
 
 
-# T49: Kodak Wratten 滤镜的实测光谱透过率 (filmlab/data/wratten_filters.json; 读自 Kodak Wratten Filters 1965 的表)
+# T49: Kodak Wratten 滤镜的实测光谱透过率 (silvergrain/data/wratten_filters.json, T55 前为 filmlab/data/; 读自 Kodak Wratten Filters 1965 的表)
 WRATTEN_ALIASES = {"k2": "8", "x1": "11", "g": "15", "a": "25"}
 
 
 @lru_cache(maxsize=None)
 def wratten_data() -> dict:
-    return json.loads((Path(__file__).parent / "data" / "wratten_filters.json").read_text())
+    from silvergrain import database
+    return json.loads(database.path("wratten_filters.json").read_text())
 
 
 def wratten_number(kind) -> str | None:

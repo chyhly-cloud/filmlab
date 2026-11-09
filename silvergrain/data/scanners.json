@@ -1,0 +1,27 @@
+{
+ "_note": "冲印店扫描的空间传递 (T51 实测器件参数, docs/tasks/T51_LAB_SCANNER_SPATIAL.md; tools/eval/t51/fit.json)。pitch_um: 35 mm 输出的像素间距 (胶片面); optics_px: 扫描光学高斯 σ (输出像素, 透射率上); usm_*: 亮度反锐化掩模 (输出像素, 8 位码值阈值); chroma_*: 色度降噪 (彩色)。光学 σ 与软件半径以输出像素计, 按 T51 的单位约定 (同一底片两种尺寸的配对扫描未验证)。",
+ "labs": {
+  "frontier_epfl": {
+   "name": "Fujifilm Frontier (EPFL 800T 冲印店, TIFF)",
+   "pitch_um": 11.65,
+   "optics_px": 0.91,
+   "usm_sigma_px": 1.0,
+   "usm_amount": 0.0,
+   "usm_threshold": 0.0,
+   "chroma_sigma_px": 1.75,
+   "chroma_threshold": 8.0,
+   "source": "T51: tools/eval/t51/fit.json frontier"
+  },
+  "noritsu_rpl": {
+   "name": "Noritsu HS-1800 (Richard Photo Lab, JPEG)",
+   "pitch_um": 12.0,
+   "optics_px": 0.35,
+   "usm_sigma_px": 0.68,
+   "usm_amount": 1.03,
+   "usm_threshold": 0.0,
+   "chroma_sigma_px": 0.0,
+   "chroma_threshold": 0.0,
+   "source": "T51: tools/eval/t51/fit.json noritsu"
+  }
+ }
+}

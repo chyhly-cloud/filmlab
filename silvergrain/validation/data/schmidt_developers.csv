@@ -1,0 +1,38 @@
+# Schmidt 各片种页显影条件表: iso_effective = ISO 6 口径 (雾上 ΔD 0.1, 以 T-Max 400 / T-Max 显影液 = ISO 400 为标准); 只存 URL 与读数
+film,developer,dilution,time_min,temp_C,iso_effective,gamma,source
+trix,Kodak D76,stock,9,20,400,0.56,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+trix,Adox Rodinal,1+50,13,20,400,0.57,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+trix,Wehner/Alpha,1+19/1+19,13,22,400,0.58,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+trix,Spur SD2525,1+11,13,20,500,0.58,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+trix,Adox FX39,1+12,10,24,400,0.59,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+trix,Kodak XTOL,stock,8,20,400,0.60,https://www.bernhard-w-schmidt.de/en/einzeln-trix
+tmx,Kodak D76,stock,9,20,200,0.65,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmx,Adox Rodinal,1+25,8,23,250,0.60,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmx,Wehner/Alpha,1+19/1+19,13,22,200,0.60,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmx,Spur SD2525,1+13,11,22,250,0.62,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmx,Adox FX39,1+12,10,24,200,0.56,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmx,Kodak XTOL,stock,10,20,200,0.63,https://www.bernhard-w-schmidt.de/en/einzeln-tmx
+tmy,Kodak D76,stock,11,20,640,0.62,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+tmy,Adox Rodinal,1+50,13,20,640,0.53,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+tmy,Wehner/Alpha,1+19/1+19,15,22,640,0.56,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+tmy,Spur SD2525,1+13,11,20,640,0.49,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+tmy,Adox FX39,1+12,10,24,640,0.61,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+tmy,Kodak XTOL,stock,10,20,800,0.52,https://www.bernhard-w-schmidt.de/en/einzeln-tmy
+d100,Kodak D76,stock,9,20,200,0.62,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d100,Adox Rodinal,1+25,8,22,125,0.73,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d100,Wehner/Alpha,1+19/1+19,9,22,125,0.69,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d100,Spur SD2525,1+20,10,20,100,0.55,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d100,Adox FX39,1+9,7,20,125,0.56,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d100,Kodak XTOL,stock,7,20,160,0.54,https://www.bernhard-w-schmidt.de/en/einzeln-d100
+d400,Kodak D76,stock,8,20,500,0.47,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+d400,Adox Rodinal,1+25,8,20,400,0.47,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+d400,Wehner/Alpha,1+19/1+19,11,22,500,0.47,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+d400,Spur SD2525,1+14,12,20,500,0.52,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+d400,Adox FX39,1+12,10,24,400,0.51,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+d400,Kodak XTOL,stock,8,20,500,0.49,https://www.bernhard-w-schmidt.de/en/einzeln-d400
+panf,Kodak D76,stock,8,20,40,0.62,https://www.bernhard-w-schmidt.de/en/einzeln-panf
+panf,Adox Rodinal,1+50,10,20,64,0.55,https://www.bernhard-w-schmidt.de/en/einzeln-panf
+panf,Wehner/Alpha,1+19/1+19,9,22,40,0.52,https://www.bernhard-w-schmidt.de/en/einzeln-panf
+panf,Spur SD2525,1+24,10,20,40,0.61,https://www.bernhard-w-schmidt.de/en/einzeln-panf
+panf,Adox FX39,1+9,5,20,40,0.55,https://www.bernhard-w-schmidt.de/en/einzeln-panf
+panf,Kodak XTOL,stock,7,20,50,0.55,https://www.bernhard-w-schmidt.de/en/einzeln-panf
