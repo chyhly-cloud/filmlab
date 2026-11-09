@@ -12,7 +12,7 @@
 模型: 均匀 18% 灰 × 2^EV, t51_bw, timing="gray" (固定定光), 20 µm/像素 (RPL 645 的像素间距), 颗粒开;
   同一套颗粒量; 扫描密度 Dn 的 48 µm 颗粒 (scan trace); 颗粒关、EV ± 0.1 的有限差分给 dCode/dDn。
 用法: python3 -I t51b_bw_level.py real  RPL目录 输出.json
-      python3 -I t51b_bw_level.py model 配方 输出.json [边长像素]
+      python3 -I t51b_bw_level.py model 配方 输出.json [边长像素] [代际 (默认 t51_bw; T56 用 t56_bw)]
 """
 import json
 import sys
@@ -149,14 +149,14 @@ def real(root, dst):
 
 
 # ------------------------------------------------------------------ 模型
-def model(rec, dst, n=384, evs=(-4, -3, -2, -1, 0, 1, 2, 3, 4)):
+def model(rec, dst, n=384, evs=(-4, -3, -2, -1, 0, 1, 2, 3, 4), gen="t51_bw"):
     import warnings
     warnings.filterwarnings("ignore")
     from filmlab import generation, grain
     from filmlab.engine import Engine, Params
     from filmlab.recipes import recipe
     from filmlab.scanning.spatial import encode
-    generation.use("t51_bw")
+    generation.use(gen)
     grain.SILVER_WORKERS = 1
     out = {}
     for ev in evs:
@@ -195,4 +195,5 @@ if __name__ == "__main__":
     if sys.argv[1] == "real":
         real(sys.argv[2], sys.argv[3])
     else:
-        model(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 384)
+        model(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 384,
+              gen=sys.argv[5] if len(sys.argv) > 5 else "t51_bw")

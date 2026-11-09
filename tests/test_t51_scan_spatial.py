@@ -24,7 +24,7 @@ def test_generations():
     assert G["t51_base"] == ("D65", G["t46_base"][1] + ("scan_spatial",), {})
     assert G["t51_bw"] == ("D65", G["t50_bw"][1] + ("scan_spatial",), {})
     for g, (_, corr, _) in G.items():
-        if g not in ("t51_base", "t51_bw"):
+        if g not in ("t51_base", "t51_bw", "t56_base", "t56_bw"):           # t56_* = t51_* + scan_mtf (T56)
             assert "scan_spatial" not in corr, g
     generation.use("t51_bw")
     assert engine.SCAN_SPATIAL_LAB == "noritsu_rpl"

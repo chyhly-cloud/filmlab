@@ -139,6 +139,8 @@ class Params:
     #   "scan_psf"       扫描仪光学点扩散 SCAN_PSF_UM (透射率上高斯; T45, 可选)
     #   "scan_spatial"   冲印店扫描的空间传递 (T51, 可选): 扫描光学 σ 改用该冲印店的实测值, 传感器孔径, 冲印店软件的亮度 USM
     #                    与色度降噪 (filmlab.scanning.spatial; 哪一家见 Params.scan_spatial / SCAN_SPATIAL_LAB)
+    #   "scan_mtf"       (配合 scan_spatial) 扫描光学、USM 模糊与色度低通的高斯按连续传递 e^{−2π²σ²f²} 在频域相乘
+    #                    (spatial.gauss_mtf, 反射边界), 不用输出像素上的取样核; T51 拟合 σ 时用的就是连续传递 (T56, 可选)
     # corrections=() 逐位复现 2026-10-18 之前的基线 (分支 baseline-legacy)。
     corrections: tuple = field(default_factory=lambda: DEFAULT_CORRECTIONS)
     frame_width_mm: float = 36.0
@@ -665,7 +667,7 @@ class Engine:
         if lab is not None and out.ndim == 3:
             # S4f (T51): 传感器孔径 + 冲印店软件的亮度 USM / 色度降噪
             from .scanning import spatial
-            out = spatial.apply(out, lab, self.px_um, mono=sc.mono)
+            out = spatial.apply(out, lab, self.px_um, mono=sc.mono, continuous="scan_mtf" in self.p.corrections)
         return out
 
     def frame_long_mm(self):
@@ -692,9 +694,15 @@ class Engine:
         if lab is not None:
             # T51: 扫描光学点扩散用该冲印店的实测 σ (输出像素; 透射率上高斯)
             if Dn.ndim == 3 and lab.optics_px >= 0.1:
-                from scipy.ndimage import gaussian_filter
                 sp = lab.optics_px
-                T = gaussian_filter(10.0 ** -np.nan_to_num(Dn, nan=0.0), (sp, sp, 0))
+                T = 10.0 ** -np.nan_to_num(Dn, nan=0.0)
+                if "scan_mtf" in self.p.corrections:
+                    # T56: 连续传递 e^{−2π²σ²f²} (T51 拟合 σ_o 时的定义), 不用取样高斯核 (亚像素 σ 时近似恒等)
+                    from .scanning import spatial
+                    T = spatial.gauss_mtf(T, sp)
+                else:
+                    from scipy.ndimage import gaussian_filter
+                    T = gaussian_filter(T, (sp, sp, 0))
                 Dn = np.where(np.isfinite(Dn), -np.log10(np.clip(T, 1e-12, None)), Dn)
             return Dn
         if "scan_psf" in self.p.corrections and Dn.ndim == 3 and SCAN_PSF_UM / self.px_um >= 0.3:
