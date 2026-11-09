@@ -27,10 +27,15 @@
         · 照片的码值不再参与密度 (T55b/c 用照片亮度的码值经冲印店影调反推密度: grain_density="photo", 只为对照)。
           所以蓝色背景按全色片对蓝光的实际曝光决定颗粒, 加滤镜 (例如 Wratten 25) 会改变底片各处的密度与颗粒, 照片影调不变。
         照片按显示出来的样子处理: 线性值 > 1 (HDR 输入) 截到 1; 全黑的像素保持黑 (相对因子作用于 0)。
-  5. 冲印店扫描 (可选, scanner="noritsu_rpl" / "frontier_epfl"; T51 实测): 光学高斯 σ (输出像素, 透射率上)、传感器孔径
-     (冲印店像素间距按画幅长边 / 36 换算, 比渲染像素大 1.2 倍以上时加方盒)、亮度 USM、色度降噪 (彩色)。
-     mode="grain" 时只作用于颗粒部分 (照片本身已有自己的成像与锐化): 光学与孔径作用于 δ, USM / 色度降噪作用于编码后的
-     (输出 − 照片) 差 (小信号线性化)。
+  5. 冲印店扫描 (scanner="auto" = 与 lab 同一家; None 关闭)。
+     Noritsu HS-1800 (T55e, 线阵 CCD 采样链; scan_grid / _to_output_grid / _sharpen3):
+       · 底片渲染在 CCD 的原生网格上 (原生间距 = 横跨片带的画面尺寸 / CCD 线数: 135 为 24 mm / 4492, 120 为 56 mm / 4824;
+         像素孔径 = 原生像素, 扫描光学 σ = 0), 照片的曝光 H 先插值到原生网格;
+       · 冲印店软件把原生扫描按这张照片的像素数缩小 (三角核按倍数拉宽 = 带抗混叠的双线性; 在密度域做), 照片更细时线性放大;
+       · 输出像素上的可分离 3 抽头锐化 (输送方向 kx, CCD 方向 ky; 编码后的亮度上)。
+       mode="grain" 时锐化作用于编码后的 (输出 − 照片) 差 (小信号线性化)。
+     Frontier (T51): 光学高斯 σ (输出像素, 透射率上)、传感器孔径 (冲印店像素间距按画幅长边 / 36 换算, 比渲染像素大 1.2 倍
+     以上时加方盒)、亮度 USM、色度降噪 (彩色)。
   6. 输出: 线性 sRGB (浮点) 与 sRGB 编码 8 / 16 位。不加输出端噪声, 不做调色。
 """
 import time
@@ -54,12 +59,26 @@ _YCC = np.array([[0.299, 0.587, 0.114], [-0.168736, -0.331264, 0.5], [0.5, -0.41
 # ---------------------------------------------------------------- 读写 --
 def srgb_encode(lin):
     x = np.clip(np.asarray(lin, float), 0.0, None)
-    return np.where(x <= 0.0031308, 12.92 * x, 1.055 * np.power(x, 1 / 2.4) - 0.055)
+    if np.ndim(x) == 0:
+        return np.where(x <= 0.0031308, 12.92 * x, 1.055 * np.power(x, 1 / 2.4) - 0.055)
+    lo = x <= 0.0031308
+    out = np.power(x, 1 / 2.4)                   # 逐步原位计算 (同一公式; 24 MP 彩色的峰值内存)
+    out *= 1.055
+    out -= 0.055
+    out[lo] = 12.92 * x[lo]
+    return out
 
 
 def srgb_decode(v):
     v = np.clip(np.asarray(v, float), 0.0, None)
-    return np.where(v <= 0.04045, v / 12.92, np.power((v + 0.055) / 1.055, 2.4))
+    if np.ndim(v) == 0:
+        return np.where(v <= 0.04045, v / 12.92, np.power((v + 0.055) / 1.055, 2.4))
+    lo = v <= 0.04045
+    out = v + 0.055
+    out /= 1.055
+    np.power(out, 2.4, out=out)
+    out[lo] = v[lo] / 12.92
+    return out
 
 
 def load_image(src, encoding="auto"):
@@ -223,12 +242,106 @@ class Scanner:
     chroma_threshold: float
     source: str = ""
     optics_px_t51: float | None = None      # T51 原拟合值 (细像素连续高斯 + 方盒的口径), 只作记录
+    # T55e: 线阵 CCD 扫描仪的采样链 (native 不为 None 时启用, 见 scan_grid / _to_output_grid / _sharpen3):
+    native: dict | None = None              # 每种片幅 (135 / 120) 横跨片带方向的画面尺寸 (mm) 与该方向的 CCD 采样线数
+    resample: str | None = None             # 原生采样 → 输出尺寸: "triangle" (按缩小倍数拉宽的三角核 = 带抗混叠的双线性)
+    sharpen_kx: float = 0.0                 # 输出像素上的可分离 3 抽头锐化 [−k, 1 + 2k, −k]: x = 片带输送方向
+    sharpen_ky: float = 0.0                 #                                                 y = CCD 线阵方向
+    optics_um: float = 0.0                  # 扫描光学的高斯 σ (µm, 胶片面; T55e 拟合为 0)
+    t51: dict | None = None                 # 被取代的 T51 / T55c 参数 (只作记录)
 
 
 def get_scanner(key):
     if key is None or isinstance(key, Scanner):
         return key
     return Scanner(**db.scanners()["labs"][key])
+
+
+GAUGE_120 = ("645", "6x6", "6x7", "6x9", "4x5")
+
+
+def film_gauge(fmt):
+    """画幅 → 片带: "120" (中画幅; 4x5 页片按 120 的扫描光学近似) / "135" (35 mm 片带上的画幅, 以及 110 / 126 / APS 的近似)。"""
+    if isinstance(fmt, str):
+        return "120" if fmt in GAUGE_120 else "135"
+    return "120" if float(fmt) > 45.0 else "135"
+
+
+SCAN_S_MAX = 4.0                # 原生网格最多比输出细 4 倍 (更粗的输出: 三角核宽 ≥ 8 个原生像素, 原生方盒的细节已被平均掉,
+                                #   改在 输出间距 / 4 上渲染)
+SCAN_MAX_PIXELS = 26e6          # 原生网格最多 2600 万像素 (内存: 24 MP 彩色 grain 模式在 9 GB 内); 超过时渲染间距略大于 CCD 间距
+
+
+def scan_grid(shape, px_um, fmt, sc, gauge=None):
+    """线阵 CCD 扫描仪 (sc.native) 的原生采样网格: 原生间距 = 横跨片带方向的画面尺寸 / CCD 线数 (HS-1800: 135 为 24 mm / 4492,
+    120 为 56 mm / 4824; 两个方向同一间距)。冲印店输出 = 按这张照片的像素数订的扫描 (输出间距 = 渲染像素 px_um),
+    缩小倍数 s = px_um / 原生间距 (s < 1: 照片比扫描仪能分辨的更细, 原生扫描再放大)。渲染在原生网格上 (像素孔径 = 原生像素)。
+    s > SCAN_S_MAX 或像素过多时在 px_um / s_max 上渲染 (见 SCAN_S_MAX)。
+    返回 dict(shape_native, px_native, s, native_pitch_um, ccd_axis, gauge) 或 None (该扫描仪没有原生采样模型)。
+    ccd_axis: 图像里 CCD 线阵的方向 (0 = 竖直, 1 = 水平) —— 物理长度最接近横跨片带尺寸的那一边。"""
+    if sc is None or not sc.native:
+        return None
+    gauge = gauge or film_gauge(fmt)
+    g = sc.native[gauge]
+    p_n = float(g["across_mm"]) * 1000.0 / float(g["lines"])
+    h, w = shape[:2]
+    s = min(px_um / p_n, SCAN_S_MAX, np.sqrt(SCAN_MAX_PIXELS / (h * w)))
+    s = max(s, min(px_um / p_n, 1.0))
+    if abs(s - 1.0) < 0.02:
+        nh, nw, p = h, w, px_um
+    else:
+        nh, nw = max(int(round(h * s)), 2), max(int(round(w * s)), 2)
+        p = px_um * h / nh
+    ccd = 0 if abs(h * px_um / 1000.0 - g["across_mm"]) <= abs(w * px_um / 1000.0 - g["across_mm"]) else 1
+    return dict(shape_native=(nh, nw), px_native=p, s=float(px_um / p), native_pitch_um=p_n, ccd_axis=ccd, gauge=gauge)
+
+
+def _resample_matrix(n_in, n_out):
+    """一维重采样矩阵 (n_out × n_in, 稀疏): 输出像素 j 的中心在输入坐标 (j + 0.5)·s − 0.5, s = n_in / n_out。
+    缩小 (s > 1): 三角核按 s 拉宽 (半宽 s 个输入像素, = 带抗混叠的双线性, PIL 的 BILINEAR); 放大: 普通线性插值。
+    边界按最近像素延拓。"""
+    from scipy import sparse
+    s = n_in / n_out
+    w = max(s, 1.0)
+    xc = (np.arange(n_out) + 0.5) * s - 0.5
+    k = int(np.ceil(w)) + 1
+    i0 = np.floor(xc - w).astype(np.int64) + 1
+    idx = i0[:, None] + np.arange(2 * k + 1)[None, :]
+    wt = np.clip(1.0 - np.abs(xc[:, None] - idx) / w, 0.0, None)
+    idx = np.clip(idx, 0, n_in - 1)
+    wt = wt / wt.sum(1, keepdims=True)
+    rows = np.repeat(np.arange(n_out), idx.shape[1])
+    return sparse.csr_matrix((wt.ravel(), (rows, idx.ravel())), shape=(n_out, n_in))
+
+
+def resample2(a, shape_out):
+    """(h, w[, c]) → shape_out 的可分离三角核重采样 (_resample_matrix)。"""
+    h, w = a.shape[:2]
+    H, W = shape_out
+    if (h, w) == (H, W):
+        return a
+    Ay, Ax = _resample_matrix(h, H), _resample_matrix(w, W)
+    flat = a.reshape(h, w, -1)
+    out = np.empty((H, W, flat.shape[2]))
+    for c in range(flat.shape[2]):
+        out[..., c] = (Ax @ (Ay @ flat[..., c]).T).T
+    return out.reshape((H, W) + a.shape[2:])
+
+
+def _to_output_grid(rr, shape_native, shape_out, layers):
+    """原生网格上的底片 (RenderResult) → 输出网格: 冲印店软件在处理后的 (对数 / 码值) 图像上缩放, 这里在密度域做
+    (冲印店影调在小信号上对密度近乎线性; 与 T55e 的拟合同一口径)。平均密度、曝光 (取对数) 同样重采样。"""
+    from .render import RenderResult
+    shp = tuple(shape_native) + (layers,)
+    D = resample2(np.asarray(rr.density, float).reshape(shp), shape_out)
+    rr.density = None                                    # 原生数组用完即放 (24 MP 彩色的峰值内存)
+    Dm = resample2(np.asarray(rr.mean, float).reshape(shp), shape_out)
+    rr.mean = None
+    lH = np.log(np.clip(np.asarray(rr.exposure, float).reshape(shp), 1e-30, None))
+    rr.exposure = None
+    lH = resample2(lH, shape_out)
+    sq = (lambda a: a[..., 0]) if layers == 1 else (lambda a: a)
+    return RenderResult(sq(D), sq(Dm), sq(np.exp(lH, out=lH)), rr.px_um, rr.method, rr.base_density)
 
 
 GAUSS_IMPL = "continuous"      # "discrete" = scipy gaussian_filter (filmlab 引擎的做法; 只为对照, 见 validation.realscan)
@@ -252,7 +365,24 @@ def _gauss(a, s):
     return out[pad:pad + a.shape[0], pad:pad + a.shape[1]]
 
 
-def _usm(Y, sc):
+def _sharpen3(Y, kx, ky, ccd_axis=0):
+    """可分离 3 抽头锐化 (输出像素): 输送方向 [−kx, 1 + 2kx, −kx], CCD 线阵方向 [−ky, 1 + 2ky, −ky] (直流增益 1)。
+    ccd_axis: 图像里 CCD 线阵的方向 (0 = 竖直)。"""
+    ka = {ccd_axis: ky, 1 - ccd_axis: kx}
+    for ax in (0, 1):
+        k = ka[ax]
+        if k == 0:
+            continue
+        P = np.pad(Y, [(1, 1) if a == ax else (0, 0) for a in range(Y.ndim)], mode="edge")
+        lo = P[:-2] if ax == 0 else P[:, :-2]
+        hi = P[2:] if ax == 0 else P[:, 2:]
+        Y = (1 + 2 * k) * Y - k * (lo + hi)
+    return Y
+
+
+def _usm(Y, sc, ccd_axis=0):
+    if sc.sharpen_kx or sc.sharpen_ky:
+        Y = _sharpen3(Y, sc.sharpen_kx, sc.sharpen_ky, ccd_axis)
     if sc.usm_amount <= 0 or sc.usm_sigma_px < 0.05:
         return Y
     d = Y - _gauss(Y, sc.usm_sigma_px)
@@ -267,14 +397,14 @@ def _box(a, k):
     return uniform_filter(a, k, mode="reflect") if k > 1.2 else a
 
 
-def _software(enc, sc, mono):
-    """冲印店软件 (编码后的输出上; BT.601 亮度 / 色度): 亮度 USM, 色度降噪 (彩色)。"""
+def _software(enc, sc, mono, ccd_axis=0):
+    """冲印店软件 (编码后的输出上; BT.601 亮度 / 色度): 亮度锐化 (USM 或 T55e 的可分离 3 抽头), 色度降噪 (彩色)。"""
     if mono or enc.ndim == 2:
         Y = enc if enc.ndim == 2 else enc.mean(-1)
-        Y = _usm(Y, sc)
+        Y = _usm(Y, sc, ccd_axis)
         return Y if enc.ndim == 2 else np.repeat(Y[..., None], 3, -1)
     ycc = enc @ _YCC.T
-    ycc[..., 0] = _usm(ycc[..., 0], sc)
+    ycc[..., 0] = _usm(ycc[..., 0], sc, ccd_axis)
     if sc.chroma_sigma_px >= 0.05:
         for k in (1, 2):
             low = _gauss(ycc[..., k], sc.chroma_sigma_px)
@@ -349,7 +479,9 @@ def finish(ex, rr, mode="grain", scanner_key=None):
     h, w = rgb.shape[:2]
     tabs = _curve_tables(em)
     sc = get_scanner(scanner_key)
-    lab_px = None if sc is None else sc.pitch_um * format_long_mm(ex.format) / 36.0 / ex.px_um   # 冲印店像素间距 / 渲染像素
+    grid = ex.info.get("scan_grid")
+    ccd = grid["ccd_axis"] if grid else 0
+    lab_px = None if (sc is None or grid or sc.native) else sc.pitch_um * format_long_mm(ex.format) / 36.0 / ex.px_um   # 冲印店像素间距 / 渲染像素
     layers = 1 if f.is_bw else 3
     D = rr.density.reshape(h, w, layers)
     Dm = rr.mean.reshape(h, w, layers)
@@ -361,7 +493,7 @@ def finish(ex, rr, mode="grain", scanner_key=None):
         info["scan"] = []
         for c in range(layers):
             Dc = D[..., c]
-            if sc is not None:                                           # 扫描光学 (透射率上) + 孔径
+            if lab_px is not None:                              # 扫描光学 (透射率上) + 孔径 (T51 的口径)
                 T = _box(_gauss(10.0 ** -Dc, sc.optics_px), lab_px)
                 Dc = -np.log10(np.clip(T, 1e-12, None))
             tab = tabs[c]
@@ -376,7 +508,7 @@ def finish(ex, rr, mode="grain", scanner_key=None):
                 info["scan"].append(dict(kind="negative_inversion", D_grey=Dg, gamma_bar=gbar))
         res = np.repeat(out, 3, -1) if layers == 1 else out
         if sc is not None:
-            res = srgb_decode(_software(srgb_encode(res), sc, mono=f.is_bw))
+            res = srgb_decode(_software(srgb_encode(res), sc, mono=f.is_bw, ccd_axis=ccd))
         if ex.mono_input and layers == 1:
             res = res[..., 0]
     elif mode == "grain":
@@ -386,7 +518,7 @@ def finish(ex, rr, mode="grain", scanner_key=None):
             g_eff, _ = _slope_at(tabs[c], logH[..., c])
             lg10[..., c] = (D[..., c] - Dm[..., c]) / g_eff
             info["slopes"].append(dict(gamma_speed_point=tabs[c][3], gamma_grey=float(np.interp(lgrey, tabs[c][0], tabs[c][2]))))
-        if sc is not None:
+        if lab_px is not None:
             for c in range(layers):
                 lg10[..., c] = _box(_gauss(lg10[..., c], sc.optics_px), lab_px)
         for c in range(layers):                            # 指数映射的二阶偏移按同一曝光的系综扣除 (见模块说明)
@@ -398,7 +530,7 @@ def finish(ex, rr, mode="grain", scanner_key=None):
         del fac
         if sc is not None:
             ev = srgb_encode(rgb)
-            o = srgb_decode(ev + _software(srgb_encode(o) - ev, sc, mono=f.is_bw))
+            o = srgb_decode(ev + _software(srgb_encode(o) - ev, sc, mono=f.is_bw, ccd_axis=ccd))
         res = o[..., 0] if (ex.mono_input and layers == 1) else o
     else:
         raise ValueError("mode: 'grain' / 'full'")
@@ -478,14 +610,16 @@ def lab_anchor(ex, Dm, timing="auto"):
     raise ValueError("timing: 'auto' / 'fixed'")
 
 
-def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto", scanner_key=None):
+def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto", scanner_key=None, release=False):
     """T55b 的步骤 4–5 (冲印店实测影调)。返回 (线性输出, 信息)。见模块说明。"""
     from .labtone import tone
     em, rgb = ex.emulsion, ex.rgb
     f = em.film
     h, w = rgb.shape[:2]
     sc = get_scanner(scanner_key)
-    lab_px = None if sc is None else sc.pitch_um * format_long_mm(ex.format) / 36.0 / ex.px_um
+    grid = ex.info.get("scan_grid")
+    ccd = grid["ccd_axis"] if grid else 0
+    lab_px = None if (sc is None or grid or sc.native) else sc.pitch_um * format_long_mm(ex.format) / 36.0 / ex.px_um
     layers = 1 if f.is_bw else 3
     D = rr.density.reshape(h, w, layers)
     Dm = rr.mean.reshape(h, w, layers)
@@ -493,7 +627,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
     reversal = em.path == "dye" and em.curve.design == "reversal"
     dec = lambda c: srgb_decode(np.clip(c, 0.0, 255.0) / 255.0)
     if mode == "full":
-        if sc is not None:                                               # 扫描光学 (透射率上) + 孔径
+        if lab_px is not None:                                  # 扫描光学 (透射率上) + 孔径 (T51 的口径)
             D = np.stack([-np.log10(np.clip(_box(_gauss(10.0 ** -D[..., c], sc.optics_px), lab_px), 1e-12, None))
                           for c in range(layers)], -1)
         if reversal:
@@ -508,7 +642,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
             info["scan"] = dict(kind="lab_tone", timing=timing, D_anchor=np.asarray(m).tolist())
         res = np.repeat(out, 3, -1) if layers == 1 else out
         if sc is not None:
-            res = srgb_decode(_software(srgb_encode(res), sc, mono=f.is_bw))
+            res = srgb_decode(_software(srgb_encode(res), sc, mono=f.is_bw, ccd_axis=ccd))
         if ex.mono_input and layers == 1:
             res = res[..., 0]
         return res, info
@@ -517,7 +651,11 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
     # grain 模式作用在照片显示出来的样子上: 线性值 > 1 (HDR 输入) 显示为白, 按 1 处理 (否则中性限制会把 HDR 高光压暗、改变影调)
     rgb = np.clip(rgb, 0.0, 1.0)
     delta = D - Dm
-    if sc is not None:
+    if release:                                                          # 调用者不保留渲染结果: 逐像素密度用完即放
+        D = None
+        rr.density = None
+        rr.exposure = None
+    if lab_px is not None:
         delta = np.stack([_box(_gauss(delta[..., c], sc.optics_px), lab_px) for c in range(layers)], -1)
     film_density = aux is None                                           # T55d: 底片密度来自该片自己的光谱曝光 (expose)
     if film_density and not reversal:
@@ -557,7 +695,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
             Yp = np.clip(Yl * k, 0.0, 1.0)
             if sc is not None:                                           # 冲印店软件 (USM) 作用于亮度的变化 (编码域), 仍是中性的
                 e0 = srgb_encode(Yl)
-                Yp = np.clip(srgb_decode(np.clip(e0 + _software(srgb_encode(Yp) - e0, sc, mono=True), 0.0, 1.0)), 0.0, 1.0)
+                Yp = np.clip(srgb_decode(np.clip(e0 + _software(srgb_encode(Yp) - e0, sc, mono=True, ccd_axis=ccd), 0.0, 1.0)), 0.0, 1.0)
                 k = np.where(Yl > EPS, Yp / np.maximum(Yl, EPS), 1.0)
             o = rgb * k[..., None]
             mx = o.max(-1)
@@ -576,7 +714,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
         del fac
     if sc is not None and not f.is_bw:                                   # 彩色: 冲印店软件作用于编码后的差 (亮度 USM / 色度降噪)
         ev = srgb_encode(rgb)
-        o = srgb_decode(np.clip(ev + _software(srgb_encode(o) - ev, sc, mono=False), 0.0, 1.0))
+        o = srgb_decode(np.clip(ev + _software(srgb_encode(o) - ev, sc, mono=False, ccd_axis=ccd), 0.0, 1.0))
     res = o[..., 0] if (ex.mono_input and layers == 1) else o
     return res, info
 
@@ -584,7 +722,7 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
 def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0, format="35mm", output_px=None,
                    mode="grain", exposure_ev=0.0, metering="fixed", filter=None, filter_compensate=True, scanner="auto",
                    lab="rpl_noritsu", timing="auto", grain_density="film", seed=0, method="auto", encoding="auto", workers=1,
-                   keep_render=False):
+                   keep_render=False, film_gauge=None):
     """给照片加银盐颗粒。返回 GrainImage (linear, info)。参数:
     image: 路径或数组 (整数 = sRGB 编码; 浮点 = 线性, encoding="srgb" 时先解码)。
     film / developer: 胶片与显影液 (films.films() / films.developers(); None = 原生冲洗)。grain_scale: 颗粒粗细 k (0.5–3)。
@@ -598,7 +736,8 @@ def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0
     filter: Wratten 号 ("8", "11", "15", "25", "47", "58" …; 黑白常用; 只影响 full 模式的曝光); filter_compensate: 按中性灰补偿。
     scanner: "auto" (默认: 与 lab 同一家冲印店 —— rpl_noritsu → "noritsu_rpl" 的空间传递; lab=None 时不加) / None (不加) /
              "noritsu_rpl" / "frontier_epfl" (T51 实测的冲印店空间传递: 光学、孔径、USM、色度降噪)。
-    method: 黑白颗粒的渲染法 "auto" / "explicit" / "closed_form" (见 render)。"""
+    method: 黑白颗粒的渲染法 "auto" / "explicit" / "closed_form" (见 render)。
+    film_gauge: 片带 "135" / "120" (None = 由画幅推断; 线阵扫描仪的原生采样间距按片带, 见 scan_grid)。"""
     t0 = time.time()
     if scanner == "auto":                                        # 一家完整的冲印店: 影调与空间传递来自同一家
         scanner = LAB_SCANNER.get(lab)
@@ -610,12 +749,27 @@ def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0
     elif grain_density not in ("film", "photo"):
         raise ValueError("grain_density: 'film' / 'photo'")
     t1 = time.time()
-    rr = render(ex.emulsion, exposure=H, px_um=ex.px_um, seed=seed, method=method, workers=workers)
+    sc = get_scanner(scanner)
+    grid = scan_grid(ex.rgb.shape, ex.px_um, format, sc, film_gauge)
+    if grid is not None:                                         # T55e: 线阵 CCD 在原生间距上采样 (像素孔径 = 原生像素)
+        ex.info["scan_grid"] = grid
+        shp = tuple(grid["shape_native"])
+        Hn = resample2(np.log(np.clip(H, 1e-30, None)), shp) if shp != ex.rgb.shape[:2] else np.log(np.clip(H, 1e-30, None))
+        Hn = np.exp(Hn, out=Hn)
+        rr = render(ex.emulsion, exposure=Hn, px_um=grid["px_native"], seed=seed, method=method, workers=workers)
+        del Hn
+        layers = 1 if ex.emulsion.film.is_bw else 3
+        rr_native_method = rr.method
+        if shp != ex.rgb.shape[:2]:
+            rr = _to_output_grid(rr, shp, ex.rgb.shape[:2], layers)
+        rr.method = rr_native_method
+    else:
+        rr = render(ex.emulsion, exposure=H, px_um=ex.px_um, seed=seed, method=method, workers=workers)
     t2 = time.time()
     if lab is None:
         res, info2 = finish(ex, rr, mode, scanner)
     else:
-        res, info2 = finish_lab(ex, rr, aux, mode, lab, timing, scanner)
+        res, info2 = finish_lab(ex, rr, aux, mode, lab, timing, scanner, release=not keep_render)
     info = dict(ex.info, **info2)
     info["seconds"] = dict(exposure=t1 - t0, grain=t2 - t1, finish=time.time() - t2, total=time.time() - t0)
     return GrainImage(res, info, rr if keep_render else None)

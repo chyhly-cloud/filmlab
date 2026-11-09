@@ -61,24 +61,29 @@ def summarize(rep):
             fl = [x["filmlab_film_side"] for x in c["t51b"] if x["mode"] == "full+noritsu"]
             rc = [x["ratio_code"] for x in c["t51b"] if x["mode"] == "full+noritsu"]
             ph = [x["ratio_px"] for x in c["t52_phone"] if x["mode"] == "full+noritsu"]
-            fd = [x["film_side"] for x in c["t51b"] if x["mode"] == "full+noritsu_discrete"]
             gs = [x["film_side"] for x in c["t51b"] if x["mode"] == "grain+noritsu"]
             L.append(f"真实 RPL {key}: 胶片侧 (真实/silvergrain) {_f(min(fs, default=None))}–{_f(max(fs, default=None))} "
                      f"(filmlab 模型 {_f(min(fl, default=None))}–{_f(max(fl, default=None))}); 同码值 σ_48 {_f(min(rc, default=None))}–{_f(max(rc, default=None))}; "
-                     f"手机尺寸 σ_px {_f(min(ph, default=None))}–{_f(max(ph, default=None))}; 胶片侧 (grain 模式) {_f(min(gs, default=None))}–{_f(max(gs, default=None))};"
-                     f" 胶片侧 (扫描高斯按 filmlab 的离散核) {_f(min(fd, default=None))}–{_f(max(fd, default=None))}")
+                     f"手机尺寸 σ_px {_f(min(ph, default=None))}–{_f(max(ph, default=None))}; 胶片侧 (grain 模式) {_f(min(gs, default=None))}–{_f(max(gs, default=None))}"
+                     " (lab=None 的旧影调)")
             s = c["spectrum_shape"]
             L.append(f"  谱形 P(f)/P(0.11), f = 0.30 / 0.48 周/像素: 真实 {s['real'][9]:.2f} / {s['real'][-1]:.2f}; silvergrain 无扫描 {s['full'][9]:.2f} / {s['full'][-1]:.2f};"
-                     f" 经 Noritsu (连续 MTF) {s['full+noritsu'][9]:.2f} / {s['full+noritsu'][-1]:.2f}; 离散核 {s['full+noritsu_discrete'][9]:.2f} / {s['full+noritsu_discrete'][-1]:.2f}")
+                     f" 经 Noritsu (T55e 采样链) {s['full+noritsu'][9]:.2f} / {s['full+noritsu'][-1]:.2f}")
         if "portra400" in r:
             c = [x for x in r["portra400"]["compare"] if x["mode"] == "full"]
             L.append("真实 RPL Portra 400 同码值 σ_48 (真实/silvergrain full): " + ", ".join(f"{x['code']:.0f}: {x['ratio']:.2f}" for x in c))
     if "scanner_fit" in rep:
         r = rep["scanner_fit"]
-        e = r["edge(train)→grain(hold)"]
-        L.append(f"T55c Noritsu 光学重拟合 (silvergrain 的传递): 直边 → 颗粒 (留出片) σ_o = {r['sigma_o_um']:g} µm (RMS {e['rms']:.4f}; "
-                 f"不锐化 {r['colour_hold_no_usm']['rms']:.3f}); 白噪声底占 40 µm 盒方差 {e['noise_var_share_box40']:.2f} (σ_o 与之简并); "
-                 + "; ".join(f"{k.split('_', 2)[-1]} 谱形 RMS {v['at_colour_sigma_o']['rms']:.3f}" for k, v in r.items() if k.startswith("bw_holdout")))
+        t = r["train"]
+        L.append(f"T55e Noritsu HS-1800 采样链 (原生 11.6 µm → 三角核缩小 → 3 抽头锐化): 训练 (彩色 {len(t['frames'])} 帧) kx {t['kx']:.3f} ky {t['ky']:.3f}, "
+                 f"2D 谱形 RMS {t['rms']:.3f} (各向同性 {t['isotropic']['rms']:.3f}, 不锐化 {t['rms_no_sharpen']:.3f}, 加光学 σ 3 µm {t['optics_3um']['rms']:.3f}, "
+                 f"T55c 的链 {t['t55c_chain_rms']:.3f})")
+        for k in ("hold_colour", "bw_cross_type"):
+            h = r[k]
+            L.append(f"  留出 {k}: RMS {h['rms_at_train']:.3f} (自由 {h['free']['rms']:.3f}: kx {h['free']['kx']:.3f} ky {h['free']['ky']:.3f}; 不锐化 {h['rms_no_sharpen']:.3f})")
+        e = r["edges"]["train"]
+        L.append(f"  直边 (训练片 {e['n']} 条, 输送方向): 本链 + kx {e['chain_sep3_kx']['cost'] * 1e4:.3f}e-4, T51 USM {e['t51_usm']['cost'] * 1e4:.3f}e-4, "
+                 f"不锐化 {e['none_t51_box']['cost'] * 1e4:.3f}e-4")
     if "labtone" in rep:
         r = rep["labtone"]
         for key in ("kodak_trix_400@xtol", "ilford_hp5_plus@d76"):

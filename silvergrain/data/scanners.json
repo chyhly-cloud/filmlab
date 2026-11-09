@@ -15,14 +15,35 @@
   "noritsu_rpl": {
    "name": "Noritsu HS-1800 (Richard Photo Lab, JPEG)",
    "pitch_um": 12.0,
-   "optics_px": 0.45,
-   "usm_sigma_px": 0.68,
-   "usm_amount": 1.03,
+   "optics_px": 0.0,
+   "usm_sigma_px": 0.0,
+   "usm_amount": 0.0,
    "usm_threshold": 0.0,
    "chroma_sigma_px": 0.0,
    "chroma_threshold": 0.0,
-   "source": "T55c: silvergrain/validation/scanner_fit.py —— 按 silvergrain 自己的扫描传递 (输出像素网格上的连续高斯 MTF) 重新拟合 T51 的颗粒谱: USM 取 T51 直边 (a 1.032, σ_u 0.683 像素); 直边 → 颗粒 (留出片 Portra 800 / Ektar 100) 定 σ_o = 9 µm = 0.45 像素 (20 µm), 谱形 RMS 0.0765 (不锐化 0.227); 跨片种留出 Tri-X 0.129、HP5+ 0.068。注意: 谱形拟合里 σ_o 与扫描仪白噪声底 N 简并 (留出片 N 占 40 µm 盒方差 58%), 谱形不能单独定 σ_o; 最清晰直边的总模糊 11 µm 为上限。T51 原值 0.35 像素 (7 µm) 是按 细像素上的连续高斯 + 像素方盒积分定的 (tools/eval/t51/fit.json); filmlab 引擎在输出像素上用离散核执行, 近乎恒等。",
-   "optics_px_t51": 0.35
+   "native": {
+    "135": {
+     "across_mm": 24.0,
+     "lines": 4492
+    },
+    "120": {
+     "across_mm": 56.0,
+     "lines": 4824
+    }
+   },
+   "resample": "triangle",
+   "sharpen_kx": 0.157,
+   "sharpen_ky": 0.306,
+   "optics_um": 0.0,
+   "source": "T55e: silvergrain/validation/scanner_fit.py (结果 validation/results/report.json 'scanner_fit'), docs/tasks/T55_SILVERGRAIN_STANDALONE.md T55e 节。线阵 CCD (三色同时读取; 片带输送) 在原生间距上采样, 像素孔径 = 原生像素 (填充 1, 渲染像素即孔径); 原生间距 = 横跨片带的画面尺寸 / CCD 线数: HS-1800 最大分辨率 135F 4492 × 6774 (24 mm → 5.34 µm), 6×4.5 4824 × 3533 (56 mm → 11.6 µm) (冲印店规格表 filmlab.com.my 'Technical details'; luckybox 'Mini deep dive: the Noritsu HS-1800': 线阵扫描, 同一镜头按片幅变焦)。RPL 的 645 文件 2048 × 2796 = 原生 4824 × 3533 缩小 1.7253 倍: 真实扫描每列 / 每行的颗粒方差以 0.2747 周/像素 (= 1 − 0.7253) 调制, 深度 0.02–0.05 (53 帧, 两个方向都有) —— 按倍数拉宽的三角核 (带抗混叠的双线性) 给 0.03–0.07; 面积平均 0.10–0.13, 拉宽的三次核约 0.02, 不拉宽的核 0.1–0.3。锐化: 真实 / 模型的 2D 颗粒谱比是菱形、四角最高 (乘积形 = 可分离核), 不是径向 (高斯 USM); 在彩色训练帧 (Pro 400H、Portra 400 / 160, 12 帧) 的 2D 中位谱上拟合 kx 0.157 (输送方向), ky 0.306 (CCD 方向), 谱形 RMS 0.195 (各向同性 0.249, 不锐化 0.664, T55c 的链 0.647); 留出彩色 0.198 (自由 0.197), 黑白 Tri-X / HP5+ 0.192 (自由 0.183)。扫描光学 σ: 0 (加 3 µm 时 0.202, 变差); 输送方向拖影与 kx 简并 (0–0.6 线等价), 取 0。直边 (T51 训练片 87 条, 输送方向): 本链 + kx 的代价 6.75e-4, 与 T51 USM 6.70e-4 相同, 不锐化 7.19e-4。",
+   "t51": {
+    "optics_px": 0.45,
+    "usm_sigma_px": 0.68,
+    "usm_amount": 1.03,
+    "usm_threshold": 0.0,
+    "source": "T55c: silvergrain/validation/scanner_fit.py —— 按 silvergrain 自己的扫描传递 (输出像素网格上的连续高斯 MTF) 重新拟合 T51 的颗粒谱: USM 取 T51 直边 (a 1.032, σ_u 0.683 像素); 直边 → 颗粒 (留出片 Portra 800 / Ektar 100) 定 σ_o = 9 µm = 0.45 像素 (20 µm), 谱形 RMS 0.0765 (不锐化 0.227); 跨片种留出 Tri-X 0.129、HP5+ 0.068。注意: 谱形拟合里 σ_o 与扫描仪白噪声底 N 简并 (留出片 N 占 40 µm 盒方差 58%), 谱形不能单独定 σ_o; 最清晰直边的总模糊 11 µm 为上限。T51 原值 0.35 像素 (7 µm) 是按 细像素上的连续高斯 + 像素方盒积分定的 (tools/eval/t51/fit.json); filmlab 引擎在输出像素上用离散核执行, 近乎恒等。",
+    "optics_px_t51": 0.35
+   }
   }
  }
 }

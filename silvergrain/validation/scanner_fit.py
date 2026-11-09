@@ -1,14 +1,15 @@
-"""T55c: 按 silvergrain 自己实现的扫描传递重新拟合 Noritsu (RPL) 的光学 σ_o (T51 第 3–5 节的同一方法)。
+"""T55e: Noritsu HS-1800 (RPL) 的扫描采样链 —— 在真实扫描的 2D 颗粒谱上拟合, 留出片与跨片种检验 (只用存下的测量)。
 
-T51 的拟合 (filmlab tools/eval/t51_fit.py) 用的模型参照是: 细像素 (5 µm) 渲染 → 连续高斯 σ_o (在细像素上) → 冲印店像素方盒积分;
-filmlab 引擎实际执行的是在 20 µm 输出像素上的离散高斯核 (σ 0.35 像素, 几乎是恒等)。silvergrain 执行的是:
-  底片 (输出像素积分) → 扫描光学 = 输出像素网格上的连续高斯 MTF exp(−2π² σ² f²) (image._gauss, 频域) → 冲印店孔径 → USM。
-这里的参照就用 silvergrain 的这条链 (同一像素、同一实现), 所以拟合出的 σ_o 可以原样写进 data/scanners.json。
-真实: RPL 颗粒谱 (validation/data/spec_rpl_{c,bw}.json.gz: T51 t51_scan_measure 的 64 × 64 块、16 档径向谱, 只存测量)。
-模型: 真实亮度谱 = |U(f)|² · (K · 参照谱(f; σ_o) + N), K、N 每帧自由 (影调斜率 × 量级、扫描仪白噪声底)。
-  · USM (a, σ_u) 取 T51 直边 (训练片 85 条) 的结果 a = 1.032, σ_u = 0.683 像素 —— 直边拟合里每条边的模糊 σ_e 自由, 与光学的实现无关。
-  · 训练片 (Pro 400H、Portra 400 / 160) 自由拟合; 直边 → 颗粒: 固定 USM, 在留出片 (Portra 800、Ektar 100) 上定 σ_o;
-    跨片种留出: 同一 (σ_o, USM) 预测 Tri-X、HP5+ 的谱形 (只放开 K、N)。
+真实 (data/realscan_rpl_2d.json.gz, 53 帧, 测量方法见文件的 _note): 每帧的 2D 中位谱 (16 × 16 粗格)、每列 / 每行颗粒方差的
+0.2747 周/像素调制、邻点相关、块内分布形状; data/edges_rpl_x.json.gz: T51 的输送方向直边。
+模型 (silvergrain 自己的链, image.scan_grid / _to_output_grid / _sharpen3):
+  均匀照片 (18% × 2^EV) → 该片的底片, 渲染在 HS-1800 的原生网格上 (120: 56 mm / 4824 = 11.6 µm; 像素孔径 = 原生像素)
+  → 冲印店软件在处理后的图像上按 1.7253 倍缩小 (三角核按倍数拉宽) → 冲印店影调 (锚点使该块印到该帧的中位码值)
+  → 输出像素上的可分离 3 抽头锐化 (kx 输送方向, ky CCD 方向) → 8 位。
+拟合: 训练帧 = 彩色 Pro 400H、Portra 400、Portra 160 (与 T51 同一划分) 中有同 EV 模型场的帧; 只拟合 (kx, ky) —— 谱形
+(log 中位谱, |f| > 0.08), 不拟合量级。对照结构: 不锐化; 再加扫描光学 σ_o = 3 µm; T55c 的链 (渲染在输出像素上, 网格高斯 0.45 像素
++ USM 1.03 / 0.68)。留出: 彩色 Portra 800 / Ektar 100; 跨片种: Tri-X (XTOL)、HP5+ (D-76) 只用训练出的 (kx, ky)。
+直边: T51 的输送方向直边, 每条边的 σ_e 自由, 比较 (台阶 ⊗ σ_e ⊗ 本链 → kx) 与 T51 (台阶 ⊗ σ_e ⊗ 1 像素方盒 → USM) 的代价。
 """
 import gzip
 import json
@@ -17,186 +18,313 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import least_squares
 
-from . import measure as M
-
 DATA = Path(__file__).resolve().parent / "data"
-USM_EDGES = (1.0322610822583158, 0.6826243370961412)      # T51 tools/eval/t51/fit.json noritsu.edges_train
-SIGMAS_UM = (0.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 13.0)
 PX = 20.0
-NB = 16
+N_OUT = 448
 TILE = 64
-FIT_BINS = slice(2, 15)
-W601 = np.array([0.299, 0.587, 0.114])
 TRAIN = ("1_FUJIPRO400H", "2_KODAKPORTRA400", "4_KODAKPORTRA160")
 HOLD = ("3_KODAKPORTRA800", "5_KODAKEKTAR100")
-BW = {"6_KODAK400TX": ("kodak_trix_400", "xtol"), "7_ILFORDHP5PLUS": ("ilford_hp5_plus", "d76")}
+BW = ("6_KODAK400TX", "7_ILFORDHP5PLUS")
+FILMS = {"1_FUJIPRO400H": ("fujifilm_pro_400h", None), "2_KODAKPORTRA400": ("kodak_portra_400", None),
+         "3_KODAKPORTRA800": ("kodak_portra_800", None), "4_KODAKPORTRA160": ("kodak_portra_160", None),
+         "5_KODAKEKTAR100": ("kodak_ektar_100", None), "6_KODAK400TX": ("kodak_trix_400", "xtol"),
+         "7_ILFORDHP5PLUS": ("ilford_hp5_plus", "d76")}
+MODEL_EVS = {"1_FUJIPRO400H": (-2, 0, 2), "2_KODAKPORTRA400": (-2, -1, 0, 1, 2, 3), "4_KODAKPORTRA160": (-2, 0, 2),
+             "3_KODAKPORTRA800": (-2, 0, 2), "5_KODAKEKTAR100": (-2, 0, 2), "6_KODAK400TX": (-3, -2, -1, 0, 1, 2, 3),
+             "7_ILFORDHP5PLUS": (-2, -1, 0, 1, 2)}
+W601 = np.array([0.299, 0.587, 0.114])
+_HANN = np.hanning(TILE)[:, None] * np.hanning(TILE)[None, :]
+_HANN = _HANN / np.sqrt((_HANN ** 2).mean())
 
 
-def usm_tf(f, a, su):
-    return 1.0 + a * (1.0 - np.exp(-2 * np.pi ** 2 * su ** 2 * f ** 2))
+def load_real():
+    return json.load(gzip.open(DATA / "realscan_rpl_2d.json.gz", "rt"))["frames"]
 
 
-# --------------------------------------------------------------- 谱 (t51_scan_measure 的同一算法)
-def _radial(T):
-    fy = np.fft.fftfreq(T)[:, None]; fx = np.fft.fftfreq(T)[None, :]
-    fr = np.sqrt(fy ** 2 + fx ** 2)
-    e = np.linspace(0, 0.5, NB + 1)
-    return [(fr >= e[i]) & (fr < e[i + 1]) & (fr > 0) for i in range(NB)], 0.5 * (e[1:] + e[:-1])
+# ------------------------------------------------------------------ 测量 (与真实同一估计器) --
+def _detrend(t):
+    h, w = t.shape
+    yy, xx = np.mgrid[:h, :w]
+    A = np.stack([np.ones(h * w), yy.ravel(), xx.ravel()], 1)
+    c, *_ = np.linalg.lstsq(A, t.ravel(), rcond=None)
+    return t - (A @ c).reshape(h, w)
 
 
-def measure_array(img8, T=TILE, border=8):
-    """均匀合成场 (H, W, 3) 编码码值 → 输出密度 Do 的每档谱 P、互谱 X、D_med (同 t51_scan_measure, synthetic)。"""
-    m, fc = _radial(T)
-    w = np.hanning(T)[:, None] * np.hanning(T)[None, :]
-    w = w / np.sqrt((w ** 2).mean())
-    H, W = img8.shape[:2]
-    Ps, Xs, Ds = [], [], []
-    for y in range(border, H - T + 1 - border, T):
-        for x in range(border, W - T + 1 - border, T):
-            t8 = np.asarray(img8[y:y + T, x:x + T], float)
-            c = t8 / 255.0
-            lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
-            D = -np.log10(np.clip(lin, 1e-6, None))
-            r = M.detrend(D)
-            F = np.fft.fft2(r * w[..., None], axes=(0, 1)) / T
-            Ps.append([[np.mean(np.abs(F[mm, k]) ** 2) for k in range(3)] for mm in m])
-            Xs.append([[np.mean((F[mm, a] * np.conj(F[mm, b])).real) for a, b in ((0, 1), (1, 2), (0, 2))] for mm in m])
-            Ds.append(D.mean((0, 1)))
-    return dict(fc=fc.tolist(), D_med=np.median(Ds, 0).tolist(), q_mean=[0.0, 0.0, 0.0],
-                P=np.mean(Ps, 0).tolist(), X=np.mean(Xs, 0).tolist())
+def _tiles(Y, border=8):
+    out = []
+    for y in range(border, Y.shape[0] - TILE - border + 1, TILE):
+        for x in range(border, Y.shape[1] - TILE - border + 1, TILE):
+            out.append((y, x, _detrend(Y[y:y + TILE, x:x + TILE])))
+    return out
 
 
-def cov_spec(m, subtract_q=True):
-    P = np.array(m["P"]); X = np.array(m["X"])
-    if subtract_q:
-        P = P - np.array(m["q_mean"])[None, :]
-    C = np.zeros((len(P), 3, 3))
-    for i in range(3):
-        C[:, i, i] = P[:, i]
-    for k, (i, j) in enumerate(((0, 1), (1, 2), (0, 2))):
-        C[:, i, j] = C[:, j, i] = X[:, k]
-    return C
+def quad16(S):
+    S = np.fft.fftshift(np.asarray(S)); S = S / S.sum()
+    Q = (S[32:, 32:] + S[32:0:-1, 32:0:-1][:32, :32] + S[32:, 32:0:-1][:, :32] + S[32:0:-1, 32:][:32]) / 4
+    return Q.reshape(16, 2, 16, 2).mean((1, 3)) * 4096
 
 
-def code_slopes(D):
-    from ..image import srgb_encode
-    lin = 10.0 ** -np.asarray(D)
-    dv = np.where(lin <= 0.0031308, 12.92, 1.055 / 2.4 * np.power(np.maximum(lin, 1e-9), 1 / 2.4 - 1))
-    return -dv * lin * np.log(10)
+_FQ = (np.arange(16) * 2 + 0.5) / 64
+QMASK = np.hypot(_FQ[:, None], _FQ[None, :]) > 0.08
 
 
-def luma_psd(C, D, mono=False):
-    if mono:
-        return C[:, 1, 1]
-    w = W601 * code_slopes(D)
-    return np.einsum("i,fij,j->f", w, C, w)
+def stats(Y, full=True):
+    """中位谱 (16 × 16)、邻点相关、行列方差调制、块内分布 (同 realscan_rpl_2d 的定义)。full=False 只算中位谱。"""
+    ts = _tiles(Y)
+    P = np.stack([np.abs(np.fft.fft2(r * _HANN) / TILE) ** 2 / r.var() for _, _, r in ts])
+    if not full:
+        return dict(quad16=quad16(np.median(P, 0)))
+    rho, z = [], []
+    H, W = Y.shape
+    colv, colc, rowv, rowc = np.zeros(W), np.zeros(W), np.zeros(H), np.zeros(H)
+    for y, x, r in ts:
+        v = r.var()
+        rho.append([np.mean(r[:, 1:] * r[:, :-1]) / v, np.mean(r[1:] * r[:-1]) / v, np.mean(r[1:, 1:] * r[:-1, :-1]) / v,
+                    np.mean(r[:, 2:] * r[:, :-2]) / v, np.mean(r[2:] * r[:-2]) / v])
+        z.append((r / np.sqrt(v)).ravel())
+        colv[x:x + TILE] += (r ** 2).mean(0) / v; colc[x:x + TILE] += 1
+        rowv[y:y + TILE] += (r ** 2).mean(1) / v; rowc[y:y + TILE] += 1
+
+    def mod(v, c, f0=0.2747):
+        ok = c > 0
+        xx = np.nonzero(ok)[0]; vv = v[ok] / c[ok]; vv = vv - vv.mean()
+        return max(2 * abs(np.sum(vv * np.exp(-2j * np.pi * f * xx))) / len(xx) for f in np.linspace(f0 - 0.004, f0 + 0.004, 81))
+    z = np.concatenate(z); zc = np.clip(z, -4, 4)
+    sub = {}
+    for b in (64, 8):
+        zz = np.concatenate([(_detrend(r[i:i + b, j:j + b] + 0.0) / max(_detrend(r[i:i + b, j:j + b] + 0.0).std(), 1e-9)).ravel()
+                             for _, _, r in ts for i in range(0, TILE, b) for j in range(0, TILE, b)])
+        sub[b] = [float(np.mean(zz ** 4) - 3), float(np.mean(zz ** 3))]
+    return dict(quad16=quad16(np.median(P, 0)), rho=np.median(rho, 0), mod_x=mod(colv, colc), mod_y=mod(rowv, rowc),
+                sd=float(np.median([r.std() for _, _, r in ts])), kurt_clip4=float(np.mean(zc ** 4) / np.mean(zc ** 2) ** 2 - 3),
+                skew=float(np.mean(z ** 3)), kurt_subtile=sub, n=len(ts))
 
 
-def pick_level(ref, D):
-    return min(ref, key=lambda k: abs(ref[k]["D_med"][1] - D[1]))
+# ------------------------------------------------------------------ 模型 --
+_CACHE = {}
 
 
-def fit_grain_luma(frames, refs_by_so, mono=False, fixed_usm=None, bins=FIT_BINS):
-    """t51_fit.fit_grain_luma 的同一算法。"""
-    best, table = None, {}
-    for so in sorted(refs_by_so):
-        ys, fs, ms = [], [], []
-        for fr in frames:
-            D = np.array(fr["D_med"])
-            Lr = luma_psd(cov_spec(fr), D, mono)
-            m = refs_by_so[so][pick_level(refs_by_so[so], D)]
-            Lm = luma_psd(cov_spec(m, subtract_q=False), np.array(m["D_med"]), mono)
-            ys.append(np.log(np.clip(Lr[bins], 1e-12, None))); fs.append(np.array(fr["fc"])[bins]); ms.append(Lm[bins])
-        nfr = len(frames)
+def native_field(film_key, ev, seed=11, method=None):
+    """均匀 18% × 2^EV 在 HS-1800 120 原生网格上的底片 → 输出网格 (N_OUT²) 的密度 (h, w, 层) 与该 EV 的平均密度。"""
+    from ..image import GREY, expose, get_scanner, scan_grid, _to_output_grid
+    from ..render import render
+    key = (film_key, ev, seed, method)
+    if key in _CACHE:
+        return _CACHE[key]
+    film, dev = FILMS[film_key]
+    ex = expose(np.full((N_OUT, N_OUT, 3), GREY * 2.0 ** ev), film, dev, format=N_OUT * PX / 1000.0)
+    g = scan_grid(ex.rgb.shape, ex.px_um, ex.format, get_scanner("noritsu_rpl"), gauge="120")
+    shp = tuple(g["shape_native"])
+    layers = 1 if ex.emulsion.film.is_bw else 3
+    H = np.full(shp + ((3,) if layers == 3 else ()), 1.0) * (ex.H.reshape(-1, layers)[0] if layers == 3 else ex.H.ravel()[0])
+    m = method or ("closed_form" if layers == 1 else "auto")
+    rr = render(ex.emulsion, exposure=H, px_um=g["px_native"], seed=seed + ev, method=m)
+    Dm = np.asarray(rr.mean, float).reshape(-1, layers).mean(0)
+    out = _to_output_grid(rr, shp, (N_OUT, N_OUT), layers)
+    D = np.asarray(out.density, float).reshape(N_OUT, N_OUT, layers)
+    _CACHE[key] = (D, Dm, g)
+    return _CACHE[key]
 
-        def model(p, i):
-            a, su = fixed_usm if fixed_usm else (p[0], np.exp(p[1]))
-            o = 0 if fixed_usm else 2
-            K, N = np.exp(p[o + 2 * i]), np.exp(p[o + 2 * i + 1])
-            return np.log(usm_tf(fs[i], a, su) ** 2 * (K * ms[i] + N))
+
+def t55c_field(film_key, ev, seed=11):
+    """T55c 的链: 渲染在输出像素 (20 µm) 上, 输出网格上的高斯 0.45 像素 (透射率上)。"""
+    from ..image import GREY, expose, _gauss
+    from ..render import render
+    film, dev = FILMS[film_key]
+    ex = expose(np.full((N_OUT, N_OUT, 3), GREY * 2.0 ** ev), film, dev, format=N_OUT * PX / 1000.0)
+    layers = 1 if ex.emulsion.film.is_bw else 3
+    rr = render(ex.emulsion, exposure=ex.H, px_um=ex.px_um, seed=seed + ev, method="closed_form" if layers == 1 else "auto")
+    D = np.asarray(rr.density, float).reshape(N_OUT, N_OUT, layers)
+    D = np.stack([-np.log10(np.clip(_gauss(10.0 ** -D[..., c], 0.45), 1e-12, None)) for c in range(layers)], -1)
+    return D, np.asarray(rr.mean, float).reshape(-1, layers).mean(0)
+
+
+def to_luma(D, Dm, code):
+    """密度 → 冲印店影调的码值 (锚点使平均密度印到 code; 彩色每层各自, 再取 BT.601 亮度)。"""
+    from ..labtone import tone
+    layers = D.shape[2]
+    T = tone("rpl_noritsu", "bw" if layers == 1 else "colour")
+    c = np.stack([T[k].code_of(D[..., k] - (Dm[k] - T[k].u_of(code))) for k in range(layers)], -1)
+    return c[..., 0] if layers == 1 else c @ W601
+
+
+def finish(Y, kx, ky, usm=None):
+    from ..image import _sharpen3, _gauss
+    Y = _sharpen3(Y, kx, ky, ccd_axis=0)
+    if usm:
+        Y = Y + usm[0] * (Y - _gauss(Y, usm[1]))
+    return np.clip(np.round(Y), 0, 255)
+
+
+def _frames(real, films):
+    out = []
+    for k, v in sorted(real.items()):
+        if v["film"] in films and v["ev"] in MODEL_EVS.get(v["film"], ()) and v["n_tiles"] >= 30:
+            out.append((k, v))
+    return out
+
+
+def fit_k(items, free=True, k0=(0.15, 0.3), usm=None, iso=False):
+    """items: [(真实帧, 锐化之前的码值图)]; 拟合 (kx, ky) (iso: kx = ky) 或在 k0 上评价。返回 (kx, ky, rms)。"""
+    RQ = [np.log(np.asarray(v["quad16"]))[QMASK] for v, _ in items]
+
+    def res(q):
+        kx, ky = (q[0], q[0]) if iso else (q[0], q[1])
+        return np.concatenate([rq - np.log(stats(finish(Y, kx, ky, usm), full=False)["quad16"])[QMASK] for rq, (_, Y) in zip(RQ, items)])
+    if free:
+        x0 = [k0[0]] if iso else list(k0)
+        s = least_squares(res, x0, diff_step=0.03, loss="soft_l1", f_scale=0.3, max_nfev=40,
+                          bounds=([-0.2] * len(x0), [0.8] * len(x0)))
+        q, r = (np.array([s.x[0], s.x[0]]) if iso else s.x), s.fun
+    else:
+        q, r = np.asarray(k0, float), res(k0)
+    return float(q[0]), float(q[1]), float(np.sqrt(np.mean(r ** 2)))
+
+
+# ------------------------------------------------------------------ 直边 --
+_DX = 0.01
+_G = np.arange(-12, 12 + _DX / 2, _DX)
+
+
+def _cdf(kind, native_px=1 / 1.7253):
+    def conv(a, b):
+        return np.convolve(a, b, mode="same") * _DX
+    if kind == "t51":
+        k = (np.abs(_G) <= 0.5).astype(float)
+    else:
+        k = (np.abs(_G) <= native_px / 2).astype(float)
+        k = conv(k / (k.sum() * _DX), np.clip(1 - np.abs(_G), 0, None))
+    k = k / (k.sum() * _DX)
+    return np.cumsum(k) * _DX
+
+
+def _esf(d, d0, se, cdf, sharp):
+    g = np.exp(-_G ** 2 / (2 * max(se, 0.05) ** 2)); g /= g.sum()
+    n = len(g) // 2
+    E = np.convolve(np.pad(cdf, n, mode="edge"), g, mode="valid")[: len(_G)]
+    f = lambda x: np.interp(x - d0, _G, E)
+    if sharp[0] == "sep3":
+        k = sharp[1]
+        return (1 + 2 * k) * f(d) - k * (f(d - 1) + f(d + 1))
+    if sharp[0] == "usm":
+        a, su = sharp[1], sharp[2]
+        gs = np.exp(-_G ** 2 / (2 * su * su)); gs /= gs.sum()
+        E2 = np.convolve(np.pad(E, len(gs) // 2, mode="edge"), gs, mode="valid")[: len(_G)]
+        return (1 + a) * f(d) - a * np.interp(d - d0, _G, E2)
+    return f(d)
+
+
+def edge_costs(films, variants, hw=4.0):
+    """每条边 (lo, 台阶, d0, σ_e, 两侧斜坡) 自由; 链与锐化固定。先按 T51 的方法筛边 (σ_e < 3 像素, 去掉残差最大的 20%)。"""
+    ed = json.load(gzip.open(DATA / "edges_rpl_x.json.gz", "rt"))["films"]
+    edges = [(np.asarray(e["d"], float), np.asarray(e["y"], float)) for f in films for e in ed.get(f, [])]
+
+    def fit_one(d, y, cdf, sharp):
+        ok = np.isfinite(y) & (np.abs(d) <= hw)
+        dd, yy = d[ok], y[ok]
+        n4 = max(4, ok.sum() // 8)
+        lo, hi = yy[:n4].mean(), yy[-n4:].mean()
 
         def res(p):
-            return np.concatenate([ys[i] - model(p, i) for i in range(nfr)])
-        p0 = [] if fixed_usm else [0.5, np.log(1.0)]
-        for i in range(nfr):
-            p0 += [np.log(float(np.median(np.exp(ys[i]) / ms[i]))), np.log(max(np.exp(ys[i]).min() * 0.1, 1e-12))]
-        lb = ([] if fixed_usm else [0.0, np.log(0.2)]) + [-np.inf] * (2 * nfr)
-        ub = ([] if fixed_usm else [8.0, np.log(8.0)]) + [np.inf] * (2 * nfr)
-        sol = least_squares(res, p0, bounds=(lb, ub))
-        rms = float(np.sqrt(np.mean(sol.fun ** 2)))
-        a, su = fixed_usm if fixed_usm else (float(sol.x[0]), float(np.exp(sol.x[1])))
-        o = 0 if fixed_usm else 2
-        # 白噪声底 N 占 0.11–0.5 周/像素的真实谱的比例 (扫描仪 / JPEG 的非颗粒部分)
-        nshare = [float(np.mean(np.exp(sol.x[o + 2 * i + 1]) / (np.exp(sol.x[o + 2 * i]) * ms[i] + np.exp(sol.x[o + 2 * i + 1]))))
-                  for i in range(nfr)]
-        # 每帧在 2 × 2 盒 (40 µm, σ_48 的口径) 与单像素上, 白噪声底 N 占真实方差的比例 (模型谱在全部频档上外推)
-        m_all = [luma_psd(cov_spec(refs_by_so[so][pick_level(refs_by_so[so], np.array(fr["D_med"]))], subtract_q=False),
-                          np.array(refs_by_so[so][pick_level(refs_by_so[so], np.array(fr["D_med"]))]["D_med"]), mono) for fr in frames]
-        mk, fc_all = _radial(TILE)
-        fy = np.fft.fftfreq(TILE)[:, None]; fx = np.fft.fftfreq(TILE)[None, :]
-        box2 = (np.cos(np.pi * fx) ** 2) * (np.cos(np.pi * fy) ** 2)
-        w_box = np.array([(box2[mm] ** 2).sum() for mm in mk]); w_px = np.array([mm.sum() for mm in mk], float)
-        sh_box, sh_px = [], []
-        for i in range(nfr):
-            K, Nn = np.exp(sol.x[o + 2 * i]), np.exp(sol.x[o + 2 * i + 1])
-            U2 = usm_tf(fc_all, a, su) ** 2
-            g, n = U2 * K * m_all[i], U2 * Nn
-            sh_box.append(float((w_box * n).sum() / (w_box * (g + n)).sum())); sh_px.append(float((w_px * n).sum() / (w_px * (g + n)).sum()))
-        r = dict(sigma_o_um=so, a=float(a), sigma_u_px=float(su), rms=rms, noise_floor_share=float(np.median(nshare)),
-                 noise_var_share_box40=float(np.median(sh_box)), noise_var_share_pixel=float(np.median(sh_px)))
-        table[so] = rms
-        if best is None or rms < best["rms"]:
-            best = r
-    best["rms_by_sigma_o"] = table
-    return best
-
-
-# --------------------------------------------------------------- silvergrain 的参照
-def reference(film, dev, evs=(-3, -2, -1, 0, 1, 2, 3), n=384, seed=5):
-    """silvergrain full 模式 (固定定光, 不加冲印店扫描) 的均匀照片 → 每档输出; 之后按每个 σ_o 加 silvergrain 的光学。"""
-    import silvergrain as sg
-    out = {}
-    for ev in evs:
-        r = sg.apply_to_image(np.full((n, n, 3), 0.18), film, dev, format=n * PX / 1000.0, mode="full", timing="fixed",
-                              exposure_ev=ev, scanner=None, seed=seed, method="explicit")
-        out[ev] = r.linear if r.linear.ndim == 3 else np.repeat(r.linear[..., None], 3, -1)
+            m = p[0] + p[1] * (_esf(dd, p[2], np.exp(p[3]), cdf, sharp) + p[4] * np.minimum(dd - p[2], 0) + p[5] * np.maximum(dd - p[2], 0))
+            return (m - yy) / max(abs(p[1]), 1.0)
+        best = None
+        for se0 in (0.3, 1.0, 2.0):
+            s = least_squares(res, [lo, hi - lo, 0.0, np.log(se0), 0.0, 0.0],
+                              bounds=([-np.inf, -np.inf, -3, np.log(0.05), 0, 0], [np.inf, np.inf, 3, np.log(12), 0.05, 0.05]))
+            if best is None or s.cost < best.cost:
+                best = s
+        return float(np.mean(best.fun ** 2)), float(np.exp(best.x[3]))
+    c51 = _cdf("t51")
+    first = [fit_one(d, y, c51, ("none",)) for d, y in edges]
+    keep = [i for i in range(len(edges)) if first[i][1] < 3.0]
+    keep = sorted(keep, key=lambda i: first[i][0])[: max(3, int(0.8 * len(keep)))]
+    out = dict(n=len(keep))
+    for name, (kind, sharp) in variants.items():
+        cdf = _cdf(kind)
+        r = [fit_one(*edges[i], cdf, sharp) for i in keep]
+        out[name] = dict(cost=float(np.mean([a for a, _ in r])), sigma_e_median=float(np.median([b for _, b in r])))
     return out
 
 
-def refs_by_sigma(levels):
-    from ..image import _gauss, srgb_encode
-    res = {}
-    for so in SIGMAS_UM:
-        res[so] = {}
-        for ev, o in levels.items():
-            oo = np.stack([_gauss(o[..., c], so / PX) for c in range(3)], -1) if so > 0 else o
-            res[so][ev] = measure_array(srgb_encode(np.clip(oo, 0, None)) * 255.0)
-    return res
-
-
+# ------------------------------------------------------------------ 主程序 --
 def run(log=print):
-    rc = json.load(gzip.open(DATA / "spec_rpl_c.json.gz", "rt"))
-    rb = json.load(gzip.open(DATA / "spec_rpl_bw.json.gz", "rt"))
-    fam = lambda d, films: [v for k, v in d.items() if k.split("/")[0] in films and v["n"] >= 40]
-    ref_c = refs_by_sigma(reference("kodak_portra_400", None)); log("  scanner_fit ref Portra 400")
-    out = {}
-    gt = fit_grain_luma(fam(rc, TRAIN), ref_c)
-    gh = fit_grain_luma(fam(rc, HOLD), ref_c)
-    eg = fit_grain_luma(fam(rc, HOLD), ref_c, fixed_usm=USM_EDGES)
-    a0 = fit_grain_luma(fam(rc, HOLD), ref_c, fixed_usm=(0.0, 1.0))
-    out["colour_train_free"] = gt
-    out["colour_hold_free"] = gh
-    out["edge(train)→grain(hold)"] = eg
-    out["colour_hold_no_usm"] = a0
-    so = eg["sigma_o_um"]
-    for film, (key, dev) in BW.items():
-        ref = refs_by_sigma(reference(key, dev)); log(f"  scanner_fit ref {key}")
-        frs = fam(rb, (film,))
-        out[f"bw_holdout_{film}"] = dict(
-            at_edge_usm=fit_grain_luma(frs, ref, mono=True, fixed_usm=USM_EDGES),
-            at_colour_sigma_o=fit_grain_luma(frs, {so: ref[so]}, mono=True, fixed_usm=USM_EDGES),
-            free=fit_grain_luma(frs, ref, mono=True), no_usm=fit_grain_luma(frs, ref, mono=True, fixed_usm=(0.0, 1.0)))
-    out["sigma_o_um"] = so
-    out["optics_px_at_20um"] = so / PX
-    out["usm"] = dict(a=USM_EDGES[0], sigma_u_px=USM_EDGES[1], source="T51 直边 (训练片 85 条), tools/eval/t51/fit.json")
+    from ..image import get_scanner
+    sc = get_scanner("noritsu_rpl")
+    real = load_real()
+    out = dict(scanner=dict(sharpen_kx=sc.sharpen_kx, sharpen_ky=sc.sharpen_ky, native=sc.native, resample=sc.resample, optics_um=sc.optics_um))
+
+    def items(films, optics_um=0.0):
+        res = []
+        for k, v in _frames(real, films):
+            D, Dm, g = native_field(v["film"], v["ev"])
+            if optics_um > 0:
+                D = _blur_native(v["film"], v["ev"], optics_um)
+            res.append((v, to_luma(D, Dm, v["code"])))
+        return res
+    tr = items(TRAIN); log(f"  scanner_fit 训练帧 {len(tr)}")
+    kx, ky, rms = fit_k(tr)
+    out["train"] = dict(frames=[v["film"] + f" EV{v['ev']:+d}" for v, _ in tr], kx=kx, ky=ky, rms=rms,
+                        isotropic=dict(zip(("kx", "ky", "rms"), fit_k(tr, k0=(0.2, 0.2), iso=True))),
+                        rms_no_sharpen=fit_k(tr, free=False, k0=(0.0, 0.0))[2],
+                        rms_at_scanner_json=fit_k(tr, free=False, k0=(sc.sharpen_kx, sc.sharpen_ky))[2])
+    tr3 = items(TRAIN, optics_um=3.0)
+    out["train"]["optics_3um"] = dict(zip(("kx", "ky", "rms"), fit_k(tr3)))
+    t55c = [(v, to_luma(*t55c_field(v["film"], v["ev"]), v["code"])) for v, _ in tr]
+    out["train"]["t55c_chain_rms"] = fit_k(t55c, free=False, k0=(0.0, 0.0), usm=(1.032, 0.683))[2]
+    log(f"  scanner_fit 训练 kx {kx:.3f} ky {ky:.3f} RMS {rms:.4f}")
+    k = (sc.sharpen_kx, sc.sharpen_ky)
+    for name, films in (("hold_colour", HOLD), ("bw_cross_type", BW)):
+        it = items(films)
+        r = dict(rms_at_train=fit_k(it, free=False, k0=k)[2], free=dict(zip(("kx", "ky", "rms"), fit_k(it))),
+                 rms_no_sharpen=fit_k(it, free=False, k0=(0.0, 0.0))[2])
+        r["frames"] = []
+        for v, Y in it:
+            st = stats(finish(Y, *k))
+            r["frames"].append(dict(frame=f"{v['film']} EV{v['ev']:+d}", code=v["code"],
+                                    rho_real=v["rho"][:2], rho_model=st["rho"][:2].tolist(),
+                                    mod_real=[v["mod_x"], v["mod_y"]], mod_model=[st["mod_x"], st["mod_y"]],
+                                    top_octave_real=_top(v["quad16"]), top_octave_model=_top(st["quad16"])))
+        out[name] = r
+        log(f"  scanner_fit {name}: RMS {r['rms_at_train']:.4f} (自由 {r['free']['rms']:.4f}, 不锐化 {r['rms_no_sharpen']:.4f})")
+    out["edges"] = dict(train=edge_costs(TRAIN, {"none_t51_box": ("t51", ("none",)), "t51_usm": ("t51", ("usm", 1.032, 0.683)),
+                                                 "chain_none": ("chain", ("none",)), "chain_sep3_kx": ("chain", ("sep3", sc.sharpen_kx))}),
+                        bw=edge_costs(BW, {"none_t51_box": ("t51", ("none",)), "chain_sep3_kx": ("chain", ("sep3", sc.sharpen_kx))}))
+    log("  scanner_fit 直边")
+    # 分布形状 (显式银粒, 黑白): 模型的 8 / 64 像素子块峰度、偏度 对 真实
+    shp = []
+    for k_, v in _frames(real, BW):
+        D, Dm, g = native_field(v["film"], v["ev"], method="explicit")
+        st = stats(finish(to_luma(D, Dm, v["code"]), *k))
+        shp.append(dict(frame=f"{v['film']} EV{v['ev']:+d}", code=v["code"], real_kurt_clip4=v["z"]["kurt_clip4"], model_kurt_clip4=st["kurt_clip4"],
+                        real_skew=v["z"]["skew"], model_skew=st["skew"],
+                        real_kurt_8px=v["kurt_subtile"]["8"][0] if v.get("kurt_subtile") else None, model_kurt_8px=st["kurt_subtile"][8][0],
+                        real_sd=v["sd"], model_sd=st["sd"]))
+    out["shape_bw"] = shp
+    log("  scanner_fit 分布形状")
     return out
+
+
+def _top(q):
+    """顶部倍频程 (0.25–0.5 周/像素) 对 0.06–0.19 周/像素 的功率比, 按 x 轴 (fy < 0.06) 与 y 轴分开。"""
+    q = np.asarray(q)
+    return [float(q[:2, 8:].mean() / q[:2, 2:6].mean()), float(q[8:, :2].mean() / q[2:6, :2].mean())]
+
+
+def _blur_native(film_key, ev, optics_um, seed=11):
+    """原生网格上的扫描光学 (高斯 σ_o, 透射率上) 再缩小 —— 只用于 σ_o 的对照。"""
+    from ..image import GREY, expose, get_scanner, scan_grid, resample2
+    from ..render import render
+    film, dev = FILMS[film_key]
+    ex = expose(np.full((N_OUT, N_OUT, 3), GREY * 2.0 ** ev), film, dev, format=N_OUT * PX / 1000.0)
+    g = scan_grid(ex.rgb.shape, ex.px_um, ex.format, get_scanner("noritsu_rpl"), gauge="120")
+    shp = tuple(g["shape_native"])
+    layers = 1 if ex.emulsion.film.is_bw else 3
+    H = np.full(shp + ((3,) if layers == 3 else ()), 1.0) * (ex.H.reshape(-1, layers)[0] if layers == 3 else ex.H.ravel()[0])
+    rr = render(ex.emulsion, exposure=H, px_um=g["px_native"], seed=seed + ev, method="closed_form" if layers == 1 else "auto")
+    D = np.asarray(rr.density, float).reshape(shp + (layers,))
+    s = optics_um / g["px_native"]
+    fy = np.fft.fftfreq(shp[0])[:, None]; fx = np.fft.fftfreq(shp[1])[None, :]
+    G = np.exp(-2 * np.pi ** 2 * s * s * (fx ** 2 + fy ** 2))
+    D = np.stack([-np.log10(np.clip(np.fft.ifft2(np.fft.fft2(10.0 ** -D[..., c]) * G).real, 1e-12, None)) for c in range(layers)], -1)
+    return resample2(D, (N_OUT, N_OUT)).reshape(N_OUT, N_OUT, layers)

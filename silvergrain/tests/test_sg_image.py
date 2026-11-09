@@ -27,10 +27,10 @@ def test_grain_mode_keeps_mean_and_hue():
 
 def test_colour_film_grain_per_layer():
     img = _photo()
-    o = sg.apply_to_image(img, "kodak_portra_400", seed=2).linear
+    o = sg.apply_to_image(img, "kodak_portra_400", seed=2, scanner=None).linear
     rel = o / img - 1
     c = np.corrcoef(rel[..., 0].ravel(), rel[..., 2].ravel())[0, 1]
-    assert abs(c) < 0.3                                          # 各层染料颗粒独立
+    assert abs(c) < 0.3                                          # 各层染料颗粒独立 (冲印店的亮度锐化会让通道相关, 见 T55e)
     assert np.all(np.abs(rel.mean((0, 1))) < 0.03)
 
 
@@ -172,3 +172,45 @@ def test_neutral_grey_matches_t55c():
     b = sg.apply_to_image(g, "kodak_trix_400", format=256 * 12 / 1000, seed=3).linear[..., 1]
     assert np.log(b / 0.18).std() == pytest.approx(np.log(a / 0.18).std(), rel=0.03)
     assert b.mean() == pytest.approx(a.mean(), rel=0.01)
+
+
+# ------------------------------------------------------------------ T55e: 线阵 CCD 扫描链 --
+def test_scan_grid_geometry():
+    from silvergrain.image import get_scanner, scan_grid
+    sc = get_scanner("noritsu_rpl")
+    g = scan_grid((2796, 2048), 20.0, "645", sc)                   # RPL 的 645 文件: 原生 4824 × 3533 缩小 1.7253 倍
+    assert g["native_pitch_um"] == pytest.approx(56000 / 4824)
+    assert g["s"] == pytest.approx(1.7253, rel=0.01) and g["ccd_axis"] == 0 and g["gauge"] == "120"
+    g = scan_grid((1000, 1500), 8.0, "35mm", sc)                    # 135: 原生 24 mm / 4492; s = 输出间距 / 原生间距
+    assert g["native_pitch_um"] == pytest.approx(24000 / 4492) and g["s"] == pytest.approx(8.0 / (24000 / 4492), rel=0.01)
+    g = scan_grid((4000, 6000), 6.0, "35mm", sc)                    # 横幅整幅 35 mm: CCD 横跨 24 mm 的短边 (竖直);
+    assert g["ccd_axis"] == 0                                       # 原生整幅 3000 万像素 > 上限 2600 万: 渲染间距略大
+    assert g["shape_native"][0] * g["shape_native"][1] <= 26e6 * 1.001 and 1.0 < g["s"] < 6.0 / (24000 / 4492)
+    g = scan_grid((64, 64), 562.5, "35mm", sc)                      # 很粗的输出: 原生网格最多细 4 倍
+    assert g["shape_native"] == (256, 256)
+    assert scan_grid((64, 64), 20.0, "35mm", get_scanner("frontier_epfl")) is None
+
+
+def test_resample_triangle_fingerprint():
+    """缩小 1.7253 倍的三角核: 每列方差以 1 − 0.7253 = 0.2747 周/像素调制 (真实 RPL 扫描的指纹, 深度约 0.04); 平均不变。"""
+    from silvergrain.image import resample2
+    rng = np.random.default_rng(0)
+    a = rng.standard_normal((1400, 1400))
+    o = resample2(a, (int(1400 / 1.7253), int(1400 / 1.7253)))
+    v = (o ** 2).mean(0); v = v / v.mean() - 1
+    x = np.arange(len(v))
+    depth = max(2 * abs(np.sum(v * np.exp(-2j * np.pi * f * x))) / len(x) for f in np.linspace(0.27, 0.28, 41))
+    assert 0.02 < depth < 0.07
+    assert abs(resample2(np.full((100, 100), 3.0), (58, 58)).mean() - 3.0) < 1e-12
+
+
+def test_noritsu_chain_crisp_and_anisotropic():
+    """均匀灰经 Noritsu 链: 像素级颗粒是脆的 (CCD 方向邻点相关为负, 来自 3 抽头锐化; T55c 的网格高斯给的是 +0.3 左右),
+    输送方向的锐化较弱 (邻点相关高于 CCD 方向) —— 与真实 RPL 扫描同号 (真实 Tri-X: y −0.06…−0.14, x −0.02…+0.18)。"""
+    g = np.full((256, 256, 3), 0.18)
+    o = sg.apply_to_image(g, "kodak_trix_400", "xtol", format=256 * 20 / 1000, film_gauge="120", mode="full", seed=3,
+                          method="closed_form").encoded[..., 1] * 255
+    r = o[8:-8, 8:-8] - o[8:-8, 8:-8].mean()
+    v = r.var()
+    rho_y = np.mean(r[1:] * r[:-1]) / v; rho_x = np.mean(r[:, 1:] * r[:, :-1]) / v
+    assert rho_y < -0.05 and rho_x > rho_y + 0.05

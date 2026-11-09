@@ -33,28 +33,38 @@ def _enc_slope(v):
 
 
 def patch(film, dev, ev, seed=1, k=1.0):
+    """均匀照片 → 底片: 渲染在输出像素 (20 µm) 上 (无扫描的参照), 以及 T55e 起在 HS-1800 的 120 原生网格 (11.6 µm) 上渲染、
+    按冲印店的缩小倍数重采样到输出网格 (Noritsu 的采样链)。"""
+    from ..image import get_scanner, scan_grid, _to_output_grid
     img = np.full((N, N, 3), GREY * 2.0 ** ev)
     ex = expose(img, film, dev, k, format=N * PX / 1000.0)
     rr = render(ex.emulsion, exposure=ex.H, px_um=ex.px_um, seed=seed, method="explicit")
-    return ex, rr
+    g = scan_grid(ex.rgb.shape, ex.px_um, ex.format, get_scanner("noritsu_rpl"), gauge="120")
+    shp = tuple(g["shape_native"])
+    layers = 1 if ex.emulsion.film.is_bw else 3
+    Hn = np.full(shp + ((3,) if layers == 3 else ()), 1.0) * (ex.H.reshape(-1, layers)[0] if layers == 3 else ex.H.ravel()[0])
+    rn = render(ex.emulsion, exposure=Hn, px_um=g["px_native"], seed=seed, method="explicit")
+    rn = _to_output_grid(rn, shp, (N, N), layers)
+    return ex, (rr, rn, g)
 
 
-def outputs(ex, rr):
-    """四种输出 (full / grain × 扫描开 / 关) 与每种的影调斜率 dCode/dD (亮度); 另加 "full+noritsu_discrete":
-    扫描光学与 USM 的高斯用离散核 (filmlab 引擎的实现), 只为对照 T51b 的数。"""
-    from .. import image as _im
+def outputs(ex, rrs):
+    """四种输出 (full / grain × 扫描开 / 关) 与每种的影调斜率 dCode/dD (亮度)。扫描开 = T55e 的 Noritsu 采样链
+    (原生网格渲染 → 重采样 → 3 抽头锐化)。"""
+    rr0, rrn, grid = rrs
     em = ex.emulsion
     tabs = _curve_tables(em)
     lg = np.log10(ex.info["H_grey_lux_s"])
     res = {}
-    for mode, sc, impl in (("full", None, "continuous"), ("full", "noritsu_rpl", "continuous"), ("grain", None, "continuous"),
-                           ("grain", "noritsu_rpl", "continuous"), ("full", "noritsu_rpl", "discrete")):
+    for mode, sc in (("full", None), ("full", "noritsu_rpl"), ("grain", None), ("grain", "noritsu_rpl")):
         if True:
-            _im.GAUSS_IMPL = impl
+            rr = rrn if sc else rr0
+            if sc:
+                ex.info["scan_grid"] = grid
             try:
                 o, info = finish(ex, rr, mode, sc)
             finally:
-                _im.GAUSS_IMPL = "continuous"
+                ex.info.pop("scan_grid", None)
             Y = M.to_code(o)
             if mode == "full":
                 lay = []
@@ -68,22 +78,22 @@ def outputs(ex, rr):
                 lH = np.log10(np.asarray(rr.exposure).reshape(N, N, -1)[0, 0])
                 g = [float(_slope_at(tabs[c], lH[c])[0]) for c in range(len(tabs))]
                 slope = float(np.mean([_enc_slope(v) * LN10 / gg for gg in g]))
-            res[(mode, sc if impl == "continuous" else sc + "_discrete")] = (Y, slope, o)
+            res[(mode, sc)] = (Y, slope, o)
     return res
 
 
 def measure_case(film, dev, seed=1):
     rows = []
     for ev in EVS:
-        ex, rr = patch(film, dev, ev, seed)
-        outs = outputs(ex, rr)
-        r = dict(ev=ev, D_mean=float(np.mean(rr.mean)), D_px_mean=float(np.mean(rr.density)))
+        ex, rrs = patch(film, dev, ev, seed)
+        outs = outputs(ex, rrs)
+        r = dict(ev=ev, D_mean=float(np.mean(rrs[0].mean)), D_px_mean=float(np.mean(rrs[0].density)))
         for (mode, sc), (Y, slope, o) in outs.items():
             nat = M.median_stats(M.tiles(Y, PX, synthetic=True))
             ph = M.median_stats(M.tiles(M.phone(Y, PHONE_FACTOR), PX * PHONE_FACTOR, synthetic=True, border=4))
             key = f"{mode}{'+' + sc.replace('noritsu_rpl', 'noritsu') if sc else ''}"
             r[key] = dict(native=nat, phone=ph, slope=slope)
-            if mode == "full" and ev == 0 and key in ("full", "full+noritsu", "full+noritsu_discrete"):
+            if mode == "full" and ev == 0 and key in ("full", "full+noritsu"):
                 Do = -np.log10(np.clip(np.asarray(o if o.ndim == 2 else o.mean(-1)), 1e-6, None))
                 fc, P = M.spectrum(Do)
                 r[key]["spectrum"] = dict(fc=fc.tolist(), P=P.tolist())
@@ -104,7 +114,7 @@ def compare(rows, film_label, rpl_key):
     ref = load("realscan_reference.json")
     out = dict(t51b=[], t52_phone=[], t52_native=[])
     for b in ref["t51b_same_code"]["films"][film_label]:
-        for key in ("full+noritsu", "grain+noritsu", "full+noritsu_discrete"):
+        for key in ("full+noritsu", "grain+noritsu"):
             s48, sl = _interp(rows, key, "native", "s48", b["code"])
             spx, _ = _interp(rows, key, "native", "s_px", b["code"])
             if s48 is None:
@@ -131,7 +141,7 @@ def compare(rows, film_label, rpl_key):
     real = np.asarray(sp["tri_x" if "trix" in rpl_key.lower() or "400TX" in rpl_key else "hp5"])
     r0 = next(r for r in rows if r["ev"] == 0)
     shapes = {}
-    for key in ("full", "full+noritsu", "full+noritsu_discrete"):
+    for key in ("full", "full+noritsu"):
         P = np.asarray(r0[key]["spectrum"]["P"])
         shapes[key] = (P / P[3]).tolist()
     out["spectrum_shape"] = dict(fc=sp["fc"], real=(real / real[3]).tolist(), **shapes)
@@ -153,7 +163,8 @@ def colour_case():
     ref = load("realscan_reference.json")["t54_rpl_portra400"]
     rows = []
     for ev in (-2, -1, 0, 1, 2, 3):
-        ex, rr = patch("kodak_portra_400", "C-41", ev)
+        ex, (rr0, rr, grid) = patch("kodak_portra_400", "C-41", ev)
+        ex.info["scan_grid"] = grid
         for mode in ("full", "grain"):
             o, info = finish(ex, rr, mode, "noritsu_rpl")
             st = M.median_stats(M.tiles(M.to_code(o), PX, synthetic=True))
@@ -188,7 +199,7 @@ def lab_rows(film, dev, mode="grain", n=N, seed=1):
         if mode == "full":
             img = np.full((n, n, 3), GREY)
         r = sg.apply_to_image(img, film, dev, format=n * PX / 1000.0, mode=mode, scanner="noritsu_rpl", seed=seed,
-                              method="explicit", **kw)
+                              method="explicit", film_gauge="120", **kw)
         Y = M.to_code(r.linear)
         rows.append(dict(ev=ev, native=M.median_stats(M.tiles(Y, PX, synthetic=True)),
                          phone=M.median_stats(M.tiles(M.phone(Y, PHONE_FACTOR), PX * PHONE_FACTOR, synthetic=True, border=4)),
