@@ -1,0 +1,27 @@
+6_KODAK400TX
+  code 40-80 frames 7 code 68  real s_px 10.16 s_hp 8.98 s48 4.45 slope 275 [270,327]  sD48_real 16.2e-3
+     kodak_trix_400: s_px 7.85 s_hp 6.77 s48 3.81 slope 303 s48_Dn 9.2e-3 (code/slope 12.6e-3) | ratio s_px 1.29 s_hp 1.33 s48 1.17 = film 1.29 x slope 0.91
+     kodak_trix_400_xtol: s_px 7.71 s_hp 6.66 s48 3.76 slope 300 s48_Dn 9.2e-3 (code/slope 12.5e-3) | ratio s_px 1.32 s_hp 1.35 s48 1.18 = film 1.29 x slope 0.92
+  code 80-120 frames 7 code 99  real s_px 11.43 s_hp 10.12 s48 5.00 slope 302 [295,331]  sD48_real 16.6e-3
+     kodak_trix_400: s_px 8.94 s_hp 7.73 s48 4.37 slope 334 s48_Dn 9.5e-3 (code/slope 13.1e-3) | ratio s_px 1.28 s_hp 1.31 s48 1.14 = film 1.27 x slope 0.90
+     kodak_trix_400_xtol: s_px 8.90 s_hp 7.67 s48 4.33 slope 333 s48_Dn 9.5e-3 (code/slope 13.0e-3) | ratio s_px 1.28 s_hp 1.32 s48 1.15 = film 1.28 x slope 0.91
+  code 120-160 frames 7 code 138  real s_px 10.89 s_hp 9.57 s48 5.02 slope 302 [291,316]  sD48_real 16.6e-3
+     kodak_trix_400: s_px 8.96 s_hp 7.74 s48 4.36 slope 325 s48_Dn 9.8e-3 (code/slope 13.4e-3) | ratio s_px 1.22 s_hp 1.24 s48 1.15 = film 1.24 x slope 0.93
+     kodak_trix_400_xtol: s_px 8.94 s_hp 7.72 s48 4.34 slope 325 s48_Dn 9.8e-3 (code/slope 13.4e-3) | ratio s_px 1.22 s_hp 1.24 s48 1.16 = film 1.24 x slope 0.93
+  code 160-200 frames 7 code 184  real s_px 7.85 s_hp 6.81 s48 3.74 slope 242 [230,253]  sD48_real 15.5e-3
+     kodak_trix_400: s_px 7.43 s_hp 6.41 s48 3.60 slope 262 s48_Dn 10.1e-3 (code/slope 13.7e-3) | ratio s_px 1.06 s_hp 1.06 s48 1.04 = film 1.13 x slope 0.92
+     kodak_trix_400_xtol: s_px 7.42 s_hp 6.42 s48 3.61 slope 263 s48_Dn 10.1e-3 (code/slope 13.7e-3) | ratio s_px 1.06 s_hp 1.06 s48 1.04 = film 1.13 x slope 0.92
+  code 200-240 frames 7 code 218  real s_px 7.00 s_hp 6.08 s48 3.16 slope 122 [108,134]  sD48_real 25.8e-3
+     kodak_trix_400: s_px 5.88 s_hp 5.07 s48 2.87 slope 204 s48_Dn 10.3e-3 (code/slope 14.1e-3) | ratio s_px 1.19 s_hp 1.20 s48 1.10 = film 1.84 x slope 0.60
+     kodak_trix_400_xtol: s_px nan s_hp nan s48 nan slope nan s48_Dn nane-3 (code/slope nane-3) | ratio s_px nan s_hp nan s48 nan = film nan x slope nan
+7_ILFORDHP5PLUS
+  code 40-80 frames 7 code 68  real s_px 10.23 s_hp 9.20 s48 4.37 slope 249 [235,282]  sD48_real 17.5e-3
+     ilford_hp5_plus: s_px 7.52 s_hp 6.48 s48 3.65 slope 306 s48_Dn 8.7e-3 (code/slope 11.9e-3) | ratio s_px 1.36 s_hp 1.42 s48 1.20 = film 1.47 x slope 0.81
+  code 80-120 frames 7 code 101  real s_px 12.25 s_hp 11.17 s48 5.45 slope 267 [251,310]  sD48_real 20.5e-3
+     ilford_hp5_plus: s_px 8.70 s_hp 7.50 s48 4.24 slope 338 s48_Dn 9.2e-3 (code/slope 12.5e-3) | ratio s_px 1.41 s_hp 1.49 s48 1.29 = film 1.63 x slope 0.79
+  code 120-160 frames 7 code 137  real s_px 11.82 s_hp 10.36 s48 5.26 slope 261 [246,293]  sD48_real 20.1e-3
+     ilford_hp5_plus: s_px 8.60 s_hp 7.42 s48 4.20 slope 327 s48_Dn 9.4e-3 (code/slope 12.8e-3) | ratio s_px 1.37 s_hp 1.40 s48 1.25 = film 1.57 x slope 0.80
+  code 160-200 frames 7 code 184  real s_px 9.39 s_hp 8.30 s48 4.18 slope 197 [191,208]  sD48_real 21.2e-3
+     ilford_hp5_plus: s_px 7.03 s_hp 6.06 s48 3.43 slope 262 s48_Dn 9.6e-3 (code/slope 13.1e-3) | ratio s_px 1.34 s_hp 1.37 s48 1.22 = film 1.62 x slope 0.75
+  code 200-240 frames 7 code 214  real s_px 8.92 s_hp 7.98 s48 3.85 slope 63 [61,65]  sD48_real 61.0e-3
+     ilford_hp5_plus: s_px 5.65 s_hp 4.87 s48 2.75 slope 207 s48_Dn 9.8e-3 (code/slope 13.3e-3) | ratio s_px 1.58 s_hp 1.64 s48 1.40 = film 4.58 x slope 0.31

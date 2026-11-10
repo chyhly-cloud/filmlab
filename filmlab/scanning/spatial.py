@@ -13,10 +13,15 @@
   与颗粒功率谱联合实测, 每家冲印店一组; 不是输出端的自由滤波, 不加噪声, 不改颜色 (各项直流增益为 1: 均匀区与大面积颜色不变)。
   渲染尺寸应等于冲印店的输出尺寸 (35 mm: Frontier L 约 3089 × 2048, Noritsu 标准约 3000 × 2000); 渲染更细时按冲印店像素间距加
   传感器方盒孔径 (不抽取), 软件的半径仍按渲染像素计。
+连续传递 (T56, 修正标志 "scan_mtf", 默认关): T51 拟合的是各项高斯的连续传递 e^{−2π²σ²f²} (σ_o 在 5 µm 细网格上加、
+USM 用解析的 U(f)); 而 scipy 在输出像素上取样的高斯核对亚像素 σ 近似恒等 (σ = 0.35 像素: 中心权 0.97, 邻点 0.016;
+0.48 周/像素处传递 0.93, 连续为 0.57)。continuous=True 时这三项高斯 (扫描光学、USM 模糊、色度低通) 改在频域按连续传递
+相乘 (gauss_mtf: DCT-II, 等价于整幅反射填充 = scipy 的 "reflect" 边界, 无截断、无回绕)。默认 False 与 T51 逐位相同。
 """
 from dataclasses import dataclass
 
 import numpy as np
+from scipy import fft as _fft
 from scipy.ndimage import gaussian_filter, uniform_filter
 
 # BT.601 (JPEG / 冲印店软件常用的亮度-色度) 在编码 sRGB 上
@@ -71,15 +76,34 @@ def decode(v):
     return np.where(v <= 0.04045, v / 12.92, np.power((v + 0.055) / 1.055, 2.4))
 
 
-def _blur(a, s):
-    return gaussian_filter(a, s, mode="reflect") if s >= 0.05 else a
+def gauss_mtf(a, s, axes=(0, 1)):
+    """连续高斯传递 e^{−2π²σ²f²} (σ: 像素; f: 周/像素) 作用于取样图像的 axes 两轴, 反射边界 (scipy "reflect":
+    d c b a | a b c d)。半样点对称延拓到 2N 后的循环卷积由 DCT-II 对角化 (第 k 个基的频率 k / 2N), 所以与整幅反射填充后
+    在频域相乘完全等价, 但不需要 4 倍内存。直流增益严格为 1。"""
+    a = np.asarray(a, float)
+    if s <= 0:
+        return a.copy()
+    X = _fft.dctn(a, type=2, axes=axes, norm="ortho")
+    for ax in axes:
+        n = a.shape[ax]
+        f = np.arange(n) / (2.0 * n)
+        shp = [1] * a.ndim
+        shp[ax] = n
+        X *= np.exp(-2.0 * np.pi ** 2 * s * s * f * f).reshape(shp)
+    return _fft.idctn(X, type=2, axes=axes, norm="ortho")
 
 
-def usm(Y, sigma_px, amount, threshold=0.0):
-    """反锐化掩模 (码值 0–1 尺度上的 Y)。threshold: 8 位码值。"""
+def _blur(a, s, continuous=False):
+    if s < 0.05:
+        return a
+    return gauss_mtf(a, s) if continuous else gaussian_filter(a, s, mode="reflect")
+
+
+def usm(Y, sigma_px, amount, threshold=0.0, continuous=False):
+    """反锐化掩模 (码值 0–1 尺度上的 Y)。threshold: 8 位码值。continuous: 模糊用连续传递 (T56)。"""
     if amount <= 0 or sigma_px < 0.05:
         return Y
-    d = Y - _blur(Y, sigma_px)
+    d = Y - _blur(Y, sigma_px, continuous)
     if threshold > 0:
         t = threshold / 255.0
         d = d * (1.0 - np.exp(-(d / t) ** 2))
@@ -94,25 +118,25 @@ def aperture(rgb, lab: LabSpatial, px_um):
     return np.stack([uniform_filter(rgb[..., c], k, mode="reflect") for c in range(rgb.shape[-1])], -1)
 
 
-def apply(rgb_lin, lab: LabSpatial, px_um, mono=False):
-    """线性输出 RGB (H, W, 3) → 冲印店软件处理后的线性 RGB。"""
+def apply(rgb_lin, lab: LabSpatial, px_um, mono=False, continuous=False):
+    """线性输出 RGB (H, W, 3) → 冲印店软件处理后的线性 RGB。continuous: USM 与色度低通用连续传递 (T56, "scan_mtf")。"""
     rgb = aperture(np.asarray(rgb_lin, float), lab, px_um)
     v = encode(rgb)
     su, sc = lab.usm_sigma_px, lab.chroma_sigma_px
     if mono:
-        Y = usm(v.mean(-1), su, lab.usm_amount, lab.usm_threshold)
+        Y = usm(v.mean(-1), su, lab.usm_amount, lab.usm_threshold, continuous)
         return decode(np.repeat(Y[..., None], 3, -1))
     ycc = v @ _YCC.T
-    ycc[..., 0] = usm(ycc[..., 0], su, lab.usm_amount, lab.usm_threshold)
+    ycc[..., 0] = usm(ycc[..., 0], su, lab.usm_amount, lab.usm_threshold, continuous)
     if sc >= 0.05:
         for k in (1, 2):
-            ycc[..., k] = chroma_nr(ycc[..., k], sc, lab.chroma_threshold)
+            ycc[..., k] = chroma_nr(ycc[..., k], sc, lab.chroma_threshold, continuous)
     return decode(ycc @ _YCC_INV.T)
 
 
-def chroma_nr(C, sigma_px, threshold=0.0):
-    """色度低通 (码值 0–1 尺度上的 Cb 或 Cr); threshold > 0 时保边 (8 位码值)。"""
-    low = _blur(C, sigma_px)
+def chroma_nr(C, sigma_px, threshold=0.0, continuous=False):
+    """色度低通 (码值 0–1 尺度上的 Cb 或 Cr); threshold > 0 时保边 (8 位码值)。continuous: 连续传递 (T56)。"""
+    low = _blur(C, sigma_px, continuous)
     if threshold <= 0:
         return low
     d = C - low

@@ -278,9 +278,19 @@ for _g, _b in (("t51_base", "t46_base"), ("t51_bw", "t50_bw")):
     for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
         if _b in _d:
             _d[_g] = _d[_b]
+# T56 研究候选 (docs/tasks/T56_SCAN_MTF_CONTINUOUS.md): 同 t51_*, 另加 scan_mtf —— 冲印店空间传递里的高斯
+#   (扫描光学 σ_o、USM 模糊 σ_u、色度低通 σ_c) 按连续传递 e^{−2π²σ²f²} 在频域相乘, 即 T51 拟合这些 σ 时的定义;
+#   t51_* 用输出像素上的取样核, 亚像素 σ (Noritsu σ_o = 0.35 像素) 近似恒等。器件参数 (LABS) 不变。
+GENERATIONS["t56_base"] = ("D65", GENERATIONS["t51_base"][1] + ("scan_mtf",), {})
+GENERATIONS["t56_bw"] = ("D65", GENERATIONS["t51_bw"][1] + ("scan_mtf",), {})
+for _g, _b in (("t56_base", "t51_base"), ("t56_bw", "t51_bw")):
+    for _d in (METERING, HIGHLIGHT_RECON, MASK_PLACEMENT, RECON_COLOUR, APERTURE_RANGE):
+        if _b in _d:
+            _d[_g] = _d[_b]
 # 未指定 Params.scan_spatial 时用哪一家 (engine.SCAN_SPATIAL_LAB); 未列出的代际 None (按扫描仪型号)
-SCAN_SPATIAL = {"t51_base": "frontier_epfl", "t51_bw": "noritsu_rpl"}
-BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49", "t50_bw": "t50", "t51_bw": "t50"}        # materials.BW_PROFILE_SET; 未列出的代际 "t47"
+SCAN_SPATIAL = {"t51_base": "frontier_epfl", "t51_bw": "noritsu_rpl", "t56_base": "frontier_epfl", "t56_bw": "noritsu_rpl"}
+BW_PROFILES = {"t48_bw": "t48", "t49_bw": "t49", "t50_bw": "t50", "t51_bw": "t50",
+               "t56_bw": "t50"}                                                   # materials.BW_PROFILE_SET; 未列出的代际 "t47"
 GENERATIONS["next_sensor"] = GENERATIONS["next"]
 # DIR 层间抑制量按代际覆盖 (materials.DIR_AMOUNT: 档案键 → Emulsion.dir_amount); 未列出的代际不覆盖 (彩色 1.0)
 DIR_AMOUNT = {}
