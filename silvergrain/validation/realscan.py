@@ -38,12 +38,12 @@ def patch(film, dev, ev, seed=1, k=1.0):
     from ..image import get_scanner, scan_grid, _to_output_grid
     img = np.full((N, N, 3), GREY * 2.0 ** ev)
     ex = expose(img, film, dev, k, format=N * PX / 1000.0)
-    rr = render(ex.emulsion, exposure=ex.H, px_um=ex.px_um, seed=seed, method="explicit")
+    rr = render(ex.emulsion, exposure=ex.H, px_um=ex.px_um, seed=seed, method="auto")
     g = scan_grid(ex.rgb.shape, ex.px_um, ex.format, get_scanner("noritsu_rpl"), gauge="120")
     shp = tuple(g["shape_native"])
     layers = 1 if ex.emulsion.film.is_bw else 3
     Hn = np.full(shp + ((3,) if layers == 3 else ()), 1.0) * (ex.H.reshape(-1, layers)[0] if layers == 3 else ex.H.ravel()[0])
-    rn = render(ex.emulsion, exposure=Hn, px_um=g["px_native"], seed=seed, method="explicit")
+    rn = render(ex.emulsion, exposure=Hn, px_um=g["px_native"], seed=seed, method="auto")
     rn = _to_output_grid(rn, shp, (N, N), layers)
     return ex, (rr, rn, g)
 
@@ -199,7 +199,7 @@ def lab_rows(film, dev, mode="grain", n=N, seed=1):
         if mode == "full":
             img = np.full((n, n, 3), GREY)
         r = sg.apply_to_image(img, film, dev, format=n * PX / 1000.0, mode=mode, scanner="noritsu_rpl", seed=seed,
-                              method="explicit", film_gauge="120", **kw)
+                              method="auto", film_gauge="120", **kw)
         Y = M.to_code(r.linear)
         rows.append(dict(ev=ev, native=M.median_stats(M.tiles(Y, PX, synthetic=True)),
                          phone=M.median_stats(M.tiles(M.phone(Y, PHONE_FACTOR), PX * PHONE_FACTOR, synthetic=True, border=4)),

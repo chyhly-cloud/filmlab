@@ -23,7 +23,7 @@ def test_explicit_mean_equals_closed_form(trix):
 def test_render_from_density_and_format(trix):
     d = np.full((64, 64), 0.8)
     r = render(trix, density=d, format=64 * 12 / 1000, seed=1)
-    assert r.px_um == pytest.approx(12.0) and r.method == "explicit"
+    assert r.px_um == pytest.approx(12.0) and r.method == "closed_form"           # T55g: ≥ 3 µm 的黑白像素一律 closed_form
     assert np.allclose(trix.mean_density(r.exposure), 0.8, atol=1e-3)
 
 
@@ -56,9 +56,10 @@ def test_dye_render_mean_and_sigma():
 
 
 def test_closed_form_matches_explicit(trix):
-    H = np.full((128, 128), 10 / 400)
-    a = render(trix, exposure=H, px_um=12.0, seed=3, method="explicit").density[8:-8, 8:-8]
-    b = render(trix, exposure=H, px_um=12.0, seed=3, method="closed_form").density[8:-8, 8:-8]
+    """显式渲染在细像素 (4 µm) 上与闭式解一致; T55g 起不透明银丝团的重叠需要细像素 (粗像素的计数档会抹平重叠)。"""
+    H = np.full((128, 128), 10 / 400 * 4)
+    a = render(trix, exposure=H, px_um=4.0, seed=3, method="explicit").density[8:-8, 8:-8]
+    b = render(trix, exposure=H, px_um=4.0, seed=3, method="closed_form").density[8:-8, 8:-8]
     assert b.std() / a.std() == pytest.approx(1.0, abs=0.08)
     assert b.mean() == pytest.approx(a.mean(), abs=0.003)
 

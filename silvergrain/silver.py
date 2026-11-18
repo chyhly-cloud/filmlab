@@ -51,6 +51,10 @@ class SilverSpec:
     process: str = ""
     source: str = ""
     fine_um: float = _FINE_UM   # T53: 银丝团几何的参考栅格 (µm); 颗粒粗细 k 的三维晶体按 k 缩放 (几何整体放大), 见 scale_silver
+    # T55g: 漫射收集 (Callier) 的作用方式。"grain" (T47, filmlab 用): 每颗银丝团按 g = 1/Q 部分透明, 重叠按部分透明相乘;
+    # "macro": 银丝团不透明 (透射域 = 镜面统计), 漫射密度 = 镜面密度 / Q —— 平均与起伏同一比例 (镜面 / 漫射颗粒度之比 = Q)。
+    # 平均密度两者相同 (Σ n p A 对 g 线性); 只有起伏随密度的形状不同 (docs/tasks/T55 T55g 节)。
+    callier: str = "grain"
 
     def with_(self, **kw):
         return replace(self, **kw)
@@ -145,8 +149,15 @@ def _silver_library(spec: SilverSpec):
 
 
 def silver_gain(spec: SilverSpec, geometry="diffuse"):
-    """单颗银粒的遮光系数 g: 镜面 1, 漫射 1/Q。"""
-    return 1.0 if geometry == "specular" else 1.0 / spec.callier_q
+    """单颗银丝团在透射域的不透明度系数 g: 镜面 1; 漫射 1/Q (callier "grain") 或 1 (callier "macro": 漫射只在密度上 ÷Q)。"""
+    if geometry == "specular" or spec.callier == "macro":
+        return 1.0
+    return 1.0 / spec.callier_q
+
+
+def density_scale(spec: SilverSpec, geometry="diffuse"):
+    """透射域 (按 silver_gain 的统计) 到所求密度的比例: callier "macro" 的漫射为 1/Q, 其余 1。"""
+    return 1.0 / spec.callier_q if (geometry != "specular" and spec.callier == "macro") else 1.0
 
 
 def silver_density(spec: SilverSpec, H, geometry="diffuse"):
@@ -157,7 +168,7 @@ def silver_density(spec: SilverSpec, H, geometry="diffuse"):
     S = (b["n"] * p * A).sum((-1, -2))
     if spec.cluster_mu > 0:                       # T50: Thomas 团簇 (簇内重叠浪费覆盖, 密度低于泊松)
         S = _cluster_mean_exponent(spec, S, _cluster_N(spec, b, p))
-    return np.log10(np.e) * S
+    return np.log10(np.e) * S * density_scale(spec, geometry)
 
 
 # ------------------------------------------------------------------ T50: Thomas 团簇的闭式解 --
@@ -210,7 +221,7 @@ def silver_budget(spec: SilverSpec, geometry="diffuse"):
     b = silver_bins(spec)
     A = silver_library(spec)["A_spec"] * silver_gain(spec, geometry)
     coat = float(np.sum(spec.coat_g_m2))
-    dmax = float(np.log10(np.e) * (b["n"] * A).sum())
+    dmax = float(np.log10(np.e) * (b["n"] * A).sum()) * density_scale(spec, geometry)
     return dict(coat_g_m2=coat, D_max=dmax, covering_power=dmax / coat)
 
 
@@ -546,7 +557,7 @@ def silver_covariance(spec: SilverSpec, H, geometry="diffuse"):
     g = silver_gain(spec, geometry)
     lam = b["n"] * silver_develop(spec, H, b["a"])
     X = np.tensordot(lam, gam, axes=([0, 1], [0, 1])) * g * g
-    ET = 10.0 ** -float(silver_density(spec, H, geometry))
+    ET = 10.0 ** -(float(silver_density(spec, H, geometry)) / density_scale(spec, geometry))   # 透射域 (g 的统计) 的平均
     if spec.cluster_mu > 0:
         return _cluster_covariance(spec, H, geometry, X, h, ET)
     return ET, ET * ET * np.expm1(X), h
@@ -615,7 +626,7 @@ def window_variance(cov, h, sides_um, psf_um=0.0, adjacent=True):
 def silver_granularity(spec: SilverSpec, H, sides_um, psf_um=0.0, geometry="diffuse", adjacent=True):
     """孔径密度 RMS (闭式解, 透射率→密度线性化 σ_D = σ_T / (E[T] ln10))。"""
     ET, C, h = silver_covariance(spec, H, geometry)
-    return np.sqrt(window_variance(C, h, sides_um, psf_um, adjacent)) / (ET * np.log(10))
+    return np.sqrt(window_variance(C, h, sides_um, psf_um, adjacent)) / (ET * np.log(10)) * density_scale(spec, geometry)
 
 
 def silver_structure(ei, U, eta_scale, illuminant="D55", thickness_um=None, scale_tgrain=True):
@@ -643,6 +654,11 @@ def silver_derive(ei, U, eta_scale, H, netD, gross_fog, morph, illuminant="D55",
                        base_density=0.0, illuminant=illuminant, process=process, source=source,
                        thickness_um=thickness_um, **morph)
     H = np.asarray(H, float)
+    if proto.callier == "macro" and geometry != "specular":     # T55g: 在透射域 (镜面统计) 拟合 Q·净密度, 平均密度与 "grain" 相同
+        sp = silver_derive(ei, U, eta_scale, H, np.asarray(netD, float) * proto.callier_q, gross_fog, morph, illuminant, "specular",
+                           process, source, thickness_um, scale_tgrain)
+        fog = float(silver_density(sp, 0.0, geometry))
+        return sp.with_(base_density=float(gross_fog - fog))
     pois = proto.with_(cluster_mu=0.0)
     cols = []
     for k in range(3):
@@ -724,5 +740,5 @@ def silver_grain_density(spec: SilverSpec, d, px_um, seed, strength=1.0, render=
     Dt = np.maximum.accumulate(Dt + 1e-12 * np.arange(len(Dt)))
     Heff = 10.0 ** np.interp(np.clip(d, Dt[0], Dt[-1]), Dt, lh)
     T = render(spec, Heff, px_um, seed)
-    D = -np.log10(np.clip(T, 1e-12, None))
+    D = -np.log10(np.clip(T, 1e-12, None)) * density_scale(spec)
     return d + strength * (D - d) if strength != 1.0 else D

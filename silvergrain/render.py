@@ -87,6 +87,11 @@ def pixel_covariance(C, h, px_um, psf_um=0.0):
     from scipy.ndimage import gaussian_filter
     C, h = _block(C, h)
     half = C.shape[0] // 2 * h                     # 协方差的支撑半径
+    if px_um > 16.0 * (half + 3 * psf_um):
+        # 像素远大于颗粒相关长度 (T55g: 小图的大像素也走 closed_form): 像素内方差 = ∫Cov / px² (Selwyn), 相邻像素只在
+        # 边界宽 ~ 相关长度的条带里相关, 量级 (相关长度 / px) 以下, 略去; 避免把协方差补零到像素尺寸的巨大网格。
+        c = np.zeros((3, 3)); c[1, 1] = float(C.sum()) * h * h / (px_um * px_um)
+        return c, 1
     R = int(np.ceil((half + 3 * psf_um) / px_um)) + 1
     pad = int(np.ceil(((R + 1) * px_um - half) / h)) + 2
     Cp = np.pad(C, pad)
@@ -166,7 +171,7 @@ def render_silver_gaussian(spec, H, px_um, seed, psf_um=0.0):
     s = (1 - w) * s_lv[i0] + w * s_lv[i0 + 1]
     # E[T] 用闭式密度的细表 (与显式路径的平均相同); s 在档之间按 log H 线性插值
     lt, Dt = silver_curve_table(spec)
-    ET = 10.0 ** -np.interp(np.log10(np.clip(H, 1e-30, None)), lt, Dt)
+    ET = 10.0 ** -(np.interp(np.log10(np.clip(H, 1e-30, None)), lt, Dt) / silver.density_scale(spec))   # 透射域的平均 (T55g)
     return np.clip(ET * np.exp(s * z - 0.5 * s * s), 1e-12, 1.0)
 
 
@@ -184,6 +189,11 @@ def choose_method(emulsion, shape, px_um, method="auto"):
     if method != "auto":
         return method
     eq = px_um / float(getattr(emulsion, "grain_scale", 1.0))      # 颗粒粗细 k: 场是 k = 1 的场放大 k 倍 → 等效像素 px/k
+    if getattr(emulsion.spec, "callier", "grain") == "macro":
+        # T55g: 不透明银丝团的重叠在显式渲染的粗格计数档 (像素 ≳ 4 µm 时中、小晶体落入) 里被抹成均匀部分透明, 高密度的
+        # 像素方差偏低 (12 µm 像素、净密度 1.5: −25%; 4 µm 像素与闭式解一致)。所以 ≥ 3 µm 的等效像素一律用 closed_form
+        # (二阶统计与闭式解严格相同), 只在更细的像素上用显式渲染。
+        return "closed_form" if eq >= AUTO_MIN_PX_UM else "explicit"
     return "closed_form" if (eq >= AUTO_MIN_PX_UM and shape[0] * shape[1] > AUTO_MIN_PIXELS) else "explicit"
 
 
@@ -215,7 +225,7 @@ def render(emulsion, exposure=None, density=None, px_um=None, format=None, seed=
             T = render_silver_gaussian(sp, H, px_um, seed, psf_um=psf_um)
         else:
             raise ValueError(f"未知 method {m!r}")
-        D = -np.log10(np.clip(T, 1e-12, None))
+        D = -np.log10(np.clip(T, 1e-12, None)) * silver.density_scale(sp)     # T55g: callier "macro" 的漫射 = 镜面 / Q
         if strength != 1.0:
             D = mean + strength * (D - mean)
         return RenderResult(D, mean, H, px_um, m, emulsion.base_density)

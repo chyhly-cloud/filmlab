@@ -1,0 +1,63 @@
+{
+ "_note": "T55g: 黑白银盐片的 RMS 颗粒度对密度 (独立于 RPL 的已发表数据)。只存读数与 URL, 不存图像 / PDF。读数: PDF 在 400 dpi 栅格化后按坐标轴刻度定标、逐列找曲线 (读数精度约 ±0.0005 D); ISPRS 为拟合直线在 D 0.7 与 1.4 处的读数。毛密度 → 净密度: 片基 + 灰雾未公布 (电影负片为灰色三醋酸片基), 取 fog_band 作为不确定带。形状比较只用净密度 ≥ min_net 的段 (低密度端含仪器 / 片基噪声底)。",
+ "series": {
+  "trix_5233_smpte1968": {
+   "film": "Eastman Tri-X Panchromatic Negative Film, Type 5233 (motion picture; EI daylight 320 / tungsten 250)",
+   "source": "W. H. Bahler, M. L. Judd, F. W. Spangler, A. L. Williams, 'A New High-speed Black-and-white Camera Negative Film', J. SMPTE 77 (Oct 1968) p. 1196, Fig. 2 'RMS granularity measurements comparing the new film with Tri-X'",
+   "url": "https://journal.smpte.org/periodicals/Journal%20of%20the%20SMPTE/77/10/29/07262837.pdf",
+   "developer": "D-96 类 (连续浸槽机), gamma 0.70",
+   "aperture": "未注明 (Kodak RMS 颗粒度; 数值约为 48 µm 漫射值的 2.5–3 倍, 孔径应更小; 形状比较不受孔径影响, 孔径 ≫ 颗粒时)",
+   "density_kind": "gross (横轴 'Gross density'; 漫射 / 镜面未注明)",
+   "density": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7],
+   "sigma": [0.0264, 0.0291, 0.0319, 0.0343, 0.037, 0.0394, 0.0421, 0.0443, 0.0463, 0.0483, 0.051, 0.0533, 0.0555, 0.0577, 0.0596],
+   "fog_band": [0.2, 0.3], "min_net": 0.4, "ref_net": 0.7, "model_film": "kodak_trix_400"
+  },
+  "4x_5224_smpte1968": {
+   "film": "Eastman 4-X Panchromatic Negative Film, Type 5224", "source": "同上, Fig. 2 (虚线)",
+   "url": "https://journal.smpte.org/periodicals/Journal%20of%20the%20SMPTE/77/10/29/07262837.pdf",
+   "developer": "D-96 类, gamma 0.70", "aperture": "同上", "density_kind": "gross",
+   "density": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.3, 1.4, 1.5, 1.6, 1.7],
+   "sigma": [0.0312, 0.0331, 0.0348, 0.037, 0.039, 0.0408, 0.0497, 0.0517, 0.0538, 0.0554, 0.0571],
+   "fog_band": [0.2, 0.3], "min_net": 0.4, "ref_net": 0.7, "model_film": null
+  },
+  "plusx_4231_smpte1968": {
+   "film": "Eastman Plus-X Panchromatic Negative Film, Type 4231 (EI 80 / 64)",
+   "source": "W. H. Bahler et al., 'A New Low-Speed Black-and-white Camera Negative Film', J. SMPTE 77 (Oct 1968) p. 1140, Fig. 3 'RMS granularity measurements comparing the new film with Plus-X'",
+   "url": "https://journal.smpte.org/periodicals/Journal%20of%20the%20SMPTE/77/10/31/07262839.pdf",
+   "developer": "D-96 类, gamma 0.70", "aperture": "未注明 (同上)", "density_kind": "gross",
+   "density": [0.3, 0.4, 0.5, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4],
+   "sigma": [0.0076, 0.0100, 0.0121, 0.0167, 0.0176, 0.0184, 0.0191, 0.0196, 0.0200, 0.0204],
+   "fog_band": [0.2, 0.3], "min_net": 0.4, "ref_net": 0.7, "model_film": "kodak_plusx_125"
+  },
+  "xt_5220_smpte1968": {
+   "film": "Eastman XT Panchromatic Negative Film, Type 5220 (EI 25 / 20)", "source": "同上, Fig. 3 (实线)",
+   "url": "https://journal.smpte.org/periodicals/Journal%20of%20the%20SMPTE/77/10/31/07262839.pdf",
+   "developer": "D-96, 21 °C, 4.8 min, gamma 0.70", "aperture": "未注明", "density_kind": "gross",
+   "density": [0.3, 0.4, 0.5, 0.8, 0.9, 1.0, 1.2, 1.4],
+   "sigma": [0.0091, 0.0112, 0.013, 0.0157, 0.016, 0.0163, 0.0166, 0.0167],
+   "fog_band": [0.2, 0.3], "min_net": 0.4, "ref_net": 0.7, "model_film": null
+  }
+ },
+ "lines_isprs": {
+  "source": "'Aerial Film Granularity and Its Influence on Visual ...' (ISPRS Congress, Hamburg 1980, XXIII-B1, part 1, paper 167; University of New South Wales), Fig. 2–3: Kodak 2405 Double-X Aerographic 与 Agfa-Gevaert Pan 33, 显微密度计, 密度约 0.5–1.6; 文中: 'A strong linear relationship between RMS values and density of sample is well established in these figures. This is consistent with characteristics of normal black and white emulsions.'",
+  "url": "https://www.isprs.org/proceedings/XXIII/congress/part1/167_XXIII-B1.pdf",
+  "density_kind": "显微密度计读数 (未注明毛 / 净、漫射 / 镜面)",
+  "note": "拟合直线在 D 0.7 与 1.4 处的读数 (σ_D); 12.5 µm 孔径受仪器限制 (多条为平线), 不用",
+  "rows": [
+   {"test": "C", "film": "Kodak 2405", "developer": "D-76 8 min, gamma 0.65", "aperture_um": 25, "s07": 0.031, "s14": 0.040},
+   {"test": "D", "film": "Kodak 2405", "developer": "D-76 6 min, gamma 0.63", "aperture_um": 25, "s07": 0.0225, "s14": 0.026},
+   {"test": "E", "film": "Kodak 2405", "developer": "DK-50 8 min, gamma 1.10", "aperture_um": 25, "s07": 0.055, "s14": 0.063},
+   {"test": "E", "film": "Kodak 2405", "developer": "DK-50 8 min, gamma 1.10", "aperture_um": 50, "s07": 0.0285, "s14": 0.040},
+   {"test": "F", "film": "Kodak 2405", "developer": "DK-50 6 min, gamma 0.95", "aperture_um": 25, "s07": 0.041, "s14": 0.050},
+   {"test": "F", "film": "Kodak 2405", "developer": "DK-50 6 min, gamma 0.95", "aperture_um": 50, "s07": 0.0305, "s14": 0.034},
+   {"test": "G", "film": "Kodak 2405", "developer": "DK-50 10 min, gamma 1.24", "aperture_um": 25, "s07": 0.052, "s14": 0.072},
+   {"test": "G", "film": "Kodak 2405", "developer": "DK-50 10 min, gamma 1.24", "aperture_um": 50, "s07": 0.027, "s14": 0.042},
+   {"test": "H", "film": "Agfa-Gevaert Pan 33", "developer": "G5 4 min, gamma 0.97", "aperture_um": 25, "s07": 0.0275, "s14": 0.040}
+  ]
+ },
+ "callier_granularity": {
+  "statement": "Kodak Research Laboratories (摘要, 经检索结果引述): 扫描仪测得的 RMS 颗粒度是镜面的, 随仪器中的有效密度与单次漫射密度之比 q 线性增长 —— 即颗粒度 (起伏) 与平均密度按同一 Callier 比例变化。全文未取得。",
+  "url": "https://scilit.com/publications/7f68ab8de5e7754894d3bbe0b1b2e2f5"
+ },
+ "double_x_vs_tri_x": "Bahler et al. 1968 (p. 1140) 表 I 把 Eastman Double-X 5222 (EI 250 / 200) 与 Eastman Tri-X 5233 (EI 320 / 250) 列为两种不同的电影负片; 'Double-X 就是 Tri-X 的电影版' 的说法不成立, Tri-X 有自己的电影负片 5233 (这里用它)。Kodak Double-X 5222 现行数据册 (https://www.kodak.com/content/products-brochures/Film/DOUBLEX-Technical-Data-EN.pdf) 只给净漫射密度 1.0 处的一个值 (48 µm), 没有颗粒度对密度的曲线; Kodak Tri-X Reversal 7266 数据册有颗粒度对密度曲线, 但是反转冲洗 (正像银来自未曝光晶体), 不用于负片的形状。"
+}

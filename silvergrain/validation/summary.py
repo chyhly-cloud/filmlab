@@ -84,6 +84,16 @@ def summarize(rep):
         e = r["edges"]["train"]
         L.append(f"  直边 (训练片 {e['n']} 条, 输送方向): 本链 + kx {e['chain_sep3_kx']['cost'] * 1e4:.3f}e-4, T51 USM {e['t51_usm']['cost'] * 1e4:.3f}e-4, "
                  f"不锐化 {e['none_t51_box']['cost'] * 1e4:.3f}e-4")
+    if "t55g" in rep:
+        r = rep["t55g"]
+        c = r["calibration"]["macro"]
+        L.append(f"T55g 宏观 Callier: η_3D {c['eta_scale']:.3f} (T47 {r['calibration']['grain']['eta_scale']:.3f}), Schmidt 四孔径 "
+                 + ", ".join(f"{x * 100:+.1f}%" for x in c["rel"]) + f", Kodak 48 µm {c['kodak48_x1000']:.1f}")
+        for m in ("grain", "macro"):
+            t = r["shape"][m]["trix_5233_smpte1968"]; p = r["shape"][m]["plusx_4231_smpte1968"]
+            L.append(f"  {m}: Tri-X 5233 指数 数据 / 模型 " + ", ".join(f"{x['exponent_data']:.2f}/{x['exponent_model']:.2f}" for x in t)
+                     + "; Plus-X 4231 " + ", ".join(f"{x['exponent_data']:.2f}/{x['exponent_model']:.2f}" for x in p)
+                     + f"; ISPRS σ(1.4)/σ(0.7) 数据中位 {r['isprs'][m]['data_median']:.2f}, 模型 {r['isprs'][m]['model_25um']:.2f}")
     if "filmside" in rep:
         r = rep["filmside"]
         for f, v in r["film_side"].items():

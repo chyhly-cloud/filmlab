@@ -43,8 +43,12 @@ def test_bw_specs_identical_to_filmlab(key, dev):
     try:
         fk = key if dev == "d76" else f"{key}@{dev}"
         a = materials.silver_spec(materials.bw_silver_film(fk))
-        assert a == silvergrain.derive(key, dev).spec
-        assert grain.scale_silver(a, 2.0) == silvergrain.derive(key, dev, 2.0).spec
+        from silvergrain.emulsion import callier_mode
+        with callier_mode("grain"):              # T55g: silvergrain 的产品路径改为宏观 Callier; T47 方式仍与 filmlab 逐位相同
+            assert a == silvergrain.derive(key, dev).spec
+            assert grain.scale_silver(a, 2.0) == silvergrain.derive(key, dev, 2.0).spec
+        m = silvergrain.derive(key, dev).spec
+        assert m.callier == "macro" and m.callier_q == a.callier_q
     finally:
         generation.use("current")
 

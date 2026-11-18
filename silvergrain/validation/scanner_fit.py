@@ -294,7 +294,7 @@ def run(log=print):
     # 分布形状 (显式银粒, 黑白): 模型的 8 / 64 像素子块峰度、偏度 对 真实
     shp = []
     for k_, v in _frames(real, BW):
-        D, Dm, g = native_field(v["film"], v["ev"], method="explicit")
+        D, Dm, g = native_field(v["film"], v["ev"], method="closed_form")
         st = stats(finish(to_luma(D, Dm, v["code"]), *k))
         shp.append(dict(frame=f"{v['film']} EV{v['ev']:+d}", code=v["code"], real_kurt_clip4=v["z"]["kurt_clip4"], model_kurt_clip4=st["kurt_clip4"],
                         real_skew=v["z"]["skew"], model_skew=st["skew"],

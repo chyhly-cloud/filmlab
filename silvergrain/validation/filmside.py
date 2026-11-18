@@ -40,7 +40,7 @@ def model_film_side(film_key, evs=(-3, -2, -1, 0, 1, 2, 3, 4)):
     sc = get_scanner("noritsu_rpl")
     rows = []
     for ev in evs:
-        D, Dm, g = S.native_field(film_key, ev, method="explicit")
+        D, Dm, g = S.native_field(film_key, ev, method="closed_form")    # T55g: 原生 11.6 µm 上显式渲染的计数档偏低
         st = block_stats(_sharpen3(D[..., 0], sc.sharpen_kx, sc.sharpen_ky) * 1000.0)
         rows.append(dict(ev=ev, D=float(Dm[0]), **st))
     return rows

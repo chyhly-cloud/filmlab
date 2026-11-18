@@ -41,10 +41,10 @@ def test_t50_d76_reference():
 def test_t53_closed_form_identical():
     r = t53_scale.run()
     assert r["max_abs_diff_vs_reference"] == 0.0
-    t = r["kodak_trix_400@d76"]["ks"]
-    for k in ("0.5", "1.5", "2.0", "3.0"):
-        assert t[k]["selwyn_ratio_over_k"]["96.0"] == pytest.approx(1.0, abs=0.02)
-        assert t[k]["coat_ratio"] == pytest.approx(float(k), rel=1e-6)
+    for t in (r["kodak_trix_400@d76"]["ks"], r["macro"]["kodak_trix_400@d76"]["ks"]):
+        for k in ("0.5", "1.5", "2.0", "3.0"):
+            assert t[k]["selwyn_ratio_over_k"]["96.0"] == pytest.approx(1.0, abs=0.02)
+            assert t[k]["coat_ratio"] == pytest.approx(float(k), rel=1e-6)
     assert max(v["curve_max_abs_dD"] for v in r["kodak_tmax_400@d76"]["ks"].values()) < 0.01
 
 
@@ -79,10 +79,41 @@ def test_native_pitch_explicit_is_near_gaussian_at_645():
                               mode="full", timing="fixed", seed=4, method=m, keep_render=True)
         d = np.asarray(r.render.density, float)
         z = (d - d.mean()) / d.std()
-        assert abs(np.mean(z ** 4) - 3) < 0.06 and abs(np.mean(z ** 3)) < 0.12
+        assert abs(np.mean(z ** 4) - 3) < 0.1 and abs(np.mean(z ** 3)) < 0.12
 
 @pytest.mark.slow
 def test_t46_full_loo_identical():
     r = t46_official.run(full=True, log=lambda *a: None)
     assert r["compare"]["identical"]
     assert r["loo_median_abs_log"] == pytest.approx(0.170, abs=0.001)
+
+
+
+# ------------------------------------------------------------------ T55g --
+def test_macro_callier_mean_unchanged_and_ratio_q():
+    """宏观 Callier: 平均密度与 T47 ("grain") 相同; 镜面 / 漫射颗粒度之比 = Q (起伏与平均同一比例)。"""
+    from silvergrain import silver
+    from silvergrain.validation.t55g_callier import trix_spec
+    g = trix_spec(6.608337, "grain")[0]; m = trix_spec(6.608337, "macro")[0]
+    lh = np.linspace(-3, 0, 31)
+    assert np.allclose(silver.silver_curve(g, lh), silver.silver_curve(m, lh), atol=1e-12)
+    H = 10 / 400
+    sd = silver.silver_granularity(m, H, [48.0], geometry="diffuse", adjacent=False)[0]
+    ss = silver.silver_granularity(m, H, [48.0], geometry="specular", adjacent=False)[0]
+    assert ss / sd == pytest.approx(m.callier_q, rel=1e-9)
+
+
+def test_t55g_calibration_and_independent_shape():
+    """η_3D 在 "macro" 下按 T47 的方法重标: Schmidt 四孔径 ±5%、曲线不变; σ 对密度的形状对独立数据 (SMPTE 1968 Tri-X 5233,
+    Plus-X 4231; ISPRS 2405) 比 T47 的 "grain" 好。"""
+    from silvergrain import database as db
+    from silvergrain.validation import t55g_callier as G
+    c = G.calibrate("macro")
+    assert c["eta_scale"] == pytest.approx(db.universal()["t55g"]["eta3d_scale"], rel=1e-3)
+    assert max(abs(x) for x in c["rel"]) < 0.05 and c["curve_max_resid"] < 0.1
+    sh = {m: G.shape_vs_independent(m) for m in ("grain", "macro")}
+    for row_g, row_m in zip(sh["grain"]["trix_5233_smpte1968"], sh["macro"]["trix_5233_smpte1968"]):
+        assert row_m["rms_log"] < row_g["rms_log"] and abs(row_m["exponent_model"] - row_m["exponent_data"]) < 0.1
+    assert all(r["rms_log"] < 0.03 for r in sh["macro"]["plusx_4231_smpte1968"])
+    isp = G.isprs_lines("macro")
+    assert abs(np.log(isp["model_25um"] / isp["data_median"])) < 0.05

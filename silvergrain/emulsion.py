@@ -113,15 +113,23 @@ class Emulsion:
 
 @lru_cache(maxsize=None)
 def _silver_spec_d76(film_key):
-    """= filmlab.materials._silver_spec(key, "bw", "BW-D76", "t48")。"""
+    """filmlab.materials._silver_spec(key, "bw", "BW-D76", "t48") 的同一推导; T55g 起漫射收集按宏观 Callier (callier "macro":
+    银丝团不透明, 漫射密度 = 镜面 / Q), η_3D 在此方式下按 T47 的同一方法重标 (universal.json "t55g")。
+    CALLIER = "grain" (或 with callier_mode("grain")) 恢复 T47 / filmlab 的档案。"""
     f = _film(film_key)
     c = f.curve()
     U = universal()
-    eta = db.universal()["t47"]["eta3d_scale"]
     from .films import _bw_def
     src = _bw_def(film_key)["spec_source"]
-    return silver.silver_derive(f.ei, U, eta, 0.8 / f.ei * 10.0 ** c["x"], c["net"], c["gross_fog"], db.t47_morph(),
+    if CALLIER == "macro":
+        eta, morph = db.universal()["t55g"]["eta3d_scale"], dict(db.t47_morph(), callier="macro")
+    else:
+        eta, morph = db.universal()["t47"]["eta3d_scale"], db.t47_morph()
+    return silver.silver_derive(f.ei, U, eta, 0.8 / f.ei * 10.0 ** c["x"], c["net"], c["gross_fog"], morph,
                                 process="BW-D76", source=src, thickness_um=f.thickness_um)
+
+
+CALLIER = "macro"      # T55g: silvergrain 产品路径的漫射收集方式; "grain" = T47 / filmlab (对照, 用 callier_mode 切换)
 
 
 def developer_mod(film_key, dev: Developer):
@@ -162,3 +170,22 @@ def derive(film, developer=None, grain_scale=1.0):
     f = _film(film)
     dev = _developer(developer, f)
     return _derive(f.key, dev.key, check_grain_scale(grain_scale))
+
+
+
+class callier_mode:
+    """临时切换产品路径的漫射收集方式 (T55g): with callier_mode("grain"): … 得到 T47 / filmlab 的档案 (逐位检验与对照用)。"""
+    def __init__(self, mode):
+        self.mode = mode
+
+    def __enter__(self):
+        global CALLIER
+        self.old = CALLIER
+        CALLIER = self.mode
+        _derive.cache_clear(); _silver_spec_d76.cache_clear(); silver_curve_table.cache_clear()
+        return self
+
+    def __exit__(self, *a):
+        global CALLIER
+        CALLIER = self.old
+        _derive.cache_clear(); _silver_spec_d76.cache_clear(); silver_curve_table.cache_clear()

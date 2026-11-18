@@ -9,7 +9,7 @@ from ..render import render
 
 CASES = (("kodak_trix_400", "d76", 1.0), ("kodak_trix_400", "rodinal", 1.0), ("kodak_tmax_400", "d76", 1.0),
          ("ilford_hp5_plus", "d76", 1.0), ("kodak_trix_400", "d76", 2.0))
-PXS = (6.0, 12.0)
+PXS = (4.0, 6.0, 12.0)          # T55g: 4 µm 加入 (callier "macro" 下显式渲染需要细像素)
 EVS = (-2, 0, 2)
 
 

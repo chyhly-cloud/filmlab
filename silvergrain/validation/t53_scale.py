@@ -82,6 +82,15 @@ def dye_case(film="kodak_portra_400", process="C-41"):
 
 
 def run():
+    """逐位对照 T53 的参考 (T47 的 callier "grain" 档案); 另给 T55g 产品路径 ("macro") 的同一标度律。"""
+    from ..emulsion import callier_mode
+    with callier_mode("grain"):
+        res = _run()
+    res["macro"] = {f"{film}@{dev}": silver_case(film, dev) for film, dev in CASES}
+    return res
+
+
+def _run():
     ref = load("t53_reference.json")
     res = {}
     diffs = []

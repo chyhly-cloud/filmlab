@@ -289,5 +289,11 @@
   ],
   "curve_source": "Schmidt Tri-X 400 / D-76 原液 20 °C 9 min (净 D 0.10 处为零点的 log10 相对曝光, 净 D); https://www.bernhard-w-schmidt.de/en/einzeln-trix (tools/eval/t47/schmidt_density_19.csv)",
   "spectral_source": "Kodak F-4017 第 7 页光谱感光度 (D = 1.0 > 灰雾, log 1/(erg/cm²)); https://kodakprofessional.com/sites/default/files/wysiwyg/film/f4017_trix_320400.pdf"
+ },
+ "t55g": {
+  "callier": "macro",
+  "eta3d_scale": 9.334597712267362,
+  "micro_psf_um": 1.1107858952510483,
+  "source": "T55g: 漫射收集的作用方式改为宏观 Callier (银丝团不透明, 漫射密度 = 镜面密度 / Q; 起伏与平均同一比例), η_3D 按 T47 的同一方法在此方式下重标 (Schmidt Tri-X / D-76 显微颗粒 20 / 25 µm 平台 σ²A + 显微镜 PSF 使 a_k 吻合; silvergrain/validation/t55g_callier.calibrate)。只用于 silvergrain 的产品路径 (emulsion.derive); filmlab 与 T47 / T47b / T50 / T53 的逐位检验仍用 t47 (callier \"grain\", η 6.608)。"
  }
 }
