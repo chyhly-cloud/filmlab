@@ -117,3 +117,21 @@ def test_t55g_calibration_and_independent_shape():
     assert all(r["rms_log"] < 0.03 for r in sh["macro"]["plusx_4231_smpte1968"])
     isp = G.isprs_lines("macro")
     assert abs(np.log(isp["model_25um"] / isp["data_median"])) < 0.05
+
+
+
+# ------------------------------------------------------------------ T55h --
+def test_t55h_ilford_evidence_and_level():
+    """Ilford 电影负片公布的 RMS (D-96): HP5 Plus 16、FP4 Plus 10; 模型 (D-76 档案) 在模型对 Kodak / Schmidt 的已知散布 (±15%) 内;
+    HP5+ 模型的 σ–D 指数在三维晶体先验 (SMPTE 1968 Tri-X 5233 / 4-X 5224, 0.32–0.44) 之内。"""
+    import silvergrain as sg
+    from silvergrain.validation import refdata
+    from silvergrain.validation.t55g_callier import sigma_curve
+    ev = refdata.load("ilford_3d_evidence.json")
+    assert ev["ilford_mp_rms"]["ilford_hp5_plus"]["rms"] == 16 and ev["ilford_mp_rms"]["ilford_fp4_plus"]["rms"] == 10
+    for f, d in ev["ilford_mp_rms"].items():
+        m = 1000 * sg.granularity(sg.derive(f, "d76"), 1.0, 48)
+        assert abs(np.log(m / d["rms"])) < np.log(1.15)
+    nets = np.array([0.5, 0.7, 0.9, 1.1, 1.3, 1.5])
+    p = np.polyfit(np.log(nets), np.log(sigma_curve(sg.derive("ilford_hp5_plus", "d76").spec, nets)), 1)[0]
+    assert 0.3 < p < 0.45

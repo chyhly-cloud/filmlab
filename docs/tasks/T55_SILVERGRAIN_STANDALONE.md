@@ -1106,3 +1106,80 @@ T51b 记录的真实斜率在码值 68 / 99 / 138 / 184 处为 275 / 302 / 302 /
 4. **代价**：Schmidt 留出片中位误差 0.10 → 0.13；Rodinal / FX-39 预测降 2–6%（Tri-X Rodinal / D-76 1.34，实测 1.58，略差）。filmlab 仍用旧模式，逐位不变。
 5. **附带发现**：显式渲染器在 12 µm 粗像素、高密度时方差少约 25%；黑白在像素 ≥ 3 µm 时默认改用闭式路径。
 6. **环境**：容器重启后 numpy 2.5.3 / scipy 1.18.1，`test_t53_closed_form_identical` 差 1.4e-17 失败，在未改的 HEAD 上同样失败，属环境，不属本任务。scratchpad 中 people_61227、day_9195 的源帧丢失，需要重新生成。
+
+## T55h：HP5+ 与 Ilford 三维晶体片（Claude）
+
+### h.0 结论（不改模型）
+
+- **没有能定 HP5+ σ–D 形状的独立证据。** 能找到的独立证据只定了 D ≈ 1 的量级，而模型在这里已经对：
+  - Ilford 电影负片 fact sheet（Kodak D-96，γ 0.65–0.70）：HP5 Plus 漫射 RMS 16，FP4 Plus 10。
+  - 模型（D-76 档案，宏观 Callier，48 µm，净 D 1.0）：HP5+ 14.6（0.91），FP4+ 9.8（0.98）。
+  - 都在模型对 Kodak / Schmidt 的已知散布（约 ±10%）之内，所以不支持单独改 HP5+ 的晶体尺寸 / η。
+  - 也不存在"Ilford 三维片"共同的偏差：Pan F+ 对 Schmidt 是 0.68，FP4+ 0.98，HP5+ 0.91。
+- **形状**（σ ∝ D^p，D 0.5–1.5）：
+  - 三维晶体的独立先验：SMPTE 1968 Tri-X 5233 0.40–0.44、4-X 5224 0.32–0.35。
+  - 模型 HP5+ 0.34，在先验之内。
+  - RPL 留出：Tri-X 0.40、Delta 3200 0.37 也在先验之内；只有 HP5+ 是 0.72，在所有独立的三维晶体数据之外。
+- **按负责人给的退路**（把 Tri-X 上标定的三维结构经 HP5+ 自己的感光度与曲线转移过去）：这正是现有模型的做法。留出不通过（真实 / 模型 1.13–1.78，形状 1.87 对 1.29），所以不采用别的转移，保持现状。
+- **部分归因：显影反差。**
+  - RPL 翻拍的特性曲线（曲线量，不是颗粒读数）显示，RPL（XTOL）冲出的 HP5+ 反差 γ ≈ 0.84，比 Tri-X 的 0.69 高约 21%；数据库的 HP5+ 曲线借自 ILFOTEC HC，γ ≈ 0.6–0.68。
+  - 用 RPL 的曲线重新推导 HP5+ 档案后，留出的真实 / 模型从 1.13–1.78 变为 1.10–1.56，形状从 1.29 变为 1.36（真实 1.87）。只解释一小部分。
+  - 这是冲印店的显影条件，不是 HP5+ 的物理量，所以不改产品档案（用户也不能指定冲印店的曲线）。
+- **自评**：
+  - HP5+ 留出：**不通过**（未改，同 T55g）。
+  - Delta 3200：没有模型档案。真实形状 0.37，与三维先验和 Tri-X 一致。
+  - Kodak 片（Tri-X、T-Max、Plus-X）与 T46 / T47 / T47b / T50 的数都没有动。
+
+### h.1 证据（`validation/data/ilford_3d_evidence.json`，只有数字与 URL）
+
+| 来源 | 量 | 值 |
+|---|---|---|
+| Ilford HP5 Plus 电影负片 fact sheet（https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf） | 漫射 RMS（D-96 6:00 / 75 °F） | 16 |
+| Ilford FP4 Plus 电影负片 fact sheet（…/fp4mpic.pdf） | 漫射 RMS（D-96 5:30 / 75 °F） | 10 |
+| RPL 翻拍（Neg Sequence，1 档间隔，配准后同点密度差 / 0.301），净 D 0.5–1.3 的中位 γ | 显影反差 | Tri-X 0.69、HP5+ 0.84、Delta 3200 1.04 |
+
+- 找过、没有结果的：
+  - HP5+ 的晶体尺寸分布或电镜照片（Ilford 只说是立方晶体）；
+  - HP5+ 的 σ 对密度曲线；
+  - Ilford 静片数据册的颗粒度数值（Ilford 不公布）；
+  - Schmidt methodgrain 表（有 Delta 100 / 400、Pan F+，没有 HP5+ / FP4+）。
+
+### h.2 检验（`validation/t55h_ilford.py`，`python -m silvergrain.validation --only=t55h`）
+
+| | 模型 / 独立值 | 留出（RPL 胶片侧，D 0.3 → 1.5 的真实 / 模型；σ(1.5)/σ(0.7)） |
+|---|---|---|
+| HP5+，数据库曲线（产品） | 0.91（RMS 16） | 1.13 → 1.78；1.29 对真实 1.87 |
+| HP5+，RPL 翻拍曲线（检验） | — | 1.10 → 1.56；1.36 对真实 1.87 |
+| FP4+ | 0.98（RMS 10） | 无 RPL 帧 |
+
+- **诊断表**：`/tmp/claude-0/-home-user/f67b7686-eba5-58fc-b23b-cf537590be15/scratchpad/t55h/real_vs_model_3x_HP5_T55h.png`。
+  - 列：真实 RPL HP5+ | 模型。模型是同码值的均匀照片（HP5+ / D-76，full，120 片带 20 µm，固定定光），3 倍最近邻。
+  - 各块的 σ（码值）：
+
+| 块 | 码值 | 真实 | 模型 | 比 |
+|---|---|---|---|---|
+| NORMAL 亮块 | 180 | 9.9 | 8.8 | 1.12 |
+| PLUS3 亮块（密底片） | 185 | 15.1 | 8.4 | 1.78 |
+
+  - NORMAL 中间调块含景物起伏（大尺度 σ 13.5），不比较。
+  - 同码值下密底片的差距正是留出里随密度上升的那部分。
+- RPL 压缩包重新下载（SHA256 相同），用后删除。
+
+### h.3 文件
+
+- **新**：
+  - `silvergrain/validation/t55h_ilford.py`；
+  - `silvergrain/validation/data/ilford_3d_evidence.json`。
+- **改**：
+  - `validation/__main__.py`、`summary.py`、`results/report.json`（新增 `t55h`）；
+  - `silvergrain/tests/test_sg_validation.py`：新增 `test_t55h_ilford_evidence_and_level`；
+  - `silvergrain/README.md`。
+- 物理代码与数据档案未改。
+- `pytest tests silvergrain/tests -m "not slow"`：621 项通过，1 项失败。失败的是已知的 `test_t53_closed_form_identical`（numpy 版本，差 1.4e-17）。
+
+## 负责人结论（T55h）
+
+1. **HP5+ 不改。** 找到的独立证据：Ilford 电影胶片资料（D-96）HP5 Plus 16、FP4 Plus 10，模型 14.6 / 9.8（0.91 / 0.98），在模型已知的 ±10% 之内；没有 HP5+ 的晶体尺寸分布或 σ–D 曲线。模型的 σ–D 指数 0.34 落在独立的三维晶体先验（1968 SMPTE Tri-X 5233 0.40–0.44、4-X 0.32–0.35）之内，RPL 的 HP5+ 0.72 在所有独立数据之外。没有独立依据就不改——直接改等于按检验数据拟合。
+2. RPL 把 HP5+ 冲得比 Tri-X 硬（γ ≈ 0.84 vs 0.69），按 RPL 曲线重建只解释一小部分（形状 1.29 → 1.36，真实 1.87）；这是冲印店的显影条件，不是 HP5+ 的产品属性。
+3. 留出检验结论：HP5+ 不通过，作为已知限制写入 README。要解决需要 HP5+ 在同一显影液下多个密度的实测颗粒度，或第二家冲印店的 HP5+ 扫描。
+4. 物理代码与数据未改；Kodak 各片结果不变。

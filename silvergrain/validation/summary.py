@@ -94,6 +94,18 @@ def summarize(rep):
             L.append(f"  {m}: Tri-X 5233 指数 数据 / 模型 " + ", ".join(f"{x['exponent_data']:.2f}/{x['exponent_model']:.2f}" for x in t)
                      + "; Plus-X 4231 " + ", ".join(f"{x['exponent_data']:.2f}/{x['exponent_model']:.2f}" for x in p)
                      + f"; ISPRS σ(1.4)/σ(0.7) 数据中位 {r['isprs'][m]['data_median']:.2f}, 模型 {r['isprs'][m]['model_25um']:.2f}")
+    if "t55h" in rep:
+        r = rep["t55h"]
+        L.append("T55h Ilford 电影负片 RMS (D-96) 模型 / 公布: " + ", ".join(f"{k} {v['model']:.1f} / {v['official']} = {v['ratio_model_over_official']:.2f}"
+                                                                for k, v in r["level"].items()))
+        sh = r["shape"]
+        L.append(f"  σ ∝ D^p (D 0.5–1.5): 三维先验 Tri-X 5233 {sh['prior_trix_5233_smpte1968'][0]:.2f}/{sh['prior_trix_5233_smpte1968'][1]:.2f}, "
+                 f"4-X {sh['prior_4x_5224_smpte1968'][0]:.2f}/{sh['prior_4x_5224_smpte1968'][1]:.2f}; RPL 真实 Tri-X {sh['6_KODAK400TX']['real_exponent']:.2f}, "
+                 f"HP5+ {sh['7_ILFORDHP5PLUS']['real_exponent']:.2f}, Delta 3200 {sh['8_ILFORDDELTA3200PRO']['real_exponent']:.2f}; "
+                 f"模型 HP5+ {sh['7_ILFORDHP5PLUS']['model_exponent_48um']:.2f}")
+        for k, v in r["development"].items():
+            L.append(f"  HP5+ {k}: 留出 σ(1.5)/σ(0.7) 模型 {v['model_shape_15_07']:.2f} 真实 {v['real_shape_15_07']:.2f}; 真实 / 模型 "
+                     + ", ".join(f"{d}: {x:.2f}" for d, x in v["real_over_model"].items()))
     if "filmside" in rep:
         r = rep["filmside"]
         for f, v in r["film_side"].items():

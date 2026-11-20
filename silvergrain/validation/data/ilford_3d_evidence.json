@@ -1,0 +1,93 @@
+{
+ "_note": "T55h: Ilford 三维晶体片的独立证据 (只存数字与 URL)。ilford_mp_rms: Ilford 电影负片 fact sheet 公布的漫射 RMS 颗粒度 (Kodak D-96 显影, γ 0.65–0.70; 孔径与密度未注明, 按 Kodak 惯例取 48 µm、净漫射密度 1.0)。rpl_negative_gamma: RPL 压缩包里同一底片在灯箱上的数码翻拍 (Neg Sequence, 1 档间隔) 互相配准后, 同一景物点的净密度差 / 0.301 (γ), 按净密度 0.2 宽分档的中位 —— 这是特性曲线 (显影反差) 的量, 不是颗粒读数; 翻拍有杂光压缩, 只作相对比较。RPL 压缩包 2026-11-20 重新下载 (SHA256 584a0261…53a0), 用后删除。",
+ "ilford_mp_rms": {
+  "ilford_hp5_plus": {
+   "rms": 16,
+   "developer": "Kodak D-96, 6:00 at 75 °F (γ 0.65–0.70)",
+   "ei": "400 daylight / 200 tungsten",
+   "url": "https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/hp5mpic.pdf",
+   "quote": "HP5 Plus negative motion picture film developed in Kodak D-96 developer for 6 minutes at 75ºF has a diffuse rms granularity of 16."
+  },
+  "ilford_fp4_plus": {
+   "rms": 10,
+   "developer": "Kodak D-96, 5:30 at 75 °F (γ 0.65–0.70)",
+   "ei": "125",
+   "url": "https://bioskoplab.wordpress.com/wp-content/uploads/2011/10/fp4mpic.pdf",
+   "quote": "FP4 Plus negative motion picture film developed in Kodak D-96 developer for 5½ minutes at 75ºF has a diffuse rms granularity of 10."
+  }
+ },
+ "searched_without_result": [
+  "HP5 Plus 晶体尺寸分布 / 电子显微照片 (未找到; Ilford 只说是立方晶体)",
+  "HP5 Plus 的 σ 对密度曲线 (未找到)",
+  "Ilford 静片数据册的颗粒度数值 (Ilford 不公布)",
+  "Schmidt methodgrain 表 (有 Delta 100 / 400、Pan F+, 没有 HP5+ / FP4+)"
+ ],
+ "rpl_negative_gamma": {
+  "6_KODAK400TX": {
+   "gamma_by_D": {
+    "0.2": 0.48689112626840203,
+    "0.4": 0.6972153238940861,
+    "0.6": 0.8730063542593959,
+    "0.8": 0.7209189962039682,
+    "1.0": 0.6587235591914238,
+    "1.2": 0.6323638769271124,
+    "1.4": 0.6686208027980666,
+    "1.6": 0.4593199851741465
+   },
+   "neg_registration_corr": {
+    "MINUS3": 0.478,
+    "MINUS2": 0.504,
+    "MINUS1": 0.471,
+    "NORMAL": 1.0,
+    "PLUS1": 0.506,
+    "PLUS2": 0.598,
+    "PLUS3": 0.605
+   }
+  },
+  "7_ILFORDHP5PLUS": {
+   "gamma_by_D": {
+    "0.2": 0.5033086084861943,
+    "0.4": 0.7696274312101845,
+    "0.6": 0.821563701769087,
+    "0.8": 0.9285946595174488,
+    "1.0": 0.8404089332684117,
+    "1.2": 0.8334286339474857,
+    "1.4": 0.841112323191712,
+    "1.6": 0.6662020917238987,
+    "1.8": 0.9267454749303147
+   },
+   "neg_registration_corr": {
+    "MINUS2": 0.228,
+    "MINUS1": 0.219,
+    "NORMAL": 1.0,
+    "PLUS1": 0.579,
+    "PLUS2": 0.448,
+    "PLUS3": 0.504,
+    "PLUS4": 0.588
+   }
+  },
+  "8_ILFORDDELTA3200PRO": {
+   "gamma_by_D": {
+    "0.2": 0.5811332543959358,
+    "0.4": 0.8681025120716093,
+    "0.6": 1.0475493702806857,
+    "0.8": 1.0371238725488816,
+    "1.0": 1.033961099459514,
+    "1.2": 1.0746539729477593,
+    "1.4": 0.9760997137752678,
+    "1.6": 0.8485590135915662,
+    "1.8": 0.9544179713107154,
+    "2.0": 0.9820904531674192
+   },
+   "neg_registration_corr": {
+    "MINUS2": 0.235,
+    "MINUS1": 0.332,
+    "NORMAL": 1.0,
+    "PLUS1": 0.484,
+    "PLUS2": 0.411,
+    "PLUS3": 0.414,
+    "PLUS4": 0.374
+   }
+  }
+ }
+}
