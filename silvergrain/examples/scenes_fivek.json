@@ -1,0 +1,12 @@
+{
+  "note": "silvergrain 整图检验用的源照片。图像不进仓库（MIT-Adobe FiveK 研究许可：仅限研究用途，复制件须附版权声明与许可）；这里只存 URL 与转换方法。",
+  "license": "https://data.csail.mit.edu/graphics/fivek/legal/LicenseAdobeMIT.txt (Copyright (C) 2011 Adobe Systems Incorporated; Copyright (C) 2011 Massachusetts Institute of Technology; research license)",
+  "dataset": "https://data.csail.mit.edu/graphics/fivek/",
+  "conversion": "rawpy postprocess(gamma=(1,1), no_auto_bright=True, output_bps=16, use_camera_wb=True, output_color=sRGB, highlight_mode=Blend) / 65535 → 线性 sRGB；整图乘常数使亮度 (BT.709) 的第 99 百分位 = 0.85（相当于相机的曝光提升，不改影调形状）。",
+  "scenes": {
+    "portrait_a2607": {"url": "https://data.csail.mit.edu/graphics/fivek/img/dng/a2607-060521_140210__MG_7945.dng", "what": "室内儿童人像，皮肤中间调，背景虚化", "size": [3522, 2348]},
+    "skyline_a3020": {"url": "https://data.csail.mit.edu/graphics/fivek/img/dng/a3020-07-09-16-at-11h03m47s-_MG_3425.dng", "what": "白天城市天际线：大面积蓝天、白云、水面", "size": [4386, 2920]},
+    "flowers_a3759": {"url": "https://data.csail.mit.edu/graphics/fivek/img/dng/a3759-_DSC0001.dng", "what": "白天花坛：饱和红、黄、绿，阴天天空", "size": [3040, 2014]}
+  },
+  "replaces": "people_61227 / day_9195（原 scratchpad more/ 目录的 RAW，来源未记录，容器重启后丢失）"
+}
