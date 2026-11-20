@@ -214,3 +214,25 @@ def test_noritsu_chain_crisp_and_anisotropic():
     v = r.var()
     rho_y = np.mean(r[1:] * r[:-1]) / v; rho_x = np.mean(r[:, 1:] * r[:, :-1]) / v
     assert rho_y < -0.05 and rho_x > rho_y + 0.05
+
+
+# ------------------------------------------------------------------ T55i: Noritsu 的色度平滑 --
+def test_noritsu_chroma_smoothing_keeps_luma():
+    """T55i: RPL 彩色扫描的颗粒几乎无色 (σ_R/σ_Y 1.01–1.09, 48 µm 通道相关 0.80–0.94)。noritsu_rpl 在编码后的 BT.601 Cb / Cr 上做
+    高斯平滑 (σ 1.75 输出像素): 亮度逐点不变 (所有亮度读数不受影响), 每通道颗粒向亮度靠拢、通道相关升高。"""
+    import dataclasses
+    import silvergrain as sg
+    from silvergrain.image import get_scanner
+    sc = get_scanner("noritsu_rpl")
+    assert sc.chroma_sigma_px == pytest.approx(1.75) and sc.chroma_threshold == 0.0
+    sc0 = dataclasses.replace(sc, chroma_sigma_px=0.0)
+    g = np.full((192, 192, 3), 0.18)
+    for mode in ("grain", "full"):
+        a = sg.apply_to_image(g, "kodak_portra_400", format=192 * 0.02, film_gauge="120", mode=mode, seed=3, scanner=sc).encoded * 255
+        b = sg.apply_to_image(g, "kodak_portra_400", format=192 * 0.02, film_gauge="120", mode=mode, seed=3, scanner=sc0).encoded * 255
+        Y = np.array([0.299, 0.587, 0.114])
+        assert np.abs(a @ Y - b @ Y).max() < 1e-9
+        ra = (a - a.mean((0, 1)))[8:-8, 8:-8].reshape(-1, 3); rb = (b - b.mean((0, 1)))[8:-8, 8:-8].reshape(-1, 3)
+        sY = (ra @ Y).std()
+        assert ra[:, 0].std() / sY < 1.1 < rb[:, 0].std() / sY
+        assert np.corrcoef(ra[:, 0], ra[:, 1])[0, 1] > 0.8 > np.corrcoef(rb[:, 0], rb[:, 1])[0, 1]

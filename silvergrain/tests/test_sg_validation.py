@@ -135,3 +135,27 @@ def test_t55h_ilford_evidence_and_level():
     nets = np.array([0.5, 0.7, 0.9, 1.1, 1.3, 1.5])
     p = np.polyfit(np.log(nets), np.log(sigma_curve(sg.derive("ilford_hp5_plus", "d76").spec, nets)), 1)[0]
     assert 0.3 < p < 0.45
+
+
+# ------------------------------------------------------------------ T55i --
+def test_t55i_colour_reference_is_measurement_only():
+    """RPL 彩色扫描是 JPEG 4:2:0 (文件头); 存下的只有数字 (谱比、相关、分档中位、量化表)。"""
+    d = refdata.load("realscan_rpl_colour_t55i.json")
+    for f in ("1_FUJIPRO400H", "2_KODAKPORTRA400", "3_KODAKPORTRA800", "4_KODAKPORTRA160", "5_KODAKEKTAR100"):
+        assert d["jpeg"]["sampling"][f]["NORMAL"] == "4:2:0"
+        r = d["chroma"][f]["dark"]["chroma_over_luma"]
+        assert len(r) == 9 and r[2][0] < 0.15                     # 0.125–0.19 周/像素: 色度功率 < 亮度的 15%
+        assert d["channel_ratios"][f]["dark"]["rho48_RG_GB_RB"][0] > 0.8
+    assert sorted(len(v) for v in d["jpeg"]["qtables_colour"].values()) == [64, 64]
+
+
+def test_t55i_kodak_layer_shape():
+    """每层 σ(D) 对 Kodak 5219 / 5213 / 5207 / 5203: 趾部 (D ≤ 0.2) 的 R / G 在 ±20% 内; 高密度 (D ≥ 1) 模型下降得比 Kodak 少
+    (模型偏平: 比值 > 1), 方向与黑白 (T55g 前模型偏平、真实继续上升) 相反。"""
+    from silvergrain.validation.t55i_colour import kodak_shape
+    r = kodak_shape()
+    for k, v in r.items():
+        for ch in ("R", "G"):
+            if ch in v:
+                assert 0.8 < v[ch]["toe_ratio"] < 1.2, (k, ch)
+                assert v[ch]["high_ratio"] > 1.0, (k, ch)

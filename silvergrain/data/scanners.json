@@ -19,8 +19,9 @@
    "usm_sigma_px": 0.0,
    "usm_amount": 0.0,
    "usm_threshold": 0.0,
-   "chroma_sigma_px": 0.0,
+   "chroma_sigma_px": 1.75,
    "chroma_threshold": 0.0,
+   "chroma_source": "T55i: silvergrain/validation/t55i_colour.py (结果 validation/results/report.json 't55i' chroma), docs/tasks/T55_SILVERGRAIN_STANDALONE.md T55i 节。RPL 彩色扫描的颗粒几乎无色: 48 µm 的通道相关 0.80–0.94, σ_R/σ_Y 1.01–1.09、σ_B/σ_Y 1.00–1.27 (独立染料层应为 1.5–1.6); 色度 / 亮度功率比在 0.06–0.31 周/像素为 0.004–0.48, 模型 (只锐化亮度, 不处理色度) 为 0.26–1.3。文件头: 彩色扫描为 JPEG 4:2:0 (量化表平均 1.3 / 1.8), 但 4:2:0 只解释 > 0.25 周/像素。在训练片 (Pro 400H、Portra 400 / 160, T55e 的划分) 上, 模型输出经 8 位 + 同一量化表的 JPEG 4:2:0 后, 拟合 BT.601 Cb / Cr 上的高斯 σ (输出像素, 阈值 0): 0.06–0.31 周/像素的 log 功率比 RMS 1.89 (σ 0) → 0.61 (σ 1.75); 留出 Portra 800 2.14 → 0.61、Ektar 100 1.91 → 0.61。只作用于色度, 亮度 (所有亮度留出读数) 不变。4:2:0 是文件格式, 不在库里做。",
    "native": {
     "135": {
      "across_mm": 24.0,

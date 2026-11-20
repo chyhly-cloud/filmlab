@@ -106,6 +106,22 @@ def summarize(rep):
         for k, v in r["development"].items():
             L.append(f"  HP5+ {k}: 留出 σ(1.5)/σ(0.7) 模型 {v['model_shape_15_07']:.2f} 真实 {v['real_shape_15_07']:.2f}; 真实 / 模型 "
                      + ", ".join(f"{d}: {x:.2f}" for d, x in v["real_over_model"].items()))
+    if "t55i" in rep:
+        r = rep["t55i"]
+        for k, v in r["kodak_shape"].items():
+            L.append(f"T55i 每层 σ(D) 模型 / Kodak {k}: " + "; ".join(
+                f"{ch} 趾部 {x['toe_ratio']:.2f}, D≥1 {x['high_ratio']:.2f}" if x["high_ratio"] is not None else f"{ch} 趾部 {x['toe_ratio']:.2f}"
+                for ch, x in v.items()))
+        c = r["chroma"]
+        L.append(f"T55i 色度 (Noritsu 色度平滑 σ {c['sigma_px']} 像素 + 文件的 JPEG 4:2:0): log 色度/亮度功率比 RMS 训练 / 留出 "
+                 + ", ".join(f"{v}: {x['train']:.2f} / {x['hold']:.2f}" for v, x in c["rms_log"].items()))
+        for f, v in r["luma_filmside"].items():
+            a, b, cc = v["loglin_const_code_D"]
+            L.append(f"T55i 亮度胶片侧 {f} ({v['split']}): 暗 (50–130) {v['dark_50_130']:.2f}, 亮 (150–220) {v['bright_150_220']:.2f}; "
+                     f"log 比 = {a:+.2f} {b:+.2f}·(码值−128)/100 {cc:+.2f}·(D_G−0.5)")
+        tx = r["dark_gap"]["texture_rho"]
+        L.append("T55i 平坦块的景物纹理 (相邻包围帧相关, 暗 / 亮 / null): " + ", ".join(f"{f[:6]} {x['dark']:.2f}/{x['bright']:.2f}/{x['null']:.2f}"
+                                                                     for f, x in tx.items()))
     if "filmside" in rep:
         r = rep["filmside"]
         for f, v in r["film_side"].items():

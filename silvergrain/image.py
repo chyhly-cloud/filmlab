@@ -249,6 +249,7 @@ class Scanner:
     sharpen_ky: float = 0.0                 #                                                 y = CCD 线阵方向
     optics_um: float = 0.0                  # 扫描光学的高斯 σ (µm, 胶片面; T55e 拟合为 0)
     t51: dict | None = None                 # 被取代的 T51 / T55c 参数 (只作记录)
+    chroma_source: str = ""                 # T55i: 色度平滑 (chroma_sigma_px) 的来源与拟合记录
 
 
 def get_scanner(key):

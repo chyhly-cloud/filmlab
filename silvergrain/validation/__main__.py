@@ -11,6 +11,7 @@
   scanner_fit T55e: Noritsu HS-1800 的线阵 CCD 采样链 (2D 颗粒谱 + 行列方差调制 + 直边; 彩色训练 → 彩色留出 → 黑白跨片种)
   t55g      T55g: 漫射收集的作用方式 (宏观 Callier), η 重标, σ 对密度的形状对独立数据; T47b / T50 在两种方式下
   t55h      T55h: Ilford 三维晶体片 (HP5+、FP4+) 的独立证据: Ilford 电影负片 RMS、三维晶体 σ–D 先验、RPL 翻拍的显影反差
+  t55i      T55i: 彩色负片: 每层 σ(D) 对 Kodak 5219/5213/5207/5203、Noritsu 链的色度 (4:2:0 与色度平滑)、亮度胶片侧与暗部差距的归因
   filmside  T55f: 原生网格上显式 vs closed_form 的尾巴; 配准得到的胶片侧 σ_D(D) 对模型
   labtone   T55b: 冲印店实测影调 (rpl_noritsu) 下 grain / full 模式的同码值颗粒, 对 Tri-X、HP5+ 与 RPL 彩负 5 种
 结果写到 silvergrain/validation/results/report.json (或给定路径); 断点续跑: 已有的项不重算 (--redo 重算)。"""
@@ -19,7 +20,7 @@ import sys
 import time
 from pathlib import Path
 
-ORDER = ("t47", "t47b", "t53", "t50", "t55g", "t55h", "fastpath", "scanner_fit", "filmside", "realscan", "labtone", "t46")
+ORDER = ("t47", "t47b", "t53", "t50", "t55g", "t55h", "t55i", "fastpath", "scanner_fit", "filmside", "realscan", "labtone", "t46")
 
 
 def _default(o):
@@ -75,6 +76,9 @@ def main(argv):
             r = run()
         elif name == "t55h":
             from .t55h_ilford import run
+            r = run()
+        elif name == "t55i":
+            from .t55i_colour import run
             r = run()
         elif name == "filmside":
             from .filmside import run
