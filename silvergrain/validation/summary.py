@@ -122,6 +122,17 @@ def summarize(rep):
         tx = r["dark_gap"]["texture_rho"]
         L.append("T55i 平坦块的景物纹理 (相邻包围帧相关, 暗 / 亮 / null): " + ", ".join(f"{f[:6]} {x['dark']:.2f}/{x['bright']:.2f}/{x['null']:.2f}"
                                                                      for f, x in tx.items()))
+    if "t55j" in rep:
+        r = rep["t55j"]
+        L.append("T55j grain 模式深红上的暗点 (暗于一半 / 纯黑): " + ", ".join(f"{k} {v['dark_half'] * 100:.2f}% / {v['black'] * 100:.3f}%"
+                                                                    for k, v in r["pepper"].items()))
+        t = r["timing"]
+        L.append(f"T55j RPL 自动定光 ({t['n_frames']} 帧): 整帧平均颜色 ln R/G {t['frame_mean_colour_median'][0]:+.2f}、ln B/G "
+                 f"{t['frame_mean_colour_median'][1]:+.2f}, 墙 {t['wall_colour_median'][0]:+.2f} / {t['wall_colour_median'][1]:+.2f}; 灰世界分数 a "
+                 f"{t['a_R/G']['a']:+.2f} ± {t['a_R/G']['se']:.2f} (R/G), {t['a_B/G']['a']:+.2f} ± {t['a_B/G']['se']:.2f} (B/G)")
+        k = r["kscale"]
+        L.append(f"T55j 闭式解阈值 {k['threshold_um']} µm (px/k): σ 比 " + "; ".join(
+            f"{x['developer']} k{x['k']:g} {x['px_um']:g} µm s{x['seed']}: " + "/".join(f"{y:.3f}" for y in x["sd_ratio"]) for x in k["rows"]))
     if "filmside" in rep:
         r = rep["filmside"]
         for f, v in r["film_side"].items():

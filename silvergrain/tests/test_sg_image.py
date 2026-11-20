@@ -139,20 +139,41 @@ def test_lab_tone_data():
 
 
 def test_grain_mode_equals_full_mode_fluctuation():
-    """T55d: grain 模式每个像素的相对亮度起伏 = full 模式同一像素的相对起伏 (同一底片、同一冲印店影调与定光; 不加冲印店扫描时严格)。"""
-    from silvergrain.image import srgb_decode
+    """T55j: 照片的影调就是该片印出的影调时 (照片 = 这张底片无颗粒的印片), grain 模式每个像素的相对起伏 = full 模式同一像素的
+    相对起伏 (同一底片、同一冲印店影调; 不加冲印店扫描)。"""
+    from silvergrain.image import expose, finish_lab, lab_anchor, srgb_decode
     from silvergrain.labtone import tone
+    from silvergrain.render import render
     img = np.zeros((96, 192, 3)); img[:, :64] = (0.45, 0.08, 0.06); img[:, 64:128] = (0.07, 0.10, 0.40); img[:, 128:] = 0.18
-    g = sg.apply_to_image(img, "kodak_trix_400", seed=5, scanner=None)
-    f = sg.apply_to_image(img, "kodak_trix_400", seed=5, scanner=None, mode="full", keep_render=True)
-    (T,) = tone("rpl_noritsu", "bw")
-    Dm = f.render.mean.reshape(96, 192)
-    base = srgb_decode(T.code_of(Dm - Dm.mean()) / 255)
-    L = np.array([0.2126, 0.7152, 0.0722])
-    for sl in (np.s_[8:88, 8:56], np.s_[8:88, 72:120], np.s_[8:88, 136:184]):
-        rg = np.log(np.clip(g.linear[sl] @ L, 1e-9, None) / (img[sl] @ L))
-        rf = np.log(np.clip(f.linear[sl][..., 0], 1e-9, None) / base[sl])
-        assert rg.std() == pytest.approx(rf.std(), rel=0.01)
+    for film in ("kodak_trix_400", "kodak_portra_400"):
+        ex = expose(img, film)
+        rr = render(ex.emulsion, exposure=ex.H, px_um=ex.px_um, seed=5)
+        L = 1 if ex.emulsion.film.is_bw else 3
+        Dm = np.asarray(rr.mean, float).reshape(96, 192, L)
+        m = lab_anchor(ex, Dm)
+        T = tone("rpl_noritsu", "bw" if L == 1 else "colour")
+        base = np.stack([srgb_decode(T[c].code_of(Dm[..., c] - m[c]) / 255) for c in range(L)], -1)
+        f, _ = finish_lab(ex, rr, mode="full")
+        ex.rgb = np.repeat(base, 3, -1) if L == 1 else base                  # 照片 = 该片无颗粒的印片
+        g, _ = finish_lab(ex, rr, mode="grain")
+        c = 0 if L == 1 else 1
+        rf = np.log(np.clip(f[..., c], 1e-9, None) / base[..., c if L == 3 else 0])
+        rg = np.log(np.clip(g[..., c], 1e-9, None) / ex.rgb[..., c])
+        ok = base[..., c if L == 3 else 0] > 0.01
+        assert np.corrcoef(rf[ok], rg[ok])[0, 1] > 0.999
+        assert rg[ok].std() == pytest.approx(rf[ok].std(), rel=0.01)
+
+
+def test_grain_transfer_at_photo_tone_no_pepper():
+    """T55j: 该片把一块印得比照片暗得多 (Tri-X 上的深红) 时, 在该片自己的印片位置传递 (T55d) 会把中间调的照片像素打成纯黑
+    (胡椒点); 在照片的影调上传递则没有。"""
+    img = np.full((160, 160, 3), 0.8); img[:, 100:] = (0.30, 0.025, 0.02)   # 大片亮中性: 自动定光把深红印得比照片暗
+    out = {}
+    for gd in ("film", "film_print"):
+        r = sg.apply_to_image(img, "kodak_trix_400", format=160 * 12 / 1000, seed=2, grain_density=gd)
+        Y = (r.encoded[8:-8, 108:-8] * 255) @ np.array([0.2126, 0.7152, 0.0722])
+        out[gd] = float(np.mean(Y < 0.5 * Y.mean()))                       # 暗于一半的像素 (胡椒点)
+    assert out["film"] < 0.004 and out["film_print"] > 2.5 * out["film"]
 
 
 def test_wratten_changes_bw_grain_density():
@@ -236,3 +257,26 @@ def test_noritsu_chroma_smoothing_keeps_luma():
         sY = (ra @ Y).std()
         assert ra[:, 0].std() / sY < 1.1 < rb[:, 0].std() / sY
         assert np.corrcoef(ra[:, 0], ra[:, 1])[0, 1] > 0.8 > np.corrcoef(rb[:, 0], rb[:, 1])[0, 1]
+
+
+def test_colour_auto_timing_keeps_scene_colour():
+    """T55j: 彩色 full 模式的自动定光只校正曝光、保持中性平衡 (RPL: 整帧平均颜色保留, 中性墙保持中性, 灰世界分数 a ≈ 0)。
+    蓝色占多数的画面: "auto" 保留蓝 (B > R), 中性块保持中性; "greyworld" 把整帧平均拉成中灰, 中性块带上补色 (偏暖)。"""
+    img = np.zeros((64, 192, 3)); img[:, :144] = (0.08, 0.14, 0.40); img[:, 144:] = 0.18
+    out = {}
+    for tm in ("auto", "greyworld"):
+        e = sg.apply_to_image(img, "kodak_portra_400", mode="full", timing=tm, seed=1, scanner=None).encoded * 255
+        out[tm] = (e[:, :144].reshape(-1, 3).mean(0), e[8:-8, 152:-8].reshape(-1, 3).mean(0))
+    blue, grey = out["auto"]
+    assert blue[2] > blue[0] + 40 and abs(grey[0] - grey[2]) < 12
+    blue_g, grey_g = out["greyworld"]
+    assert grey_g[0] - grey_g[2] > abs(grey[0] - grey[2]) + 15
+
+
+def test_k2_35mm_routes_to_closed_form():
+    """T55j: 闭式解阈值按等效像素 px/k = 2.85 µm; 35 mm 原生网格 (5.8 µm) 上的 k = 2 (2.9 µm) 走闭式解。"""
+    from silvergrain.render import choose_method
+    em = sg.derive("kodak_trix_400", "d76", 2.0)
+    assert choose_method(em, (4000, 6000), 5.8) == "closed_form"
+    assert choose_method(em, (4000, 6000), 5.34) == "explicit"
+    assert choose_method(sg.derive("kodak_trix_400", "d76", 1.0), (4000, 6000), 2.9) == "closed_form"

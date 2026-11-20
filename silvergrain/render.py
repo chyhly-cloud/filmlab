@@ -31,6 +31,10 @@ from .formats import px_um_for
 
 GAUSS_DLOGH = 0.1               # 高斯路径的曝光档间距 (log10 H)
 AUTO_MIN_PX_UM = 3.0             # closed_form 的最小 "等效像素" px/k (µm); k = 1 时 6 µm 像素 σ 与显式差 ≤ 3–5%, 3 µm 约 −7%
+AUTO_MIN_PX_UM_MACRO = 2.85      # T55j: 宏观 Callier (产品) 的阈值。closed/explicit 像素 σ 比 (Tri-X D-76 / Rodinal, EV −2/0/+2):
+                                 # 3.0 µm 0.86–0.88 / 0.81–0.86 (3 个种子的散布 ±0.01), 2.9 µm 0.86–0.87 / 0.81–0.84 (同一容差内),
+                                 # 2.67 µm 0.84–0.85 / 0.78–0.83 (低于容差)。场按 k 严格缩放 (k = 2 @ 5.8 µm ≡ k = 1 @ 2.9 µm),
+                                 # 所以阈值本来就相对颗粒大小 (px/k)。2.85 使 35 mm 原生网格 (5.8 µm, 2600 万像素上限) 的 k = 2 走闭式解。
 AUTO_MIN_PIXELS = 2_000_000
 DYE_BAND_ROWS = 256
 
@@ -191,9 +195,9 @@ def choose_method(emulsion, shape, px_um, method="auto"):
     eq = px_um / float(getattr(emulsion, "grain_scale", 1.0))      # 颗粒粗细 k: 场是 k = 1 的场放大 k 倍 → 等效像素 px/k
     if getattr(emulsion.spec, "callier", "grain") == "macro":
         # T55g: 不透明银丝团的重叠在显式渲染的粗格计数档 (像素 ≳ 4 µm 时中、小晶体落入) 里被抹成均匀部分透明, 高密度的
-        # 像素方差偏低 (12 µm 像素、净密度 1.5: −25%; 4 µm 像素与闭式解一致)。所以 ≥ 3 µm 的等效像素一律用 closed_form
+        # 像素方差偏低 (12 µm 像素、净密度 1.5: −25%; 4 µm 像素与闭式解一致)。所以 ≥ 2.85 µm (T55j; 原 3 µm) 的等效像素一律用 closed_form
         # (二阶统计与闭式解严格相同), 只在更细的像素上用显式渲染。
-        return "closed_form" if eq >= AUTO_MIN_PX_UM else "explicit"
+        return "closed_form" if eq >= AUTO_MIN_PX_UM_MACRO else "explicit"
     return "closed_form" if (eq >= AUTO_MIN_PX_UM and shape[0] * shape[1] > AUTO_MIN_PIXELS) else "explicit"
 
 
