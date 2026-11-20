@@ -1528,3 +1528,117 @@ T55i 提交；T55j（上面三项）随后开始。
   - 改后 2.9 µm 仍在 T55g 已接受的误差范围内，2.67 µm 已超出；
   - k = 2 从约 20 分钟降到约 2 分钟。
 - **仍留着的问题：** 彩色暗部差距；Portra 一张约 5 分钟；`apply_to_image` 默认单线程。下一步 T55k 处理速度。
+
+## T55k：任意照片上实用的速度、内存与命令行（Claude；结果逐位不变）
+
+### k.0 结论
+
+- **结果逐位不变**：
+  - 8 种情形（Tri-X D-76 grain / full / Rodinal / k = 2 / 25 号滤镜 full / 强制 explicit，Portra 400 grain / full；花 3040 × 2014）在 `workers="auto"` 与 `workers=1` 下，输出的线性浮点数组都与 T55j 提交（274c673）逐位相同（`np.array_equal`）。
+  - 没有用任何近似，float32 也没有引入（closed_form 的噪声场本来就是 float32）。
+- **时间与内存**（花 3040 × 2014 及其 24 MP 放大，4 核，`workers="auto"`；峰值内存含调用者持有的 float64 输入）：
+
+| 变体 | 6 MP：T55j → T55k | 24 MP（6000 × 3975）：T55j → T55k |
+|---|---|---|
+| Tri-X D-76 grain | 128 s / 3.06 GB → 25 s / 1.60 GB（5.1×） | 164 s / 4.70 GB → 43 s / 3.37 GB（3.8×） |
+| Tri-X Rodinal grain | 201 s / 3.06 GB → 39 s / 1.53 GB（5.2×） | 273 s / 4.72 GB → 55 s / 3.31 GB（5.0×） |
+| Tri-X D-76 grain k = 2 | 132 s / 3.09 GB → 26 s / 1.65 GB（5.0×） | 174 s / 4.84 GB → 43 s / 3.39 GB（4.0×） |
+| Portra 400 grain | 336 s / 2.81 GB → 97 s / 3.21 GB（3.5×） | 373 s / 7.70 GB → 131 s / 4.25 GB（2.8×） |
+| Portra 400 full | 328 s / 2.81 GB → 93 s / 3.12 GB（3.5×） | 352 s / 6.77 GB → 115 s / 4.05 GB（3.1×） |
+| Tri-X 强制 explicit（输出 600 px） | 102 s → 28 s | — |
+
+  - "T55j" 是 `git archive 274c673` 的代码，在同一台机器上、同一个脚本里先后单独运行。
+  - Portra 在 6 MP 时内存比 T55j 多 0.4 GB：4 个染料条带同时计算，每个约 0.4 GB。`workers="auto"` 按可用内存的一半封顶。
+- **命令行**：`python -m silvergrain 输入 输出 …`，读 JPEG / PNG / TIFF 与 DNG / RAW（rawpy），写 8 / 16 位（README 2.1 节）。
+- **24 MP ≤ 2 GB 没有达到**：在逐位不变的约束下，输出网格的 float64 数组是下限，原因见 k.4。
+
+### k.1 剖析（T55j 代码，花 3040 × 2014 → 35 mm 原生网格 4163 × 6245 = 2600 万像素，单进程）
+
+| 变体 | 时间 | 时间去哪里 | 峰值内存 / 在哪一步 |
+|---|---|---|---|
+| Tri-X D-76 grain（closed_form） | 117 s | 36 次整幅的 `ndimage.correlate`（每个曝光档一次，84 s，72%）；按档掩码的整幅累加（21 s，18%） | 3.06 GB，渲染：原生网格上十几个整幅 float64 临时数组 |
+| Portra 400 grain（染料云） | 328 s | `_layer_fluct_t46` 的随机数（二项、伽马）与逐档数组运算（189 s，58%）；`develop_probability` 的 gammainc（98 s，30%）；`_packed_counts`（8 s） | 2.8 GB，原生网格的三层曝光、平均密度、颗粒密度各 0.6 GB |
+
+- **Portra 为什么比 Tri-X 慢 3 倍**：
+  - 染料云是逐晶体计数：每像素 3 层 × 3 亚群 × 5 个尺寸档，即 45 次二项 + 45 次伽马抽样，另有 45 次 gammainc。
+  - Tri-X 用 closed_form：每个像素只需要它所在的两个曝光档的一次相关。
+  - 随机数流的顺序决定结果，所以没有逐位不变的算法捷径。逐位不变的办法是：条带本来就各有独立的随机数流（`[seed, 条带号, 7]`），可以并行。
+- 24 MP（花放大到 6000 × 3975）时，峰值移到照片网格上的 finish：Tri-X 5.1 GB、Portra 7.9 GB（含调用者自己持有的 0.58 GB 输入）。
+
+### k.2 改了什么（全部逐位不变）
+
+1. **closed_form 分条**（`render.render_silver_gaussian`）：
+   - 按 256 行分条，每条只对本条出现的曝光档做相关。相关窗取自整幅噪声的对称延拓，与 scipy 的 "reflect" 边界逐位相同。
+   - 多线程（scipy.ndimage 释放 GIL）。
+   - 整幅版本保留为 `_render_silver_gaussian_whole`，测试 `test_closed_form_strips_equal_whole_frame` 逐位比较（D-76、Rodinal、k = 2）。
+2. **染料云条带并行**（`render._render_dye`）：条带独立，多线程，随机数流不变。
+3. **`apply_to_image(workers="auto")`**：
+   - 取 CPU 数与 8 的较小者，再按可用内存的一半封顶；每单元内存实测为染料云 0.45 GB、closed_form 0.12 GB、显式 0.35 GB。
+   - 显式银粒照旧用进程（实测线程因 GIL 没有加速：600 × 600 单进程 3.3 s，4 进程 1.2 s，4 线程 4.2 s）。
+   - 多线程之后 `malloc_trim` 把空闲内存还给系统。
+4. **内存**：
+   - 光谱曝光按 512 行分条；
+   - 照片网格上的曝光在插值到原生网格后立即放掉，原位取对数；
+   - 冲印店影调路径不再重采样曝光（两种模式都不用它）；
+   - 染料云先算平均密度、放掉原生曝光，再由平均密度渲染（`render(density=…, need_exposure=False)`）；
+   - finish_lab 的 grain 模式原位计算 δ、按通道现算照片影调位置、逐通道写输出，Dm 在定光后放掉；
+   - 彩色冲印店软件的编码差原位计算，输入交给 `_software` 后即释放；full 模式逐通道写码值，定光后放掉底片数组；`_mean_fix` 的档号用 int32；
+   - 以上都是同一逐元素运算，只是不另占数组。
+
+### k.3 bit-identity 的证据
+
+- `scratchpad/t55k/w/refout.py` 与 `cmp.py`：T55j 的代码（`git archive 274c673`）与本次代码在同一 8 种情形上输出 `.npy`，逐位比较。`workers="auto"` 与 `workers=1` 都是 8/8 逐位相同。
+- 测试：
+  - `test_workers_bit_identical_all_paths`：closed_form、Rodinal full、显式、Portra grain / full，workers 1 / 3 / auto；
+  - `test_closed_form_strips_equal_whole_frame`；
+  - `test_cli_16bit_and_workers_invariance`。
+- 分条用到的逐元素函数（log10、exp、power、interp、clip）在 numpy 2.5.3 上分块与整块逐位相同（实测 1000 万个元素按 777 个一块）。
+
+### k.4 没有做的
+
+- **24 MP ≤ 2 GB**：输入照片本身就是 float64 的线性数组（24 MP × 3 = 0.58 GB），输出也是。finish 里冲印店软件的色度高斯是整幅 FFT，`_mean_fix` 的分档平均是整幅统计。两者都不能分条而逐位不变，所以照片网格上始终需要 3–4 份整幅数组。
+  - 改成 float32 或分条近似可以降到 2 GB 以下，但输出会变（不再逐位相同），按任务规则没有做。
+- **染料云的随机数本身**：没有逐位不变的加速。gammainc 也不能换成查表（会改变结果）。
+- **显式银粒用线程**：没有加速（GIL），仍用 fork 进程。在已有线程的进程里 fork 有 DeprecationWarning（测试里可见）；silvergrain 自己的线程池都在 fork 前结束。
+
+### k.5 命令行（`silvergrain/__main__.py`；README 2.1 节）
+
+- `python -m silvergrain 输入 输出 --film --developer --grain-scale --format --mode --filter --ev --seed --bits --workers --output-px --timing --raw-p99 --list`。
+- **读**：JPEG / PNG / TIFF 由 `load_image` 按 sRGB 解码。DNG 与相机 RAW 经 rawpy 解成线性 sRGB（相机白平衡，`gamma=(1,1)`，不自动提亮，高光 Blend），再乘常数使亮度第 99 百分位 = 0.85，与 `examples/scenes_fivek.json` 同一转换。
+- **写**：8 位 JPEG / PNG；16 位 PNG / TIFF（imageio 或 tifffile）。
+- 实测：花的 DNG 用 Portra、`--output-px 900`，46 s。原生网格是输出的 4 倍细（扫描仪上限），所以小输出也不是瞬间完成。
+- 测试 `silvergrain/tests/test_sg_cli.py`：
+  - PNG 往返与 API 逐位相同；
+  - 16 位 TIFF，`--workers 1` 与 `3` 逐位相同；
+  - `--list` 与缺文件；
+  - RAW 读入用 rawpy 替身检验缩放（不需要第三方文件）。
+
+### k.6 文件
+
+- **改**：
+  - `silvergrain/render.py`：分条 closed_form、染料条带并行、`need_exposure`、`_trim`、`STRIP_ROWS`；
+  - `silvergrain/image.py`：`workers="auto"`、`auto_workers`、内存（k.2）、`EXPOSE_ROWS`、`_LazyU`、`_software_consume`；
+  - `silvergrain/tests/test_sg_image.py`：新增 2 项；
+  - `silvergrain/README.md`：2.1 命令行、第 7 节性能。
+- **新**：`silvergrain/__main__.py`、`silvergrain/tests/test_sg_cli.py`。
+- scratchpad：`t55k/w/`（prof.py、memprof.py、refout.py、cmp.py、bench.sh、bench.jsonl）；`t55k/ref/`（274c673 的代码副本）；`t55k/out_*`（8 种情形的输出）。
+
+### k.7 测试与检验
+
+- `pytest -m "not slow" tests silvergrain/tests`：633 项通过，1 项失败（已知的 `test_t53_closed_form_identical`，numpy 版本，差 1.4e-17）。filmlab 未改，`tests/test_t55_silvergrain.py` 的逐位检验通过。
+- `python -m silvergrain.validation`（全部 14 项，结果写到 scratchpad，没有覆盖仓库里的 report.json）与仓库的 `results/report.json` 比较：
+  - 不同的只有时间字段：每项的 `_seconds`，以及 `fastpath.rows[*].seconds.{explicit, closed_form}`；
+  - 另有 `t50.quick` 的 13 个 ak 拟合值差 1e-9（相对），例如 `d76.d400.ak_pred` 5.909630517879 → 5.909630524397。T55j 的代码（274c673）在本机重算给出同一个新值，所以这是仓库里那份 t50 记录生成时的环境差异，与 T55k 无关（同 t53 的 1.4e-17）。
+- 仓库的 `report.json` 没有改动。
+
+## 负责人结论（T55k）
+
+接受。
+
+- **结果不变。** 八种情况都与 274c673 逐位一致（`np.array_equal`，`workers="auto"` 与 `1` 都比过），没有引入近似。
+- **速度：** 6 MP 的 Tri-X 从 128 s 到 25 s，Portra 从 336 s 到 97 s；24 MP 的 Tri-X 43 s、Portra 131 s。
+- **我自己验证过：**
+  - 命令行 `python -m silvergrain` 对花坛那张跑 Tri-X 只加颗粒，用时 26.6 s，与报告一致；
+  - CLI 的 4 个测试通过。
+- **24 MP ≤ 2 GB 没达到（Tri-X 3.4 GB、Portra 4.3 GB）。** 剩下的占用来自整幅的色度模糊与 `_mean_fix` 分档，这两步要压内存就得引入近似，结果不再逐位一致。目前不做，记为已知限制。
+- **Portra 慢在逐晶体随机抽样。** 抽样顺序决定结果，所以只能并行，不能换算法。

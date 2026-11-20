@@ -329,7 +329,7 @@ def resample2(a, shape_out):
     return out.reshape((H, W) + a.shape[2:])
 
 
-def _to_output_grid(rr, shape_native, shape_out, layers):
+def _to_output_grid(rr, shape_native, shape_out, layers, exposure=True):
     """原生网格上的底片 (RenderResult) → 输出网格: 冲印店软件在处理后的 (对数 / 码值) 图像上缩放, 这里在密度域做
     (冲印店影调在小信号上对密度近乎线性; 与 T55e 的拟合同一口径)。平均密度、曝光 (取对数) 同样重采样。"""
     from .render import RenderResult
@@ -338,10 +338,13 @@ def _to_output_grid(rr, shape_native, shape_out, layers):
     rr.density = None                                    # 原生数组用完即放 (24 MP 彩色的峰值内存)
     Dm = resample2(np.asarray(rr.mean, float).reshape(shp), shape_out)
     rr.mean = None
+    sq = (lambda a: a[..., 0]) if layers == 1 else (lambda a: a)
+    if not exposure:                                     # T55k: 冲印店影调的两种模式都不用曝光, 不重采样 (省一份原生数组)
+        rr.exposure = None
+        return RenderResult(sq(D), sq(Dm), None, rr.px_um, rr.method, rr.base_density)
     lH = np.log(np.clip(np.asarray(rr.exposure, float).reshape(shp), 1e-30, None))
     rr.exposure = None
     lH = resample2(lH, shape_out)
-    sq = (lambda a: a[..., 0]) if layers == 1 else (lambda a: a)
     return RenderResult(sq(D), sq(Dm), sq(np.exp(lH, out=lH)), rr.px_um, rr.method, rr.base_density)
 
 
@@ -398,6 +401,12 @@ def _box(a, k):
     return uniform_filter(a, k, mode="reflect") if k > 1.2 else a
 
 
+def _software_consume(box, sc, mono, ccd_axis=0):
+    """T55k: 同 _software, 但输入放在列表里交出 (调用者不再持有), 用完即放。"""
+    enc = box.pop()
+    return _software(enc, sc, mono, ccd_axis)
+
+
 def _software(enc, sc, mono, ccd_axis=0):
     """冲印店软件 (编码后的输出上; BT.601 亮度 / 色度): 亮度锐化 (USM 或 T55e 的可分离 3 抽头), 色度降噪 (彩色)。"""
     if mono or enc.ndim == 2:
@@ -405,6 +414,7 @@ def _software(enc, sc, mono, ccd_axis=0):
         Y = _usm(Y, sc, ccd_axis)
         return Y if enc.ndim == 2 else np.repeat(Y[..., None], 3, -1)
     ycc = enc @ _YCC.T
+    del enc                                                   # T55k: 调用者传入的临时数组在这里即可释放
     ycc[..., 0] = _usm(ycc[..., 0], sc, ccd_axis)
     if sc.chroma_sigma_px >= 0.05:
         for k in (1, 2):
@@ -457,7 +467,13 @@ def expose(image, film="kodak_trix_400", developer=None, grain_scale=1.0, format
     f = _film(film)
     em = derive(f, developer, grain_scale)
     resp, rinfo = layer_response(f, filter, filter_compensate)
-    E = resp(rgb)                                         # (h, w, k) 相对曝光 (中灰 0.18)
+    E = None                                              # (h, w, k) 相对曝光 (中灰 0.18); T55k: 按行条计算 (逐像素, 结果相同)
+    for r0 in range(0, h, EXPOSE_ROWS):
+        e = resp(rgb[r0:r0 + EXPOSE_ROWS])
+        if E is None:
+            E = np.empty((h, w) + e.shape[2:])
+        E[r0:r0 + EXPOSE_ROWS] = e
+        del e
     if metering == "average":
         key = float(np.exp(np.mean(np.log(np.clip(E.mean(-1), 1e-4, None)))))
     elif metering == "fixed":
@@ -466,7 +482,11 @@ def expose(image, film="kodak_trix_400", developer=None, grain_scale=1.0, format
         raise ValueError("metering: 'fixed' / 'average'")
     H_grey = 10.0 / f.ei                                  # 18% 灰的曝光 (lux·s)
     scale = H_grey / key * 2.0 ** float(exposure_ev)
-    H = (E[..., 0] if f.is_bw else E) * scale
+    if f.is_bw:
+        H = E[..., 0] * scale
+    else:                                                 # T55k: 原位 (同一逐元素乘法)
+        H = E; H *= scale
+    del E
     info = dict(film=f.key, film_name=f.name, developer=em.developer.key, grain_scale=em.grain_scale, format=format,
                 px_um=px_um, shape=(h, w), exposure_ev=exposure_ev, metering=metering, metering_key=key, H_grey_lux_s=H_grey,
                 filter=rinfo, emulsion=em.describe(), mono_input=mono_in, input=meta)
@@ -600,11 +620,23 @@ def film_grain_exposure(ex, lab="rpl_noritsu"):
     return exposure_from_density(em, De), De
 
 
+class _LazyU:
+    """T55k: 彩色 grain 模式每通道的照片影调位置 u_p, 按通道现算 (aux["u"][..., c] 的同一结果)。"""
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __getitem__(self, key):
+        return self.fn(key[-1])
+
+
 def _mean_fix(y1, b, delta, g):
     """二阶 (影调曲率 / 指数映射) 的平均偏移按同一底片密度的系综扣除: 在 b (u, 或反转片的密度) 的每档 (0.02) 内,
     期望 E[y1 | b] 改成 g(b + E[δ | b]) —— 只剩物理的 −log⟨T⟩ (E[δ] > 0) 经影调的传递。与 _exp_bias 同一分档合并规则。"""
     k = np.floor(b / MEAN_FIX_BIN).astype(np.int64)
     idx = (k - k.min()).ravel()
+    del k
+    if idx.max() < 2 ** 31:                                   # T55k: 档号用 int32 (同一数值, 省内存)
+        idx = idx.astype(np.int32)
     n = int(idx.max()) + 1
     N = np.bincount(idx, minlength=n).astype(float)
     grp = np.zeros(n, np.int64); gi, acc = 0, 0.0
@@ -615,7 +647,8 @@ def _mean_fix(y1, b, delta, g):
             gi, acc = gi + 1, 0.0
     if acc > 0 and gi > 0:
         grp[nz[grp[nz] == gi]] = gi - 1
-    gidx = grp[idx]
+    gidx = grp.astype(idx.dtype)[idx]
+    del idx
     ng = int(gidx.max()) + 1
     GN = np.bincount(gidx, minlength=ng).astype(float)
     Ed = np.bincount(gidx, weights=delta.ravel(), minlength=ng) / GN
@@ -683,24 +716,36 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
         else:
             T = tone(lab, "bw" if f.is_bw else "colour")
             m = lab_anchor(ex, Dm, timing)
-            code = np.stack([T[c].code_of(D[..., c] - m[c]) for c in range(layers)], -1)
-            out = dec(code)
+            code = np.empty(D.shape)                            # T55k: 逐通道写入 (= np.stack, 同一数值)
+            for c in range(layers):
+                code[..., c] = T[c].code_of(D[..., c] - m[c])
+            if release:
+                D = Dm = None; rr.density = rr.mean = rr.exposure = None; ex.rgb = None
+            out = dec(code); del code
             info["scan"] = dict(kind="lab_tone", timing=timing, D_anchor=np.asarray(m).tolist())
         res = np.repeat(out, 3, -1) if layers == 1 else out
+        del out
         if sc is not None:
-            res = srgb_decode(_software(srgb_encode(res), sc, mono=f.is_bw, ccd_axis=ccd))
+            box = [srgb_encode(res)]; del res
+            res = srgb_decode(_software_consume(box, sc, mono=f.is_bw, ccd_axis=ccd))
         if ex.mono_input and layers == 1:
             res = res[..., 0]
         return res, info
     if mode != "grain":
         raise ValueError("mode: 'grain' / 'full'")
     # grain 模式作用在照片显示出来的样子上: 线性值 > 1 (HDR 输入) 显示为白, 按 1 处理 (否则中性限制会把 HDR 高光压暗、改变影调)
-    rgb = np.clip(rgb, 0.0, 1.0)
-    delta = D - Dm
+    if release:                                                          # T55k: ex.rgb 是 load_image 自己的副本, 原位截断 (同一结果)
+        rgb = np.clip(rgb, 0.0, 1.0, out=rgb)
+    else:
+        rgb = np.clip(rgb, 0.0, 1.0)
     if release:                                                          # 调用者不保留渲染结果: 逐像素密度用完即放
+        delta = D                                                        # T55k: 原位 (D − Dm, 同一逐元素运算), 不另占一份
+        delta -= Dm
         D = None
         rr.density = None
         rr.exposure = None
+    else:
+        delta = D - Dm
     if lab_px is not None:
         delta = np.stack([_box(_gauss(delta[..., c], sc.optics_px), lab_px) for c in range(layers)], -1)
     film_density = aux is None                                           # T55d: 底片密度来自该片自己的光谱曝光 (expose)
@@ -713,15 +758,17 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
             if f.is_bw:
                 code = 255.0 * srgb_encode(rgb @ LUMA_709)
                 up = T[0].u_of(code)[..., None]
-            else:
-                code = 255.0 * srgb_encode(rgb)
-                up = np.stack([T[c].u_of(code[..., c]) for c in range(3)], -1)
-            del code
+                del code
+            else:                                                        # T55k: 每通道用到时再算 (同一逐元素运算), 不存三层
+                up = _LazyU(lambda c, T=T, rgb=rgb: T[c].u_of(255.0 * srgb_encode(rgb[..., c])))
         elif print_position == "film":                                    # T55d: 该片自己印出的位置 (只为对照)
             up = Dm - m[None, None, :]
         else:
             raise ValueError("print_position: 'photo' / 'film'")
         aux = dict(kind="film", tones=T, u=up, base=None, anchor=np.asarray(m).tolist())
+        if release and print_position == "photo":                        # T55k: Dm 只用于定光锚点, 之后不再需要
+            Dm = None
+            rr.mean = None
         info["grain_density"] = "film"; info["print_position"] = print_position
         info["anchor_D"] = aux["anchor"]; info["timing"] = timing
     elif not reversal:
@@ -737,14 +784,23 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
         info["mean_rel_shift"] = [float(np.mean(o[..., c]) / max(np.mean(rgb[..., c]), EPS) - 1) for c in range(3)]
     else:
         T = aux["tones"]
-        fac = np.empty((h, w, layers))
+        fac = np.empty((h, w, layers)) if layers == 1 else None
+        o = None if layers == 1 else np.empty_like(rgb)
+        mean_fac = []
         for c in range(layers):
             u = aux["u"][..., c]
             g = lambda x, c=c: dec(T[c].code_of(x))
             y1 = _mean_fix(g(u + delta[..., c]), u, delta[..., c], g)
             y0 = g(u)
-            fac[..., c] = np.where(y0 > EPS, y1 / np.maximum(y0, EPS), 1.0)
+            fc = np.where(y0 > EPS, y1 / np.maximum(y0, EPS), 1.0)
+            del y1, y0
             info.setdefault("slope_code_per_D", []).append(float(np.median(T[c].slope(u))))
+            mean_fac.append(float(np.mean(fc)))
+            if layers == 1:
+                fac[..., c] = fc
+            else:                                                        # 彩色: 每层颗粒进对应通道 (= rgb * fac, 逐通道)
+                o[..., c] = rgb[..., c] * fc
+            del fc, u
         if layers == 1:
             # 黑白银粒 = 中性密度调制: 亮度 Y' = Y·k (k 对三通道相同, 色相不变)。亮的颗粒 = 该处底片密度低于平均
             # (显影晶体少于平均), 在正像上比平均亮; Y' 本身不超过冲印店影调的白 (≤ 1)。某个通道会超过正像的白 (1.0) 时,
@@ -757,7 +813,10 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
                 e0 = srgb_encode(Yl)
                 Yp = np.clip(srgb_decode(np.clip(e0 + _software(srgb_encode(Yp) - e0, sc, mono=True, ccd_axis=ccd), 0.0, 1.0)), 0.0, 1.0)
                 k = np.where(Yl > EPS, Yp / np.maximum(Yl, EPS), 1.0)
-            o = rgb * k[..., None]
+            if release:                                                  # T55k: 原位 (rgb 之后不再用)
+                o = rgb; o *= k[..., None]; rgb = None; ex.rgb = None
+            else:
+                o = rgb * k[..., None]
             mx = o.max(-1)
             over = mx > 1.0
             if over.any():
@@ -768,20 +827,60 @@ def finish_lab(ex, rr, aux=None, mode="grain", lab="rpl_noritsu", timing="auto",
                 yv = dec(T[0].code_of(aux["u"][..., 0] + delta[..., 0]))
                 o[dark] = np.minimum(yv[dark], 1.0)[:, None]
             info["desaturated_fraction"] = float(np.mean(over))
-        else:
-            o = rgb * fac                                                # 彩色: 每层颗粒进对应通道, 码值不超出冲印店影调的 0–255
-        info["mean_rel_shift"] = [float(np.mean(fac[..., c]) - 1.0) for c in range(layers)]
+        info["mean_rel_shift"] = [x - 1.0 for x in mean_fac]
         del fac
     if sc is not None and not f.is_bw:                                   # 彩色: 冲印店软件作用于编码后的差 (亮度 USM / 色度降噪)
+        del delta
         ev = srgb_encode(rgb)
-        o = srgb_decode(np.clip(ev + _software(srgb_encode(o) - ev, sc, mono=False, ccd_axis=ccd), 0.0, 1.0))
+        if release:
+            rgb = None; ex.rgb = None
+        d = srgb_encode(o); del o
+        d -= ev                                                          # T55k: 原位 (同一逐元素运算)
+        box = [d]; del d
+        d = _software_consume(box, sc, mono=False, ccd_axis=ccd)
+        d += ev; del ev
+        np.clip(d, 0.0, 1.0, out=d)
+        o = srgb_decode(d); del d
     res = o[..., 0] if (ex.mono_input and layers == 1) else o
     return res, info
 
 
+EXPOSE_ROWS = 512              # T55k: 光谱曝光的行条 (只影响内存)
+# T55k: 每个并行单元的峰值内存 (字节; 26 MP 原生网格实测, 见 docs T55k) —— "auto" 按可用内存的一半封顶
+WORKER_BYTES = {"dye": 0.45e9, "closed_form": 0.12e9, "explicit": 0.35e9}
+MAX_WORKERS = 8
+
+
+def _mem_available():
+    try:
+        for line in open("/proc/meminfo"):
+            if line.startswith("MemAvailable:"):
+                return float(line.split()[1]) * 1024.0
+    except OSError:
+        pass
+    return 4e9
+
+
+def _worker_kind(em, shape, px_um, method):
+    from .render import choose_method
+    return "dye" if em.path == "dye" else choose_method(em, shape, px_um, method)
+
+
+def auto_workers(kind, workers="auto"):
+    """并行数: 整数照用; "auto" = min(CPU 数, MAX_WORKERS, 可用内存的一半 / 每单元内存), 至少 1。结果与并行数无关。"""
+    import os
+    if workers != "auto":
+        return max(1, int(workers))
+    try:
+        cpu = len(os.sched_getaffinity(0))
+    except AttributeError:
+        cpu = os.cpu_count() or 1
+    return max(1, min(cpu, MAX_WORKERS, int(0.5 * _mem_available() // WORKER_BYTES[kind])))
+
+
 def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0, format="35mm", output_px=None,
                    mode="grain", exposure_ev=0.0, metering="fixed", filter=None, filter_compensate=True, scanner="auto",
-                   lab="rpl_noritsu", timing="auto", grain_density="film", seed=0, method="auto", encoding="auto", workers=1,
+                   lab="rpl_noritsu", timing="auto", grain_density="film", seed=0, method="auto", encoding="auto", workers="auto",
                    keep_render=False, film_gauge=None):
     """给照片加银盐颗粒。返回 GrainImage (linear, info)。参数:
     image: 路径或数组 (整数 = sRGB 编码; 浮点 = 线性, encoding="srgb" 时先解码)。
@@ -800,7 +899,8 @@ def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0
     scanner: "auto" (默认: 与 lab 同一家冲印店 —— rpl_noritsu → "noritsu_rpl" 的空间传递; lab=None 时不加) / None (不加) /
              "noritsu_rpl" / "frontier_epfl" (T51 实测的冲印店空间传递: 光学、孔径、USM、色度降噪)。
     method: 黑白颗粒的渲染法 "auto" / "explicit" / "closed_form" (见 render)。
-    film_gauge: 片带 "135" / "120" (None = 由画幅推断; 线阵扫描仪的原生采样间距按片带, 见 scan_grid)。"""
+    film_gauge: 片带 "135" / "120" (None = 由画幅推断; 线阵扫描仪的原生采样间距按片带, 见 scan_grid)。
+    workers: 并行数 (T55k): "auto" (默认: CPU 数, 按可用内存封顶) 或整数。结果与 workers 无关 (逐位相同)。"""
     t0 = time.time()
     if scanner == "auto":                                        # 一家完整的冲印店: 影调与空间传递来自同一家
         scanner = LAB_SCANNER.get(lab)
@@ -819,17 +919,32 @@ def apply_to_image(image, film="kodak_trix_400", developer=None, grain_scale=1.0
     if grid is not None:                                         # T55e: 线阵 CCD 在原生间距上采样 (像素孔径 = 原生像素)
         ex.info["scan_grid"] = grid
         shp = tuple(grid["shape_native"])
-        Hn = resample2(np.log(np.clip(H, 1e-30, None)), shp) if shp != ex.rgb.shape[:2] else np.log(np.clip(H, 1e-30, None))
+        if H is ex.H:                                            # T55k: 照片网格上的曝光之后不再用 (finish 只用 ex.rgb 与 ex.info): 原位取对数
+            lHp = np.clip(H, 1e-30, None, out=H); np.log(lHp, out=lHp)
+        else:
+            lHp = np.log(np.clip(H, 1e-30, None))
+        H = None; ex.H = None
+        Hn = resample2(lHp, shp) if shp != ex.rgb.shape[:2] else lHp
+        del lHp
         Hn = np.exp(Hn, out=Hn)
-        rr = render(ex.emulsion, exposure=Hn, px_um=grid["px_native"], seed=seed, method=method, workers=workers)
-        del Hn
+        nw = auto_workers(_worker_kind(ex.emulsion, shp, grid["px_native"], method), workers)
+        if ex.emulsion.path == "dye" and lab is not None and not keep_render:
+            # T55k: 染料云的颗粒只由平均密度决定; 先算平均密度、放掉原生曝光, 再渲染 (逐位相同, 省一份原生数组)
+            Dmean = ex.emulsion.mean_density(Hn)
+            del Hn
+            rr = render(ex.emulsion, density=Dmean, px_um=grid["px_native"], seed=seed, method=method, workers=nw, need_exposure=False)
+            del Dmean
+        else:
+            rr = render(ex.emulsion, exposure=Hn, px_um=grid["px_native"], seed=seed, method=method, workers=nw)
+            del Hn
         layers = 1 if ex.emulsion.film.is_bw else 3
         rr_native_method = rr.method
         if shp != ex.rgb.shape[:2]:
-            rr = _to_output_grid(rr, shp, ex.rgb.shape[:2], layers)
+            rr = _to_output_grid(rr, shp, ex.rgb.shape[:2], layers, exposure=keep_render or lab is None)
         rr.method = rr_native_method
     else:
-        rr = render(ex.emulsion, exposure=H, px_um=ex.px_um, seed=seed, method=method, workers=workers)
+        nw = auto_workers(_worker_kind(ex.emulsion, ex.rgb.shape[:2], ex.px_um, method), workers)
+        rr = render(ex.emulsion, exposure=H, px_um=ex.px_um, seed=seed, method=method, workers=nw)
     t2 = time.time()
     if lab is None:
         res, info2 = finish(ex, rr, mode, scanner)

@@ -37,9 +37,45 @@ silvergrain 从第一性原理生成胶片的银盐颗粒：卤化银晶体 → 
 
 ```bash
 pip install -e silvergrain[image,test]     # 或直接把仓库根目录放进 PYTHONPATH (扁平布局: 本目录就是包)
-python -m pytest silvergrain/tests -m "not slow"     # 27 项, 约 1 分钟 (另有 1 项 slow: T46 全网格留一)
+python -m pytest silvergrain/tests -m "not slow"     # 约 1 分钟 (另有 1 项 slow: T46 全网格留一)
 python -m silvergrain.validation                     # 独立检验, 结果写入 silvergrain/validation/results/report.json
 python -m silvergrain.examples.apply_grain synthetic out.jpg --film kodak_trix_400 --developer rodinal --phone out_phone.jpg
+```
+
+### 2.1 给自己的照片加颗粒（命令行，T55k）
+
+```bash
+python -m silvergrain 照片.jpg 照片_trix.jpg                                    # 默认: Tri-X 400 / D-76, 只加颗粒
+python -m silvergrain 照片.jpg 照片_rodinal.jpg --film kodak_trix_400 --developer rodinal
+python -m silvergrain 照片.jpg 照片_portra.jpg --film kodak_portra_400            # 彩色负片的颗粒
+python -m silvergrain 照片.jpg 照片_portra_full.jpg --film kodak_portra_400 --mode full   # 整卷胶片: 该片的影调与颜色
+python -m silvergrain IMG_0001.dng 黑白.tif --film kodak_trix_400 --mode full --filter 25 --bits 16
+python -m silvergrain --list                                                    # 可用的胶片、显影液、画幅
+```
+
+- **输入**：JPEG / PNG / TIFF（8 / 16 位，按 sRGB 解码）。DNG 与相机 RAW（.dng .cr2 .cr3 .nef .arw .raf …）需要 `pip install rawpy`。
+  - RAW 解成线性 sRGB（相机白平衡，不自动提亮），再乘一个常数，使亮度的第 99 百分位 = 0.85（`--raw-p99`）。这相当于相机的曝光提升，不改影调。
+- **输出**：`.jpg` / `.png` 为 8 位；`--bits 16` 输出 `.png` / `.tif`（需要 imageio 或 tifffile）。尺寸与输入相同（`--output-px` 可缩小）。
+- **常用参数**：
+  - `--film`、`--developer`（黑白片；默认 D-76）；
+  - `--grain-scale` 颗粒粗细 k（0.5–3）；
+  - `--format` 画幅（默认 35mm；"645"、"6x7" 或长边毫米数，画幅越大颗粒越细）；
+  - `--mode grain|full`；
+  - `--filter` Wratten 滤镜号（只影响底片曝光，黑白常用 8 / 15 / 25）；
+  - `--ev` 曝光补偿；
+  - `--seed` 随机种子（同一种子结果完全相同）；
+  - `--timing` full 模式的冲印店定光（默认 auto：校正曝光、保持颜色）。
+- **怎么选**：
+  - `grain`（默认）保留照片本身的影调与颜色，只加这卷胶片、这家冲印店扫描出来会有的颗粒；
+  - `full` 把照片当作景物，重新拍在这卷胶片上并由冲印店印出（黑白片得到黑白照片，Portra 有自己的影调与颜色）。
+  - 想要颗粒更明显：用更小的画幅（`--format half`）、Rodinal、或 `--grain-scale 1.5–2`。不要指望在手机尺寸看到 35 mm 的颗粒：缩小会平均掉颗粒。
+- **速度与内存**（4 核；`--workers` 默认按 CPU 数与可用内存自动选，结果与并行数无关）：见第 7 节。
+- 同样的事在 Python 里：
+
+```python
+import silvergrain as sg
+r = sg.apply_to_image("照片.jpg", "kodak_portra_400", mode="grain", seed=1)   # 也可以传线性浮点数组
+r.save("照片_portra.jpg")                                                      # 或 r.linear (线性 sRGB 浮点)
 ```
 
 ## 3. API
@@ -217,21 +253,22 @@ out.linear, out.encoded, out.info, out.save("x.jpg")
   - 真实的尾巴更重：暗部偏度 +0.43、超额峰度 +0.67、|z| > 3 为 0.57%；模型为 +0.15–0.26、≈ 0、0.28–0.37%。
   - 没有模型在暗部出现黑点：z < −3 的比例 ≤ 0.05%，与真实相同。
 
-## 7. 性能（24 MP：6064 × 4040，35 mm，5.9 µm/像素；单进程，4 核机器）
+## 7. 性能（T55k：4 核机器，`workers="auto"`；结果与并行数无关，与单进程逐位相同）
 
-| 胶片 / 显影液 | 模式 | 渲染法 | 时间 | 峰值内存 |
+花（FiveK a3759）3040 × 2014，35 mm，扫描仪原生网格 2600 万像素；以及同一张放大到 6000 × 3975（24 MP）。峰值内存含调用者自己持有的 float64 输入（24 MP 时 0.58 GB）：
+
+| 胶片 / 显影液 | 模式 | 渲染法 | 6 MP：T55j → T55k | 24 MP：T55j → T55k |
 |---|---|---|---|---|
-| Tri-X / D-76，k = 1 | grain | closed_form | 117 s（T55e 原生网格；T55d 106 s） | 4.7 GB（3.7） |
-| Tri-X / D-76，k = 1 | full | closed_form | 96 s | 3.5 GB |
-| Tri-X / Rodinal，k = 1 | grain | closed_form（含成团协方差） | 168 s | 3.7 GB |
-| Tri-X / D-76，k = 2 | grain | closed_form（T55j：px/k = 2.9 µm ≥ 2.85） | 102–153 s（6–13 MP 照片，原生网格 2600 万像素；T55i 走 explicit 时 1061–1282 s） | 3.1–3.5 GB |
-| Tri-X / D-76，k = 1，强制 explicit | — | explicit | 84 s / 百万像素 → 24 MP 约 34 分钟 | 0.4 GB / 百万像素块 |
-| Tri-X / Rodinal，k = 1，强制 explicit | — | explicit | 131 s / 百万像素 → 24 MP 约 53 分钟 | |
-| Portra 400 / C-41 | grain | 染料云（计数级） | 335 s（T55d 309 s） | 7.2 GB（5.7） |
-| Portra 400 / C-41 | full | 染料云 | 322 s（T55d 308 s） | 6.2 GB（4.1） |
+| Tri-X / D-76，k = 1 | grain | closed_form | 128 s / 3.1 GB → **25 s / 1.6 GB** | 164 s / 4.7 GB → **43 s / 3.4 GB** |
+| Tri-X / Rodinal，k = 1 | grain | closed_form（含成团协方差） | 201 s / 3.1 GB → **39 s / 1.5 GB** | 273 s / 4.7 GB → **55 s / 3.3 GB** |
+| Tri-X / D-76，k = 2 | grain | closed_form | 132 s / 3.1 GB → **26 s / 1.7 GB** | 174 s / 4.8 GB → **43 s / 3.4 GB** |
+| Portra 400 / C-41 | grain | 染料云（计数级） | 336 s / 2.8 GB → **97 s / 3.2 GB** | 373 s / 7.7 GB → **131 s / 4.3 GB** |
+| Portra 400 / C-41 | full | 染料云 | 328 s / 2.8 GB → **93 s / 3.1 GB** | 352 s / 6.8 GB → **115 s / 4.1 GB** |
+| Tri-X / D-76，强制 explicit | — | 显式银粒（多进程） | 输出 600 px（原生 2400 × 1590）：102 s → **28 s** | 单进程约 84 s / 百万像素，4 进程约快 2.7–3.6 倍 |
 
-- 24 MP 用 `auto` 时，黑白在 2–3 分钟内完成（closed_form），彩色约 5.5 分钟。T55e 起底片渲染在扫描仪的原生网格上（上限 2600 万像素），其余行是 T55 的数。显式银粒要 0.5–1 小时，所以只在小图、细像素或 k 大时用。
-- 测量用 `scratchpad/t55/work/perf24.py`、`perf_explicit.py`。
+- 原生网格的上限是 2600 万像素，所以 6 MP 与 24 MP 的渲染量相同。24 MP 多出的时间与内存都在照片网格上的曝光与冲印店步骤。
+- Portra 在 6 MP 时内存比单进程多约 0.4 GB：4 个条带同时在算，每个约 0.4 GB。`workers="auto"` 按可用内存的一半封顶，内存少的机器会自动减少并行数。
+- 测量：`scratchpad/t55k/w/memprof.py`、`bench.sh`；逐位比较：`refout.py`、`cmp.py`（docs/tasks/T55 的 T55k 节）。
 
 ## 8. 局限
 

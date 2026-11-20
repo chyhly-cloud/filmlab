@@ -280,3 +280,31 @@ def test_k2_35mm_routes_to_closed_form():
     assert choose_method(em, (4000, 6000), 5.8) == "closed_form"
     assert choose_method(em, (4000, 6000), 5.34) == "explicit"
     assert choose_method(sg.derive("kodak_trix_400", "d76", 1.0), (4000, 6000), 2.9) == "closed_form"
+
+
+# ------------------------------------------------------------------ T55k: 并行与内存 (结果逐位不变) --
+def test_workers_bit_identical_all_paths():
+    """closed_form (分条多线程)、显式银粒 (多进程)、染料云 (分带多线程), grain 与 full: workers 1 / 3 / "auto" 逐位相同。"""
+    img = np.zeros((96, 160, 3)); img[:, :60] = (0.45, 0.08, 0.06); img[:, 60:110] = (0.07, 0.10, 0.40); img[:, 110:] = 0.18
+    cases = [dict(film="kodak_trix_400", developer="d76", format=160 * 6 / 1000),
+             dict(film="kodak_trix_400", developer="rodinal", format=160 * 6 / 1000, mode="full"),
+             dict(film="kodak_trix_400", developer="d76", format=160 * 2 / 1000, method="explicit"),
+             dict(film="kodak_portra_400", format=160 * 6 / 1000),
+             dict(film="kodak_portra_400", format=160 * 6 / 1000, mode="full")]
+    for kw in cases:
+        a = sg.apply_to_image(img, seed=4, workers=1, **kw).linear
+        for wk in (3, "auto"):
+            assert np.array_equal(a, sg.apply_to_image(img, seed=4, workers=wk, **kw).linear), (kw, wk)
+
+
+def test_closed_form_strips_equal_whole_frame():
+    """T55k 的分条 closed_form 与 T55j 的整幅一次计算逐位相同 (含 Rodinal 的成团协方差、k = 2)。"""
+    import sys
+    R = sys.modules["silvergrain.render"]
+    rng = np.random.default_rng(3)
+    H = 10.0 / 400 * 2.0 ** rng.uniform(-4, 3, (300, 230))
+    for dev, k in (("d76", 1.0), ("rodinal", 1.0), ("d76", 2.0)):
+        sp = sg.derive("kodak_trix_400", dev, k).spec
+        a = R._render_silver_gaussian_whole(sp, H, 5.8, 7)
+        assert np.array_equal(a, R.render_silver_gaussian(sp, H, 5.8, 7))
+        assert np.array_equal(a, R.render_silver_gaussian(sp, H, 5.8, 7, workers=3))

@@ -37,6 +37,7 @@ AUTO_MIN_PX_UM_MACRO = 2.85      # T55j: 宏观 Callier (产品) 的阈值。clo
                                  # 所以阈值本来就相对颗粒大小 (px/k)。2.85 使 35 mm 原生网格 (5.8 µm, 2600 万像素上限) 的 k = 2 走闭式解。
 AUTO_MIN_PIXELS = 2_000_000
 DYE_BAND_ROWS = 256
+STRIP_ROWS = 256                # T55k: closed_form 的分条行数 (只影响内存与并行, 结果逐位不变)
 
 
 @dataclass
@@ -142,17 +143,78 @@ def _level(spec, logH, px_um, psf_um):
 
 
 def gaussian_levels(spec, H, px_um, psf_um=0.0):
-    lh = np.log10(np.clip(H, 1e-12, None))
-    lo = np.floor(np.nanmin(lh) / GAUSS_DLOGH) * GAUSS_DLOGH
-    hi = np.ceil(np.nanmax(lh) / GAUSS_DLOGH) * GAUSS_DLOGH
+    lo, hi = _log_range(H)
+    lo = np.floor(lo / GAUSS_DLOGH) * GAUSS_DLOGH
+    hi = np.ceil(hi / GAUSS_DLOGH) * GAUSS_DLOGH
     lv = np.round(np.arange(lo, hi + GAUSS_DLOGH / 2, GAUSS_DLOGH), 6)
     if len(lv) < 2:
         lv = np.array([lo, lo + GAUSS_DLOGH])
     return lv, [_level(spec, float(v), float(px_um), float(psf_um)) for v in lv]
 
 
-def render_silver_gaussian(spec, H, px_um, seed, psf_um=0.0):
-    """显式银粒的二阶统计等价场 (对数正态; 见模块说明)。返回每像素银层透射率 (与 silver.render_silver 同义)。"""
+def _log_range(H, rows=STRIP_ROWS):
+    """nanmin / nanmax of log10(clip(H, 1e-12)), 按行条计算 (逐元素相同, 不建整幅的对数数组)。"""
+    H = np.asarray(H)
+    lo, hi = np.inf, -np.inf
+    for r0 in range(0, H.shape[0], rows):
+        lh = np.log10(np.clip(H[r0:r0 + rows], 1e-12, None))
+        lo = min(lo, float(np.nanmin(lh))); hi = max(hi, float(np.nanmax(lh)))
+    return lo, hi
+
+
+def render_silver_gaussian(spec, H, px_um, seed, psf_um=0.0, workers=1):
+    """显式银粒的二阶统计等价场 (对数正态; 见模块说明)。返回每像素银层透射率 (与 silver.render_silver 同义)。
+    T55k: 按 STRIP_ROWS 行分条计算 (每条只对本条出现的曝光档做相关, 相关窗取自整幅噪声的对称延拓 = scipy 的 "reflect"),
+    workers > 1 时多线程; 与整幅一次计算的 T55j 版本 (_render_silver_gaussian_whole) 逐位相同。"""
+    from concurrent.futures import ThreadPoolExecutor
+    H = np.asarray(H, float)
+    lv, L = gaussian_levels(spec, H, px_um, psf_um)
+    rng = np.random.default_rng([int(seed) & 0xFFFFFFFF, 55])
+    noise = rng.standard_normal(H.shape).astype(np.float32)
+    kers = [x[2].astype(np.float32) for x in L]
+    r = max(k.shape[0] // 2 for k in kers)
+    noise = np.pad(noise, r, mode="symmetric")                       # = scipy.ndimage 的 "reflect" 边界
+    rho = np.array([float((_pad_to(L[j][2], L[j + 1][2]) * _pad_to(L[j + 1][2], L[j][2])).sum()) for j in range(len(lv) - 1)])
+    s_lv = np.array([x[1] for x in L])
+    lt, Dt = silver_curve_table(spec)
+    scale = silver.density_scale(spec)
+    out = np.empty(H.shape)
+    h, w = H.shape
+
+    def strip(r0):
+        from scipy.ndimage import correlate
+        r1 = min(h, r0 + STRIP_ROWS)
+        Hs = H[r0:r1]
+        lh = np.clip(np.log10(np.clip(Hs, 1e-12, None)), lv[0], lv[-1])
+        t = (lh - lv[0]) / GAUSS_DLOGH
+        i0 = np.minimum(np.floor(t).astype(np.int64), len(lv) - 2)
+        wt = (t - i0).astype(np.float64)
+        acc = np.zeros(Hs.shape, np.float64)
+        for j in np.unique(np.concatenate([i0.ravel(), i0.ravel() + 1])):
+            sel0 = i0 == j; sel1 = (i0 + 1) == j
+            k = kers[j]; rk = k.shape[0] // 2
+            win = noise[r0 + r - rk:r1 + r + rk, r - rk:w + r + rk]
+            field = correlate(win, k, mode="reflect")[rk:rk + (r1 - r0), rk:rk + w]
+            acc[sel0] += (1.0 - wt[sel0]) * field[sel0]
+            acc[sel1] += wt[sel1] * field[sel1]
+            del field
+        z = acc / np.sqrt((1 - wt) ** 2 + wt ** 2 + 2 * wt * (1 - wt) * rho[i0])
+        sv = (1 - wt) * s_lv[i0] + wt * s_lv[i0 + 1]
+        ET = 10.0 ** -(np.interp(np.log10(np.clip(Hs, 1e-30, None)), lt, Dt) / scale)
+        out[r0:r1] = np.clip(ET * np.exp(sv * z - 0.5 * sv * sv), 1e-12, 1.0)
+
+    starts = range(0, h, STRIP_ROWS)
+    if workers > 1:
+        with ThreadPoolExecutor(workers) as ex:
+            list(ex.map(strip, starts))
+    else:
+        for r0 in starts:
+            strip(r0)
+    return out
+
+
+def _render_silver_gaussian_whole(spec, H, px_um, seed, psf_um=0.0):
+    """T55j 的整幅版本 (只为逐位对照, 见测试)。"""
     from scipy.ndimage import correlate
     H = np.asarray(H, float)
     lv, L = gaussian_levels(spec, H, px_um, psf_um)
@@ -173,9 +235,8 @@ def render_silver_gaussian(spec, H, px_um, seed, psf_um=0.0):
     z = acc / np.sqrt((1 - w) ** 2 + w ** 2 + 2 * w * (1 - w) * rho[i0])
     s_lv = np.array([x[1] for x in L])
     s = (1 - w) * s_lv[i0] + w * s_lv[i0 + 1]
-    # E[T] 用闭式密度的细表 (与显式路径的平均相同); s 在档之间按 log H 线性插值
     lt, Dt = silver_curve_table(spec)
-    ET = 10.0 ** -(np.interp(np.log10(np.clip(H, 1e-30, None)), lt, Dt) / silver.density_scale(spec))   # 透射域的平均 (T55g)
+    ET = 10.0 ** -(np.interp(np.log10(np.clip(H, 1e-30, None)), lt, Dt) / silver.density_scale(spec))
     return np.clip(ET * np.exp(s * z - 0.5 * s * s), 1e-12, 1.0)
 
 
@@ -202,10 +263,12 @@ def choose_method(emulsion, shape, px_um, method="auto"):
 
 
 def render(emulsion, exposure=None, density=None, px_um=None, format=None, seed=0, method="auto", psf_um=0.0,
-           workers=1, strength=1.0):
+           workers=1, strength=1.0, need_exposure=True):
     """渲染颗粒场。exposure: 每像素曝光 H (lux·s; 黑白 (h, w), 彩色 (h, w, 3)); 或 density: 每像素平均密度 (不含片基)。
     px_um: 每像素的胶片边长 (µm); 或 format: 画幅 ("35mm" …, 长边对长边)。psf_um: 底片面高斯光学 PSF (透射率上; 仅黑白)。
-    workers: 显式银粒的进程数。strength: 颗粒倍数 (1 = 物理; 只为诊断)。"""
+    workers: 并行数 (显式银粒: 进程; closed_form 与染料云: 线程)。结果与 workers 无关 (逐位相同)。
+    strength: 颗粒倍数 (1 = 物理; 只为诊断)。need_exposure=False (T55k): 染料云路径给 density 时不反求曝光 (结果里 exposure 为 None,
+    省一份数组; 颗粒只由平均密度决定, 逐位不变)。"""
     if exposure is None and density is None:
         raise ValueError("需要 exposure 或 density")
     ref = exposure if exposure is not None else density
@@ -215,7 +278,10 @@ def render(emulsion, exposure=None, density=None, px_um=None, format=None, seed=
             raise ValueError("需要 px_um 或 format")
         px_um = px_um_for(shape, format)
     px_um = float(px_um)
-    H = np.asarray(exposure, float) if exposure is not None else exposure_from_density(emulsion, density)
+    if exposure is None and emulsion.path == "dye" and not need_exposure:
+        H = None
+    else:
+        H = np.asarray(exposure, float) if exposure is not None else exposure_from_density(emulsion, density)
     mean = emulsion.mean_density(H) if exposure is not None else np.asarray(density, float)
     m = choose_method(emulsion, shape, px_um, method)
     sp = emulsion.spec
@@ -226,32 +292,57 @@ def render(emulsion, exposure=None, density=None, px_um=None, format=None, seed=
             else:
                 T = silver.render_silver(sp, H, px_um, seed, workers=workers)
         elif m == "closed_form":
-            T = render_silver_gaussian(sp, H, px_um, seed, psf_um=psf_um)
+            T = render_silver_gaussian(sp, H, px_um, seed, psf_um=psf_um, workers=workers)
+            if workers > 1:
+                _trim()
         else:
             raise ValueError(f"未知 method {m!r}")
         D = -np.log10(np.clip(T, 1e-12, None)) * silver.density_scale(sp)     # T55g: callier "macro" 的漫射 = 镜面 / Q
         if strength != 1.0:
             D = mean + strength * (D - mean)
         return RenderResult(D, mean, H, px_um, m, emulsion.base_density)
-    D = _render_dye(emulsion, mean, px_um, seed, strength)
+    D = _render_dye(emulsion, mean, px_um, seed, strength, workers=workers)
+    if workers > 1:
+        _trim()
     return RenderResult(D, mean, H, px_um, m, 0.0)
 
 
-def _render_dye(emulsion, mean, px_um, seed, strength=1.0):
-    """染料云路径, 按 DYE_BAND_ROWS 行分条 (每条独立随机数; 云的高斯展开 > 0.3 像素时, 条带上下各多算 4σ 再裁掉)。"""
+def _trim():
+    """T55k: 多线程之后把各线程 malloc 区里已释放的内存还给系统 (glibc; 其他平台什么也不做)。"""
+    try:
+        import ctypes
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except Exception:
+        pass
+
+
+def _render_dye(emulsion, mean, px_um, seed, strength=1.0, workers=1):
+    """染料云路径, 按 DYE_BAND_ROWS 行分条 (每条独立随机数; 云的高斯展开 > 0.3 像素时, 条带上下各多算 4σ 再裁掉)。
+    T55k: 条带互相独立 (各自的随机数流), workers > 1 时多线程并行, 结果逐位不变。"""
+    from concurrent.futures import ThreadPoolExecutor
     sp = emulsion.spec
     rev = emulsion.curve.design == "reversal"
     h = mean.shape[0]
     sig = max(float(np.max(dye.cloud_sigma_um(sp, c))) for c in range(3)) / px_um
     margin = int(np.ceil(4 * sig)) if sig > 0.3 else 0
     out = np.empty_like(mean)
-    for bi, r0 in enumerate(range(0, h, DYE_BAND_ROWS)):
+
+    def band(bi):
+        r0 = bi * DYE_BAND_ROWS
         r1 = min(h, r0 + DYE_BAND_ROWS)
         a0, a1 = max(0, r0 - margin), min(h, r1 + margin)
         tgt = np.array(mean[a0:a1], float)
         rng = np.random.default_rng([int(seed) & 0xFFFFFFFF, bi, 7])
         dye.apply_dye_grain(sp, tgt, px_um, rng, reversal=rev, strength=strength)
         out[r0:r1] = tgt[r0 - a0:r0 - a0 + (r1 - r0)]
+
+    bands = range(len(range(0, h, DYE_BAND_ROWS)))
+    if workers > 1:
+        with ThreadPoolExecutor(workers) as ex:
+            list(ex.map(band, bands))
+    else:
+        for bi in bands:
+            band(bi)
     return out
 
 
